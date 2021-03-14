@@ -11,7 +11,10 @@
     <packaging>war</packaging>
 
     <developers>
-
+        <developer>
+            <name>Bartłomiej Graczyk</name>
+            <id>224301</id>
+        </developer>
     </developers>
 
     <properties>
