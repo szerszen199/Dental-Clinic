@@ -11,6 +11,11 @@
     <packaging>war</packaging>
 
     <developers>
+        <developer>
+            <name>Przemysław Zdrzalik</name>
+            <id>224466</id>
+            <email>224466@edu.p.lodz.pl</email>
+        </developer>
 
     </developers>
 
