@@ -11,7 +11,10 @@
     <packaging>war</packaging>
 
     <developers>
-
+        <developer>
+            <name>Tomasz Woźniak</name>
+            <id>224459</id>
+        </developer>
     </developers>
 
     <properties>
