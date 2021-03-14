@@ -11,7 +11,11 @@
     <packaging>war</packaging>
 
     <developers>
-
+        <developer>
+            <name>Piotr Antczak</name>
+            <id>224248</id>
+            <email>224248@edu.p.lodz.pl</email>
+        </developer>
     </developers>
 
     <properties>
