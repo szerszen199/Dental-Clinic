@@ -11,7 +11,10 @@
     <packaging>war</packaging>
 
     <developers>
-
+		<developer>
+		<name>Witold Pietrzak</name>
+		<id>224406</id>
+		</developer>
     </developers>
 
     <properties>
