@@ -16,6 +16,11 @@
             <id>224248</id>
             <email>224248@edu.p.lodz.pl</email>
         </developer>
+        <developer>
+            <name>Grzegorz Muszyński</name>
+            <id>224383</id>
+            <email>224383@edu.p.lodz.pl</email>
+        </developer>
     </developers>
 
     <properties>
