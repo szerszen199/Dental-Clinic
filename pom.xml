@@ -24,6 +24,10 @@
             <name>Bartłomiej Graczyk</name>
             <id>224301</id>
         </developer>
+		<developer>
+		<name>Witold Pietrzak</name>
+		<id>224406</id>
+		</developer>
     </developers>
 
     <properties>
