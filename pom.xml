@@ -32,6 +32,12 @@
             <name>Tomasz Woźniak</name>
             <id>224459</id>
         </developer>
+        <developer>
+            <name>Przemysław Zdrzalik</name>
+            <id>224466</id>
+            <email>224466@edu.p.lodz.pl</email>
+        </developer>
+
     </developers>
 
     <properties>
