@@ -16,6 +16,10 @@
             <id>224248</id>
             <email>224248@edu.p.lodz.pl</email>
         </developer>
+        <developer>
+            <name>Julia Szymańska</name>
+            <id>224441</id>
+        </developer>
     </developers>
 
     <properties>
