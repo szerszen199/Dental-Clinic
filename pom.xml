@@ -25,8 +25,8 @@
             <id>224301</id>
         </developer>
 		<developer>
-		<name>Witold Pietrzak</name>
-		<id>224406</id>
+		    <name>Witold Pietrzak</name>
+		    <id>224406</id>
 		</developer>
         <developer>
             <name>Tomasz Woźniak</name>
@@ -37,7 +37,11 @@
             <id>224466</id>
             <email>224466@edu.p.lodz.pl</email>
         </developer>
-
+        <developer>
+            <name>Grzegorz Muszyński</name>
+            <id>224383</id>
+            <email>224383@edu.p.lodz.pl</email>
+        </developer>
     </developers>
 
     <properties>
