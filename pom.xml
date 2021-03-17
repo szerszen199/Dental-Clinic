@@ -28,6 +28,10 @@
 		<name>Witold Pietrzak</name>
 		<id>224406</id>
 		</developer>
+        <developer>
+            <name>Tomasz Woźniak</name>
+            <id>224459</id>
+        </developer>
     </developers>
 
     <properties>
