@@ -45,6 +45,6 @@ public class JDBCConfig {
     //    Uczynienie z tej klasy komponentu Stateless i wstrzykniecie zarzadcy encji korzystajacego z ssbd00adminPU
     //    powoduje aktywowanie tej jednostki skladowania, a w konsekwencji utworzenie (z ew. usunieciem!) struktur w bazie danych
     //    @see persistence.xml
-//    @PersistenceContext(unitName = "ssbd01adminPU")
-//    private EntityManager em;
+    @PersistenceContext(unitName = "ssbd01adminPU")
+    private EntityManager em;
 }
