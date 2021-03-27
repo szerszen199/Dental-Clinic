@@ -31,7 +31,7 @@ import java.sql.Connection;
         isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 
 @DataSourceDefinition( // Ta pula połączeń jest na potrzeby implementacji uwierzytelniania w aplikacji
-        name = "java:app/jdbc/ssbd00auth",
+        name = "java:app/jdbc/ssbd01auth",
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd01auth",
         password = "tF?reN@F7Yt9WM-=",
