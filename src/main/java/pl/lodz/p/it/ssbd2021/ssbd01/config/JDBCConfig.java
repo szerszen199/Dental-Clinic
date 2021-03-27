@@ -1,12 +1,14 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.config;
 
+import java.sql.Connection;
 import javax.annotation.sql.DataSourceDefinition;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.sql.Connection;
 
-@DataSourceDefinition( // Ta pula połączeń jest na potrzeby tworzenia struktur przy wdrażaniu aplikacji
+// Ta pula połączeń jest na potrzeby tworzenia struktur przy wdrażaniu aplikacji
+@DataSourceDefinition(
+
         name = "java:app/jdbc/ssbd01admin",
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd01admin",
@@ -19,7 +21,8 @@ import java.sql.Connection;
         maxPoolSize = 1,
         maxIdleTime = 10) //Nie potrzebujemy przetrzymywać połączeń w tej puli
 
-@DataSourceDefinition( // Ta pula połączeń jest na potrzeby operacji realizowanych przez moduł aplikacji
+// Ta pula połączeń jest na potrzeby operacji realizowanych przez moduł aplikacji
+@DataSourceDefinition(
         name = "java:app/jdbc/ssbd01mok",
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd01mok",
@@ -30,7 +33,8 @@ import java.sql.Connection;
         transactional = true,
         isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 
-@DataSourceDefinition( // Ta pula połączeń jest na potrzeby implementacji uwierzytelniania w aplikacji
+// Ta pula połączeń jest na potrzeby implementacji uwierzytelniania w aplikacji
+@DataSourceDefinition(
         name = "java:app/jdbc/ssbd01auth",
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd01auth",
@@ -42,8 +46,10 @@ import java.sql.Connection;
 @Stateless
 public class JDBCConfig {
 
-    //    Uczynienie z tej klasy komponentu Stateless i wstrzykniecie zarzadcy encji korzystajacego z ssbd00adminPU
-    //    powoduje aktywowanie tej jednostki skladowania, a w konsekwencji utworzenie (z ew. usunieciem!) struktur w bazie danych
+    //    Uczynienie z tej klasy komponentu Stateless
+    //    i wstrzykniecie zarzadcy encji korzystajacego z ssbd00adminPU
+    //    powoduje aktywowanie tej jednostki skladowania,
+    //    a w konsekwencji utworzenie (z ew. usunieciem!) struktur w bazie danych
     //    @see persistence.xml
     @PersistenceContext(unitName = "ssbd01adminPU")
     private EntityManager em;
