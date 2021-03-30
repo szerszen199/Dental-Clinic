@@ -3,7 +3,7 @@
              xmlns="http://xmlns.jcp.org/xml/ns/persistence"
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
     <persistence-unit name="ssbd01adminPU" transaction-type="JTA">
-        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <jta-data-source>java:app/jdbc/ssbd01admin</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
@@ -12,7 +12,7 @@
     </persistence-unit>
 
     <persistence-unit name="ssbd01authPU" transaction-type="JTA">
-        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <jta-data-source>java:app/jdbc/ssbd01auth</jta-data-source>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <!--        todo: klasy-->
@@ -21,12 +21,14 @@
         </properties>
     </persistence-unit>
     <persistence-unit name="ssbd01mokPU" transaction-type="JTA">
-        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <jta-data-source>java:app/jdbc/ssbd01mok</jta-data-source>
         <!-- todo: klasy -->
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
-            <!--        TODO: Properties?-->
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
         </properties>
     </persistence-unit>
     <persistence-unit name="ssbd01mowPU" transaction-type="JTA">
