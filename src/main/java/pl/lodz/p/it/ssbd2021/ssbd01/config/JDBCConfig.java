@@ -43,6 +43,18 @@ import javax.persistence.PersistenceContext;
         portNumber = 5432,
         databaseName = "ssbd01")
 
+// Ta pula połączeń jest na potrzeby operacji realizowanych przez moduł aplikacji
+@DataSourceDefinition(
+        name = "java:app/jdbc/ssbd01mow",
+        className = "org.postgresql.ds.PGSimpleDataSource",
+        user = "ssbd01mow",
+        password = "t2ymEPCbs^#8Qfeb",
+        serverName = "studdev.it.p.lodz.pl",
+        portNumber = 5432,
+        databaseName = "ssbd01",
+        transactional = true,
+        isolationLevel = Connection.TRANSACTION_SERIALIZABLE)
+
 @Stateless
 public class JDBCConfig {
 
