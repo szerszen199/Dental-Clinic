@@ -53,7 +53,7 @@ import javax.persistence.PersistenceContext;
         portNumber = 5432,
         databaseName = "ssbd01",
         transactional = true,
-        isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
+        isolationLevel = Connection.TRANSACTION_SERIALIZABLE)
 
 @Stateless
 public class JDBCConfig {
