@@ -68,7 +68,7 @@ public class AccessLevel implements Serializable {
         this.id = id;
     }
 
-    public AccessLevel(Long id, String level, int active, long creationDateTime) {
+    public AccessLevel(Long id, String level, boolean active, LocalDateTime creationDateTime) {
         this.id = id;
         this.level = level;
         this.active = active;
@@ -91,44 +91,36 @@ public class AccessLevel implements Serializable {
         this.level = level;
     }
 
-    public int getActive() {
+    public boolean getActive() {
         return active;
     }
 
-    public void setActive(int active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 
-    public BigInteger getVersion() {
+    public Long getVersion() {
         return version;
     }
 
-    public void setVersion(BigInteger version) {
+    public void setVersion(Long version) {
         this.version = version;
     }
 
-    public long getCreationDateTime() {
+    public LocalDateTime getCreationDateTime() {
         return creationDateTime;
     }
 
-    public void setCreationDateTime(long creationDateTime) {
+    public void setCreationDateTime(LocalDateTime creationDateTime) {
         this.creationDateTime = creationDateTime;
     }
 
-    public BigInteger getModificationDateTime() {
+    public LocalDateTime getModificationDateTime() {
         return modificationDateTime;
     }
 
-    public void setModificationDateTime(BigInteger modificationDateTime) {
+    public void setModificationDateTime(LocalDateTime modificationDateTime) {
         this.modificationDateTime = modificationDateTime;
-    }
-
-    public Account getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(Account accountId) {
-        this.accountId = accountId;
     }
 
     public Account getCreatedBy() {

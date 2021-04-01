@@ -36,7 +36,7 @@ import javax.persistence.UniqueConstraint;
     @NamedQuery(name = "Account.findByLastSuccessfulLoginIp", query = "SELECT a FROM Account a WHERE a.lastSuccessfulLoginIp = :lastSuccessfulLoginIp"),
     @NamedQuery(name = "Account.findByLastUnsuccessfulLogin", query = "SELECT a FROM Account a WHERE a.lastUnsuccessfulLogin = :lastUnsuccessfulLogin"),
     @NamedQuery(name = "Account.findByLastUnsuccessfulLoginIp", query = "SELECT a FROM Account a WHERE a.lastUnsuccessfulLoginIp = :lastUnsuccessfulLoginIp"),
-    @NamedQuery(name = "Account.findByUnsuccessfulLoginCountSinceLastLogin", query = "SELECT a FROM Account a WHERE a.unsuccessfulLoginCountSinceLastLogin = :unsuccessfulLoginCountSinceLastLogin"),
+    @NamedQuery(name = "Account.findByUnsuccessfulLoginCountSinceLastLogin", query = "SELECT a FROM Account a WHERE a.unsuccessfulLoginCounter = :unsuccessfulLoginCountSinceLastLogin"),
     @NamedQuery(name = "Account.findByModificationDate", query = "SELECT a FROM Account a WHERE a.modificationDate = :modificationDate"),
     @NamedQuery(name = "Account.findByCreationDate", query = "SELECT a FROM Account a WHERE a.creationDate = :creationDate"),
     @NamedQuery(name = "Account.findByLanguage", query = "SELECT a FROM Account a WHERE a.language = :language"),
@@ -125,7 +125,7 @@ public class Account implements Serializable {
         this.id = id;
     }
 
-    public Account(Long id, String email, String password, String firstName, String lastName, int active, int enabled) {
+    public Account(Long id, String email, String password, String firstName, String lastName, boolean active, boolean enabled) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -191,27 +191,27 @@ public class Account implements Serializable {
         this.pesel = pesel;
     }
 
-    public int getActive() {
+    public boolean getActive() {
         return active;
     }
 
-    public void setActive(int active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 
-    public int getEnabled() {
+    public boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(int enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
-    public BigInteger getLastSuccessfulLogin() {
+    public LocalDateTime getLastSuccessfulLogin() {
         return lastSuccessfulLogin;
     }
 
-    public void setLastSuccessfulLogin(BigInteger lastSuccessfulLogin) {
+    public void setLastSuccessfulLogin(LocalDateTime lastSuccessfulLogin) {
         this.lastSuccessfulLogin = lastSuccessfulLogin;
     }
 
@@ -223,11 +223,11 @@ public class Account implements Serializable {
         this.lastSuccessfulLoginIp = lastSuccessfulLoginIp;
     }
 
-    public BigInteger getLastUnsuccessfulLogin() {
+    public LocalDateTime getLastUnsuccessfulLogin() {
         return lastUnsuccessfulLogin;
     }
 
-    public void setLastUnsuccessfulLogin(BigInteger lastUnsuccessfulLogin) {
+    public void setLastUnsuccessfulLogin(LocalDateTime lastUnsuccessfulLogin) {
         this.lastUnsuccessfulLogin = lastUnsuccessfulLogin;
     }
 
@@ -239,27 +239,27 @@ public class Account implements Serializable {
         this.lastUnsuccessfulLoginIp = lastUnsuccessfulLoginIp;
     }
 
-    public Integer getUnsuccessfulLoginCountSinceLastLogin() {
-        return unsuccessfulLoginCountSinceLastLogin;
+    public Integer getUnsuccessfulLoginCounter() {
+        return unsuccessfulLoginCounter;
     }
 
-    public void setUnsuccessfulLoginCountSinceLastLogin(Integer unsuccessfulLoginCountSinceLastLogin) {
-        this.unsuccessfulLoginCountSinceLastLogin = unsuccessfulLoginCountSinceLastLogin;
+    public void setUnsuccessfulLoginCounter(Integer unsuccessfulLoginCounter) {
+        this.unsuccessfulLoginCounter = unsuccessfulLoginCounter;
     }
 
-    public BigInteger getModificationDate() {
+    public LocalDateTime getModificationDate() {
         return modificationDate;
     }
 
-    public void setModificationDate(BigInteger modificationDate) {
+    public void setModificationDate(LocalDateTime modificationDate) {
         this.modificationDate = modificationDate;
     }
 
-    public BigInteger getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(BigInteger creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -271,44 +271,20 @@ public class Account implements Serializable {
         this.language = language;
     }
 
-    public BigInteger getVersion() {
+    public Long getVersion() {
         return version;
     }
 
-    public void setVersion(BigInteger version) {
+    public void setVersion(Long version) {
         this.version = version;
     }
 
     public Collection<AccessLevel> getAccessLevelCollection() {
-        return accessLevelCollection;
+        return accessLevels;
     }
 
     public void setAccessLevelCollection(Collection<AccessLevel> accessLevelCollection) {
-        this.accessLevelCollection = accessLevelCollection;
-    }
-
-    public Collection<AccessLevel> getAccessLevelCollection1() {
-        return accessLevelCollection1;
-    }
-
-    public void setAccessLevelCollection1(Collection<AccessLevel> accessLevelCollection1) {
-        this.accessLevelCollection1 = accessLevelCollection1;
-    }
-
-    public Collection<AccessLevel> getAccessLevelCollection2() {
-        return accessLevelCollection2;
-    }
-
-    public void setAccessLevelCollection2(Collection<AccessLevel> accessLevelCollection2) {
-        this.accessLevelCollection2 = accessLevelCollection2;
-    }
-
-    public Collection<Account> getAccountCollection() {
-        return accountCollection;
-    }
-
-    public void setAccountCollection(Collection<Account> accountCollection) {
-        this.accountCollection = accountCollection;
+        this.accessLevels = accessLevelCollection;
     }
 
     public Account getModifiedBy() {
@@ -317,14 +293,6 @@ public class Account implements Serializable {
 
     public void setModifiedBy(Account modifiedBy) {
         this.modifiedBy = modifiedBy;
-    }
-
-    public Collection<Account> getAccountCollection1() {
-        return accountCollection1;
-    }
-
-    public void setAccountCollection1(Collection<Account> accountCollection1) {
-        this.accountCollection1 = accountCollection1;
     }
 
     public Account getCreatedBy() {
