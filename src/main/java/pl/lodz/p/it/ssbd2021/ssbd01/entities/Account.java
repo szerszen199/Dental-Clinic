@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -21,10 +17,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-/**
- *
- * @author student
- */
 @Entity
 @Table(name = "accounts", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"email"}),
@@ -52,67 +44,80 @@ import javax.persistence.UniqueConstraint;
 public class Account implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Long id;
+    
     @Basic(optional = false)
     @Column(name = "email", nullable = false, length = 100)
     private String email;
+    
     @Basic(optional = false)
     @Column(name = "password", nullable = false, length = 64)
     private String password;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accountId")
+    private Collection<AccessLevel> accessLevels;
+    
     @Basic(optional = false)
     @Column(name = "first_name", nullable = false, length = 50)
     private String firstName;
+    
     @Basic(optional = false)
     @Column(name = "last_name", nullable = false, length = 80)
     private String lastName;
+    
     @Column(name = "phone_number", length = 15)
     private String phoneNumber;
+    
     @Column(name = "pesel", length = 11)
     private String pesel;
+    
     @Basic(optional = false)
     @Column(name = "active", nullable = false)
-    private int active;
+    private boolean active;
+    
     @Basic(optional = false)
     @Column(name = "enabled", nullable = false)
-    private int enabled;
+    private boolean enabled;
+    
     @Column(name = "last_successful_login")
-    private BigInteger lastSuccessfulLogin;
+    private LocalDateTime lastSuccessfulLogin;
+    
     @Column(name = "last_successful_login_ip", length = 15)
     private String lastSuccessfulLoginIp;
+    
     @Column(name = "last_unsuccessful_login")
-    private BigInteger lastUnsuccessfulLogin;
+    private LocalDateTime lastUnsuccessfulLogin;
+    
     @Column(name = "last_unsuccessful_login_ip", length = 15)
     private String lastUnsuccessfulLoginIp;
+    
     @Column(name = "unsuccessful_login_count_since_last_login")
-    private Integer unsuccessfulLoginCountSinceLastLogin;
-    @Column(name = "modification_date")
-    private BigInteger modificationDate;
+    private Integer unsuccessfulLoginCounter;
+
     @Column(name = "creation_date")
-    private BigInteger creationDate;
-    @Column(name = "language", length = 2)
-    private String language;
-    @Column(name = "version")
-    private BigInteger version;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accountId")
-    private Collection<AccessLevel> accessLevelCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "createdBy")
-    private Collection<AccessLevel> accessLevelCollection1;
-    @OneToMany(mappedBy = "modifiedBy")
-    private Collection<AccessLevel> accessLevelCollection2;
-    @OneToMany(mappedBy = "modifiedBy")
-    private Collection<Account> accountCollection;
-    @JoinColumn(name = "modified_by", referencedColumnName = "id")
-    @ManyToOne
-    private Account modifiedBy;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "createdBy")
-    private Collection<Account> accountCollection1;
+    private LocalDateTime creationDate;
+
     @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Account createdBy;
+    
+    @Column(name = "modification_date")
+    private LocalDateTime modificationDate;
 
+    @JoinColumn(name = "modified_by", referencedColumnName = "id")
+    @ManyToOne
+    private Account modifiedBy;
+    
+    @Column(name = "language", length = 2)
+    private String language;
+    
+    @Column(name = "version")
+    private Long version;
+    
     public Account() {
     }
 

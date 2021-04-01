@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,10 +14,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-/**
- *
- * @author student
- */
+
 @Entity
 @Table(name = "access_levels", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"level", "account_id"})})
@@ -36,32 +29,37 @@ import javax.persistence.UniqueConstraint;
 public class AccessLevel implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Long id;
+    
     @Basic(optional = false)
     @Column(name = "level", nullable = false, length = 16)
     private String level;
+    
     @Basic(optional = false)
     @Column(name = "active", nullable = false)
-    private int active;
-    @Column(name = "version")
-    private BigInteger version;
+    private boolean active;
+    
     @Basic(optional = false)
     @Column(name = "creation_date_time", nullable = false)
-    private long creationDateTime;
-    @Column(name = "modification_date_time")
-    private BigInteger modificationDateTime;
-    @JoinColumn(name = "account_id", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
-    private Account accountId;
+    private LocalDateTime creationDateTime;
+
     @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Account createdBy;
+    
+    @Column(name = "modification_date_time")
+    private LocalDateTime modificationDateTime;
+    
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     @ManyToOne
     private Account modifiedBy;
+
+    @Column(name = "version")
+    private Long version;
 
     public AccessLevel() {
     }
