@@ -23,12 +23,15 @@
     <persistence-unit name="ssbd01mokPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <jta-data-source>java:app/jdbc/ssbd01mok</jta-data-source>
+        <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel</class>
+        <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.Account</class>
         <!-- todo: klasy -->
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
             <property name="hibernate.hbm2ddl.auto" value="validate"/>
+            <property name="hibernate.connection.url" value="jdbc:postgresql://studdev.it.p.lodz.pl:5432/ssbd01"/>
         </properties>
     </persistence-unit>
     <persistence-unit name="ssbd01mowPU" transaction-type="JTA">
