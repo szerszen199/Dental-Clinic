@@ -181,7 +181,7 @@ GRANT
 
 GRANT
     SELECT
-    ON ACCOUNTS TO ssbd01glassfish;
+    ON ACCOUNTS TO ssbd01auth;
 
 GRANT
     SELECT,
@@ -199,7 +199,47 @@ GRANT
 
 GRANT
     SELECT
-    ON ACCESS_LEVELS TO ssbd01glassfish;
+    ON ACCESS_LEVELS TO ssbd01auth;
+
+-- UPRAWNIENIA dla MOW
+
+
+ALTER TABLE APPOINTMENTS
+    OWNER TO ssbd01admin;
+
+GRANT
+    SELECT,
+    INSERT,
+    UPDATE,
+    DELETE
+    ON APPOINTMENTS TO ssbd01mow;
+
+-- UPRAWNIENIA dla MOD
+
+ALTER TABLE MEDICAL_DOCUMENTATIONS
+    OWNER TO ssbd01admin;
+ALTER TABLE DOCUMENTATION_ENTRIES
+    OWNER TO ssbd01admin;
+ALTER TABLE PRESCRIPTIONS
+    OWNER TO ssbd01admin;
+
+GRANT
+    SELECT,
+    INSERT,
+    UPDATE
+    ON MEDICAL_DOCUMENTATIONS TO ssbd01mod;
+
+GRANT
+    SELECT,
+    INSERT,
+    UPDATE
+    ON DOCUMENTATION_ENTRIES TO ssbd01mod;
+
+GRANT
+    SELECT,
+    INSERT,
+    UPDATE
+    ON PRESCRIPTIONS TO ssbd01mod;
 /*
 INSERT INTO accounts (id, email, password, first_name, last_name, language, version, enabled)
 VALUES (-1, 'jkowalski@mail.com', 'b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342', 'Jan', 'Kowalski',
@@ -215,8 +255,8 @@ INSERT INTO access_levels (id, level, account_id, active)
 VALUES (-2, 'level.recep', -2, 0);
 INSERT INTO access_levels (id, level, account_id)
 VALUES (-3, 'level.doctor', -2);
-*/
-/*
+
+
 -- uwierzytelnienie
 SELECT *
 FROM accounts
@@ -234,4 +274,6 @@ WHERE account_id = (SELECT id FROM accounts WHERE email = 'jnowak@mail.com')
 SELECT *
 FROM access_levels
 WHERE account_id = (SELECT id FROM accounts WHERE email = 'jnowak@mail.com');
+
+
 */
