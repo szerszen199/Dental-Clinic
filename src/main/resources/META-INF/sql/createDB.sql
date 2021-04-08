@@ -73,7 +73,6 @@ where (al.account_id = a.id)
 
 CREATE INDEX acc_lvl_account_id ON ACCESS_LEVELS (account_id);
 
-
 -- struktura dla MOW
 
 CREATE TABLE APPOINTMENTS
@@ -258,7 +257,7 @@ GRANT
     INSERT,
     UPDATE
     ON PRESCRIPTIONS TO ssbd01mod;
-/*
+
 INSERT INTO accounts (id, email, password, first_name, last_name, language, version, enabled)
 VALUES (-1, 'jkowalski@mail.com', 'b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342', 'Jan', 'Kowalski',
         'pl', 0, 1);
@@ -292,6 +291,3 @@ WHERE account_id = (SELECT id FROM accounts WHERE email = 'jnowak@mail.com')
 SELECT *
 FROM access_levels
 WHERE account_id = (SELECT id FROM accounts WHERE email = 'jnowak@mail.com');
-
-
-*/
