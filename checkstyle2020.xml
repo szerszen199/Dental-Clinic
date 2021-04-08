@@ -231,8 +231,12 @@
             <property name="validateThrows" value="true"/>
             <property name="allowMissingReturnTag" value="false"/>
             <property name="allowedAnnotations" value="Override, Test"/>
+        </module>
+
+        <module name="MissingJavadocMethod">
             <property name="allowMissingPropertyJavadoc" value="true"/>
         </module>
+
         <module name="MethodName">
             <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9_]*$"/>
             <message key="name.invalidPattern"
