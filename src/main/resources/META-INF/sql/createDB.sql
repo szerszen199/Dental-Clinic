@@ -33,7 +33,7 @@ CREATE TABLE ACCOUNTS
     modification_date                         BIGINT,
     created_by                                BIGINT           NOT NULL
         CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
-    creation_date                             BIGINT,
+    creation_date                             BIGINT           not null default date_part('epoch', now()),
     language                                  CHAR(2)
         CONSTRAINT acc_languages_available_values CHECK (language IN ('en', 'pl', 'EN', 'PL')),
     version                                   BIGINT
@@ -48,12 +48,12 @@ CREATE TABLE ACCESS_LEVELS
     level                  VARCHAR(16) NOT NULL,
     account_id             BIGINT      NOT NULL
         CONSTRAINT acc_lvl_account_fk REFERENCES ACCOUNTS (ID),
-    active                 INT         NOT NULL DEFAULT 1
+    active                 INT         NOT NULL          DEFAULT 1
         CONSTRAINT acc_lvl_active_in_1_0 CHECK (active IN (0, 1)),
     CONSTRAINT acc_lvl_level_account_pair_unique UNIQUE (level, account_id),
     version                BIGINT
         CONSTRAINT acc_lvl_version_gr0 CHECK (version >= 0),
-    creation_date_time     BIGINT      NOT NULL,
+    creation_date_time     BIGINT      NOT NULL not null default date_part('epoch', now()),
     created_by             BIGINT      NOT NULL
         CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
     modification_date_time BIGINT,
@@ -91,7 +91,7 @@ CREATE TABLE APPOINTMENTS
         CONSTRAINT appoint_rating_between CHECK (rating >= 0 AND rating <= 5),
     version                BIGINT
         CONSTRAINT appoint_version_gr0 CHECK (version >= 0),
-    creation_date_time     BIGINT                                 NOT NULL,
+    creation_date_time     BIGINT                           not null default date_part('epoch', now()),
     created_by             BIGINT                                 NOT NULL
         CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
     modification_date_time BIGINT,
@@ -114,7 +114,7 @@ CREATE TABLE MEDICAL_DOCUMENTATIONS
     medications_taken      TEXT,
     version                BIGINT
         CONSTRAINT version_gr0 CHECK (version >= 0),
-    creation_date_time     BIGINT NOT NULL,
+    creation_date_time     BIGINT not null default date_part('epoch', now()),
     created_by             BIGINT NOT NULL
         CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
     modification_date_time BIGINT,
@@ -136,7 +136,7 @@ CREATE TABLE DOCUMENTATION_ENTRIES
     to_be_done             TEXT,
     version                BIGINT
         CONSTRAINT version_gr0 CHECK (version >= 0),
-    creation_date_time     BIGINT NOT NULL,
+    creation_date_time     BIGINT not null default date_part('epoch', now()),
     created_by             BIGINT NOT NULL
         CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
     modification_date_time BIGINT,
@@ -157,7 +157,7 @@ CREATE TABLE PRESCRIPTIONS
     medications            TEXT   NOT NULL,
     version                BIGINT
         CONSTRAINT version_gr0 CHECK (version >= 0),
-    creation_date_time     BIGINT NOT NULL,
+    creation_date_time     BIGINT not null default date_part('epoch', now()),
     created_by             BIGINT NOT NULL
         CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
     modification_date_time BIGINT,
@@ -258,20 +258,28 @@ GRANT
     UPDATE
     ON PRESCRIPTIONS TO ssbd01mod;
 
-INSERT INTO accounts (id, email, password, first_name, last_name, language, version, enabled)
+INSERT INTO accounts (id, email, password, first_name, last_name, language, version, enabled, created_by)
 VALUES (-1, 'jkowalski@mail.com', 'b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342', 'Jan', 'Kowalski',
-        'pl', 0, 1);
+        'pl', 0, 1, -1),
+       (-2, 'jnowak@mail.com', 'b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342', 'Jan', 'Nowak', 'pl',
+        0, 1, -2),
+       (-3, 'pzdrzalik@mail.com', 'b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342', 'Przemysław',
+        'Zdrzalik', 'pl',
+        0, 1, -2),
+       (-4, 'mseseseko@mail.com', 'b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342', 'Mobutu',
+        'Sese Seko', 'en',
+        0, 1, -4);
 
-INSERT INTO accounts (id, email, password, first_name, last_name, language, version, enabled)
-VALUES (-2, 'jnowak@mail.com', 'b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342', 'Jan', 'Nowak', 'pl',
-        0, 1);
 
-INSERT INTO access_levels (id, level, account_id)
-VALUES (-1, 'level.patient', -1);
-INSERT INTO access_levels (id, level, account_id, active)
-VALUES (-2, 'level.recep', -2, 0);
-INSERT INTO access_levels (id, level, account_id)
-VALUES (-3, 'level.doctor', -2);
+INSERT INTO access_levels (id, level, account_id, created_by)
+VALUES (-1, 'level.patient', -1, -1),
+       (-2, 'level.recep', -1, -1),
+       (-3, 'level.admin', -1, -1),
+       (-4, 'level.doctor', -2, -1),
+       (-5, 'level.patient', -3, -1),
+       (-6, 'level.recep', -4, -1);
+INSERT INTO access_levels (id, level, account_id, active, created_by)
+VALUES (-7, 'level.recep', -2, 0, -1);
 
 
 -- uwierzytelnienie
@@ -281,13 +289,13 @@ WHERE (email = 'jnowak@mail.com')
   AND (password = 'b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342')
   AND (active = 1)
   AND (enabled = 1);
-
--- autoryzacja
-SELECT *
-FROM access_levels
-WHERE account_id = (SELECT id FROM accounts WHERE email = 'jnowak@mail.com')
-  AND (active = 1);
--- poziomy dostępu
-SELECT *
-FROM access_levels
-WHERE account_id = (SELECT id FROM accounts WHERE email = 'jnowak@mail.com');
+--
+-- -- autoryzacja
+-- SELECT *
+-- FROM access_levels
+-- WHERE account_id = (SELECT id FROM accounts WHERE email = 'jnowak@mail.com')
+--   AND (active = 1);
+-- -- poziomy dostępu
+-- SELECT *
+-- FROM access_levels
+-- WHERE account_id = (SELECT id FROM accounts WHERE email = 'jnowak@mail.com');
