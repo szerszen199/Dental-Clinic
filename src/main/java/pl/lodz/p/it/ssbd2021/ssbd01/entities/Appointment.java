@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.time.LocalDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,10 +13,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-/**
- *
- * @author student
- */
 @Entity
 @Table(name = "appointments")
 @NamedQueries({
@@ -36,51 +27,68 @@ import javax.persistence.Table;
     @NamedQuery(name = "Appointment.findByModificationDateTime", query = "SELECT a FROM Appointment a WHERE a.modificationDateTime = :modificationDateTime")})
 public class Appointment implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final Long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
     @Basic(optional = false)
     @Column(name = "appointment_date")
-    private long appointmentDate;
+    private LocalDateTime appointmentDate;
     @Basic(optional = false)
     @Column(name = "confirmed")
-    private int confirmed;
+    private Boolean confirmed;
     @Basic(optional = false)
     @Column(name = "canceled")
-    private int canceled;
+    private Boolean canceled;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "rating")
     private BigDecimal rating;
     @Column(name = "version")
-    private BigInteger version;
+    private Long version;
     @Basic(optional = false)
     @Column(name = "creation_date_time")
-    private long creationDateTime;
+    private LocalDateTime creationDateTime;
     @Column(name = "modification_date_time")
-    private BigInteger modificationDateTime;
+    private LocalDateTime modificationDateTime;
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Account_1 doctorId;
+    private Account doctor;
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     @ManyToOne
-    private Account_1 patientId;
+    private Account patient;
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Account_1 createdBy;
+    private Account createdBy;
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     @ManyToOne
-    private Account_1 modifiedBy;
+    private Account modifiedBy;
 
+    /**
+     * Tworzy nową instancję Appointment.
+     */
     public Appointment() {
     }
 
+    /**
+     * Tworzy nową instancję  Appointment.
+     *
+     * @param id klucz glowny
+     */
     public Appointment(Long id) {
         this.id = id;
     }
 
-    public Appointment(Long id, long appointmentDate, int confirmed, int canceled, long creationDateTime) {
+    /**
+     * Tworzy nowa instancje  Appointment.
+     *
+     * @param id               klucz glowny
+     * @param appointmentDate  data wizyty
+     * @param confirmed        status wizyty (potwierdzone)
+     * @param canceled         status wizyty (odwolane)
+     * @param creationDateTime data utworzenia
+     */
+    public Appointment(Long id, LocalDateTime appointmentDate, Boolean confirmed, Boolean canceled, LocalDateTime creationDateTime) {
         this.id = id;
         this.appointmentDate = appointmentDate;
         this.confirmed = confirmed;
@@ -96,27 +104,27 @@ public class Appointment implements Serializable {
         this.id = id;
     }
 
-    public long getAppointmentDate() {
+    public LocalDateTime getAppointmentDate() {
         return appointmentDate;
     }
 
-    public void setAppointmentDate(long appointmentDate) {
+    public void setAppointmentDate(LocalDateTime appointmentDate) {
         this.appointmentDate = appointmentDate;
     }
 
-    public int getConfirmed() {
+    public Boolean getConfirmed() {
         return confirmed;
     }
 
-    public void setConfirmed(int confirmed) {
+    public void setConfirmed(Boolean confirmed) {
         this.confirmed = confirmed;
     }
 
-    public int getCanceled() {
+    public Boolean getCanceled() {
         return canceled;
     }
 
-    public void setCanceled(int canceled) {
+    public void setCanceled(Boolean canceled) {
         this.canceled = canceled;
     }
 
@@ -128,59 +136,59 @@ public class Appointment implements Serializable {
         this.rating = rating;
     }
 
-    public BigInteger getVersion() {
+    public Long getVersion() {
         return version;
     }
 
-    public void setVersion(BigInteger version) {
+    public void setVersion(Long version) {
         this.version = version;
     }
 
-    public long getCreationDateTime() {
+    public LocalDateTime getCreationDateTime() {
         return creationDateTime;
     }
 
-    public void setCreationDateTime(long creationDateTime) {
+    public void setCreationDateTime(LocalDateTime creationDateTime) {
         this.creationDateTime = creationDateTime;
     }
 
-    public BigInteger getModificationDateTime() {
+    public LocalDateTime getModificationDateTime() {
         return modificationDateTime;
     }
 
-    public void setModificationDateTime(BigInteger modificationDateTime) {
+    public void setModificationDateTime(LocalDateTime modificationDateTime) {
         this.modificationDateTime = modificationDateTime;
     }
 
-    public Account_1 getDoctorId() {
-        return doctorId;
+    public Account getDoctor() {
+        return doctor;
     }
 
-    public void setDoctorId(Account_1 doctorId) {
-        this.doctorId = doctorId;
+    public void setDoctor(Account doctor) {
+        this.doctor = doctor;
     }
 
-    public Account_1 getPatientId() {
-        return patientId;
+    public Account getPatient() {
+        return patient;
     }
 
-    public void setPatientId(Account_1 patientId) {
-        this.patientId = patientId;
+    public void setPatient(Account patient) {
+        this.patient = patient;
     }
 
-    public Account_1 getCreatedBy() {
+    public Account getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Account_1 createdBy) {
+    public void setCreatedBy(Account createdBy) {
         this.createdBy = createdBy;
     }
 
-    public Account_1 getModifiedBy() {
+    public Account getModifiedBy() {
         return modifiedBy;
     }
 
-    public void setModifiedBy(Account_1 modifiedBy) {
+    public void setModifiedBy(Account modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 
@@ -193,7 +201,7 @@ public class Appointment implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        // TODO: Warning - this method won't work in the case klucz glowny fields are not set
         if (!(object instanceof Appointment)) {
             return false;
         }
