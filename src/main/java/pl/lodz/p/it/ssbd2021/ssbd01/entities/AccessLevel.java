@@ -29,20 +29,20 @@ import javax.persistence.UniqueConstraint;
 public class AccessLevel implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Long id;
-    
+
     @Basic(optional = false)
     @Column(name = "level", nullable = false, length = 16)
     private String level;
-    
+
     @Basic(optional = false)
     @Column(name = "active", nullable = false)
     private boolean active;
-    
+
     @Basic(optional = false)
     @Column(name = "creation_date_time", nullable = false)
     private LocalDateTime creationDateTime;
@@ -50,10 +50,10 @@ public class AccessLevel implements Serializable {
     @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Account createdBy;
-    
+
     @Column(name = "modification_date_time")
     private LocalDateTime modificationDateTime;
-    
+
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     @ManyToOne
     private Account modifiedBy;
@@ -163,5 +163,5 @@ public class AccessLevel implements Serializable {
     public String toString() {
         return "pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel[ id=" + id + " ]";
     }
-    
+
 }
