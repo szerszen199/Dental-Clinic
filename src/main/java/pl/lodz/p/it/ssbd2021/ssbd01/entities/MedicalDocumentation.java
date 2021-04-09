@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
@@ -19,8 +14,10 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+
+
 /**
- * @author student
+ * Klasa Medical documentation.
  */
 @Entity
 @Table(name = "medical_documentations")
@@ -72,13 +69,27 @@ public class MedicalDocumentation implements Serializable {
     @Column(name = "version")
     private Long version;
 
+    /**
+     * Tworzy nowa instancje Medical documentation.
+     */
     public MedicalDocumentation() {
     }
 
+    /**
+     * Tworzy nowa instancje Medical documentation.
+     *
+     * @param id klucz glowny
+     */
     public MedicalDocumentation(Long id) {
         this.id = id;
     }
 
+    /**
+     * Tworzy nowa instancje Medical documentation.
+     *
+     * @param id               klucz glowny
+     * @param creationDateTime data utworzenia
+     */
     public MedicalDocumentation(Long id, Long creationDateTime) {
         this.id = id;
         this.creationDateTime = creationDateTime;

@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,8 +12,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
- *
- * @author student
+ * Klasa Prescription.
  */
 @Entity
 @Table(name = "prescriptions")
@@ -69,13 +62,28 @@ public class Prescription implements Serializable {
     @Column(name = "version")
     private Long version;
 
+    /**
+     * Tworzy nowa instancje Prescription.
+     */
     public Prescription() {
     }
 
+    /**
+     * Tworzy nowa instancje Prescription.
+     *
+     * @param id klucz glowny
+     */
     public Prescription(Long id) {
         this.id = id;
     }
 
+    /**
+     * Tworzy nowa instancje Prescription.
+     *
+     * @param id               klucz glowny
+     * @param medications      przepisane leki
+     * @param creationDateTime data utworzenia
+     */
     public Prescription(Long id, String medications, Long creationDateTime) {
         this.id = id;
         this.medications = medications;
