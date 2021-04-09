@@ -6,7 +6,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,33 +33,39 @@ import javax.persistence.Table;
 public class DocumentationEntry implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
+
     @Column(name = "was_done")
     private String wasDone;
+
     @Column(name = "to_be_done")
     private String toBeDone;
-    @Column(name = "version")
-    private BigInteger version;
+
     @Basic(optional = false)
     @Column(name = "creation_date_time")
-    private long creationDateTime;
+    private Long creationDateTime;
+
     @Column(name = "modification_date_time")
-    private BigInteger modificationDateTime;
+    private Long modificationDateTime;
+
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Account_1 createdBy;
+    private Account createdBy;
+
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Account_1 doctorId;
+    private Account doctor;
+
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     @ManyToOne
-    private Account_1 modifiedBy;
-    @JoinColumn(name = "documentation_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private MedicalDocumentation documentationId;
+    private Account modifiedBy;
+
+    @Column(name = "version")
+    private Long version;
 
     public DocumentationEntry() {
     }
@@ -69,7 +74,7 @@ public class DocumentationEntry implements Serializable {
         this.id = id;
     }
 
-    public DocumentationEntry(Long id, long creationDateTime) {
+    public DocumentationEntry(Long id, Long creationDateTime) {
         this.id = id;
         this.creationDateTime = creationDateTime;
     }
@@ -98,60 +103,52 @@ public class DocumentationEntry implements Serializable {
         this.toBeDone = toBeDone;
     }
 
-    public BigInteger getVersion() {
+    public Long getVersion() {
         return version;
     }
 
-    public void setVersion(BigInteger version) {
+    public void setVersion(Long version) {
         this.version = version;
     }
 
-    public long getCreationDateTime() {
+    public Long getCreationDateTime() {
         return creationDateTime;
     }
 
-    public void setCreationDateTime(long creationDateTime) {
+    public void setCreationDateTime(Long creationDateTime) {
         this.creationDateTime = creationDateTime;
     }
 
-    public BigInteger getModificationDateTime() {
+    public Long getModificationDateTime() {
         return modificationDateTime;
     }
 
-    public void setModificationDateTime(BigInteger modificationDateTime) {
+    public void setModificationDateTime(Long modificationDateTime) {
         this.modificationDateTime = modificationDateTime;
     }
 
-    public Account_1 getCreatedBy() {
+    public Account getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Account_1 createdBy) {
+    public void setCreatedBy(Account createdBy) {
         this.createdBy = createdBy;
     }
 
-    public Account_1 getDoctorId() {
-        return doctorId;
+    public Account getDoctor() {
+        return doctor;
     }
 
-    public void setDoctorId(Account_1 doctorId) {
-        this.doctorId = doctorId;
+    public void setDoctor(Account doctor) {
+        this.doctor = doctor;
     }
 
-    public Account_1 getModifiedBy() {
+    public Account getModifiedBy() {
         return modifiedBy;
     }
 
-    public void setModifiedBy(Account_1 modifiedBy) {
+    public void setModifiedBy(Account modifiedBy) {
         this.modifiedBy = modifiedBy;
-    }
-
-    public MedicalDocumentation getDocumentationId() {
-        return documentationId;
-    }
-
-    public void setDocumentationId(MedicalDocumentation documentationId) {
-        this.documentationId = documentationId;
     }
 
     @Override
