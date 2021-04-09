@@ -12,7 +12,6 @@
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <jta-data-source>java:app/jdbc/ssbd01auth</jta-data-source>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
-    <!--        todo: klasy-->
     <properties>
       <!--        TODO: Properties?-->
     </properties>
@@ -20,7 +19,6 @@
   <persistence-unit name="ssbd01mokPU" transaction-type="JTA">
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <jta-data-source>java:app/jdbc/ssbd01mok</jta-data-source>
-    <!-- todo: klasy -->
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
@@ -31,7 +29,14 @@
   <persistence-unit name="ssbd01mowPU" transaction-type="JTA">
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <jta-data-source>java:app/jdbc/ssbd01mow</jta-data-source>
-    <!-- todo: klasy -->
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <properties>
+      <!--        TODO: Properties?-->
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="ssbd01modPU" transaction-type="JTA">
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <jta-data-source>java:app/jdbc/ssbd01mod</jta-data-source>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!--        TODO: Properties?-->

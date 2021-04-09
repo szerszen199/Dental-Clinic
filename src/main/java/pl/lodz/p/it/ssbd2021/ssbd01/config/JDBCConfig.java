@@ -55,6 +55,19 @@ import javax.persistence.PersistenceContext;
         transactional = true,
         isolationLevel = Connection.TRANSACTION_SERIALIZABLE)
 
+// Ta pula połączeń jest na potrzeby operacji realizowanych przez moduł aplikacji
+@DataSourceDefinition(
+        name = "java:app/jdbc/ssbd01mod",
+        className = "org.postgresql.ds.PGSimpleDataSource",
+        user = "ssbd01mod",
+        password = "?43DR#bQzEaceZb5",
+        serverName = "studdev.it.p.lodz.pl",
+        portNumber = 5432,
+        databaseName = "ssbd01",
+        transactional = true,
+        isolationLevel = Connection.TRANSACTION_SERIALIZABLE)
+
+
 @Stateless
 public class JDBCConfig {
 
