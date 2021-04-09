@@ -1,8 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.time.LocalDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,36 +10,38 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 
 @Entity
 @Table(name = "access_levels", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"level", "account_id"})})
+        @UniqueConstraint(columnNames = {"level", "account_id"})})
 @NamedQueries({
-    @NamedQuery(name = "AccessLevel.findAll", query = "SELECT a FROM AccessLevel a"),
-    @NamedQuery(name = "AccessLevel.findById", query = "SELECT a FROM AccessLevel a WHERE a.id = :id"),
-    @NamedQuery(name = "AccessLevel.findByLevel", query = "SELECT a FROM AccessLevel a WHERE a.level = :level"),
-    @NamedQuery(name = "AccessLevel.findByActive", query = "SELECT a FROM AccessLevel a WHERE a.active = :active"),
-    @NamedQuery(name = "AccessLevel.findByVersion", query = "SELECT a FROM AccessLevel a WHERE a.version = :version"),
-    @NamedQuery(name = "AccessLevel.findByCreationDateTime", query = "SELECT a FROM AccessLevel a WHERE a.creationDateTime = :creationDateTime"),
-    @NamedQuery(name = "AccessLevel.findByModificationDateTime", query = "SELECT a FROM AccessLevel a WHERE a.modificationDateTime = :modificationDateTime")})
+        @NamedQuery(name = "AccessLevel.findAll", query = "SELECT a FROM AccessLevel a"),
+        @NamedQuery(name = "AccessLevel.findById", query = "SELECT a FROM AccessLevel a WHERE a.id = :id"),
+        @NamedQuery(name = "AccessLevel.findByLevel", query = "SELECT a FROM AccessLevel a WHERE a.level = :level"),
+        @NamedQuery(name = "AccessLevel.findByActive", query = "SELECT a FROM AccessLevel a WHERE a.active = :active"),
+        @NamedQuery(name = "AccessLevel.findByVersion", query = "SELECT a FROM AccessLevel a WHERE a.version = :version"),
+        @NamedQuery(name = "AccessLevel.findByCreationDateTime", query = "SELECT a FROM AccessLevel a WHERE a.creationDateTime = :creationDateTime"),
+        @NamedQuery(name = "AccessLevel.findByModificationDateTime", query = "SELECT a FROM AccessLevel a WHERE a.modificationDateTime = :modificationDateTime")})
 public class AccessLevel implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Long id;
-    
+
     @Basic(optional = false)
     @Column(name = "level", nullable = false, length = 16)
     private String level;
-    
+
     @Basic(optional = false)
     @Column(name = "active", nullable = false)
     private boolean active;
-    
+
     @Basic(optional = false)
     @Column(name = "creation_date_time", nullable = false)
     private LocalDateTime creationDateTime;
@@ -50,10 +49,10 @@ public class AccessLevel implements Serializable {
     @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Account createdBy;
-    
+
     @Column(name = "modification_date_time")
     private LocalDateTime modificationDateTime;
-    
+
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     @ManyToOne
     private Account modifiedBy;
@@ -153,15 +152,12 @@ public class AccessLevel implements Serializable {
             return false;
         }
         AccessLevel other = (AccessLevel) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override
     public String toString() {
         return "pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel[ id=" + id + " ]";
     }
-    
+
 }
