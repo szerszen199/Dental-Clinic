@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Entity
 @Table(name = "appointments")
@@ -41,7 +43,9 @@ public class Appointment implements Serializable {
     @Column(name = "canceled")
     private Boolean canceled;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "rating")
+    @Max(5)
+    @Min(1)
+    @Column(name = "rating", precision = 2, scale = 1)
     private Float rating;
     @Column(name = "version")
     private Long version;
