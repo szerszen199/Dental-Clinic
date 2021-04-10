@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Basic;
@@ -15,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -88,16 +90,16 @@ public class Account implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "enabled", nullable = false)
-    private Integer enabled;
+    private Boolean enabled;
 
     @Column(name = "last_successful_login")
-    private Long lastSuccessfulLogin;
+    private LocalDateTime lastSuccessfulLogin;
 
     @Column(name = "last_successful_login_ip", length = 15)
     private String lastSuccessfulLoginIp;
 
     @Column(name = "last_unsuccessful_login")
-    private Long lastUnsuccessfulLogin;
+    private LocalDateTime lastUnsuccessfulLogin;
 
     @Column(name = "last_unsuccessful_login_ip", length = 15)
     private String lastUnsuccessfulLoginIp;
@@ -106,17 +108,17 @@ public class Account implements Serializable {
     private Integer unsuccessfulLoginCounter;
 
     @Column(name = "creation_date")
-    private Long creationDate;
+    private LocalDateTime creationDate;
 
     @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     private Account createdBy;
 
     @Column(name = "modification_date")
-    private Long modificationDate;
+    private LocalDateTime modificationDate;
 
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
-    @ManyToOne
+    @OneToOne
     private Account modifiedBy;
 
     @Column(name = "language", length = 2)
@@ -151,7 +153,7 @@ public class Account implements Serializable {
      * @param active    status konta (aktywne)
      * @param enabled   status konta (potwierdzone)
      */
-    public Account(Long id, String email, Character password, String firstName, String lastName, Boolean active, Integer enabled) {
+    public Account(Long id, String email, Character password, String firstName, String lastName, Boolean active, Boolean enabled) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -225,19 +227,19 @@ public class Account implements Serializable {
         this.active = active;
     }
 
-    public Integer getEnabled() {
+    public Boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(Integer enabled) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 
-    public Long getLastSuccessfulLogin() {
+    public LocalDateTime getLastSuccessfulLogin() {
         return lastSuccessfulLogin;
     }
 
-    public void setLastSuccessfulLogin(Long lastSuccessfulLogin) {
+    public void setLastSuccessfulLogin(LocalDateTime lastSuccessfulLogin) {
         this.lastSuccessfulLogin = lastSuccessfulLogin;
     }
 
@@ -249,11 +251,11 @@ public class Account implements Serializable {
         this.lastSuccessfulLoginIp = lastSuccessfulLoginIp;
     }
 
-    public Long getLastUnsuccessfulLogin() {
+    public LocalDateTime getLastUnsuccessfulLogin() {
         return lastUnsuccessfulLogin;
     }
 
-    public void setLastUnsuccessfulLogin(Long lastUnsuccessfulLogin) {
+    public void setLastUnsuccessfulLogin(LocalDateTime lastUnsuccessfulLogin) {
         this.lastUnsuccessfulLogin = lastUnsuccessfulLogin;
     }
 
@@ -273,19 +275,19 @@ public class Account implements Serializable {
         this.unsuccessfulLoginCounter = unsuccessfulLoginCounter;
     }
 
-    public Long getModificationDate() {
+    public LocalDateTime getModificationDate() {
         return modificationDate;
     }
 
-    public void setModificationDate(Long modificationDate) {
+    public void setModificationDate(LocalDateTime modificationDate) {
         this.modificationDate = modificationDate;
     }
 
-    public Long getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Long creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 

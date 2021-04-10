@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -52,21 +54,21 @@ public class AccessLevel implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "active", nullable = false)
-    private Integer active;
+    private Boolean active;
 
     @Basic(optional = false)
     @Column(name = "creation_date_time", nullable = false)
-    private Long creationDateTime;
+    private LocalDateTime creationDateTime;
 
     @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     private Account createdBy;
 
     @Column(name = "modification_date_time")
-    private Long modificationDateTime;
+    private LocalDateTime modificationDateTime;
 
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
-    @ManyToOne
+    @OneToOne
     private Account modifiedBy;
 
     @Column(name = "version")
@@ -96,7 +98,7 @@ public class AccessLevel implements Serializable {
      * @param active           status
      * @param creationDateTime data stworzenia
      */
-    public AccessLevel(Long id,Account account, String level, Integer active, Long creationDateTime) {
+    public AccessLevel(Long id, Account account, String level, Boolean active, LocalDateTime creationDateTime) {
         this.id = id;
         this.account = account;
         this.level = level;
@@ -124,11 +126,11 @@ public class AccessLevel implements Serializable {
         this.level = level;
     }
 
-    public Integer getActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    public void setActive(Integer active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 
@@ -140,19 +142,19 @@ public class AccessLevel implements Serializable {
         this.version = version;
     }
 
-    public Long getCreationDateTime() {
+    public LocalDateTime getCreationDateTime() {
         return creationDateTime;
     }
 
-    public void setCreationDateTime(Long creationDateTime) {
+    public void setCreationDateTime(LocalDateTime creationDateTime) {
         this.creationDateTime = creationDateTime;
     }
 
-    public Long getModificationDateTime() {
+    public LocalDateTime getModificationDateTime() {
         return modificationDateTime;
     }
 
-    public void setModificationDateTime(Long modificationDateTime) {
+    public void setModificationDateTime(LocalDateTime modificationDateTime) {
         this.modificationDateTime = modificationDateTime;
     }
 
