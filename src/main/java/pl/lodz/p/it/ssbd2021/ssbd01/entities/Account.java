@@ -1,9 +1,9 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -67,7 +67,7 @@ public class Account implements Serializable {
     private String password;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "accountId")
-    private Collection<AccessLevel> accessLevels;
+    private Set<AccessLevel> accessLevels = new HashSet<>();
     
     @Basic(optional = false)
     @Column(name = "first_name", nullable = false, length = 50)
@@ -306,12 +306,8 @@ public class Account implements Serializable {
         this.version = version;
     }
 
-    public Collection<AccessLevel> getAccessLevelCollection() {
+    public Set<AccessLevel> getAccessLevelCollection() {
         return accessLevels;
-    }
-
-    public void setAccessLevelCollection(Collection<AccessLevel> accessLevelCollection) {
-        this.accessLevels = accessLevelCollection;
     }
 
     public Account getModifiedBy() {
