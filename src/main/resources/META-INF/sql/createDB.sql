@@ -39,8 +39,10 @@ CREATE TABLE ACCOUNTS
     version                                   BIGINT
         CONSTRAINT acc_version_gr0 CHECK (version >= 0)
 );
-CREATE INDEX acc_ID_pk ON ACCOUNTS (ID);
+CREATE INDEX acc_ID_index ON ACCOUNTS (ID);
 CREATE INDEX acc_email_index ON ACCOUNTS (email);
+CREATE INDEX acc_modified_by_index ON ACCOUNTS (modified_by);
+CREATE INDEX acc_created_by_index ON ACCOUNTS (created_by);
 
 CREATE TABLE ACCESS_LEVELS
 (
@@ -61,6 +63,10 @@ CREATE TABLE ACCESS_LEVELS
         CONSTRAINT modified_by_id_fk REFERENCES ACCOUNTS (ID)
 
 );
+CREATE INDEX acc_ID_index ON ACCOUNTS (ID);
+CREATE INDEX acc_lvl_account_id_index ON ACCESS_LEVELS (account_id);
+CREATE INDEX acc_created_by_id_index ON ACCESS_LEVELS (created_by);
+CREATE INDEX acc_modified_by_id_index ON ACCESS_LEVELS (modified_by);
 
 CREATE VIEW GLASSFISH_AUTH_VIEW as
 select a.email, a.password, al.level
@@ -71,7 +77,6 @@ where (al.account_id = a.id)
   and (a.enabled = 1)
   and (al.active = 1);
 
-CREATE INDEX acc_lvl_account_id ON ACCESS_LEVELS (account_id);
 
 -- struktura dla MOW
 
@@ -91,7 +96,7 @@ CREATE TABLE APPOINTMENTS
         CONSTRAINT appoint_rating_between CHECK (rating >= 0 AND rating <= 5),
     version                BIGINT
         CONSTRAINT appoint_version_gr0 CHECK (version >= 0),
-    creation_date_time     BIGINT                           not null default date_part('epoch', now()),
+    creation_date_time     BIGINT                                 not null default date_part('epoch', now()),
     created_by             BIGINT                                 NOT NULL
         CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
     modification_date_time BIGINT,
@@ -100,8 +105,11 @@ CREATE TABLE APPOINTMENTS
 
 );
 
+CREATE INDEX appoint_ID_index ON APPOINTMENTS (ID);
 CREATE INDEX appoint_doctor_id_index ON APPOINTMENTS (doctor_ID);
 CREATE INDEX appoint_patient_id_index ON APPOINTMENTS (patient_ID);
+CREATE INDEX appoint_created_by_id_index ON APPOINTMENTS (created_by);
+CREATE INDEX appoint_modified_by_id_index ON APPOINTMENTS (modified_by);
 
 -- struktura dla MOD
 
@@ -122,8 +130,11 @@ CREATE TABLE MEDICAL_DOCUMENTATIONS
         CONSTRAINT modified_by_id_fk REFERENCES ACCOUNTS (ID)
 );
 
-CREATE INDEX documentation_id_pk ON MEDICAL_DOCUMENTATIONS (ID);
-CREATE INDEX documentation_patient_id_fk ON APPOINTMENTS (patient_ID);
+CREATE INDEX documentation_id_index ON MEDICAL_DOCUMENTATIONS (ID);
+CREATE INDEX documentation_patient_id_index ON MEDICAL_DOCUMENTATIONS (patient_ID);
+CREATE INDEX documentation_created_by_id_index ON MEDICAL_DOCUMENTATIONS (created_by);
+CREATE INDEX documentation_modified_by_id_index ON MEDICAL_DOCUMENTATIONS (modified_by);
+
 
 CREATE TABLE DOCUMENTATION_ENTRIES
 (
@@ -144,8 +155,11 @@ CREATE TABLE DOCUMENTATION_ENTRIES
         CONSTRAINT modified_by_ID_fk REFERENCES ACCOUNTS (ID)
 );
 
-CREATE INDEX documentation_entry_id_pk ON DOCUMENTATION_ENTRIES (ID);
-CREATE INDEX documentation_id_fk ON MEDICAL_DOCUMENTATIONS (ID);
+CREATE INDEX documentation_entry_id_index ON DOCUMENTATION_ENTRIES (ID);
+CREATE INDEX documentation_id_index ON DOCUMENTATION_ENTRIES (documentation_ID);
+CREATE INDEX documentation_created_by_index ON DOCUMENTATION_ENTRIES (created_by);
+CREATE INDEX documentation_modified_by_index ON DOCUMENTATION_ENTRIES (modified_by);
+
 
 CREATE TABLE PRESCRIPTIONS
 (
@@ -165,8 +179,11 @@ CREATE TABLE PRESCRIPTIONS
         CONSTRAINT modified_by_id_fk REFERENCES ACCOUNTS (ID)
 );
 
-CREATE INDEX prescription_id_pk ON PRESCRIPTIONS (ID);
-CREATE INDEX patient_prescriptions_index ON PRESCRIPTIONS (patient_ID);
+CREATE INDEX prescription_id_index ON PRESCRIPTIONS (ID);
+CREATE INDEX prescription_doctor_id_index ON PRESCRIPTIONS (patient_ID);
+CREATE INDEX prescription_patient_index ON PRESCRIPTIONS (doctor_ID);
+CREATE INDEX prescription_created_by_id_index ON PRESCRIPTIONS (created_by);
+CREATE INDEX prescription_modified_by_id_index ON PRESCRIPTIONS (modified_by);
 
 --------------------------------------------------
 --                 UPRAWNIENIA                  --
@@ -174,6 +191,7 @@ CREATE INDEX patient_prescriptions_index ON PRESCRIPTIONS (patient_ID);
 
 ALTER TABLE ACCOUNTS
     OWNER TO ssbd01admin;
+
 ALTER TABLE ACCESS_LEVELS
     OWNER TO ssbd01admin;
 
@@ -187,18 +205,6 @@ GRANT
     INSERT,
     UPDATE
     ON ACCOUNTS TO ssbd01mok;
-
-GRANT
-    SELECT
-    ON ACCOUNTS TO ssbd01mow;
-
-GRANT
-    SELECT
-    ON ACCOUNTS TO ssbd01mod;
-
-GRANT
-    SELECT
-    ON ACCOUNTS TO ssbd01auth;
 
 GRANT
     SELECT,
@@ -235,8 +241,10 @@ GRANT
 
 ALTER TABLE MEDICAL_DOCUMENTATIONS
     OWNER TO ssbd01admin;
+
 ALTER TABLE DOCUMENTATION_ENTRIES
     OWNER TO ssbd01admin;
+
 ALTER TABLE PRESCRIPTIONS
     OWNER TO ssbd01admin;
 
@@ -249,13 +257,15 @@ GRANT
 GRANT
     SELECT,
     INSERT,
-    UPDATE
+    UPDATE,
+    DELETE
     ON DOCUMENTATION_ENTRIES TO ssbd01mod;
 
 GRANT
     SELECT,
     INSERT,
-    UPDATE
+    UPDATE,
+    DELETE
     ON PRESCRIPTIONS TO ssbd01mod;
 
 INSERT INTO accounts (id, email, password, first_name, last_name, language, version, enabled, created_by)
