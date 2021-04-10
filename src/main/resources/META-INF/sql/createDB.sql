@@ -2,10 +2,17 @@ DROP TABLE if exists PRESCRIPTIONS;
 DROP TABLE if exists DOCUMENTATION_ENTRIES;
 DROP TABLE if exists MEDICAL_DOCUMENTATIONS;
 DROP TABLE IF EXISTS APPOINTMENTS;
-DROP VIEW IF EXISTS GLASSFISH_AUTH_VIEW;
 DROP TABLE IF EXISTS ACCESS_LEVELS;
 DROP TABLE IF EXISTS ACCOUNTS;
 
+DROP VIEW IF EXISTS GLASSFISH_AUTH_VIEW;
+
+DROP SEQUENCE IF EXISTS accounts_seq;
+DROP SEQUENCE IF EXISTS access_levels_seq;
+DROP SEQUENCE IF EXISTS appointments_seq;
+DROP SEQUENCE IF EXISTS medical_documentations_seq;
+DROP SEQUENCE IF EXISTS documentation_entries_seq;
+DROP SEQUENCE IF EXISTS prescriptions_seq;
 
 CREATE TABLE ACCOUNTS
 (
@@ -42,6 +49,13 @@ CREATE TABLE ACCOUNTS
 CREATE INDEX acc_ID_pk ON ACCOUNTS (ID);
 CREATE INDEX acc_email_index ON ACCOUNTS (email);
 
+CREATE SEQUENCE accounts_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
 CREATE TABLE ACCESS_LEVELS
 (
     ID                     BIGINT PRIMARY KEY,
@@ -63,15 +77,22 @@ CREATE TABLE ACCESS_LEVELS
 );
 
 CREATE VIEW GLASSFISH_AUTH_VIEW as
-select a.email, a.password, al.level
-from ACCOUNTS a,
+SELECT a.email, a.password, al.level
+FROM ACCOUNTS a,
      ACCESS_LEVELS al
-where (al.account_id = a.id)
-  and (a.active = 1)
-  and (a.enabled = 1)
-  and (al.active = 1);
+WHERE (al.account_id = a.id)
+  AND (a.active = 1)
+  AND (a.enabled = 1)
+  AND (al.active = 1);
 
 CREATE INDEX acc_lvl_account_id ON ACCESS_LEVELS (account_id);
+
+CREATE SEQUENCE access_levels_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 -- struktura dla MOW
 
@@ -103,6 +124,13 @@ CREATE TABLE APPOINTMENTS
 CREATE INDEX appoint_doctor_id_index ON APPOINTMENTS (doctor_ID);
 CREATE INDEX appoint_patient_id_index ON APPOINTMENTS (patient_ID);
 
+CREATE SEQUENCE appointments_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
 -- struktura dla MOD
 
 CREATE TABLE MEDICAL_DOCUMENTATIONS
@@ -124,6 +152,13 @@ CREATE TABLE MEDICAL_DOCUMENTATIONS
 
 CREATE INDEX documentation_id_pk ON MEDICAL_DOCUMENTATIONS (ID);
 CREATE INDEX documentation_patient_id_fk ON APPOINTMENTS (patient_ID);
+
+CREATE SEQUENCE medical_documentations_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 CREATE TABLE DOCUMENTATION_ENTRIES
 (
@@ -147,6 +182,13 @@ CREATE TABLE DOCUMENTATION_ENTRIES
 CREATE INDEX documentation_entry_id_pk ON DOCUMENTATION_ENTRIES (ID);
 CREATE INDEX documentation_id_fk ON MEDICAL_DOCUMENTATIONS (ID);
 
+CREATE SEQUENCE documentation_entries_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
 CREATE TABLE PRESCRIPTIONS
 (
     ID                     BIGINT PRIMARY KEY,
@@ -167,6 +209,13 @@ CREATE TABLE PRESCRIPTIONS
 
 CREATE INDEX prescription_id_pk ON PRESCRIPTIONS (ID);
 CREATE INDEX patient_prescriptions_index ON PRESCRIPTIONS (patient_ID);
+
+CREATE SEQUENCE prescriptions_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 --------------------------------------------------
 --                 UPRAWNIENIA                  --

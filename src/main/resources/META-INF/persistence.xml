@@ -24,6 +24,7 @@
       <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
       <property name="hibernate.hbm2ddl.auto" value="validate"/>
+      <property name="hibernate.id.new_generator_mappings" value="true"/>
     </properties>
   </persistence-unit>
   <persistence-unit name="ssbd01mowPU" transaction-type="JTA">
@@ -32,6 +33,7 @@
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!--        TODO: Properties?-->
+      <property name="hibernate.id.new_generator_mappings" value="true"/>
     </properties>
   </persistence-unit>
   <persistence-unit name="ssbd01modPU" transaction-type="JTA">
@@ -40,6 +42,7 @@
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!--        TODO: Properties?-->
+      <property name="hibernate.id.new_generator_mappings" value="true"/>
     </properties>
   </persistence-unit>
 </persistence>
