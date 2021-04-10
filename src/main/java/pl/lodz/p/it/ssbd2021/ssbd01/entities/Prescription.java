@@ -12,7 +12,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
- * Klasa Prescription.
+ * Typ Prescription.
  */
 @Entity
 @Table(name = "prescriptions")
@@ -63,13 +63,13 @@ public class Prescription implements Serializable {
     private Long version;
 
     /**
-     * Tworzy nowa instancje Prescription.
+     * Tworzy nową instancję klasy Prescription.
      */
     public Prescription() {
     }
 
     /**
-     * Tworzy nowa instancje Prescription.
+     * Tworzy nową instancję klasy Prescription.
      *
      * @param id klucz glowny
      */
@@ -78,7 +78,7 @@ public class Prescription implements Serializable {
     }
 
     /**
-     * Tworzy nowa instancje Prescription.
+     * Tworzy nową instancję klasy Prescription.
      *
      * @param id               klucz glowny
      * @param medications      przepisane leki

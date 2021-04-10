@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -17,7 +18,7 @@ import javax.persistence.Table;
 
 
 /**
- * Klasa Medical documentation.
+ * Typ Medical documentation.
  */
 @Entity
 @Table(name = "medical_documentations")
@@ -64,19 +65,19 @@ public class MedicalDocumentation implements Serializable {
     private Account patient;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "documentationId")
-    private Collection<DocumentationEntry> documentationEntryCollection;
+    private Collection<DocumentationEntry> documentationEntryCollection = new ArrayList<DocumentationEntry>();
 
     @Column(name = "version")
     private Long version;
 
     /**
-     * Tworzy nowa instancje Medical documentation.
+     * Tworzy nową instancję klasy MedicalDocumentation.
      */
     public MedicalDocumentation() {
     }
 
     /**
-     * Tworzy nowa instancje Medical documentation.
+     * Tworzy nową instancję klasy MedicalDocumentation.
      *
      * @param id klucz glowny
      */
@@ -85,7 +86,7 @@ public class MedicalDocumentation implements Serializable {
     }
 
     /**
-     * Tworzy nowa instancje Medical documentation.
+     * Tworzy nową instancję klasy MedicalDocumentation.
      *
      * @param id               klucz glowny
      * @param creationDateTime data utworzenia

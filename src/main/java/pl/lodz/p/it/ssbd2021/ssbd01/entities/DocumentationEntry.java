@@ -12,7 +12,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
- * Klasa Documentation entry.
+ * Typ Documentation entry reprezentujący wpisy do dokumentacji.
  */
 @Entity
 @Table(name = "documentation_entries")
@@ -62,13 +62,13 @@ public class DocumentationEntry implements Serializable {
     private Long version;
 
     /**
-     * Tworzy nowa instancje Documentation entry.
+     * Tworzy nową instancję klasy DocumentationEntry.
      */
     public DocumentationEntry() {
     }
 
     /**
-     * Tworzy nowa instancje Documentation entry.
+     * Tworzy nową instancję klasy DocumentationEntry.
      *
      * @param id klucz glowny
      */
@@ -77,7 +77,7 @@ public class DocumentationEntry implements Serializable {
     }
 
     /**
-     * Tworzy nowa instancje Documentation entry.
+     * Tworzy nową instancję klasy DocumentationEntry.
      *
      * @param id               klucz glowny
      * @param creationDateTime data utworzenia
