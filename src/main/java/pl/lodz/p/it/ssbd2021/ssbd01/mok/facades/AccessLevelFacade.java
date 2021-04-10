@@ -13,6 +13,9 @@ public class AccessLevelFacade extends AbstractFacade<AccessLevel> {
     @PersistenceContext(unitName = "ssbd01mokPU")
     private EntityManager em;
 
+    /**
+     * Tworzy nową instancję klasy AccessLevelFacade.
+     */
     public AccessLevelFacade() {
         super(AccessLevel.class);
     }

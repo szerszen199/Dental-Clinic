@@ -13,6 +13,9 @@ public class AccountFacade extends AbstractFacade<Account> {
     @PersistenceContext(unitName = "ssbd01mokPU")
     private EntityManager em;
 
+    /**
+     * Tworzy nową instancję klasy AccountFacade.
+     */
     public AccountFacade() {
         super(Account.class);
     }
