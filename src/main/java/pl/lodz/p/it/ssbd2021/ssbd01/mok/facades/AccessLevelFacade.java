@@ -10,7 +10,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
  */
 public class AccessLevelFacade extends AbstractFacade<AccessLevel> {
 
-    @PersistenceContext(unitName = "ssbd04mokPU")
+    @PersistenceContext(unitName = "ssbd01mokPU")
     private EntityManager em;
 
     public AccessLevelFacade() {
