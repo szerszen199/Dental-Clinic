@@ -75,10 +75,10 @@ CREATE TABLE ACCESS_LEVELS
         CONSTRAINT modified_by_id_fk REFERENCES ACCOUNTS (ID)
 
 );
-CREATE INDEX acc_ID_index ON ACCOUNTS (ID);
+CREATE INDEX acc_lvl_ID_index ON ACCESS_LEVELS (id);
 CREATE INDEX acc_lvl_account_id_index ON ACCESS_LEVELS (account_id);
-CREATE INDEX acc_created_by_id_index ON ACCESS_LEVELS (created_by);
-CREATE INDEX acc_modified_by_id_index ON ACCESS_LEVELS (modified_by);
+CREATE INDEX acc_lvl_created_by_id_index ON ACCESS_LEVELS (created_by);
+CREATE INDEX acc_lvl_modified_by_id_index ON ACCESS_LEVELS (modified_by);
 
 CREATE VIEW GLASSFISH_AUTH_VIEW as
 SELECT a.email, a.password, al.level
@@ -154,10 +154,10 @@ CREATE TABLE MEDICAL_DOCUMENTATIONS
         CONSTRAINT modified_by_id_fk REFERENCES ACCOUNTS (ID)
 );
 
-CREATE INDEX documentation_id_index ON MEDICAL_DOCUMENTATIONS (ID);
-CREATE INDEX documentation_patient_id_index ON MEDICAL_DOCUMENTATIONS (patient_ID);
-CREATE INDEX documentation_created_by_id_index ON MEDICAL_DOCUMENTATIONS (created_by);
-CREATE INDEX documentation_modified_by_id_index ON MEDICAL_DOCUMENTATIONS (modified_by);
+CREATE INDEX med_documentation_id_index ON MEDICAL_DOCUMENTATIONS (ID);
+CREATE INDEX med_documentation_patient_id_index ON MEDICAL_DOCUMENTATIONS (patient_ID);
+CREATE INDEX med_documentation_created_by_id_index ON MEDICAL_DOCUMENTATIONS (created_by);
+CREATE INDEX med_documentation_modified_by_id_index ON MEDICAL_DOCUMENTATIONS (modified_by);
 
 
 CREATE SEQUENCE medical_documentations_seq
