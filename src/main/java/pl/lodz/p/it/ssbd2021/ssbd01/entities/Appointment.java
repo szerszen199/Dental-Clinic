@@ -51,7 +51,7 @@ public class Appointment implements Serializable {
     private Long version;
     @Basic(optional = false)
     @Column(name = "creation_date_time")
-    private LocalDateTime creationDateTime;
+    private LocalDateTime creationDateTime = LocalDateTime.now();
     @Column(name = "modification_date_time")
     private LocalDateTime modificationDateTime;
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
