@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -43,7 +42,7 @@ public class Appointment implements Serializable {
     private Boolean canceled;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "rating")
-    private BigDecimal rating;
+    private Float rating;
     @Column(name = "version")
     private Long version;
     @Basic(optional = false)
@@ -128,11 +127,11 @@ public class Appointment implements Serializable {
         this.canceled = canceled;
     }
 
-    public BigDecimal getRating() {
+    public Float getRating() {
         return rating;
     }
 
-    public void setRating(BigDecimal rating) {
+    public void setRating(Float rating) {
         this.rating = rating;
     }
 
