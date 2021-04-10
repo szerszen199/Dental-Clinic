@@ -2,10 +2,10 @@ DROP TABLE if exists PRESCRIPTIONS;
 DROP TABLE if exists DOCUMENTATION_ENTRIES;
 DROP TABLE if exists MEDICAL_DOCUMENTATIONS;
 DROP TABLE IF EXISTS APPOINTMENTS;
+DROP VIEW IF EXISTS GLASSFISH_AUTH_VIEW;
 DROP TABLE IF EXISTS ACCESS_LEVELS;
 DROP TABLE IF EXISTS ACCOUNTS;
 
-DROP VIEW IF EXISTS GLASSFISH_AUTH_VIEW;
 
 DROP SEQUENCE IF EXISTS accounts_seq;
 DROP SEQUENCE IF EXISTS access_levels_seq;
@@ -14,33 +14,32 @@ DROP SEQUENCE IF EXISTS medical_documentations_seq;
 DROP SEQUENCE IF EXISTS documentation_entries_seq;
 DROP SEQUENCE IF EXISTS prescriptions_seq;
 
+
 CREATE TABLE ACCOUNTS
 (
     ID                                        BIGINT PRIMARY KEY,
-    email                                     VARCHAR(100)     NOT NULL
+    email                                     VARCHAR(100)       NOT NULL
         CONSTRAINT acc_email_unique UNIQUE,                                                                                    -- size?
-    password                                  CHAR(64)         NOT NULL,
-    first_name                                VARCHAR(50)      NOT NULL,
-    last_name                                 VARCHAR(80)      NOT NULL,
+    password                                  CHAR(64)           NOT NULL,
+    first_name                                VARCHAR(50)        NOT NULL,
+    last_name                                 VARCHAR(80)        NOT NULL,
     phone_number                              VARCHAR(15),
     pesel                                     CHAR(11)
         CONSTRAINT acc_pesel_unique UNIQUE,
-    active                                    INT DEFAULT 1    NOT NULL
-        CONSTRAINT acc_active_in_1_0 CHECK (active IN (0, 1)),
-    enabled                                   INT DEFAULT 0    NOT NULL
-        CONSTRAINT acc_enabled_in_1_0 CHECK (enabled IN (0, 1)),
-    last_successful_login                     BIGINT,
+    active                                    bool default true  NOT NULL,
+    enabled                                   bool DEFAULT false NOT NULL,
+    last_successful_login                     timestamptz,
     last_successful_login_ip                  VARCHAR(15),
-    last_unsuccessful_login                   BIGINT,
+    last_unsuccessful_login                   timestamptz,
     last_unsuccessful_login_ip                VARCHAR(15),
-    unsuccessful_login_count_since_last_login INT DEFAULT 0
+    unsuccessful_login_count_since_last_login INT  DEFAULT 0
         CONSTRAINT acc_unsuccessful_login_count_since_last_login_gr0 CHECK ( unsuccessful_login_count_since_last_login >= 0 ), -- bigger than 0
     modified_by                               BIGINT
-        CONSTRAINT acc_modified_by_fk REFERENCES ACCOUNTS (ID) NULL,
-    modification_date                         BIGINT,
-    created_by                                BIGINT           NOT NULL
+        CONSTRAINT acc_modified_by_fk REFERENCES ACCOUNTS (ID)   NULL,
+    modification_date                         timestamptz,
+    created_by                                BIGINT             NOT NULL
         CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
-    creation_date                             BIGINT           not null default date_part('epoch', now()),
+    creation_date                             timestamptz        not null default current_timestamp,
     language                                  CHAR(2)
         CONSTRAINT acc_languages_available_values CHECK (language IN ('en', 'pl', 'EN', 'PL')),
     version                                   BIGINT
@@ -59,18 +58,17 @@ CREATE SEQUENCE accounts_seq
 CREATE TABLE ACCESS_LEVELS
 (
     ID                     BIGINT PRIMARY KEY,
-    level                  VARCHAR(16) NOT NULL,
+    level                  VARCHAR(32) NOT NULL,
     account_id             BIGINT      NOT NULL
         CONSTRAINT acc_lvl_account_fk REFERENCES ACCOUNTS (ID),
-    active                 INT         NOT NULL          DEFAULT 1
-        CONSTRAINT acc_lvl_active_in_1_0 CHECK (active IN (0, 1)),
+    active                 bool        NOT NULL DEFAULT true,
     CONSTRAINT acc_lvl_level_account_pair_unique UNIQUE (level, account_id),
     version                BIGINT
         CONSTRAINT acc_lvl_version_gr0 CHECK (version >= 0),
-    creation_date_time     BIGINT      NOT NULL not null default date_part('epoch', now()),
+    creation_date_time     timestamptz NOT NULL default current_timestamp,
     created_by             BIGINT      NOT NULL
         CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
-    modification_date_time BIGINT,
+    modification_date_time timestamptz,
     modified_by            BIGINT
         CONSTRAINT modified_by_id_fk REFERENCES ACCOUNTS (ID)
 
@@ -81,9 +79,9 @@ SELECT a.email, a.password, al.level
 FROM ACCOUNTS a,
      ACCESS_LEVELS al
 WHERE (al.account_id = a.id)
-  AND (a.active = 1)
-  AND (a.enabled = 1)
-  AND (al.active = 1);
+  AND (a.active = true)
+  AND (a.enabled = true)
+  AND (al.active = true);
 
 CREATE INDEX acc_lvl_account_id ON ACCESS_LEVELS (account_id);
 
@@ -103,19 +101,17 @@ CREATE TABLE APPOINTMENTS
         CONSTRAINT appoint_doctor_ID_fk REFERENCES ACCOUNTS (ID)  NOT NULL,
     patient_ID             BIGINT
         CONSTRAINT appoint_patient_ID_fk REFERENCES ACCOUNTS (ID) NULL,
-    appointment_date       BIGINT                                 NOT NULL,
-    confirmed              INT DEFAULT 0                          NOT NULL
-        CONSTRAINT appoint_confirmed_in_1_0 CHECK (confirmed IN (0, 1)),
-    canceled               INT DEFAULT 0                          NOT NULL
-        CONSTRAINT appoint_canceled_in_1_0 CHECK (canceled IN (0, 1)),
+    appointment_date       timestamptz                                 NOT NULL,
+    confirmed              bool DEFAULT false                          NOT NULL,
+    canceled               bool DEFAULT false                          NOT NULL,
     rating                 NUMERIC(2, 1)
         CONSTRAINT appoint_rating_between CHECK (rating >= 0 AND rating <= 5),
     version                BIGINT
         CONSTRAINT appoint_version_gr0 CHECK (version >= 0),
-    creation_date_time     BIGINT                           not null default date_part('epoch', now()),
+    creation_date_time     timestamptz                                 not null default current_timestamp,
     created_by             BIGINT                                 NOT NULL
         CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
-    modification_date_time BIGINT,
+    modification_date_time timestamptz,
     modified_by            BIGINT
         CONSTRAINT modified_by_id_fk REFERENCES ACCOUNTS (ID)
 
@@ -142,10 +138,10 @@ CREATE TABLE MEDICAL_DOCUMENTATIONS
     medications_taken      TEXT,
     version                BIGINT
         CONSTRAINT version_gr0 CHECK (version >= 0),
-    creation_date_time     BIGINT not null default date_part('epoch', now()),
+    creation_date_time     timestamptz not null default current_timestamp,
     created_by             BIGINT NOT NULL
         CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
-    modification_date_time BIGINT,
+    modification_date_time timestamptz,
     modified_by            BIGINT
         CONSTRAINT modified_by_id_fk REFERENCES ACCOUNTS (ID)
 );
@@ -171,10 +167,10 @@ CREATE TABLE DOCUMENTATION_ENTRIES
     to_be_done             TEXT,
     version                BIGINT
         CONSTRAINT version_gr0 CHECK (version >= 0),
-    creation_date_time     BIGINT not null default date_part('epoch', now()),
+    creation_date_time     timestamptz not null default current_timestamp,
     created_by             BIGINT NOT NULL
         CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
-    modification_date_time BIGINT,
+    modification_date_time timestamptz,
     modified_by            BIGINT
         CONSTRAINT modified_by_ID_fk REFERENCES ACCOUNTS (ID)
 );
@@ -199,10 +195,10 @@ CREATE TABLE PRESCRIPTIONS
     medications            TEXT   NOT NULL,
     version                BIGINT
         CONSTRAINT version_gr0 CHECK (version >= 0),
-    creation_date_time     BIGINT not null default date_part('epoch', now()),
+    creation_date_time     timestamptz not null default current_timestamp,
     created_by             BIGINT NOT NULL
         CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
-    modification_date_time BIGINT,
+    modification_date_time timestamptz,
     modified_by            BIGINT
         CONSTRAINT modified_by_id_fk REFERENCES ACCOUNTS (ID)
 );
@@ -307,17 +303,7 @@ GRANT
     UPDATE
     ON PRESCRIPTIONS TO ssbd01mod;
 
-INSERT INTO accounts (id, email, password, first_name, last_name, language, version, enabled, created_by)
-VALUES (-1, 'jkowalski@mail.com', 'b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342', 'Jan', 'Kowalski',
-        'pl', 0, 1, -1),
-       (-2, 'jnowak@mail.com', 'b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342', 'Jan', 'Nowak', 'pl',
-        0, 1, -2),
-       (-3, 'pzdrzalik@mail.com', 'b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342', 'Przemysław',
-        'Zdrzalik', 'pl',
-        0, 1, -2),
-       (-4, 'mseseseko@mail.com', 'b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342', 'Mobutu',
-        'Sese Seko', 'en',
-        0, 1, -4);
+
 
 
 

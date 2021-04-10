@@ -9,10 +9,15 @@ INSERT INTO access_levels (id, level, account_id, active, created_by)
 VALUES (-7, 'level.recep', -2, 0, -1);
 
 
--- uwierzytelnienie
-SELECT *
-FROM accounts
-WHERE (email = 'jnowak@mail.com')
-  AND (password = 'b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342')
-  AND (active = 1)
-  AND (enabled = 1);
+INSERT INTO accounts (id, email, password, first_name, last_name, language, version, enabled, created_by)
+VALUES (-1, 'jkowalski@mail.com', 'b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342', 'Jan', 'Kowalski',
+        'pl', 0, 1, -1),
+       (-2, 'jnowak@mail.com', 'b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342', 'Jan', 'Nowak', 'pl',
+        0, 1, -2),
+       (-3, 'pzdrzalik@mail.com', 'b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342', 'Przemysław',
+        'Zdrzalik', 'pl',
+        0, 1, -2),
+       (-4, 'mseseseko@mail.com', 'b03ddf3ca2e714a6548e7495e2a03f5e824eaac9837cd7f159c67b90fb4b7342', 'Mobutu',
+        'Sese Seko', 'en',
+        0, 1, -4);
+
