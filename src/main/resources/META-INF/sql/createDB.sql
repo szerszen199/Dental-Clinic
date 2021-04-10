@@ -97,6 +97,8 @@ CREATE SEQUENCE access_levels_seq
     NO MAXVALUE
     CACHE 1;
 
+
+
 -- struktura dla MOW
 
 CREATE TABLE APPOINTMENTS
@@ -237,6 +239,7 @@ CREATE SEQUENCE prescriptions_seq
 ALTER TABLE ACCOUNTS
     OWNER TO ssbd01admin;
 
+
 ALTER TABLE ACCESS_LEVELS
     OWNER TO ssbd01admin;
 
@@ -251,26 +254,17 @@ GRANT
     UPDATE
     ON ACCOUNTS TO ssbd01mok;
 
+grant select on accounts_seq to ssbd01mok;
+
 GRANT
     SELECT,
     INSERT,
     UPDATE
     ON ACCESS_LEVELS TO ssbd01mok;
 
-GRANT
-    SELECT
-    ON ACCESS_LEVELS TO ssbd01mow;
-
-GRANT
-    SELECT
-    ON ACCESS_LEVELS TO ssbd01mod;
-
-GRANT
-    SELECT
-    ON ACCESS_LEVELS TO ssbd01auth;
+grant select on access_levels_seq to ssbd01mok;
 
 -- UPRAWNIENIA dla MOW
-
 
 ALTER TABLE APPOINTMENTS
     OWNER TO ssbd01admin;
@@ -281,6 +275,8 @@ GRANT
     UPDATE,
     DELETE
     ON APPOINTMENTS TO ssbd01mow;
+
+grant select on appointments_seq to ssbd01mow;
 
 -- UPRAWNIENIA dla MOD
 
@@ -299,6 +295,8 @@ GRANT
     UPDATE
     ON MEDICAL_DOCUMENTATIONS TO ssbd01mod;
 
+grant select on medical_documentations_seq to ssbd01mod;
+
 GRANT
     SELECT,
     INSERT,
@@ -306,12 +304,16 @@ GRANT
     DELETE
     ON DOCUMENTATION_ENTRIES TO ssbd01mod;
 
+grant select on documentation_entries_seq to ssbd01mod;
+
 GRANT
     SELECT,
     INSERT,
     UPDATE,
     DELETE
     ON PRESCRIPTIONS TO ssbd01mod;
+
+grant select on prescriptions_seq to ssbd01mod;
 
 
 
