@@ -20,6 +20,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+/**
+ * Typ Account.
+ */
 @Entity
 @Table(name = "accounts", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"email"}),
@@ -122,14 +125,33 @@ public class Account implements Serializable {
     
     @Column(name = "version")
     private Long version;
-    
+
+    /**
+     * Tworzy nową instancję klasy Account.
+     */
     public Account() {
     }
 
+    /**
+     * Tworzy nową instancję klasy Account.
+     *
+     * @param id id
+     */
     public Account(Long id) {
         this.id = id;
     }
 
+    /**
+     * Tworzy nową instancję klasy Account reprezentujacej konto użytkownika aplikacji.
+     *
+     * @param id        klucz główny
+     * @param email     adres e-mail przypisany do konta
+     * @param password  hasło konta
+     * @param firstName imię użytkownika
+     * @param lastName  nazwisko użytkownika
+     * @param active    status konta (aktywne)
+     * @param enabled   status konta (potwierdzone)
+     */
     public Account(Long id, String email, String password, String firstName, String lastName, boolean active, boolean enabled) {
         this.id = id;
         this.email = email;

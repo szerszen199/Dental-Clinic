@@ -5,6 +5,9 @@ import javax.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 
+/**
+ * Klasa definiująca główne operacje wykonywane na encjach typu AccessLevel.
+ */
 public class AccessLevelFacade extends AbstractFacade<AccessLevel> {
 
     @PersistenceContext(unitName = "ssbd04mokPU")
@@ -14,6 +17,11 @@ public class AccessLevelFacade extends AbstractFacade<AccessLevel> {
         super(AccessLevel.class);
     }
 
+    /**
+     * Tworzy nową instancję klasy AccessLevelFacade.
+     *
+     * @param entityClass typ obiektowy encji.
+     */
     public AccessLevelFacade(Class<AccessLevel> entityClass) {
         super(entityClass);
     }

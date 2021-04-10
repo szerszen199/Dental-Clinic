@@ -6,11 +6,14 @@ import java.time.LocalDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -29,6 +32,8 @@ public class Appointment implements Serializable {
 
     private static final Long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appointments_generator")
+    @SequenceGenerator(name = "appointments_generator", sequenceName = "appointments_seq")
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
