@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Basic;
@@ -25,104 +24,104 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "accounts", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"email"}),
-    @UniqueConstraint(columnNames = {"pesel"})})
+        @UniqueConstraint(columnNames = {"email"}),
+        @UniqueConstraint(columnNames = {"pesel"})})
 @NamedQueries({
-    @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a"),
-    @NamedQuery(name = "Account.findById", query = "SELECT a FROM Account a WHERE a.id = :id"),
-    @NamedQuery(name = "Account.findByEmail", query = "SELECT a FROM Account a WHERE a.email = :email"),
-    @NamedQuery(name = "Account.findByPassword", query = "SELECT a FROM Account a WHERE a.password = :password"),
-    @NamedQuery(name = "Account.findByFirstName", query = "SELECT a FROM Account a WHERE a.firstName = :firstName"),
-    @NamedQuery(name = "Account.findByLastName", query = "SELECT a FROM Account a WHERE a.lastName = :lastName"),
-    @NamedQuery(name = "Account.findByPhoneNumber", query = "SELECT a FROM Account a WHERE a.phoneNumber = :phoneNumber"),
-    @NamedQuery(name = "Account.findByPesel", query = "SELECT a FROM Account a WHERE a.pesel = :pesel"),
-    @NamedQuery(name = "Account.findByActive", query = "SELECT a FROM Account a WHERE a.active = :active"),
-    @NamedQuery(name = "Account.findByEnabled", query = "SELECT a FROM Account a WHERE a.enabled = :enabled"),
-    @NamedQuery(name = "Account.findByLastSuccessfulLogin", query = "SELECT a FROM Account a WHERE a.lastSuccessfulLogin = :lastSuccessfulLogin"),
-    @NamedQuery(name = "Account.findByLastSuccessfulLoginIp", query = "SELECT a FROM Account a WHERE a.lastSuccessfulLoginIp = :lastSuccessfulLoginIp"),
-    @NamedQuery(name = "Account.findByLastUnsuccessfulLogin", query = "SELECT a FROM Account a WHERE a.lastUnsuccessfulLogin = :lastUnsuccessfulLogin"),
-    @NamedQuery(name = "Account.findByLastUnsuccessfulLoginIp", query = "SELECT a FROM Account a WHERE a.lastUnsuccessfulLoginIp = :lastUnsuccessfulLoginIp"),
-    @NamedQuery(name = "Account.findByUnsuccessfulLoginCountSinceLastLogin", query = "SELECT a FROM Account a WHERE a.unsuccessfulLoginCounter = :unsuccessfulLoginCountSinceLastLogin"),
-    @NamedQuery(name = "Account.findByModificationDate", query = "SELECT a FROM Account a WHERE a.modificationDate = :modificationDate"),
-    @NamedQuery(name = "Account.findByCreationDate", query = "SELECT a FROM Account a WHERE a.creationDate = :creationDate"),
-    @NamedQuery(name = "Account.findByLanguage", query = "SELECT a FROM Account a WHERE a.language = :language"),
-    @NamedQuery(name = "Account.findByVersion", query = "SELECT a FROM Account a WHERE a.version = :version")})
+        @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a"),
+        @NamedQuery(name = "Account.findById", query = "SELECT a FROM Account a WHERE a.id = :id"),
+        @NamedQuery(name = "Account.findByEmail", query = "SELECT a FROM Account a WHERE a.email = :email"),
+        @NamedQuery(name = "Account.findByPassword", query = "SELECT a FROM Account a WHERE a.password = :password"),
+        @NamedQuery(name = "Account.findByFirstName", query = "SELECT a FROM Account a WHERE a.firstName = :firstName"),
+        @NamedQuery(name = "Account.findByLastName", query = "SELECT a FROM Account a WHERE a.lastName = :lastName"),
+        @NamedQuery(name = "Account.findByPhoneNumber", query = "SELECT a FROM Account a WHERE a.phoneNumber = :phoneNumber"),
+        @NamedQuery(name = "Account.findByPesel", query = "SELECT a FROM Account a WHERE a.pesel = :pesel"),
+        @NamedQuery(name = "Account.findByActive", query = "SELECT a FROM Account a WHERE a.active = :active"),
+        @NamedQuery(name = "Account.findByEnabled", query = "SELECT a FROM Account a WHERE a.enabled = :enabled"),
+        @NamedQuery(name = "Account.findByLastSuccessfulLogin", query = "SELECT a FROM Account a WHERE a.lastSuccessfulLogin = :lastSuccessfulLogin"),
+        @NamedQuery(name = "Account.findByLastSuccessfulLoginIp", query = "SELECT a FROM Account a WHERE a.lastSuccessfulLoginIp = :lastSuccessfulLoginIp"),
+        @NamedQuery(name = "Account.findByLastUnsuccessfulLogin", query = "SELECT a FROM Account a WHERE a.lastUnsuccessfulLogin = :lastUnsuccessfulLogin"),
+        @NamedQuery(name = "Account.findByLastUnsuccessfulLoginIp", query = "SELECT a FROM Account a WHERE a.lastUnsuccessfulLoginIp = :lastUnsuccessfulLoginIp"),
+        @NamedQuery(name = "Account.findByUnsuccessfulLoginCountSinceLastLogin", query = "SELECT a FROM Account a WHERE a.unsuccessfulLoginCounter = :unsuccessfulLoginCountSinceLastLogin"),
+        @NamedQuery(name = "Account.findByModificationDate", query = "SELECT a FROM Account a WHERE a.modificationDate = :modificationDate"),
+        @NamedQuery(name = "Account.findByCreationDate", query = "SELECT a FROM Account a WHERE a.creationDate = :creationDate"),
+        @NamedQuery(name = "Account.findByLanguage", query = "SELECT a FROM Account a WHERE a.language = :language"),
+        @NamedQuery(name = "Account.findByVersion", query = "SELECT a FROM Account a WHERE a.version = :version")})
 public class Account implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accounts_generator")
-    @SequenceGenerator(name = "accounts_generator", sequenceName = "accounts_seq")
+    @SequenceGenerator(name = "accounts_generator", sequenceName = "accounts_seq", allocationSize = 1)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Long id;
-    
+
     @Basic(optional = false)
     @Column(name = "email", nullable = false, length = 100)
     private String email;
-    
+
     @Basic(optional = false)
     @Column(name = "password", nullable = false, length = 64)
-    private String password;
+    private Character password;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accountId")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "account")
     private Set<AccessLevel> accessLevels = new HashSet<>();
-    
+
     @Basic(optional = false)
     @Column(name = "first_name", nullable = false, length = 50)
     private String firstName;
-    
+
     @Basic(optional = false)
     @Column(name = "last_name", nullable = false, length = 80)
     private String lastName;
-    
+
     @Column(name = "phone_number", length = 15)
     private String phoneNumber;
-    
+
     @Column(name = "pesel", length = 11)
-    private String pesel;
-    
+    private Character pesel;
+
     @Basic(optional = false)
     @Column(name = "active", nullable = false)
-    private boolean active;
-    
+    private Boolean active;
+
     @Basic(optional = false)
     @Column(name = "enabled", nullable = false)
-    private boolean enabled;
-    
+    private Integer enabled;
+
     @Column(name = "last_successful_login")
-    private LocalDateTime lastSuccessfulLogin;
-    
+    private Long lastSuccessfulLogin;
+
     @Column(name = "last_successful_login_ip", length = 15)
     private String lastSuccessfulLoginIp;
-    
+
     @Column(name = "last_unsuccessful_login")
-    private LocalDateTime lastUnsuccessfulLogin;
-    
+    private Long lastUnsuccessfulLogin;
+
     @Column(name = "last_unsuccessful_login_ip", length = 15)
     private String lastUnsuccessfulLoginIp;
-    
+
     @Column(name = "unsuccessful_login_count_since_last_login")
     private Integer unsuccessfulLoginCounter;
 
     @Column(name = "creation_date")
-    private LocalDateTime creationDate;
+    private Long creationDate;
 
     @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Account createdBy;
-    
+
     @Column(name = "modification_date")
-    private LocalDateTime modificationDate;
+    private Long modificationDate;
 
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     @ManyToOne
     private Account modifiedBy;
-    
+
     @Column(name = "language", length = 2)
-    private String language;
-    
+    private Character language;
+
     @Column(name = "version")
     private Long version;
 
@@ -152,7 +151,7 @@ public class Account implements Serializable {
      * @param active    status konta (aktywne)
      * @param enabled   status konta (potwierdzone)
      */
-    public Account(Long id, String email, String password, String firstName, String lastName, boolean active, boolean enabled) {
+    public Account(Long id, String email, Character password, String firstName, String lastName, Boolean active, Integer enabled) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -178,11 +177,11 @@ public class Account implements Serializable {
         this.email = email;
     }
 
-    public String getPassword() {
+    public Character getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(Character password) {
         this.password = password;
     }
 
@@ -210,35 +209,35 @@ public class Account implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getPesel() {
+    public Character getPesel() {
         return pesel;
     }
 
-    public void setPesel(String pesel) {
+    public void setPesel(Character pesel) {
         this.pesel = pesel;
     }
 
-    public boolean getActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 
-    public boolean getEnabled() {
+    public Integer getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(Integer enabled) {
         this.enabled = enabled;
     }
 
-    public LocalDateTime getLastSuccessfulLogin() {
+    public Long getLastSuccessfulLogin() {
         return lastSuccessfulLogin;
     }
 
-    public void setLastSuccessfulLogin(LocalDateTime lastSuccessfulLogin) {
+    public void setLastSuccessfulLogin(Long lastSuccessfulLogin) {
         this.lastSuccessfulLogin = lastSuccessfulLogin;
     }
 
@@ -250,11 +249,11 @@ public class Account implements Serializable {
         this.lastSuccessfulLoginIp = lastSuccessfulLoginIp;
     }
 
-    public LocalDateTime getLastUnsuccessfulLogin() {
+    public Long getLastUnsuccessfulLogin() {
         return lastUnsuccessfulLogin;
     }
 
-    public void setLastUnsuccessfulLogin(LocalDateTime lastUnsuccessfulLogin) {
+    public void setLastUnsuccessfulLogin(Long lastUnsuccessfulLogin) {
         this.lastUnsuccessfulLogin = lastUnsuccessfulLogin;
     }
 
@@ -274,27 +273,27 @@ public class Account implements Serializable {
         this.unsuccessfulLoginCounter = unsuccessfulLoginCounter;
     }
 
-    public LocalDateTime getModificationDate() {
+    public Long getModificationDate() {
         return modificationDate;
     }
 
-    public void setModificationDate(LocalDateTime modificationDate) {
+    public void setModificationDate(Long modificationDate) {
         this.modificationDate = modificationDate;
     }
 
-    public LocalDateTime getCreationDate() {
+    public Long getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(Long creationDate) {
         this.creationDate = creationDate;
     }
 
-    public String getLanguage() {
+    public Character getLanguage() {
         return language;
     }
 
-    public void setLanguage(String language) {
+    public void setLanguage(Character language) {
         this.language = language;
     }
 
@@ -350,5 +349,5 @@ public class Account implements Serializable {
     public String toString() {
         return "pl.lodz.p.it.ssbd2021.ssbd01.entities.Account[ id=" + id + " ]";
     }
-    
+
 }

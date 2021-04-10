@@ -32,7 +32,7 @@ public class Prescription implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prescriptions_generator")
-    @SequenceGenerator(name = "prescriptions_generator", sequenceName = "prescriptions_seq")
+    @SequenceGenerator(name = "prescriptions_generator", sequenceName = "prescriptions_seq", allocationSize = 1)
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;

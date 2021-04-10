@@ -39,7 +39,7 @@ public class MedicalDocumentation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medical_documentations_generator")
-    @SequenceGenerator(name = "medical_documentations_generator", sequenceName = "medical_documentations_seq")
+    @SequenceGenerator(name = "medical_documentations_generator", sequenceName = "medical_documentations_seq", allocationSize = 1)
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
@@ -69,7 +69,7 @@ public class MedicalDocumentation implements Serializable {
     @ManyToOne(optional = false)
     private Account patient;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "documentationId")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "documentation")
     private Collection<DocumentationEntry> documentationEntryCollection = new ArrayList<DocumentationEntry>();
 
     @Column(name = "version")

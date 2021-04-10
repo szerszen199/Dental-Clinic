@@ -1,8 +1,8 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,10 +37,14 @@ public class AccessLevel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "access_levels_generator")
-    @SequenceGenerator(name = "access_levels_generator", sequenceName = "access_levels_seq")
+    @SequenceGenerator(name = "access_levels_generator", sequenceName = "access_levels_seq", allocationSize = 1)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Long id;
+
+    @JoinColumn(name = "account_id", referencedColumnName = "id", updatable = false)
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+    private Account account;
 
     @Basic(optional = false)
     @Column(name = "level", nullable = false, length = 16)
@@ -48,18 +52,18 @@ public class AccessLevel implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "active", nullable = false)
-    private boolean active;
+    private Integer active;
 
     @Basic(optional = false)
     @Column(name = "creation_date_time", nullable = false)
-    private LocalDateTime creationDateTime;
+    private Long creationDateTime;
 
     @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Account createdBy;
 
     @Column(name = "modification_date_time")
-    private LocalDateTime modificationDateTime;
+    private Long modificationDateTime;
 
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     @ManyToOne
@@ -87,12 +91,14 @@ public class AccessLevel implements Serializable {
      * Tworzy nową instancję klasy AccessLevel.
      *
      * @param id               klucz glowny
+     * @param account          klucz obcy konto
      * @param level            nazwa poziomu dostepu
      * @param active           status
      * @param creationDateTime data stworzenia
      */
-    public AccessLevel(Long id, String level, boolean active, LocalDateTime creationDateTime) {
+    public AccessLevel(Long id,Account account, String level, Integer active, Long creationDateTime) {
         this.id = id;
+        this.account = account;
         this.level = level;
         this.active = active;
         this.creationDateTime = creationDateTime;
@@ -106,6 +112,10 @@ public class AccessLevel implements Serializable {
         this.id = id;
     }
 
+    public Account getAccount() {
+        return account;
+    }
+
     public String getLevel() {
         return level;
     }
@@ -114,11 +124,11 @@ public class AccessLevel implements Serializable {
         this.level = level;
     }
 
-    public boolean getActive() {
+    public Integer getActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Integer active) {
         this.active = active;
     }
 
@@ -130,19 +140,19 @@ public class AccessLevel implements Serializable {
         this.version = version;
     }
 
-    public LocalDateTime getCreationDateTime() {
+    public Long getCreationDateTime() {
         return creationDateTime;
     }
 
-    public void setCreationDateTime(LocalDateTime creationDateTime) {
+    public void setCreationDateTime(Long creationDateTime) {
         this.creationDateTime = creationDateTime;
     }
 
-    public LocalDateTime getModificationDateTime() {
+    public Long getModificationDateTime() {
         return modificationDateTime;
     }
 
-    public void setModificationDateTime(LocalDateTime modificationDateTime) {
+    public void setModificationDateTime(Long modificationDateTime) {
         this.modificationDateTime = modificationDateTime;
     }
 
@@ -172,11 +182,11 @@ public class AccessLevel implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (! (object instanceof AccessLevel)) {
+        if (!(object instanceof AccessLevel)) {
             return false;
         }
         AccessLevel other = (AccessLevel) object;
-        if ((this.id == null && other.id != null) || (this.id != null && ! this.id.equals(other.id))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;

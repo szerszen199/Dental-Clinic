@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,10 +34,14 @@ public class DocumentationEntry implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "documentation_entries_generator")
-    @SequenceGenerator(name = "documentation_entries_generator", sequenceName = "documentation_entries_seq")
+    @SequenceGenerator(name = "documentation_entries_generator", sequenceName = "documentation_entries_seq", allocationSize = 1)
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
+
+    @JoinColumn(name = "documentation_id", referencedColumnName = "id", updatable = false)
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+    private MedicalDocumentation documentation;
 
     @Column(name = "was_done")
     private String wasDone;
@@ -85,10 +90,12 @@ public class DocumentationEntry implements Serializable {
      * Tworzy nową instancję klasy DocumentationEntry.
      *
      * @param id               klucz glowny
+     * @param medicalDocumentation klucz obcy dokumentacja
      * @param creationDateTime data utworzenia
      */
-    public DocumentationEntry(Long id, Long creationDateTime) {
+    public DocumentationEntry(Long id,MedicalDocumentation medicalDocumentation, Long creationDateTime) {
         this.id = id;
+        this.documentation = medicalDocumentation;
         this.creationDateTime = creationDateTime;
     }
 
@@ -98,6 +105,10 @@ public class DocumentationEntry implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public MedicalDocumentation getDocumentation() {
+        return documentation;
     }
 
     public String getWasDone() {

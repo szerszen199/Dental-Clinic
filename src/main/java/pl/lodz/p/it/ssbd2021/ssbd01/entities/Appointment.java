@@ -34,7 +34,7 @@ public class Appointment implements Serializable {
     private static final Long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appointments_generator")
-    @SequenceGenerator(name = "appointments_generator", sequenceName = "appointments_seq")
+    @SequenceGenerator(name = "appointments_generator", sequenceName = "appointments_seq", allocationSize = 1)
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
