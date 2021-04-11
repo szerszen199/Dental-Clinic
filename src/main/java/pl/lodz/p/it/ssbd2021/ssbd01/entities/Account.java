@@ -43,11 +43,11 @@ import javax.persistence.UniqueConstraint;
         @NamedQuery(name = "Account.findByLastUnsuccessfulLogin", query = "SELECT a FROM Account a WHERE a.lastUnsuccessfulLogin = :lastUnsuccessfulLogin"),
         @NamedQuery(name = "Account.findByLastUnsuccessfulLoginIp", query = "SELECT a FROM Account a WHERE a.lastUnsuccessfulLoginIp = :lastUnsuccessfulLoginIp"),
         @NamedQuery(name = "Account.findByUnsuccessfulLoginCountSinceLastLogin", query = "SELECT a FROM Account a WHERE a.unsuccessfulLoginCounter = :unsuccessfulLoginCountSinceLastLogin"),
-        @NamedQuery(name = "Account.findByModificationDate", query = "SELECT a FROM Account a WHERE a.modificationDate = :modificationDate"),
-        @NamedQuery(name = "Account.findByCreationDate", query = "SELECT a FROM Account a WHERE a.creationDate = :creationDate"),
+        @NamedQuery(name = "Account.findByModificationDate", query = "SELECT a FROM Account a WHERE a.modificationDateTime = :modificationDate"),
+        @NamedQuery(name = "Account.findByCreationDate", query = "SELECT a FROM Account a WHERE a.creationDateTime = :creationDate"),
         @NamedQuery(name = "Account.findByLanguage", query = "SELECT a FROM Account a WHERE a.language = :language"),
         @NamedQuery(name = "Account.findByVersion", query = "SELECT a FROM Account a WHERE a.version = :version")})
-public class Account implements Serializable {
+public class Account extends AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -107,25 +107,8 @@ public class Account implements Serializable {
     @Column(name = "unsuccessful_login_count_since_last_login")
     private Integer unsuccessfulLoginCounter;
 
-    @Column(name = "creation_date")
-    private LocalDateTime creationDate;
-
-    @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false) // TODO
-    private Account createdBy;
-
-    @Column(name = "modification_date")
-    private LocalDateTime modificationDate;
-
-    @JoinColumn(name = "modified_by", referencedColumnName = "id")
-    @ManyToOne //TODO
-    private Account modifiedBy;
-
     @Column(name = "language", length = 2)
     private Character language;
-
-    @Column(name = "version")
-    private Long version;
 
     /**
      * Tworzy nową instancję klasy Account.
@@ -152,6 +135,7 @@ public class Account implements Serializable {
         this.enabled = enabled;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -260,21 +244,6 @@ public class Account implements Serializable {
         this.unsuccessfulLoginCounter = unsuccessfulLoginCounter;
     }
 
-    public LocalDateTime getModificationDate() {
-        return modificationDate;
-    }
-
-    public void setModificationDate(LocalDateTime modificationDate) {
-        this.modificationDate = modificationDate;
-    }
-
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
-    }
 
     public Character getLanguage() {
         return language;
@@ -282,54 +251,6 @@ public class Account implements Serializable {
 
     public void setLanguage(Character language) {
         this.language = language;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
-    public Set<AccessLevel> getAccessLevelCollection() {
-        return accessLevels;
-    }
-
-    public Account getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(Account modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-
-    public Account getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(Account createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Account)) {
-            return false;
-        }
-        Account other = (Account) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
     }
 
     @Override

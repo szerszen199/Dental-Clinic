@@ -37,7 +37,7 @@ import javax.persistence.UniqueConstraint;
         @NamedQuery(name = "AccessLevel.findByVersion", query = "SELECT a FROM AccessLevel a WHERE a.version = :version"),
         @NamedQuery(name = "AccessLevel.findByCreationDateTime", query = "SELECT a FROM AccessLevel a WHERE a.creationDateTime = :creationDateTime"),
         @NamedQuery(name = "AccessLevel.findByModificationDateTime", query = "SELECT a FROM AccessLevel a WHERE a.modificationDateTime = :modificationDateTime")})
-public class AccessLevel implements Serializable {
+public class AccessLevel extends AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -56,24 +56,6 @@ public class AccessLevel implements Serializable {
     @Column(name = "active", nullable = false)
     private Boolean active;
 
-    @Basic(optional = false)
-    @Column(name = "creation_date_time", nullable = false)
-    private LocalDateTime creationDateTime;
-
-    @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false) //TODO
-    private Account createdBy;
-
-    @Column(name = "modification_date_time")
-    private LocalDateTime modificationDateTime;
-
-    @JoinColumn(name = "modified_by", referencedColumnName = "id")
-    @ManyToOne //TODO
-    private Account modifiedBy;
-
-    @Column(name = "version")
-    private Long version;
-
     /**
      * Tworzy nową instancję klasy Access level.
      */
@@ -91,9 +73,9 @@ public class AccessLevel implements Serializable {
 
         this.level = level;
         this.active = active;
-        this.creationDateTime = creationDateTime;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -112,66 +94,6 @@ public class AccessLevel implements Serializable {
 
     public void setActive(Boolean active) {
         this.active = active;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
-    public LocalDateTime getCreationDateTime() {
-        return creationDateTime;
-    }
-
-    public void setCreationDateTime(LocalDateTime creationDateTime) {
-        this.creationDateTime = creationDateTime;
-    }
-
-    public LocalDateTime getModificationDateTime() {
-        return modificationDateTime;
-    }
-
-    public void setModificationDateTime(LocalDateTime modificationDateTime) {
-        this.modificationDateTime = modificationDateTime;
-    }
-
-    public Account getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(Account createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Account getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(Account modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof AccessLevel)) {
-            return false;
-        }
-        AccessLevel other = (AccessLevel) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
     }
 
     @Override
