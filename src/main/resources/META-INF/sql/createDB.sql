@@ -123,10 +123,10 @@ CREATE TABLE APPOINTMENTS
         CONSTRAINT appoint_rating_between CHECK (rating >= 0 AND rating <= 5),
     version                     BIGINT
         CONSTRAINT appoint_version_gr0 CHECK (version >= 0),
-    creation_date_time_time     timestamptz                      not null default current_timestamp,
+    creation_date_time     timestamptz                      not null default current_timestamp,
     created_by                  BIGINT                           NOT NULL
         CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
-    modification_date_time_time timestamptz,
+    modification_date_time timestamptz,
     modified_by                 BIGINT
         CONSTRAINT modified_by_id_fk REFERENCES ACCOUNTS (ID)
 
