@@ -206,10 +206,10 @@ CREATE SEQUENCE documentation_entries_seq
 CREATE TABLE PRESCRIPTIONS
 (
     ID                     BIGINT PRIMARY KEY,
-    patient_ID             BIGINT NOT NULL
-        CONSTRAINT patient_id_fk REFERENCES ACCOUNTS (ID),
-    doctor_ID              BIGINT NOT NULL
-        CONSTRAINT doctor_id_fk REFERENCES ACCOUNTS (ID),
+    patient_access_level_ID             BIGINT NOT NULL
+        CONSTRAINT patient_access_level_id_fk REFERENCES ACCESS_LEVELS (ID),
+    doctor_access_level_ID              BIGINT NOT NULL
+        CONSTRAINT doctor_access_level_id_fk REFERENCES ACCESS_LEVELS (ID),
     medications            TEXT   NOT NULL,
     version                BIGINT
         CONSTRAINT version_gr0 CHECK (version >= 0),
