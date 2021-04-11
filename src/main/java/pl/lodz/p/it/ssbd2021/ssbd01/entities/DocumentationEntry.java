@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -51,10 +52,10 @@ public class DocumentationEntry implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "creation_date_time")
-    private Long creationDateTime;
+    private LocalDateTime creationDateTime;
 
     @Column(name = "modification_date_time")
-    private Long modificationDateTime;
+    private LocalDateTime modificationDateTime;
 
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     @ManyToOne(optional = false)
@@ -93,7 +94,7 @@ public class DocumentationEntry implements Serializable {
      * @param medicalDocumentation klucz obcy dokumentacja
      * @param creationDateTime data utworzenia
      */
-    public DocumentationEntry(Long id,MedicalDocumentation medicalDocumentation, Long creationDateTime) {
+    public DocumentationEntry(Long id, MedicalDocumentation medicalDocumentation, LocalDateTime creationDateTime) {
         this.id = id;
         this.documentation = medicalDocumentation;
         this.creationDateTime = creationDateTime;
@@ -135,19 +136,19 @@ public class DocumentationEntry implements Serializable {
         this.version = version;
     }
 
-    public Long getCreationDateTime() {
+    public LocalDateTime getCreationDateTime() {
         return creationDateTime;
     }
 
-    public void setCreationDateTime(Long creationDateTime) {
+    public void setCreationDateTime(LocalDateTime creationDateTime) {
         this.creationDateTime = creationDateTime;
     }
 
-    public Long getModificationDateTime() {
+    public LocalDateTime getModificationDateTime() {
         return modificationDateTime;
     }
 
-    public void setModificationDateTime(Long modificationDateTime) {
+    public void setModificationDateTime(LocalDateTime modificationDateTime) {
         this.modificationDateTime = modificationDateTime;
     }
 

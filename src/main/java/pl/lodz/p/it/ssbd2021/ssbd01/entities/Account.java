@@ -111,14 +111,14 @@ public class Account implements Serializable {
     private LocalDateTime creationDate;
 
     @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false) // TODO
     private Account createdBy;
 
     @Column(name = "modification_date")
     private LocalDateTime modificationDate;
 
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
-    @OneToOne
+    @ManyToOne //TODO
     private Account modifiedBy;
 
     @Column(name = "language", length = 2)

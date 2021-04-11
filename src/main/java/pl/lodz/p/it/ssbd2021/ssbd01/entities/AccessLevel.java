@@ -61,14 +61,14 @@ public class AccessLevel implements Serializable {
     private LocalDateTime creationDateTime;
 
     @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false) //TODO
     private Account createdBy;
 
     @Column(name = "modification_date_time")
     private LocalDateTime modificationDateTime;
 
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
-    @OneToOne
+    @ManyToOne //TODO
     private Account modifiedBy;
 
     @Column(name = "version")

@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -52,10 +53,10 @@ public class MedicalDocumentation implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "creation_date_time")
-    private Long creationDateTime;
+    private LocalDateTime creationDateTime;
 
     @Column(name = "modification_date_time")
-    private Long modificationDateTime;
+    private LocalDateTime modificationDateTime;
 
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     @ManyToOne(optional = false)
@@ -96,7 +97,7 @@ public class MedicalDocumentation implements Serializable {
      * @param id               klucz glowny
      * @param creationDateTime data utworzenia
      */
-    public MedicalDocumentation(Long id, Long creationDateTime) {
+    public MedicalDocumentation(Long id, LocalDateTime creationDateTime) {
         this.id = id;
         this.creationDateTime = creationDateTime;
     }
@@ -133,19 +134,19 @@ public class MedicalDocumentation implements Serializable {
         this.version = version;
     }
 
-    public Long getCreationDateTime() {
+    public LocalDateTime getCreationDateTime() {
         return creationDateTime;
     }
 
-    public void setCreationDateTime(Long creationDateTime) {
+    public void setCreationDateTime(LocalDateTime creationDateTime) {
         this.creationDateTime = creationDateTime;
     }
 
-    public Long getModificationDateTime() {
+    public LocalDateTime getModificationDateTime() {
         return modificationDateTime;
     }
 
-    public void setModificationDateTime(Long modificationDateTime) {
+    public void setModificationDateTime(LocalDateTime modificationDateTime) {
         this.modificationDateTime = modificationDateTime;
     }
 

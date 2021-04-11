@@ -13,9 +13,16 @@
     <persistence-unit name="ssbd01authPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <jta-data-source>java:app/jdbc/ssbd01auth</jta-data-source>
+        <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel</class>
+        <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.Account</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
-            <!--        TODO: Properties?-->
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+            <property name="hibernate.transaction.jta.platform"
+                      value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
+            <property name="hibernate.id.new_generator_mappings" value="true"/>
         </properties>
     </persistence-unit>
     <persistence-unit name="ssbd01mokPU" transaction-type="JTA">
@@ -37,7 +44,8 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <jta-data-source>java:app/jdbc/ssbd01mow</jta-data-source>
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment</class>
-        <!--POMIESZNE KLASY-->
+        <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel</class>
+        <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.Account</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
@@ -54,6 +62,8 @@
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation</class>
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry</class>
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription</class>
+        <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel</class>
+        <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.Account</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>

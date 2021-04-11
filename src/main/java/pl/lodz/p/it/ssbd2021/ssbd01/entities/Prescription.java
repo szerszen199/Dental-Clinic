@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,10 +44,10 @@ public class Prescription implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "creation_date_time")
-    private Long creationDateTime;
+    private LocalDateTime creationDateTime;
 
     @Column(name = "modification_date_time")
-    private Long modificationDateTime;
+    private LocalDateTime modificationDateTime;
 
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     @ManyToOne(optional = false)
@@ -89,7 +90,7 @@ public class Prescription implements Serializable {
      * @param medications      przepisane leki
      * @param creationDateTime data utworzenia
      */
-    public Prescription(Long id, String medications, Long creationDateTime) {
+    public Prescription(Long id, String medications, LocalDateTime creationDateTime) {
         this.id = id;
         this.medications = medications;
         this.creationDateTime = creationDateTime;
@@ -119,19 +120,19 @@ public class Prescription implements Serializable {
         this.version = version;
     }
 
-    public Long getCreationDateTime() {
+    public LocalDateTime getCreationDateTime() {
         return creationDateTime;
     }
 
-    public void setCreationDateTime(Long creationDateTime) {
+    public void setCreationDateTime(LocalDateTime creationDateTime) {
         this.creationDateTime = creationDateTime;
     }
 
-    public Long getModificationDateTime() {
+    public LocalDateTime getModificationDateTime() {
         return modificationDateTime;
     }
 
-    public void setModificationDateTime(Long modificationDateTime) {
+    public void setModificationDateTime(LocalDateTime modificationDateTime) {
         this.modificationDateTime = modificationDateTime;
     }
 
