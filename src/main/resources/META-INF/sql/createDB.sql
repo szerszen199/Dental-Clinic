@@ -222,8 +222,8 @@ CREATE TABLE PRESCRIPTIONS
 );
 
 CREATE INDEX prescription_id_index ON PRESCRIPTIONS (ID);
-CREATE INDEX prescription_doctor_id_index ON PRESCRIPTIONS (patient_ID);
-CREATE INDEX prescription_patient_index ON PRESCRIPTIONS (doctor_ID);
+CREATE INDEX prescription_doctor_id_index ON PRESCRIPTIONS (patient_access_level_ID);
+CREATE INDEX prescription_patient_index ON PRESCRIPTIONS (doctor_access_level_ID);
 CREATE INDEX prescription_created_by_id_index ON PRESCRIPTIONS (created_by);
 CREATE INDEX prescription_modified_by_id_index ON PRESCRIPTIONS (modified_by);
 
