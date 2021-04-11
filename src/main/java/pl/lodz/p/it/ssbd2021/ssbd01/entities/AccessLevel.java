@@ -44,10 +44,6 @@ public class AccessLevel implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @JoinColumn(name = "account_id", referencedColumnName = "id", updatable = false)
-    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
-    private Account account;
-
     @Basic(optional = false)
     @Column(name = "level", nullable = false, length = 16)
     private String level;
@@ -83,24 +79,12 @@ public class AccessLevel implements Serializable {
     /**
      * Tworzy nową instancję klasy AccessLevel.
      *
-     * @param id klucz glowny
-     */
-    public AccessLevel(Long id) {
-        this.id = id;
-    }
-
-    /**
-     * Tworzy nową instancję klasy AccessLevel.
-     *
-     * @param id               klucz glowny
-     * @param account          klucz obcy konto
      * @param level            nazwa poziomu dostepu
      * @param active           status
      * @param creationDateTime data stworzenia
      */
-    public AccessLevel(Long id, Account account, String level, Boolean active, LocalDateTime creationDateTime) {
-        this.id = id;
-        this.account = account;
+    public AccessLevel(String level, Boolean active, LocalDateTime creationDateTime) {
+
         this.level = level;
         this.active = active;
         this.creationDateTime = creationDateTime;
@@ -108,14 +92,6 @@ public class AccessLevel implements Serializable {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Account getAccount() {
-        return account;
     }
 
     public String getLevel() {

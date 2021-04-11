@@ -67,7 +67,7 @@ public class Account implements Serializable {
     @Column(name = "password", nullable = false, length = 64)
     private Character password;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "account")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<AccessLevel> accessLevels = new HashSet<>();
 
     @Basic(optional = false)
@@ -134,18 +134,8 @@ public class Account implements Serializable {
     }
 
     /**
-     * Tworzy nową instancję klasy Account.
-     *
-     * @param id id
-     */
-    public Account(Long id) {
-        this.id = id;
-    }
-
-    /**
      * Tworzy nową instancję klasy Account reprezentujacej konto użytkownika aplikacji.
      *
-     * @param id        klucz główny
      * @param email     adres e-mail przypisany do konta
      * @param password  hasło konta
      * @param firstName imię użytkownika
@@ -153,8 +143,7 @@ public class Account implements Serializable {
      * @param active    status konta (aktywne)
      * @param enabled   status konta (potwierdzone)
      */
-    public Account(Long id, String email, Character password, String firstName, String lastName, Boolean active, Boolean enabled) {
-        this.id = id;
+    public Account(String email, Character password, String firstName, String lastName, Boolean active, Boolean enabled) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
@@ -165,10 +154,6 @@ public class Account implements Serializable {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getEmail() {

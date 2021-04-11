@@ -76,25 +76,14 @@ public class Appointment implements Serializable {
     }
 
     /**
-     * Tworzy nową instancję  Appointment.
-     *
-     * @param id klucz glowny
-     */
-    public Appointment(Long id) {
-        this.id = id;
-    }
-
-    /**
      * Tworzy nowa instancje  Appointment.
      *
-     * @param id               klucz glowny
      * @param appointmentDate  data wizyty
      * @param confirmed        status wizyty (potwierdzone)
      * @param canceled         status wizyty (odwolane)
      * @param creationDateTime data utworzenia
      */
-    public Appointment(Long id, LocalDateTime appointmentDate, Boolean confirmed, Boolean canceled, LocalDateTime creationDateTime) {
-        this.id = id;
+    public Appointment(LocalDateTime appointmentDate, Boolean confirmed, Boolean canceled, LocalDateTime creationDateTime) {
         this.appointmentDate = appointmentDate;
         this.confirmed = confirmed;
         this.canceled = canceled;
@@ -103,10 +92,6 @@ public class Appointment implements Serializable {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public LocalDateTime getAppointmentDate() {

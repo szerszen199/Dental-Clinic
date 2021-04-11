@@ -70,7 +70,7 @@ public class MedicalDocumentation implements Serializable {
     @ManyToOne(optional = false)
     private Account patient;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "documentation")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Collection<DocumentationEntry> documentationEntryCollection = new ArrayList<DocumentationEntry>();
 
     @Column(name = "version")
@@ -85,29 +85,14 @@ public class MedicalDocumentation implements Serializable {
     /**
      * Tworzy nową instancję klasy MedicalDocumentation.
      *
-     * @param id klucz glowny
-     */
-    public MedicalDocumentation(Long id) {
-        this.id = id;
-    }
-
-    /**
-     * Tworzy nową instancję klasy MedicalDocumentation.
-     *
-     * @param id               klucz glowny
      * @param creationDateTime data utworzenia
      */
-    public MedicalDocumentation(Long id, LocalDateTime creationDateTime) {
-        this.id = id;
+    public MedicalDocumentation(LocalDateTime creationDateTime) {
         this.creationDateTime = creationDateTime;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getAllergies() {

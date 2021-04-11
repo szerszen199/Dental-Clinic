@@ -1,10 +1,9 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.facades;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 
 /**
  * Klasa definiująca główne operacje wykonywane na encjach typu AccessLevel.

@@ -77,31 +77,16 @@ public class Prescription implements Serializable {
     /**
      * Tworzy nową instancję klasy Prescription.
      *
-     * @param id klucz glowny
-     */
-    public Prescription(Long id) {
-        this.id = id;
-    }
-
-    /**
-     * Tworzy nową instancję klasy Prescription.
-     *
-     * @param id               klucz glowny
      * @param medications      przepisane leki
      * @param creationDateTime data utworzenia
      */
-    public Prescription(Long id, String medications, LocalDateTime creationDateTime) {
-        this.id = id;
+    public Prescription(String medications, LocalDateTime creationDateTime) {
         this.medications = medications;
         this.creationDateTime = creationDateTime;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getMedications() {
