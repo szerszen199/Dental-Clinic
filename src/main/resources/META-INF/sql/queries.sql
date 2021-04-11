@@ -15,3 +15,4 @@ WHERE account_id = (SELECT id FROM accounts WHERE email = 'jnowak@mail.com')
 SELECT *
 FROM access_levels
 WHERE account_id = (SELECT id FROM accounts WHERE email = 'jnowak@mail.com');
+
