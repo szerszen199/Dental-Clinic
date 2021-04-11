@@ -254,7 +254,11 @@ GRANT
     UPDATE
     ON ACCOUNTS TO ssbd01mok;
 
+GRANT SELECT on ACCOUNTS to ssbd01mok, ssbd01mow;
+
 grant select on accounts_seq to ssbd01mok;
+grant select on accounts_seq to ssbd01mod;
+grant select on accounts_seq to ssbd01mow;
 
 GRANT
     SELECT,
@@ -262,7 +266,11 @@ GRANT
     UPDATE
     ON ACCESS_LEVELS TO ssbd01mok;
 
+GRANT SELECT on ACCESS_LEVELS to ssbd01mok, ssbd01mow;
+
 grant select on access_levels_seq to ssbd01mok;
+grant select on access_levels_seq to ssbd01mod;
+grant select on access_levels_seq to ssbd01mow;
 
 -- UPRAWNIENIA dla MOW
 
