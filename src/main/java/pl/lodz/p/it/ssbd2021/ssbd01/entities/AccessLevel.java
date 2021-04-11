@@ -3,17 +3,19 @@ package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -45,7 +47,7 @@ public class AccessLevel implements Serializable {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "level", nullable = false, length = 16)
+    @Column(name = "level", nullable = false, length = 32)
     private String level;
 
     @Basic(optional = false)

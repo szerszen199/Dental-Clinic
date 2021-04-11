@@ -16,7 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -64,10 +63,11 @@ public class Account implements Serializable {
     private String email;
 
     @Basic(optional = false)
-    @Column(name = "password", nullable = false, length = 64)
-    private Character password;
+    @Column(name = "password", columnDefinition = "bpchar", nullable = false, length = 64)
+    private String password;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name = "account_id")
     private Set<AccessLevel> accessLevels = new HashSet<>();
 
     @Basic(optional = false)
@@ -81,8 +81,8 @@ public class Account implements Serializable {
     @Column(name = "phone_number", length = 15)
     private String phoneNumber;
 
-    @Column(name = "pesel", length = 11)
-    private Character pesel;
+    @Column(name = "pesel", columnDefinition = "bpchar", length = 11)
+    private String pesel;
 
     @Basic(optional = false)
     @Column(name = "active", nullable = false)
@@ -143,7 +143,7 @@ public class Account implements Serializable {
      * @param active    status konta (aktywne)
      * @param enabled   status konta (potwierdzone)
      */
-    public Account(String email, Character password, String firstName, String lastName, Boolean active, Boolean enabled) {
+    public Account(String email, String password, String firstName, String lastName, Boolean active, Boolean enabled) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
@@ -164,11 +164,11 @@ public class Account implements Serializable {
         this.email = email;
     }
 
-    public Character getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(Character password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -196,11 +196,11 @@ public class Account implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public Character getPesel() {
+    public String getPesel() {
         return pesel;
     }
 
-    public void setPesel(Character pesel) {
+    public void setPesel(String pesel) {
         this.pesel = pesel;
     }
 

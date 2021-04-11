@@ -13,8 +13,6 @@
     <persistence-unit name="ssbd01authPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <jta-data-source>java:app/jdbc/ssbd01auth</jta-data-source>
-        <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel</class>
-        <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.Account</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>

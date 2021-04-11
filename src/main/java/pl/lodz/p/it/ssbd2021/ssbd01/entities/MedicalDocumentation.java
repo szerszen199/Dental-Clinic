@@ -71,6 +71,7 @@ public class MedicalDocumentation implements Serializable {
     private Account patient;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name = "documentation_id")
     private Collection<DocumentationEntry> documentationEntryCollection = new ArrayList<DocumentationEntry>();
 
     @Column(name = "version")
