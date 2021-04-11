@@ -12,29 +12,28 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 
 @Entity
 @Table(name = "appointments")
 @NamedQueries({
-    @NamedQuery(name = "Appointment.findAll", query = "SELECT a FROM Appointment a"),
-    @NamedQuery(name = "Appointment.findById", query = "SELECT a FROM Appointment a WHERE a.id = :id"),
-    @NamedQuery(name = "Appointment.findByAppointmentDate", query = "SELECT a FROM Appointment a WHERE a.appointmentDate = :appointmentDate"),
-    @NamedQuery(name = "Appointment.findByConfirmed", query = "SELECT a FROM Appointment a WHERE a.confirmed = :confirmed"),
-    @NamedQuery(name = "Appointment.findByCanceled", query = "SELECT a FROM Appointment a WHERE a.canceled = :canceled"),
-    @NamedQuery(name = "Appointment.findByRating", query = "SELECT a FROM Appointment a WHERE a.rating = :rating"),
-    @NamedQuery(name = "Appointment.findByVersion", query = "SELECT a FROM Appointment a WHERE a.version = :version"),
-    @NamedQuery(name = "Appointment.findByCreationDateTime", query = "SELECT a FROM Appointment a WHERE a.creationDateTime = :creationDateTime"),
-    @NamedQuery(name = "Appointment.findByModificationDateTime", query = "SELECT a FROM Appointment a WHERE a.modificationDateTime = :modificationDateTime")})
+        @NamedQuery(name = "Appointment.findAll", query = "SELECT a FROM Appointment a"),
+        @NamedQuery(name = "Appointment.findById", query = "SELECT a FROM Appointment a WHERE a.id = :id"),
+        @NamedQuery(name = "Appointment.findByAppointmentDate", query = "SELECT a FROM Appointment a WHERE a.appointmentDate = :appointmentDate"),
+        @NamedQuery(name = "Appointment.findByConfirmed", query = "SELECT a FROM Appointment a WHERE a.confirmed = :confirmed"),
+        @NamedQuery(name = "Appointment.findByCanceled", query = "SELECT a FROM Appointment a WHERE a.canceled = :canceled"),
+        @NamedQuery(name = "Appointment.findByRating", query = "SELECT a FROM Appointment a WHERE a.rating = :rating"),
+        @NamedQuery(name = "Appointment.findByVersion", query = "SELECT a FROM Appointment a WHERE a.version = :version"),
+        @NamedQuery(name = "Appointment.findByCreationDateTime", query = "SELECT a FROM Appointment a WHERE a.creationDateTime = :creationDateTime"),
+        @NamedQuery(name = "Appointment.findByModificationDateTime", query = "SELECT a FROM Appointment a WHERE a.modificationDateTime = :modificationDateTime")})
 public class Appointment implements Serializable {
 
     private static final Long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appointments_generator")
-    @SequenceGenerator(name = "appointments_generator", sequenceName = "appointments_seq")
+    @SequenceGenerator(name = "appointments_generator", sequenceName = "appointments_seq", allocationSize = 1)
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
@@ -48,10 +47,8 @@ public class Appointment implements Serializable {
     @Column(name = "canceled")
     private Boolean canceled;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Max(5)
-    @Min(1)
-    @Column(name = "rating", precision = 2, scale = 1)
-    private Float rating;
+    @Column(name = "rating",columnDefinition = "numeric", precision = 2, scale = 1)
+    private Double rating;
     @Column(name = "version")
     private Long version;
     @Basic(optional = false)
@@ -60,16 +57,16 @@ public class Appointment implements Serializable {
     @Column(name = "modification_date_time")
     private LocalDateTime modificationDateTime;
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false) //TODO
     private Account doctor;
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
-    @ManyToOne
+    @ManyToOne //TODO
     private Account patient;
     @JoinColumn(name = "created_by", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false) //TODO
     private Account createdBy;
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
-    @ManyToOne
+    @ManyToOne //TODO
     private Account modifiedBy;
 
     /**
@@ -79,25 +76,14 @@ public class Appointment implements Serializable {
     }
 
     /**
-     * Tworzy nową instancję  Appointment.
-     *
-     * @param id klucz glowny
-     */
-    public Appointment(Long id) {
-        this.id = id;
-    }
-
-    /**
      * Tworzy nowa instancje  Appointment.
      *
-     * @param id               klucz glowny
      * @param appointmentDate  data wizyty
      * @param confirmed        status wizyty (potwierdzone)
      * @param canceled         status wizyty (odwolane)
      * @param creationDateTime data utworzenia
      */
-    public Appointment(Long id, LocalDateTime appointmentDate, Boolean confirmed, Boolean canceled, LocalDateTime creationDateTime) {
-        this.id = id;
+    public Appointment(LocalDateTime appointmentDate, Boolean confirmed, Boolean canceled, LocalDateTime creationDateTime) {
         this.appointmentDate = appointmentDate;
         this.confirmed = confirmed;
         this.canceled = canceled;
@@ -106,10 +92,6 @@ public class Appointment implements Serializable {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public LocalDateTime getAppointmentDate() {
@@ -136,11 +118,11 @@ public class Appointment implements Serializable {
         this.canceled = canceled;
     }
 
-    public Float getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(Float rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
@@ -224,5 +206,5 @@ public class Appointment implements Serializable {
     public String toString() {
         return "pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment[ id=" + id + " ]";
     }
-    
+
 }

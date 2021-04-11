@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -39,7 +40,7 @@ public class MedicalDocumentation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medical_documentations_generator")
-    @SequenceGenerator(name = "medical_documentations_generator", sequenceName = "medical_documentations_seq")
+    @SequenceGenerator(name = "medical_documentations_generator", sequenceName = "medical_documentations_seq", allocationSize = 1)
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
@@ -52,10 +53,10 @@ public class MedicalDocumentation implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "creation_date_time")
-    private Long creationDateTime;
+    private LocalDateTime creationDateTime;
 
     @Column(name = "modification_date_time")
-    private Long modificationDateTime;
+    private LocalDateTime modificationDateTime;
 
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     @ManyToOne(optional = false)
@@ -69,7 +70,8 @@ public class MedicalDocumentation implements Serializable {
     @ManyToOne(optional = false)
     private Account patient;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "documentationId")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name = "documentation_id")
     private Collection<DocumentationEntry> documentationEntryCollection = new ArrayList<DocumentationEntry>();
 
     @Column(name = "version")
@@ -84,29 +86,14 @@ public class MedicalDocumentation implements Serializable {
     /**
      * Tworzy nową instancję klasy MedicalDocumentation.
      *
-     * @param id klucz glowny
-     */
-    public MedicalDocumentation(Long id) {
-        this.id = id;
-    }
-
-    /**
-     * Tworzy nową instancję klasy MedicalDocumentation.
-     *
-     * @param id               klucz glowny
      * @param creationDateTime data utworzenia
      */
-    public MedicalDocumentation(Long id, Long creationDateTime) {
-        this.id = id;
+    public MedicalDocumentation(LocalDateTime creationDateTime) {
         this.creationDateTime = creationDateTime;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getAllergies() {
@@ -133,19 +120,19 @@ public class MedicalDocumentation implements Serializable {
         this.version = version;
     }
 
-    public Long getCreationDateTime() {
+    public LocalDateTime getCreationDateTime() {
         return creationDateTime;
     }
 
-    public void setCreationDateTime(Long creationDateTime) {
+    public void setCreationDateTime(LocalDateTime creationDateTime) {
         this.creationDateTime = creationDateTime;
     }
 
-    public Long getModificationDateTime() {
+    public LocalDateTime getModificationDateTime() {
         return modificationDateTime;
     }
 
-    public void setModificationDateTime(Long modificationDateTime) {
+    public void setModificationDateTime(LocalDateTime modificationDateTime) {
         this.modificationDateTime = modificationDateTime;
     }
 

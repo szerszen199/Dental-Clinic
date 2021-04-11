@@ -4,10 +4,14 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -37,32 +41,32 @@ public class AccessLevel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "access_levels_generator")
-    @SequenceGenerator(name = "access_levels_generator", sequenceName = "access_levels_seq")
+    @SequenceGenerator(name = "access_levels_generator", sequenceName = "access_levels_seq", allocationSize = 1)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "level", nullable = false, length = 16)
+    @Column(name = "level", nullable = false, length = 32)
     private String level;
 
     @Basic(optional = false)
     @Column(name = "active", nullable = false)
-    private boolean active;
+    private Boolean active;
 
     @Basic(optional = false)
     @Column(name = "creation_date_time", nullable = false)
     private LocalDateTime creationDateTime;
 
     @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false) //TODO
     private Account createdBy;
 
     @Column(name = "modification_date_time")
     private LocalDateTime modificationDateTime;
 
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
-    @ManyToOne
+    @ManyToOne //TODO
     private Account modifiedBy;
 
     @Column(name = "version")
@@ -77,22 +81,12 @@ public class AccessLevel implements Serializable {
     /**
      * Tworzy nową instancję klasy AccessLevel.
      *
-     * @param id klucz glowny
-     */
-    public AccessLevel(Long id) {
-        this.id = id;
-    }
-
-    /**
-     * Tworzy nową instancję klasy AccessLevel.
-     *
-     * @param id               klucz glowny
      * @param level            nazwa poziomu dostepu
      * @param active           status
      * @param creationDateTime data stworzenia
      */
-    public AccessLevel(Long id, String level, boolean active, LocalDateTime creationDateTime) {
-        this.id = id;
+    public AccessLevel(String level, Boolean active, LocalDateTime creationDateTime) {
+
         this.level = level;
         this.active = active;
         this.creationDateTime = creationDateTime;
@@ -100,10 +94,6 @@ public class AccessLevel implements Serializable {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getLevel() {
@@ -114,11 +104,11 @@ public class AccessLevel implements Serializable {
         this.level = level;
     }
 
-    public boolean getActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 
@@ -172,11 +162,11 @@ public class AccessLevel implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (! (object instanceof AccessLevel)) {
+        if (!(object instanceof AccessLevel)) {
             return false;
         }
         AccessLevel other = (AccessLevel) object;
-        if ((this.id == null && other.id != null) || (this.id != null && ! this.id.equals(other.id))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
