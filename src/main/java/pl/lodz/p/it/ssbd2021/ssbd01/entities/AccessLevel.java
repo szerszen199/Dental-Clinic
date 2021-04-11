@@ -12,8 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
@@ -32,7 +30,6 @@ import javax.persistence.UniqueConstraint;
 @NamedQueries({
         @NamedQuery(name = "AccessLevel.findAll", query = "SELECT a FROM AccessLevel a"),
         @NamedQuery(name = "AccessLevel.findById", query = "SELECT a FROM AccessLevel a WHERE a.id = :id"),
-        @NamedQuery(name = "AccessLevel.findByLevel", query = "SELECT a FROM AccessLevel a WHERE a.level = :level"),
         @NamedQuery(name = "AccessLevel.findByActive", query = "SELECT a FROM AccessLevel a WHERE a.active = :active"),
         @NamedQuery(name = "AccessLevel.findByVersion", query = "SELECT a FROM AccessLevel a WHERE a.version = :version"),
         @NamedQuery(name = "AccessLevel.findByCreationDateTime", query = "SELECT a FROM AccessLevel a WHERE a.creationDateTime = :creationDateTime"),
@@ -49,10 +46,6 @@ public class AccessLevel extends AbstractEntity implements Serializable {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "level", nullable = false, length = 32)
-    private String level;
-
-    @Basic(optional = false)
     @Column(name = "active", nullable = false)
     private Boolean active;
 
@@ -65,27 +58,16 @@ public class AccessLevel extends AbstractEntity implements Serializable {
     /**
      * Tworzy nową instancję klasy AccessLevel.
      *
-     * @param level            nazwa poziomu dostepu
      * @param active           status
      * @param creationDateTime data stworzenia
      */
-    public AccessLevel(String level, Boolean active, LocalDateTime creationDateTime) {
-
-        this.level = level;
+    public AccessLevel(Boolean active, LocalDateTime creationDateTime) {
         this.active = active;
     }
 
     @Override
     public Long getId() {
         return id;
-    }
-
-    public String getLevel() {
-        return level;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
     }
 
     public Boolean getActive() {
