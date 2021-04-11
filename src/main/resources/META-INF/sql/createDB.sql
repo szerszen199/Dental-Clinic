@@ -60,7 +60,8 @@ CREATE SEQUENCE accounts_seq
 CREATE TABLE ACCESS_LEVELS
 (
     ID                     BIGINT PRIMARY KEY,
-    level                  VARCHAR(32) NOT NULL,
+    level                  VARCHAR(32) NOT NULL
+CONSTRAINT access_levels_level_values check(level in ('level.patient', 'level.recep', 'level.admin', 'level.doctor') ),
     account_id             BIGINT      NOT NULL
         CONSTRAINT acc_lvl_account_fk REFERENCES ACCOUNTS (ID),
     active                 bool        NOT NULL DEFAULT true,
@@ -75,6 +76,7 @@ CREATE TABLE ACCESS_LEVELS
         CONSTRAINT modified_by_id_fk REFERENCES ACCOUNTS (ID)
 
 );
+
 CREATE INDEX acc_lvl_ID_index ON ACCESS_LEVELS (id);
 CREATE INDEX acc_lvl_account_id_index ON ACCESS_LEVELS (account_id);
 CREATE INDEX acc_lvl_created_by_id_index ON ACCESS_LEVELS (created_by);
