@@ -28,7 +28,7 @@ import javax.persistence.Table;
         @NamedQuery(name = "Appointment.findByVersion", query = "SELECT a FROM Appointment a WHERE a.version = :version"),
         @NamedQuery(name = "Appointment.findByCreationDateTime", query = "SELECT a FROM Appointment a WHERE a.creationDateTime = :creationDateTime"),
         @NamedQuery(name = "Appointment.findByModificationDateTime", query = "SELECT a FROM Appointment a WHERE a.modificationDateTime = :modificationDateTime")})
-public class Appointment implements Serializable {
+public class Appointment extends AbstractEntity implements Serializable {
 
     private static final Long serialVersionUID = 1L;
     @Id
@@ -47,27 +47,14 @@ public class Appointment implements Serializable {
     @Column(name = "canceled")
     private Boolean canceled;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "rating",columnDefinition = "numeric", precision = 2, scale = 1)
+    @Column(name = "rating", columnDefinition = "numeric", precision = 2, scale = 1)
     private Double rating;
-    @Column(name = "version")
-    private Long version;
-    @Basic(optional = false)
-    @Column(name = "creation_date_time")
-    private LocalDateTime creationDateTime = LocalDateTime.now();
-    @Column(name = "modification_date_time")
-    private LocalDateTime modificationDateTime;
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
-    @ManyToOne(optional = false) //TODO
+    @ManyToOne(optional = false)
     private Account doctor;
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     @ManyToOne //TODO
     private Account patient;
-    @JoinColumn(name = "created_by", referencedColumnName = "id")
-    @ManyToOne(optional = false) //TODO
-    private Account createdBy;
-    @JoinColumn(name = "modified_by", referencedColumnName = "id")
-    @ManyToOne //TODO
-    private Account modifiedBy;
 
     /**
      * Tworzy nową instancję Appointment.
@@ -87,9 +74,10 @@ public class Appointment implements Serializable {
         this.appointmentDate = appointmentDate;
         this.confirmed = confirmed;
         this.canceled = canceled;
-        this.creationDateTime = creationDateTime;
+        this.setCreationDateTime(creationDateTime);
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -126,29 +114,6 @@ public class Appointment implements Serializable {
         this.rating = rating;
     }
 
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
-    public LocalDateTime getCreationDateTime() {
-        return creationDateTime;
-    }
-
-    public void setCreationDateTime(LocalDateTime creationDateTime) {
-        this.creationDateTime = creationDateTime;
-    }
-
-    public LocalDateTime getModificationDateTime() {
-        return modificationDateTime;
-    }
-
-    public void setModificationDateTime(LocalDateTime modificationDateTime) {
-        this.modificationDateTime = modificationDateTime;
-    }
 
     public Account getDoctor() {
         return doctor;
@@ -164,42 +129,6 @@ public class Appointment implements Serializable {
 
     public void setPatient(Account patient) {
         this.patient = patient;
-    }
-
-    public Account getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(Account createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Account getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(Account modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case klucz glowny fields are not set
-        if (!(object instanceof Appointment)) {
-            return false;
-        }
-        Appointment other = (Appointment) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
     }
 
     @Override
