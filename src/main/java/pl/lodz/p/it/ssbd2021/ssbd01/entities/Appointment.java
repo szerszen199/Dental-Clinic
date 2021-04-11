@@ -47,27 +47,14 @@ public class Appointment extends AbstractEntity implements Serializable {
     @Column(name = "canceled")
     private Boolean canceled;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "rating",columnDefinition = "numeric", precision = 2, scale = 1)
+    @Column(name = "rating", columnDefinition = "numeric", precision = 2, scale = 1)
     private Double rating;
-    @Column(name = "version")
-    private Long version;
-    @Basic(optional = false)
-    @Column(name = "creation_date_time")
-    private LocalDateTime creationDateTime = LocalDateTime.now();
-    @Column(name = "modification_date_time")
-    private LocalDateTime modificationDateTime;
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Account doctor;
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     @ManyToOne //TODO
     private Account patient;
-    @JoinColumn(name = "created_by", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Account createdBy;
-    @JoinColumn(name = "modified_by", referencedColumnName = "id")
-    @ManyToOne
-    private Account modifiedBy;
 
     /**
      * Tworzy nową instancję Appointment.
@@ -87,8 +74,9 @@ public class Appointment extends AbstractEntity implements Serializable {
         this.appointmentDate = appointmentDate;
         this.confirmed = confirmed;
         this.canceled = canceled;
-        this.creationDateTime = creationDateTime;
+        this.setCreationDateTime(creationDateTime);
     }
+
     @Override
     public Long getId() {
         return id;

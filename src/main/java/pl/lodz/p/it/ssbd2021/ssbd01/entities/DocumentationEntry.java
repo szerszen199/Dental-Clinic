@@ -46,27 +46,9 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
     @Column(name = "to_be_done")
     private String toBeDone;
 
-    @Basic(optional = false)
-    @Column(name = "creation_date_time")
-    private LocalDateTime creationDateTime;
-
-    @Column(name = "modification_date_time")
-    private LocalDateTime modificationDateTime;
-
-    @JoinColumn(name = "created_by", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Account createdBy;
-
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Account doctor;
-
-    @JoinColumn(name = "modified_by", referencedColumnName = "id")
-    @ManyToOne
-    private Account modifiedBy;
-
-    @Column(name = "version")
-    private Long version;
 
     /**
      * Tworzy nową instancję klasy DocumentationEntry.
@@ -80,7 +62,7 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
      * @param creationDateTime data utworzenia
      */
     public DocumentationEntry(LocalDateTime creationDateTime) {
-        this.creationDateTime = creationDateTime;
+        this.setCreationDateTime(creationDateTime);
     }
 
     @Override

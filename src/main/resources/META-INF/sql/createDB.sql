@@ -116,7 +116,7 @@ CREATE TABLE APPOINTMENTS
         CONSTRAINT appoint_doctor_ID_fk REFERENCES ACCOUNTS (ID) NOT NULL,
     patient_ID                  BIGINT
         CONSTRAINT appoint_patient_ID_fk REFERENCES ACCOUNTS (ID) NULL,
-    appointment_date_time       timestamptz                      NOT NULL,
+    appointment_date      timestamptz                      NOT NULL,
     confirmed                   bool DEFAULT false               NOT NULL,
     canceled                    bool DEFAULT false               NOT NULL,
     rating                      NUMERIC(2, 1)

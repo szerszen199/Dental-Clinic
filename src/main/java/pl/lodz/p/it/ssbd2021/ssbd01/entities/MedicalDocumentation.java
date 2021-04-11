@@ -20,7 +20,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
-
 /**
  * Typ Medical documentation.
  */
@@ -34,7 +33,7 @@ import javax.persistence.Table;
         @NamedQuery(name = "MedicalDocumentation.findByVersion", query = "SELECT m FROM MedicalDocumentation m WHERE m.version = :version"),
         @NamedQuery(name = "MedicalDocumentation.findByCreationDateTime", query = "SELECT m FROM MedicalDocumentation m WHERE m.creationDateTime = :creationDateTime"),
         @NamedQuery(name = "MedicalDocumentation.findByModificationDateTime", query = "SELECT m FROM MedicalDocumentation m WHERE m.modificationDateTime = :modificationDateTime")})
-public class MedicalDocumentation extends  AbstractEntity implements Serializable {
+public class MedicalDocumentation extends AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -51,21 +50,6 @@ public class MedicalDocumentation extends  AbstractEntity implements Serializabl
     @Column(name = "medications_taken")
     private String medicationsTaken;
 
-    @Basic(optional = false)
-    @Column(name = "creation_date_time")
-    private LocalDateTime creationDateTime;
-
-    @Column(name = "modification_date_time")
-    private LocalDateTime modificationDateTime;
-
-    @JoinColumn(name = "created_by", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Account createdBy;
-
-    @JoinColumn(name = "modified_by", referencedColumnName = "id")
-    @ManyToOne
-    private Account modifiedBy;
-
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Account patient;
@@ -73,9 +57,6 @@ public class MedicalDocumentation extends  AbstractEntity implements Serializabl
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "documentation_id")
     private Collection<DocumentationEntry> documentationEntryCollection = new ArrayList<DocumentationEntry>();
-
-    @Column(name = "version")
-    private Long version;
 
     /**
      * Tworzy nową instancję klasy MedicalDocumentation.
@@ -89,7 +70,7 @@ public class MedicalDocumentation extends  AbstractEntity implements Serializabl
      * @param creationDateTime data utworzenia
      */
     public MedicalDocumentation(LocalDateTime creationDateTime) {
-        this.creationDateTime = creationDateTime;
+        this.setCreationDateTime(creationDateTime);
     }
 
     @Override
