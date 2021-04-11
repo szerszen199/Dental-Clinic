@@ -134,6 +134,7 @@ public class Account extends AbstractEntity implements Serializable {
         this.active = active;
         this.enabled = enabled;
     }
+
     @Override
     public Long getId() {
         return id;

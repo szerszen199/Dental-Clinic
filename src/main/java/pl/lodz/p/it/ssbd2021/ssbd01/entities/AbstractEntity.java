@@ -1,12 +1,19 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
 
+    /**
+     * Pobiera wartośc pola ID.
+     * @return ID
+     */
     public abstract Long getId();
 
     @Column(name = "version")
