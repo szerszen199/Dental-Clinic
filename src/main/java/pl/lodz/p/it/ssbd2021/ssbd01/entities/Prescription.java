@@ -27,7 +27,7 @@ import javax.persistence.Table;
     @NamedQuery(name = "Prescription.findByVersion", query = "SELECT p FROM Prescription p WHERE p.version = :version"),
     @NamedQuery(name = "Prescription.findByCreationDateTime", query = "SELECT p FROM Prescription p WHERE p.creationDateTime = :creationDateTime"),
     @NamedQuery(name = "Prescription.findByModificationDateTime", query = "SELECT p FROM Prescription p WHERE p.modificationDateTime = :modificationDateTime")})
-public class Prescription implements Serializable {
+public class Prescription extends AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -85,6 +85,7 @@ public class Prescription implements Serializable {
         this.creationDateTime = creationDateTime;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -97,38 +98,6 @@ public class Prescription implements Serializable {
         this.medications = medications;
     }
 
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
-    public LocalDateTime getCreationDateTime() {
-        return creationDateTime;
-    }
-
-    public void setCreationDateTime(LocalDateTime creationDateTime) {
-        this.creationDateTime = creationDateTime;
-    }
-
-    public LocalDateTime getModificationDateTime() {
-        return modificationDateTime;
-    }
-
-    public void setModificationDateTime(LocalDateTime modificationDateTime) {
-        this.modificationDateTime = modificationDateTime;
-    }
-
-    public Account getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(Account createdBy) {
-        this.createdBy = createdBy;
-    }
-
     public Account getDoctor() {
         return doctor;
     }
@@ -137,13 +106,6 @@ public class Prescription implements Serializable {
         this.doctor = doctor;
     }
 
-    public Account getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(Account modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
 
     public Account getPatient() {
         return patient;
@@ -151,26 +113,6 @@ public class Prescription implements Serializable {
 
     public void setPatient(Account patient) {
         this.patient = patient;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Prescription)) {
-            return false;
-        }
-        Prescription other = (Prescription) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
     }
 
     @Override
