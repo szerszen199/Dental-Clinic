@@ -13,8 +13,7 @@ public class AdminData extends AccessLevel implements Serializable {
 
     @Override
     public String toString() {
-        return "pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData[ id=" + this.getId() + " ]";
-
+        return "pl.lodz.p.it.ssbd2021.ssbd01.entities.AdminData[ id=" + this.getId() + " ]";
     }
 
 }
