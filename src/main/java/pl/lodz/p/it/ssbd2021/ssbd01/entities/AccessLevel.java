@@ -27,6 +27,8 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "access_levels", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"level", "account_id"})})
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "level", discriminatorType = DiscriminatorType.STRING)
 @NamedQueries({
         @NamedQuery(name = "AccessLevel.findAll", query = "SELECT a FROM AccessLevel a"),
         @NamedQuery(name = "AccessLevel.findById", query = "SELECT a FROM AccessLevel a WHERE a.id = :id"),
