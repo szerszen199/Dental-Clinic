@@ -27,6 +27,10 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <jta-data-source>java:app/jdbc/ssbd01mok</jta-data-source>
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel</class>
+        <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData</class>
+        <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorData</class>
+        <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData</class>
+        <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.AdminData</class>
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.Account</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
