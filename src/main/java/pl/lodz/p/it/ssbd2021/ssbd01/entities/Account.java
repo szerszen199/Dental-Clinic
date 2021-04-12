@@ -12,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -55,11 +54,11 @@ public class Account extends AbstractEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accounts_generator")
     @SequenceGenerator(name = "accounts_generator", sequenceName = "accounts_seq", allocationSize = 1)
     @Basic(optional = false)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "email", nullable = false, length = 100)
+    @Column(name = "email", updatable = false, nullable = false, length = 100)
     private String email;
 
     @Basic(optional = false)
@@ -86,11 +85,11 @@ public class Account extends AbstractEntity implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "active", nullable = false)
-    private Boolean active;
+    private Boolean active  = true;
 
     @Basic(optional = false)
     @Column(name = "enabled", nullable = false)
-    private Boolean enabled;
+    private Boolean enabled = false;
 
     @Column(name = "last_successful_login")
     private LocalDateTime lastSuccessfulLogin;
@@ -105,10 +104,10 @@ public class Account extends AbstractEntity implements Serializable {
     private String lastUnsuccessfulLoginIp;
 
     @Column(name = "unsuccessful_login_count_since_last_login")
-    private Integer unsuccessfulLoginCounter;
+    private Integer unsuccessfulLoginCounter = 0;
 
-    @Column(name = "language", length = 2)
-    private Character language;
+    @Column(name = "language", columnDefinition = "bpchar", length = 2)
+    private String language;
 
     /**
      * Tworzy nową instancję klasy Account.
@@ -142,10 +141,6 @@ public class Account extends AbstractEntity implements Serializable {
 
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getPassword() {
@@ -245,11 +240,11 @@ public class Account extends AbstractEntity implements Serializable {
     }
 
 
-    public Character getLanguage() {
+    public String getLanguage() {
         return language;
     }
 
-    public void setLanguage(Character language) {
+    public void setLanguage(String language) {
         this.language = language;
     }
 

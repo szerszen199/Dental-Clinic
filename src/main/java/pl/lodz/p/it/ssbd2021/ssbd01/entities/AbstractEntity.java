@@ -6,12 +6,16 @@ import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
 
     /**
      * Pobiera wartośc pola ID.
+     *
      * @return ID
      */
     public abstract Long getId();
@@ -20,19 +24,29 @@ public abstract class AbstractEntity {
     private Long version;
 
     @Basic(optional = false)
-    @Column(name = "creation_date_time", nullable = false)
+    @Column(name = "creation_date_time", nullable = false, updatable = false)
     private LocalDateTime creationDateTime;
 
-    @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
+    @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false, updatable = false)
+    @OneToOne(optional = false)
     private Account createdBy;
 
     @Column(name = "modification_date_time")
     private LocalDateTime modificationDateTime;
 
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
-    @ManyToOne
+    @OneToOne
     private Account modifiedBy;
+
+    @PrePersist
+    private void init() {
+        creationDateTime = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    private void initUpdate() {
+        modificationDateTime = LocalDateTime.now();
+    }
 
     public Long getVersion() {
         return version;
@@ -46,10 +60,6 @@ public abstract class AbstractEntity {
         return creationDateTime;
     }
 
-    public void setCreationDateTime(LocalDateTime creationDateTime) {
-        this.creationDateTime = creationDateTime;
-    }
-
     public LocalDateTime getModificationDateTime() {
         return modificationDateTime;
     }
@@ -60,10 +70,6 @@ public abstract class AbstractEntity {
 
     public Account getCreatedBy() {
         return createdBy;
-    }
-
-    public void setCreatedBy(Account createdBy) {
-        this.createdBy = createdBy;
     }
 
     public Account getModifiedBy() {

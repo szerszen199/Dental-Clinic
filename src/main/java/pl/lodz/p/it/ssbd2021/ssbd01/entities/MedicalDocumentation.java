@@ -41,7 +41,7 @@ public class MedicalDocumentation extends AbstractEntity implements Serializable
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medical_documentations_generator")
     @SequenceGenerator(name = "medical_documentations_generator", sequenceName = "medical_documentations_seq", allocationSize = 1)
     @Basic(optional = false)
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     private Long id;
 
     @Column(name = "allergies")
@@ -50,27 +50,18 @@ public class MedicalDocumentation extends AbstractEntity implements Serializable
     @Column(name = "medications_taken")
     private String medicationsTaken;
 
-    @JoinColumn(name = "patient_id", referencedColumnName = "id")
+    @JoinColumn(name = "patient_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
     private Account patient;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinColumn(name = "documentation_id")
+    @JoinColumn(name = "documentation_id", nullable = false)
     private Collection<DocumentationEntry> documentationEntryCollection = new ArrayList<DocumentationEntry>();
 
     /**
      * Tworzy nową instancję klasy MedicalDocumentation.
      */
     public MedicalDocumentation() {
-    }
-
-    /**
-     * Tworzy nową instancję klasy MedicalDocumentation.
-     *
-     * @param creationDateTime data utworzenia
-     */
-    public MedicalDocumentation(LocalDateTime creationDateTime) {
-        this.setCreationDateTime(creationDateTime);
     }
 
     @Override
@@ -96,10 +87,6 @@ public class MedicalDocumentation extends AbstractEntity implements Serializable
 
     public Account getPatient() {
         return patient;
-    }
-
-    public void setPatient(Account patient) {
-        this.patient = patient;
     }
 
     public Collection<DocumentationEntry> getDocumentationEntryCollection() {

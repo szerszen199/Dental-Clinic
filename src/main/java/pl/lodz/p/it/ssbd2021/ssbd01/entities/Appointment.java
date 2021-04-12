@@ -35,25 +35,25 @@ public class Appointment extends AbstractEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appointments_generator")
     @SequenceGenerator(name = "appointments_generator", sequenceName = "appointments_seq", allocationSize = 1)
     @Basic(optional = false)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
     @Basic(optional = false)
-    @Column(name = "appointment_date")
+    @Column(name = "appointment_date", nullable = false)
     private LocalDateTime appointmentDate;
     @Basic(optional = false)
-    @Column(name = "confirmed")
-    private Boolean confirmed;
+    @Column(name = "confirmed", nullable = false)
+    private Boolean confirmed = false;
     @Basic(optional = false)
-    @Column(name = "canceled")
-    private Boolean canceled;
+    @Column(name = "canceled", nullable = false)
+    private Boolean canceled = false;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "rating", columnDefinition = "numeric", precision = 2, scale = 1)
     private Double rating;
-    @JoinColumn(name = "doctor_id", referencedColumnName = "id")
+    @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Account doctor;
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
-    @ManyToOne //TODO
+    @ManyToOne
     private Account patient;
 
     /**
@@ -65,16 +65,14 @@ public class Appointment extends AbstractEntity implements Serializable {
     /**
      * Tworzy nowa instancje  Appointment.
      *
-     * @param appointmentDate  data wizyty
-     * @param confirmed        status wizyty (potwierdzone)
-     * @param canceled         status wizyty (odwolane)
-     * @param creationDateTime data utworzenia
+     * @param appointmentDate data wizyty
+     * @param confirmed       status wizyty (potwierdzone)
+     * @param canceled        status wizyty (odwolane)
      */
-    public Appointment(LocalDateTime appointmentDate, Boolean confirmed, Boolean canceled, LocalDateTime creationDateTime) {
+    public Appointment(LocalDateTime appointmentDate, Boolean confirmed, Boolean canceled) {
         this.appointmentDate = appointmentDate;
         this.confirmed = confirmed;
         this.canceled = canceled;
-        this.setCreationDateTime(creationDateTime);
     }
 
     @Override

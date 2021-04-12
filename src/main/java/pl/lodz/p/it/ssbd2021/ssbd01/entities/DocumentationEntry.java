@@ -37,7 +37,7 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "documentation_entries_generator")
     @SequenceGenerator(name = "documentation_entries_generator", sequenceName = "documentation_entries_seq", allocationSize = 1)
     @Basic(optional = false)
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     private Long id;
 
     @Column(name = "was_done")
@@ -46,7 +46,7 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
     @Column(name = "to_be_done")
     private String toBeDone;
 
-    @JoinColumn(name = "doctor_id", referencedColumnName = "id")
+    @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Account doctor;
 
@@ -54,15 +54,6 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
      * Tworzy nową instancję klasy DocumentationEntry.
      */
     public DocumentationEntry() {
-    }
-
-    /**
-     * Tworzy nową instancję klasy DocumentationEntry.
-     *
-     * @param creationDateTime data utworzenia
-     */
-    public DocumentationEntry(LocalDateTime creationDateTime) {
-        this.setCreationDateTime(creationDateTime);
     }
 
     @Override
