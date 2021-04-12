@@ -12,8 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
@@ -27,6 +25,8 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "access_levels", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"level", "account_id"})})
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "level", discriminatorType = DiscriminatorType.STRING)
 @NamedQueries({
         @NamedQuery(name = "AccessLevel.findAll", query = "SELECT a FROM AccessLevel a"),
         @NamedQuery(name = "AccessLevel.findById", query = "SELECT a FROM AccessLevel a WHERE a.id = :id"),
@@ -47,12 +47,12 @@ public class AccessLevel extends AbstractEntity implements Serializable {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "level", nullable = false, length = 32)
-    private String level;
-
-    @Basic(optional = false)
     @Column(name = "active", nullable = false)
     private Boolean active;
+
+    @Basic(optional = false)
+    @Column(name = "level", nullable = false, length = 32, updatable = false, insertable = false)
+    private String level;
 
     /**
      * Tworzy nową instancję klasy Access level.
@@ -68,7 +68,6 @@ public class AccessLevel extends AbstractEntity implements Serializable {
      * @param creationDateTime data stworzenia
      */
     public AccessLevel(String level, Boolean active, LocalDateTime creationDateTime) {
-
         this.level = level;
         this.active = active;
     }

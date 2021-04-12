@@ -65,7 +65,7 @@ CREATE TABLE ACCESS_LEVELS
 (
     ID                     BIGINT PRIMARY KEY,
     level                  VARCHAR(32) NOT NULL
-        CONSTRAINT access_levels_level_values check (level in ('level.patient', 'level.recep', 'level.admin', 'level.doctor') ),
+        CONSTRAINT access_levels_level_values check (level in ('level.patient', 'level.receptionist', 'level.admin', 'level.doctor') ),
     account_id             BIGINT      NOT NULL
         CONSTRAINT acc_lvl_account_fk REFERENCES ACCOUNTS (ID),
     active                 bool        NOT NULL DEFAULT true,
