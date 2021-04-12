@@ -43,7 +43,7 @@ public class AccessLevel extends AbstractEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "access_levels_generator")
     @SequenceGenerator(name = "access_levels_generator", sequenceName = "access_levels_seq", allocationSize = 1)
     @Basic(optional = false)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
     @Basic(optional = false)
@@ -65,9 +65,8 @@ public class AccessLevel extends AbstractEntity implements Serializable {
      *
      * @param level            nazwa poziomu dostepu
      * @param active           status
-     * @param creationDateTime data stworzenia
      */
-    public AccessLevel(String level, Boolean active, LocalDateTime creationDateTime) {
+    public AccessLevel(String level, Boolean active) {
         this.level = level;
         this.active = active;
     }
@@ -79,10 +78,6 @@ public class AccessLevel extends AbstractEntity implements Serializable {
 
     public String getLevel() {
         return level;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
     }
 
     public Boolean getActive() {

@@ -35,18 +35,18 @@ public class Prescription extends AbstractEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prescriptions_generator")
     @SequenceGenerator(name = "prescriptions_generator", sequenceName = "prescriptions_seq", allocationSize = 1)
     @Basic(optional = false)
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     private Long id;
 
     @Basic(optional = false)
     @Column(name = "medications")
     private String medications;
 
-    @JoinColumn(name = "doctor_id", referencedColumnName = "id")
+    @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Account doctor;
 
-    @JoinColumn(name = "patient_id", referencedColumnName = "id")
+    @JoinColumn(name = "patient_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Account patient;
 
@@ -59,12 +59,10 @@ public class Prescription extends AbstractEntity implements Serializable {
     /**
      * Tworzy nową instancję klasy Prescription.
      *
-     * @param medications      przepisane leki
-     * @param creationDateTime data utworzenia
+     * @param medications przepisane leki
      */
-    public Prescription(String medications, LocalDateTime creationDateTime) {
+    public Prescription(String medications) {
         this.medications = medications;
-        this.setCreationDateTime(creationDateTime);
     }
 
     @Override
@@ -87,7 +85,6 @@ public class Prescription extends AbstractEntity implements Serializable {
     public void setDoctor(Account doctor) {
         this.doctor = doctor;
     }
-
 
     public Account getPatient() {
         return patient;
