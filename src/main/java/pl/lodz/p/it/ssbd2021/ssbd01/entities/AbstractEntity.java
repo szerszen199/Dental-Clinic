@@ -6,7 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
@@ -28,14 +27,14 @@ public abstract class AbstractEntity {
     private LocalDateTime creationDateTime;
 
     @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false, updatable = false)
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     private Account createdBy;
 
     @Column(name = "modification_date_time")
     private LocalDateTime modificationDateTime;
 
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
-    @OneToOne
+    @ManyToOne
     private Account modifiedBy;
 
     @PrePersist
