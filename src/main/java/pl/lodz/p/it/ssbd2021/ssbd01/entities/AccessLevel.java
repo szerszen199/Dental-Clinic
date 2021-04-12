@@ -30,6 +30,7 @@ import javax.persistence.UniqueConstraint;
 @NamedQueries({
         @NamedQuery(name = "AccessLevel.findAll", query = "SELECT a FROM AccessLevel a"),
         @NamedQuery(name = "AccessLevel.findById", query = "SELECT a FROM AccessLevel a WHERE a.id = :id"),
+        @NamedQuery(name = "AccessLevel.findByLevel", query = "SELECT a FROM AccessLevel a WHERE a.level = :level"),
         @NamedQuery(name = "AccessLevel.findByActive", query = "SELECT a FROM AccessLevel a WHERE a.active = :active"),
         @NamedQuery(name = "AccessLevel.findByVersion", query = "SELECT a FROM AccessLevel a WHERE a.version = :version"),
         @NamedQuery(name = "AccessLevel.findByCreationDateTime", query = "SELECT a FROM AccessLevel a WHERE a.creationDateTime = :creationDateTime"),
@@ -49,6 +50,10 @@ public class AccessLevel extends AbstractEntity implements Serializable {
     @Column(name = "active", nullable = false)
     private Boolean active;
 
+    @Basic(optional = false)
+    @Column(name = "level", nullable = false, length = 32, updatable = false, insertable = false)
+    private String level;
+
     /**
      * Tworzy nową instancję klasy Access level.
      */
@@ -58,16 +63,26 @@ public class AccessLevel extends AbstractEntity implements Serializable {
     /**
      * Tworzy nową instancję klasy AccessLevel.
      *
+     * @param level            nazwa poziomu dostepu
      * @param active           status
      * @param creationDateTime data stworzenia
      */
-    public AccessLevel(Boolean active, LocalDateTime creationDateTime) {
+    public AccessLevel(String level, Boolean active, LocalDateTime creationDateTime) {
+        this.level = level;
         this.active = active;
     }
 
     @Override
     public Long getId() {
         return id;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
     }
 
     public Boolean getActive() {
