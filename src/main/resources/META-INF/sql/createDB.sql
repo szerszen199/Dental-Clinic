@@ -35,19 +35,26 @@ CREATE TABLE accounts
     unsuccessful_login_count_since_last_login INT  DEFAULT 0                                  -- Ilość nieudanych logowań od czasu ostatniego udanego logowania
         CONSTRAINT acc_unsuccessful_login_count_since_last_login_gr0 CHECK
             ( unsuccessful_login_count_since_last_login >= 0 ),                               -- bigger than 0
-    modified_by                               BIGINT                                          -- ID konta które ostatnio modyfikowało dane tabeli
-        CONSTRAINT acc_modified_by_fk REFERENCES accounts (id)   NULL,
+    modified_by                               BIGINT,                                         -- ID konta które ostatnio modyfikowało dane tabeli
+
     modification_date_time                    TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji tabeli
-    created_by                                BIGINT             NOT NULL                     -- ID konta które utworzyło tabelę
-        CONSTRAINT created_by_id_fk REFERENCES accounts (id),
+    created_by                                BIGINT             NOT NULL,                    -- ID konta które utworzyło tabelę,
     creation_date_time                        TIMESTAMPTZ        NOT NULL DEFAULT
-        CURRENT_TIMESTAMP,                                                                    -- Data utworzenia konta
+                CURRENT_TIMESTAMP,                                                                    -- Data utworzenia konta
     language                                  CHAR(2)
         CONSTRAINT acc_languages_available_values CHECK (language IN ('en', 'pl', 'EN', 'PL') -- Język konta, angielski albo polski
             ),
     version                                   BIGINT                                          -- Wersja
         CONSTRAINT acc_version_gr0 CHECK (version >= 0)
 );
+
+-- Klucze obce dla tabeli accounts
+ALTER TABLE accounts
+    ADD FOREIGN KEY (created_by) REFERENCES accounts (id);
+ALTER TABLE accounts
+    ADD FOREIGN KEY (modified_by) REFERENCES accounts (id);
+
+
 CREATE
     INDEX acc_id_index ON accounts (id);
 CREATE
@@ -69,20 +76,25 @@ CREATE TABLE access_levels
     level                  VARCHAR(32) NOT NULL
         CONSTRAINT access_levels_level_values CHECK (level IN
                                                      ('level.patient', 'level.receptionist', 'level.admin', 'level.doctor') ), -- Poziom dostępu, jedyne możliwe wartości: 'level.patient', 'level.receptionist', 'level.admin', 'level.doctor'
-    account_id             BIGINT      NOT NULL
-        CONSTRAINT acc_lvl_account_fk REFERENCES accounts (id),                                                                -- Konto przypisane do poziomu dostepu
+    account_id             BIGINT      NOT NULL,                                                                               -- Konto przypisane do poziomu dostepu
     active                 BOOL        NOT NULL DEFAULT TRUE,                                                                  -- Czy przypisany poziom dostępu jest aktywny, domyślnie prawda (jest aktywny). Pole pozwala na wyłączanie użytkownikom poziomów dostepu bez usuwania wiersza tabeli.
     CONSTRAINT acc_lvl_level_account_pair_unique UNIQUE (level, account_id),                                                   -- Para poziom dostepu i konta użytkownika jest unikalna
     version                BIGINT                                                                                              -- Wersja
         CONSTRAINT acc_lvl_version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,                                                     -- Data utworzenia tabeli
-    created_by             BIGINT      NOT NULL                                                                                -- ID konta które utworzyło tabelę
-        CONSTRAINT created_by_id_fk REFERENCES accounts (id),
+    created_by             BIGINT      NOT NULL,                                                                               -- ID konta które utworzyło tabelę
     modification_date_time TIMESTAMPTZ,                                                                                        -- Data ostatniej modyfikacji tabeli
     modified_by            BIGINT                                                                                              -- Użytkownik który ostatni modyfikował tabelę
-        CONSTRAINT modified_by_id_fk REFERENCES accounts (id)
-
 );
+
+-- Klucze obce dla tabeli access_levels
+ALTER TABLE access_levels
+    ADD FOREIGN KEY (created_by) REFERENCES accounts (id);
+ALTER TABLE access_levels
+    ADD FOREIGN KEY (modified_by) REFERENCES accounts (id);
+ALTER TABLE access_levels
+    ADD FOREIGN KEY (account_id) REFERENCES accounts (id);
+
 
 CREATE
     INDEX acc_lvl_id_index ON access_levels (id);
@@ -110,31 +122,35 @@ CREATE SEQUENCE access_levels_seq -- Sekwencja wykorzystywana przy tworzeniu pol
     NO MINVALUE
     NO MAXVALUE CACHE 1;
 
-
 -- struktura dla MOW
 
 CREATE TABLE appointments
 (
-    id                     BIGINT PRIMARY KEY,                                                       -- Klucz głowny tabeli
-    doctor_id              BIGINT                                                                    -- Id konta lekarza dla wizyty
-        CONSTRAINT appoint_doctor_id_fk REFERENCES accounts (id)  NOT NULL,
-    patient_id             BIGINT                                                                    -- Id konta pacjenta dla wizyty
-        CONSTRAINT appoint_patient_id_fk REFERENCES accounts (id) NULL,
-    appointment_date       TIMESTAMPTZ                            NOT NULL,                          -- Data wizyty
-    confirmed              BOOL DEFAULT FALSE                     NOT NULL,                          -- Czy wizyta została potwierdzona, domyślnie fałsz.
-    canceled               BOOL DEFAULT FALSE                     NOT NULL,                          -- Czy wizyta została anulowana, domyślnie fałsz.
-    rating                 NUMERIC(2, 1)                                                             -- Ocena wizyty
+    id                     BIGINT PRIMARY KEY,                                   -- Klucz głowny tabeli
+    doctor_id              BIGINT,                                               -- Id konta lekarza dla wizyty
+    patient_id             BIGINT,                                               -- Id konta pacjenta dla wizyty
+    appointment_date       TIMESTAMPTZ        NOT NULL,                          -- Data wizyty
+    confirmed              BOOL DEFAULT FALSE NOT NULL,                          -- Czy wizyta została potwierdzona, domyślnie fałsz.
+    canceled               BOOL DEFAULT FALSE NOT NULL,                          -- Czy wizyta została anulowana, domyślnie fałsz.
+    rating                 NUMERIC(2, 1)                                         -- Ocena wizyty
         CONSTRAINT appoint_rating_between CHECK (rating >= 0 AND rating <= 5),
-    version                BIGINT                                                                    -- Wersja
+    version                BIGINT                                                -- Wersja
         CONSTRAINT appoint_version_gr0 CHECK (version >= 0),
-    creation_date_time     TIMESTAMPTZ                            NOT NULL DEFAULT CURRENT_TIMESTAMP,-- Data utworzenia wizyty
-    created_by             BIGINT                                 NOT NULL                           -- Konto które stworzyło wizytę
-        CONSTRAINT created_by_id_fk REFERENCES accounts (id),
-    modification_date_time TIMESTAMPTZ,                                                              -- Data modyfikacji,
-    modified_by            BIGINT                                                                    -- Konto które modyfikowało ostatnio tabelę
-        CONSTRAINT modified_by_id_fk REFERENCES accounts (id)
-
+    creation_date_time     TIMESTAMPTZ        NOT NULL DEFAULT CURRENT_TIMESTAMP,-- Data utworzenia wizyty
+    created_by             BIGINT             NOT NULL,                          -- Konto które stworzyło wizytę
+    modification_date_time TIMESTAMPTZ,                                          -- Data modyfikacji,
+    modified_by            BIGINT                                                -- Konto które modyfikowało ostatnio tabelę
 );
+
+-- Klucze obce dla tabeli appointments
+ALTER TABLE appointments
+    ADD FOREIGN KEY (created_by) REFERENCES accounts (id);
+ALTER TABLE appointments
+    ADD FOREIGN KEY (modified_by) REFERENCES accounts (id);
+ALTER TABLE appointments
+    ADD FOREIGN KEY (doctor_id) REFERENCES accounts (id);
+ALTER TABLE appointments
+    ADD FOREIGN KEY (patient_id) REFERENCES accounts (id);
 
 CREATE
     INDEX appoint_id_index ON appointments (id);
@@ -159,19 +175,24 @@ CREATE SEQUENCE appointments_seq -- Sekwencja wykorzystywana do tworzenia kluczy
 CREATE TABLE medical_documentations
 (
     id                     BIGINT PRIMARY KEY,                             -- Klucz głowny tabeli
-    patient_id             BIGINT UNIQUE      NOT NULL
-        CONSTRAINT patient_id_fk REFERENCES accounts (id),                 -- ID pacjenta którego dotyczy dokumentacja
+    patient_id             BIGINT      NOT NULL,                           -- ID pacjenta którego dotyczy dokumentacja
     allergies              TEXT,                                           -- Tekstowy opis alergii pacjenta
     medications_taken      TEXT,                                           -- Tekstowy opis przyjmowanych lekarstw uzytkownika
     version                BIGINT                                          -- Wersja
         CONSTRAINT version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Data stworzenia wiersza w tabeli
-    created_by             BIGINT      NOT NULL                            -- Id użytkownika
-        CONSTRAINT created_by_id_fk REFERENCES accounts (id),
+    created_by             BIGINT      NOT NULL,                           -- Id użytkownika
     modification_date_time TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji
     modified_by            BIGINT                                          -- Konto które ostatnio modyfikowało dane tabeli
-        CONSTRAINT modified_by_id_fk REFERENCES accounts (id)
 );
+
+-- Klucze obce dla tabeli medical_documentations
+ALTER TABLE medical_documentations
+    ADD FOREIGN KEY (created_by) REFERENCES accounts (id);
+ALTER TABLE medical_documentations
+    ADD FOREIGN KEY (modified_by) REFERENCES accounts (id);
+ALTER TABLE medical_documentations
+    ADD FOREIGN KEY (patient_id) REFERENCES accounts (id);
 
 
 CREATE
@@ -194,21 +215,27 @@ CREATE SEQUENCE medical_documentations_seq -- Sekwencja wykorzystywana do tworze
 CREATE TABLE documentation_entries
 (
     id                     BIGINT PRIMARY KEY,                             -- Klucz głowny tabeli
-    documentation_id       BIGINT      NOT NULL                            -- Dokumentacja medyczna, do której odnosi się wpis
-        CONSTRAINT documentation_id_fk REFERENCES medical_documentations (id),
-    doctor_id              BIGINT      NOT NULL                            -- Lekarz, który tworzy wpis w dokumentacji
-        CONSTRAINT doctor_id_fk REFERENCES accounts (id),
+    documentation_id       BIGINT      NOT NULL,                           -- Dokumentacja medyczna, do której odnosi się wpis
+    doctor_id              BIGINT      NOT NULL,                           -- Lekarz, który tworzy wpis w dokumentacji
     was_done               TEXT,                                           -- Tekst informujący co zostało wykonane na wizycie reprezentowanej przez wpis w dokumentacji
     to_be_done             TEXT,                                           -- Tekst informujący co ma zostać wykonane na nastepnej wizycie
     version                BIGINT                                          -- Wersja
         CONSTRAINT version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Data utworzenia wiersza tabeli
-    created_by             BIGINT      NOT NULL                            -- Konto, które tworzyło wiersz tabeli
-        CONSTRAINT created_by_id_fk REFERENCES accounts (id),
+    created_by             BIGINT      NOT NULL,                           -- Konto, które tworzyło wiersz tabeli
     modification_date_time TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji wiersza w tabelik
     modified_by            BIGINT                                          -- Konto które ostatnio modyfikowało wiersz w tabeli.
-        CONSTRAINT modified_by_id_fk REFERENCES accounts (id)
 );
+
+-- Klucze obce dla tabeli documentation_entries
+ALTER TABLE documentation_entries
+    ADD FOREIGN KEY (created_by) REFERENCES accounts (id);
+ALTER TABLE documentation_entries
+    ADD FOREIGN KEY (modified_by) REFERENCES accounts (id);
+ALTER TABLE documentation_entries
+    ADD FOREIGN KEY (documentation_id) REFERENCES medical_documentations (id);
+ALTER TABLE documentation_entries
+    ADD FOREIGN KEY (doctor_id) REFERENCES accounts (id);
 
 CREATE
     INDEX documentation_entry_id_index ON documentation_entries (id);
@@ -230,20 +257,26 @@ CREATE SEQUENCE documentation_entries_seq -- Sekwencja uzywana do tworzenia pola
 CREATE TABLE prescriptions
 (
     id                     BIGINT PRIMARY KEY,                             -- Klucz główny tabeli
-    patient_id             BIGINT      NOT NULL
-        CONSTRAINT patient_id_fk REFERENCES accounts (id),                 -- Id pacjenta, którego dotyczy recepta
-    doctor_id              BIGINT      NOT NULL                            -- Id lekarza który wystawił receptę
-        CONSTRAINT doctor_id_fk REFERENCES accounts (id),
+    patient_id             BIGINT      NOT NULL,-- Id pacjenta, którego dotyczy recepta
+    doctor_id              BIGINT      NOT NULL,                           -- Id lekarza który wystawił receptę
     medications            TEXT        NOT NULL,                           -- Tekst informujący o przepisanych lekarstwach
     version                BIGINT                                          -- Wersja
         CONSTRAINT version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Czas utworzenia wiersza w tabeli
-    created_by             BIGINT      NOT NULL                            -- Konto które utworzyło wiersz w tabeli
-        CONSTRAINT created_by_id_fk REFERENCES accounts (id),
+    created_by             BIGINT      NOT NULL,                           -- Konto które utworzyło wiersz w tabeli
     modification_date_time TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji wiersza w tabeli
     modified_by            BIGINT                                          -- Konto ostatnio modyfikujące wiersza w tabeli
-        CONSTRAINT modified_by_id_fk REFERENCES accounts (id)
 );
+
+-- Klucze obce dla tabeli documentation_entries
+ALTER TABLE prescriptions
+    ADD FOREIGN KEY (created_by) REFERENCES accounts (id);
+ALTER TABLE prescriptions
+    ADD FOREIGN KEY (modified_by) REFERENCES accounts (id);
+ALTER TABLE prescriptions
+    ADD FOREIGN KEY (doctor_id) REFERENCES accounts (id);
+ALTER TABLE prescriptions
+    ADD FOREIGN KEY (patient_id) REFERENCES accounts (id);
 
 CREATE
     INDEX prescription_id_index ON prescriptions (id);
