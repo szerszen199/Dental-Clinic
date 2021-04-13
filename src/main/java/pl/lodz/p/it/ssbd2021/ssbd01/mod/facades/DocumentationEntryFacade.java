@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.facades;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
@@ -8,6 +9,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry;
 /**
  * Klasa definiująca główne operacje wykonywane na encjach typu DocumentationEntry.
  */
+@Stateless
 public class DocumentationEntryFacade extends AbstractFacade<DocumentationEntry> {
 
     @PersistenceContext(unitName = "ssbd01modPU")

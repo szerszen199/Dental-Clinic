@@ -40,7 +40,7 @@ CREATE TABLE accounts
     modification_date_time                    TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji tabeli
     created_by                                BIGINT             NOT NULL,                    -- ID konta które utworzyło tabelę,
     creation_date_time                        TIMESTAMPTZ        NOT NULL DEFAULT
-        CURRENT_TIMESTAMP,                                                                    -- Data utworzenia konta
+                CURRENT_TIMESTAMP,                                                                    -- Data utworzenia konta
     language                                  CHAR(2)
         CONSTRAINT acc_languages_available_values CHECK (language IN ('en', 'pl', 'EN', 'PL') -- Język konta, angielski albo polski
             ),
