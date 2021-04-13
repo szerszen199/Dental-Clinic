@@ -13,7 +13,7 @@ import javax.persistence.criteria.Root;
  *
  * @param <T> klasa encyjna
  */
-@Stateless
+
 public abstract class AbstractFacade<T> {
 
     private Class<T> entityClass;
