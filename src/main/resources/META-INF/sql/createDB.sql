@@ -1,10 +1,10 @@
-DROP TABLE if exists PRESCRIPTIONS;
-DROP TABLE if exists DOCUMENTATION_ENTRIES;
-DROP TABLE if exists MEDICAL_DOCUMENTATIONS;
-DROP TABLE IF EXISTS APPOINTMENTS;
-DROP VIEW IF EXISTS GLASSFISH_AUTH_VIEW;
-DROP TABLE IF EXISTS ACCESS_LEVELS;
-DROP TABLE IF EXISTS ACCOUNTS;
+DROP TABLE IF EXISTS prescriptions;
+DROP TABLE IF EXISTS documentation_entries;
+DROP TABLE IF EXISTS medical_documentations;
+DROP TABLE IF EXISTS appointments;
+DROP VIEW IF EXISTS glassfish_auth_view;
+DROP TABLE IF EXISTS access_levels;
+DROP TABLE IF EXISTS accounts;
 
 
 DROP SEQUENCE IF EXISTS accounts_seq;
@@ -15,9 +15,9 @@ DROP SEQUENCE IF EXISTS documentation_entries_seq;
 DROP SEQUENCE IF EXISTS prescriptions_seq;
 
 
-CREATE TABLE ACCOUNTS
+CREATE TABLE accounts
 (
-    ID                                        BIGINT PRIMARY KEY,
+    id                                        BIGINT PRIMARY KEY,
     email                                     VARCHAR(100)       NOT NULL
         CONSTRAINT acc_email_unique UNIQUE,                                                                                    -- size?
     password                                  CHAR(64)           NOT NULL,
@@ -26,34 +26,34 @@ CREATE TABLE ACCOUNTS
     phone_number                              VARCHAR(15),
     pesel                                     CHAR(11)
         CONSTRAINT acc_pesel_unique UNIQUE,
-    active                                    bool default true  NOT NULL,
-    enabled                                   bool DEFAULT false NOT NULL,
-    last_successful_login                     timestamptz,
+    active                                    BOOL DEFAULT TRUE  NOT NULL,
+    enabled                                   BOOL DEFAULT FALSE NOT NULL,
+    last_successful_login                     TIMESTAMPTZ,
     last_successful_login_ip                  VARCHAR(15),
-    last_unsuccessful_login                   timestamptz,
+    last_unsuccessful_login                   TIMESTAMPTZ,
     last_unsuccessful_login_ip                VARCHAR(15),
     unsuccessful_login_count_since_last_login INT  DEFAULT 0
         CONSTRAINT acc_unsuccessful_login_count_since_last_login_gr0 CHECK ( unsuccessful_login_count_since_last_login >= 0 ), -- bigger than 0
     modified_by                               BIGINT
-        CONSTRAINT acc_modified_by_fk REFERENCES ACCOUNTS (ID) NULL,
-    modification_date_time                    timestamptz,
+        CONSTRAINT acc_modified_by_fk REFERENCES accounts (id)   NULL,
+    modification_date_time                    TIMESTAMPTZ,
     created_by                                BIGINT             NOT NULL
-        CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
-    creation_date_time                        timestamptz        not null default current_timestamp,
+        CONSTRAINT created_by_id_fk REFERENCES accounts (id),
+    creation_date_time                        TIMESTAMPTZ        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     language                                  CHAR(2)
         CONSTRAINT acc_languages_available_values CHECK (language IN ('en', 'pl', 'EN', 'PL')
-) ,
+            ),
     version                                   BIGINT
         CONSTRAINT acc_version_gr0 CHECK (version >= 0)
 );
 CREATE
-INDEX acc_ID_index ON ACCOUNTS (ID);
+    INDEX acc_id_index ON accounts (id);
 CREATE
-INDEX acc_email_index ON ACCOUNTS (email);
+    INDEX acc_email_index ON accounts (email);
 CREATE
-INDEX acc_modified_by_index ON ACCOUNTS (modified_by);
+    INDEX acc_modified_by_index ON accounts (modified_by);
 CREATE
-INDEX acc_created_by_index ON ACCOUNTS (created_by);
+    INDEX acc_created_by_index ON accounts (created_by);
 
 CREATE SEQUENCE accounts_seq
     START WITH 1
@@ -61,43 +61,44 @@ CREATE SEQUENCE accounts_seq
     NO MINVALUE
     NO MAXVALUE CACHE 1;
 
-CREATE TABLE ACCESS_LEVELS
+CREATE TABLE access_levels
 (
-    ID                     BIGINT PRIMARY KEY,
+    id                     BIGINT PRIMARY KEY,
     level                  VARCHAR(32) NOT NULL
-        CONSTRAINT access_levels_level_values check (level in ('level.patient', 'level.receptionist', 'level.admin', 'level.doctor') ),
+        CONSTRAINT access_levels_level_values CHECK (level IN
+                                                     ('level.patient', 'level.receptionist', 'level.admin', 'level.doctor') ),
     account_id             BIGINT      NOT NULL
-        CONSTRAINT acc_lvl_account_fk REFERENCES ACCOUNTS (ID),
-    active                 bool        NOT NULL DEFAULT true,
+        CONSTRAINT acc_lvl_account_fk REFERENCES accounts (id),
+    active                 BOOL        NOT NULL DEFAULT TRUE,
     CONSTRAINT acc_lvl_level_account_pair_unique UNIQUE (level, account_id),
     version                BIGINT
         CONSTRAINT acc_lvl_version_gr0 CHECK (version >= 0),
-    creation_date_time     timestamptz NOT NULL default current_timestamp,
+    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by             BIGINT      NOT NULL
-        CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
-    modification_date_time timestamptz,
+        CONSTRAINT created_by_id_fk REFERENCES accounts (id),
+    modification_date_time TIMESTAMPTZ,
     modified_by            BIGINT
-        CONSTRAINT modified_by_id_fk REFERENCES ACCOUNTS (ID)
+        CONSTRAINT modified_by_id_fk REFERENCES accounts (id)
 
 );
 
 CREATE
-INDEX acc_lvl_ID_index ON ACCESS_LEVELS (id);
+    INDEX acc_lvl_id_index ON access_levels (id);
 CREATE
-INDEX acc_lvl_account_id_index ON ACCESS_LEVELS (account_id);
+    INDEX acc_lvl_account_id_index ON access_levels (account_id);
 CREATE
-INDEX acc_lvl_created_by_id_index ON ACCESS_LEVELS (created_by);
+    INDEX acc_lvl_created_by_id_index ON access_levels (created_by);
 CREATE
-INDEX acc_lvl_modified_by_id_index ON ACCESS_LEVELS (modified_by);
+    INDEX acc_lvl_modified_by_id_index ON access_levels (modified_by);
 
-CREATE VIEW GLASSFISH_AUTH_VIEW as
+CREATE VIEW glassfish_auth_view AS
 SELECT a.email, a.password, al.level
-FROM ACCOUNTS a,
-     ACCESS_LEVELS al
+FROM accounts a,
+     access_levels al
 WHERE (al.account_id = a.id)
-  AND (a.active = true)
-  AND (a.enabled = true)
-  AND (al.active = true);
+  AND (a.active = TRUE)
+  AND (a.enabled = TRUE)
+  AND (al.active = TRUE);
 
 
 CREATE SEQUENCE access_levels_seq
@@ -109,39 +110,39 @@ CREATE SEQUENCE access_levels_seq
 
 -- struktura dla MOW
 
-CREATE TABLE APPOINTMENTS
+CREATE TABLE appointments
 (
-    ID                          BIGINT PRIMARY KEY,
-    doctor_ID                   BIGINT
-        CONSTRAINT appoint_doctor_ID_fk REFERENCES ACCOUNTS (ID) NOT NULL,
-    patient_ID                  BIGINT
-        CONSTRAINT appoint_patient_ID_fk REFERENCES ACCOUNTS (ID) NULL,
-    appointment_date      timestamptz                      NOT NULL,
-    confirmed                   bool DEFAULT false               NOT NULL,
-    canceled                    bool DEFAULT false               NOT NULL,
-    rating                      NUMERIC(2, 1)
+    id                     BIGINT PRIMARY KEY,
+    doctor_id              BIGINT
+        CONSTRAINT appoint_doctor_id_fk REFERENCES accounts (id)  NOT NULL,
+    patient_id             BIGINT
+        CONSTRAINT appoint_patient_id_fk REFERENCES accounts (id) NULL,
+    appointment_date       TIMESTAMPTZ                            NOT NULL,
+    confirmed              BOOL DEFAULT FALSE                     NOT NULL,
+    canceled               BOOL DEFAULT FALSE                     NOT NULL,
+    rating                 NUMERIC(2, 1)
         CONSTRAINT appoint_rating_between CHECK (rating >= 0 AND rating <= 5),
-    version                     BIGINT
+    version                BIGINT
         CONSTRAINT appoint_version_gr0 CHECK (version >= 0),
-    creation_date_time     timestamptz                      not null default current_timestamp,
-    created_by                  BIGINT                           NOT NULL
-        CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
-    modification_date_time timestamptz,
-    modified_by                 BIGINT
-        CONSTRAINT modified_by_id_fk REFERENCES ACCOUNTS (ID)
+    creation_date_time     TIMESTAMPTZ                            NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by             BIGINT                                 NOT NULL
+        CONSTRAINT created_by_id_fk REFERENCES accounts (id),
+    modification_date_time TIMESTAMPTZ,
+    modified_by            BIGINT
+        CONSTRAINT modified_by_id_fk REFERENCES accounts (id)
 
 );
 
 CREATE
-INDEX appoint_ID_index ON APPOINTMENTS (ID);
+    INDEX appoint_id_index ON appointments (id);
 CREATE
-INDEX appoint_doctor_id_index ON APPOINTMENTS (doctor_ID);
+    INDEX appoint_doctor_id_index ON appointments (doctor_id);
 CREATE
-INDEX appoint_patient_id_index ON APPOINTMENTS (patient_ID);
+    INDEX appoint_patient_id_index ON appointments (patient_id);
 CREATE
-INDEX appoint_created_by_id_index ON APPOINTMENTS (created_by);
+    INDEX appoint_created_by_id_index ON appointments (created_by);
 CREATE
-INDEX appoint_modified_by_id_index ON APPOINTMENTS (modified_by);
+    INDEX appoint_modified_by_id_index ON appointments (modified_by);
 
 CREATE SEQUENCE appointments_seq
     START WITH 1
@@ -151,31 +152,31 @@ CREATE SEQUENCE appointments_seq
 
 -- struktura dla MOD
 
-CREATE TABLE MEDICAL_DOCUMENTATIONS
+CREATE TABLE medical_documentations
 (
-    ID                     BIGINT PRIMARY KEY,
-    patient_ID             BIGINT      NOT NULL
-        CONSTRAINT patient_id_fk REFERENCES ACCOUNTS (ID),
+    id                     BIGINT PRIMARY KEY,
+    patient_id             BIGINT      NOT NULL
+        CONSTRAINT patient_id_fk REFERENCES accounts (id),
     allergies              TEXT,
     medications_taken      TEXT,
     version                BIGINT
         CONSTRAINT version_gr0 CHECK (version >= 0),
-    creation_date_time     timestamptz not null default current_timestamp,
+    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by             BIGINT      NOT NULL
-        CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
-    modification_date_time timestamptz,
+        CONSTRAINT created_by_id_fk REFERENCES accounts (id),
+    modification_date_time TIMESTAMPTZ,
     modified_by            BIGINT
-        CONSTRAINT modified_by_id_fk REFERENCES ACCOUNTS (ID)
+        CONSTRAINT modified_by_id_fk REFERENCES accounts (id)
 );
 
 CREATE
-INDEX med_documentation_id_index ON MEDICAL_DOCUMENTATIONS (ID);
+    INDEX med_documentation_id_index ON medical_documentations (id);
 CREATE
-INDEX med_documentation_patient_id_index ON MEDICAL_DOCUMENTATIONS (patient_ID);
+    INDEX med_documentation_patient_id_index ON medical_documentations (patient_id);
 CREATE
-INDEX med_documentation_created_by_id_index ON MEDICAL_DOCUMENTATIONS (created_by);
+    INDEX med_documentation_created_by_id_index ON medical_documentations (created_by);
 CREATE
-INDEX med_documentation_modified_by_id_index ON MEDICAL_DOCUMENTATIONS (modified_by);
+    INDEX med_documentation_modified_by_id_index ON medical_documentations (modified_by);
 
 
 CREATE SEQUENCE medical_documentations_seq
@@ -184,33 +185,33 @@ CREATE SEQUENCE medical_documentations_seq
     NO MINVALUE
     NO MAXVALUE CACHE 1;
 
-CREATE TABLE DOCUMENTATION_ENTRIES
+CREATE TABLE documentation_entries
 (
-    ID                     BIGINT PRIMARY KEY,
-    documentation_ID       BIGINT      NOT NULL
-        CONSTRAINT documentation_id_fk REFERENCES MEDICAL_DOCUMENTATIONS (ID),
-    doctor_ID              BIGINT      NOT NULL
-        CONSTRAINT doctor_id_fk REFERENCES ACCOUNTS (ID),
+    id                     BIGINT PRIMARY KEY,
+    documentation_id       BIGINT      NOT NULL
+        CONSTRAINT documentation_id_fk REFERENCES medical_documentations (id),
+    doctor_id              BIGINT      NOT NULL
+        CONSTRAINT doctor_id_fk REFERENCES accounts (id),
     was_done               TEXT,
     to_be_done             TEXT,
     version                BIGINT
         CONSTRAINT version_gr0 CHECK (version >= 0),
-    creation_date_time     timestamptz not null default current_timestamp,
+    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by             BIGINT      NOT NULL
-        CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
-    modification_date_time timestamptz,
+        CONSTRAINT created_by_id_fk REFERENCES accounts (id),
+    modification_date_time TIMESTAMPTZ,
     modified_by            BIGINT
-        CONSTRAINT modified_by_ID_fk REFERENCES ACCOUNTS (ID)
+        CONSTRAINT modified_by_id_fk REFERENCES accounts (id)
 );
 
 CREATE
-INDEX documentation_entry_id_index ON DOCUMENTATION_ENTRIES (ID);
+    INDEX documentation_entry_id_index ON documentation_entries (id);
 CREATE
-INDEX documentation_id_index ON DOCUMENTATION_ENTRIES (documentation_ID);
+    INDEX documentation_id_index ON documentation_entries (documentation_id);
 CREATE
-INDEX documentation_created_by_index ON DOCUMENTATION_ENTRIES (created_by);
+    INDEX documentation_created_by_index ON documentation_entries (created_by);
 CREATE
-INDEX documentation_modified_by_index ON DOCUMENTATION_ENTRIES (modified_by);
+    INDEX documentation_modified_by_index ON documentation_entries (modified_by);
 
 
 CREATE SEQUENCE documentation_entries_seq
@@ -219,34 +220,34 @@ CREATE SEQUENCE documentation_entries_seq
     NO MINVALUE
     NO MAXVALUE CACHE 1;
 
-CREATE TABLE PRESCRIPTIONS
+CREATE TABLE prescriptions
 (
-    ID                     BIGINT PRIMARY KEY,
-    patient_ID             BIGINT      NOT NULL
-        CONSTRAINT patient_id_fk REFERENCES ACCOUNTS (ID),
-    doctor_ID              BIGINT      NOT NULL
-        CONSTRAINT doctor_id_fk REFERENCES ACCOUNTS (ID),
+    id                     BIGINT PRIMARY KEY,
+    patient_id             BIGINT      NOT NULL
+        CONSTRAINT patient_id_fk REFERENCES accounts (id),
+    doctor_id              BIGINT      NOT NULL
+        CONSTRAINT doctor_id_fk REFERENCES accounts (id),
     medications            TEXT        NOT NULL,
     version                BIGINT
         CONSTRAINT version_gr0 CHECK (version >= 0),
-    creation_date_time     timestamptz not null default current_timestamp,
+    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by             BIGINT      NOT NULL
-        CONSTRAINT created_by_id_fk REFERENCES ACCOUNTS (ID),
-    modification_date_time timestamptz,
+        CONSTRAINT created_by_id_fk REFERENCES accounts (id),
+    modification_date_time TIMESTAMPTZ,
     modified_by            BIGINT
-        CONSTRAINT modified_by_id_fk REFERENCES ACCOUNTS (ID)
+        CONSTRAINT modified_by_id_fk REFERENCES accounts (id)
 );
 
 CREATE
-INDEX prescription_id_index ON PRESCRIPTIONS (ID);
+    INDEX prescription_id_index ON prescriptions (id);
 CREATE
-INDEX prescription_doctor_id_index ON PRESCRIPTIONS (patient_ID);
+    INDEX prescription_doctor_id_index ON prescriptions (patient_id);
 CREATE
-INDEX prescription_patient_index ON PRESCRIPTIONS (doctor_ID);
+    INDEX prescription_patient_index ON prescriptions (doctor_id);
 CREATE
-INDEX prescription_created_by_id_index ON PRESCRIPTIONS (created_by);
+    INDEX prescription_created_by_id_index ON prescriptions (created_by);
 CREATE
-INDEX prescription_modified_by_id_index ON PRESCRIPTIONS (modified_by);
+    INDEX prescription_modified_by_id_index ON prescriptions (modified_by);
 
 CREATE SEQUENCE prescriptions_seq
     START WITH 1
@@ -258,46 +259,46 @@ CREATE SEQUENCE prescriptions_seq
 --                 UPRAWNIENIA                  --
 --------------------------------------------------
 
-ALTER TABLE ACCOUNTS
+ALTER TABLE accounts
     OWNER TO ssbd01admin;
 
 
-ALTER TABLE ACCESS_LEVELS
+ALTER TABLE access_levels
     OWNER TO ssbd01admin;
 
 ALTER
-VIEW glassfish_auth_view
+    VIEW glassfish_auth_view
     OWNER TO ssbd01admin;
 
-GRANT select on glassfish_auth_view to ssbd01auth;
+GRANT SELECT ON glassfish_auth_view TO ssbd01auth;
 
 GRANT
     SELECT,
     INSERT,
     UPDATE
-    ON ACCOUNTS TO ssbd01mok;
+    ON accounts TO ssbd01mok;
 
-GRANT SELECT on ACCOUNTS to ssbd01mok, ssbd01mow;
+GRANT SELECT ON accounts TO ssbd01mok, ssbd01mow;
 
-grant select on accounts_seq to ssbd01mok;
-grant select on accounts_seq to ssbd01mod;
-grant select on accounts_seq to ssbd01mow;
+GRANT SELECT, USAGE ON accounts_seq TO ssbd01mok;
+GRANT SELECT ON accounts_seq TO ssbd01mod;
+GRANT SELECT ON accounts_seq TO ssbd01mow;
 
 GRANT
     SELECT,
     INSERT,
     UPDATE
-    ON ACCESS_LEVELS TO ssbd01mok;
+    ON access_levels TO ssbd01mok;
 
-GRANT SELECT on ACCESS_LEVELS to ssbd01mok, ssbd01mow;
+GRANT SELECT ON access_levels TO ssbd01mok, ssbd01mow;
 
-grant select on access_levels_seq to ssbd01mok;
-grant select on access_levels_seq to ssbd01mod;
-grant select on access_levels_seq to ssbd01mow;
+GRANT SELECT, USAGE ON access_levels_seq TO ssbd01mok;
+GRANT SELECT ON access_levels_seq TO ssbd01mod;
+GRANT SELECT ON access_levels_seq TO ssbd01mow;
 
 -- UPRAWNIENIA dla MOW
 
-ALTER TABLE APPOINTMENTS
+ALTER TABLE appointments
     OWNER TO ssbd01admin;
 
 GRANT
@@ -305,46 +306,46 @@ GRANT
     INSERT,
     UPDATE,
     DELETE
-    ON APPOINTMENTS TO ssbd01mow;
+    ON appointments TO ssbd01mow;
 
-grant select on appointments_seq to ssbd01mow;
+GRANT SELECT, USAGE ON appointments_seq TO ssbd01mow;
 
 -- UPRAWNIENIA dla MOD
 
-ALTER TABLE MEDICAL_DOCUMENTATIONS
+ALTER TABLE medical_documentations
     OWNER TO ssbd01admin;
 
-ALTER TABLE DOCUMENTATION_ENTRIES
+ALTER TABLE documentation_entries
     OWNER TO ssbd01admin;
 
-ALTER TABLE PRESCRIPTIONS
+ALTER TABLE prescriptions
     OWNER TO ssbd01admin;
 
 GRANT
     SELECT,
     INSERT,
     UPDATE
-    ON MEDICAL_DOCUMENTATIONS TO ssbd01mod;
+    ON medical_documentations TO ssbd01mod;
 
-grant select on medical_documentations_seq to ssbd01mod;
-
-GRANT
-    SELECT,
-    INSERT,
-    UPDATE,
-    DELETE
-    ON DOCUMENTATION_ENTRIES TO ssbd01mod;
-
-grant select on documentation_entries_seq to ssbd01mod;
+GRANT SELECT, USAGE ON medical_documentations_seq TO ssbd01mod;
 
 GRANT
     SELECT,
     INSERT,
     UPDATE,
     DELETE
-    ON PRESCRIPTIONS TO ssbd01mod;
+    ON documentation_entries TO ssbd01mod;
 
-grant select on prescriptions_seq to ssbd01mod;
+GRANT SELECT, USAGE ON documentation_entries_seq TO ssbd01mod;
+
+GRANT
+    SELECT,
+    INSERT,
+    UPDATE,
+    DELETE
+    ON prescriptions TO ssbd01mod;
+
+GRANT SELECT, USAGE ON prescriptions_seq TO ssbd01mod;
 
 
 
