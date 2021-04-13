@@ -14,36 +14,38 @@ DROP SEQUENCE IF EXISTS medical_documentations_seq;
 DROP SEQUENCE IF EXISTS documentation_entries_seq;
 DROP SEQUENCE IF EXISTS prescriptions_seq;
 
-
+-- Tabela reprezentująca dane użytkownika
 CREATE TABLE accounts
 (
-    id                                        BIGINT PRIMARY KEY,
-    email                                     VARCHAR(100)       NOT NULL
-        CONSTRAINT acc_email_unique UNIQUE,                                                                                    -- size?
-    password                                  CHAR(64)           NOT NULL,
-    first_name                                VARCHAR(50)        NOT NULL,
-    last_name                                 VARCHAR(80)        NOT NULL,
-    phone_number                              VARCHAR(15),
-    pesel                                     CHAR(11)
+    id                                        BIGINT PRIMARY KEY,                             -- klucz główny tabeli
+    email                                     VARCHAR(100)       NOT NULL                     -- Adres email użytkownika, wykorzystany przy rejestracji, w założeniu jest niezmienny i wykorzystywany jako login użytkownika.
+        CONSTRAINT acc_email_unique UNIQUE,
+    password                                  CHAR(64)           NOT NULL,                    -- Skrót hasła uzytkownika - SHA-256.
+    first_name                                VARCHAR(50)        NOT NULL,                    -- Imię użytkownika
+    last_name                                 VARCHAR(80)        NOT NULL,                    -- Nazwisko użytkownika
+    phone_number                              VARCHAR(15),                                    -- Numer telefonu użytkownika
+    pesel                                     CHAR(11)                                        -- Numer pesel użytkownika
         CONSTRAINT acc_pesel_unique UNIQUE,
-    active                                    BOOL DEFAULT TRUE  NOT NULL,
-    enabled                                   BOOL DEFAULT FALSE NOT NULL,
-    last_successful_login                     TIMESTAMPTZ,
-    last_successful_login_ip                  VARCHAR(15),
-    last_unsuccessful_login                   TIMESTAMPTZ,
-    last_unsuccessful_login_ip                VARCHAR(15),
-    unsuccessful_login_count_since_last_login INT  DEFAULT 0
-        CONSTRAINT acc_unsuccessful_login_count_since_last_login_gr0 CHECK ( unsuccessful_login_count_since_last_login >= 0 ), -- bigger than 0
-    modified_by                               BIGINT
+    active                                    BOOL DEFAULT TRUE  NOT NULL,                    -- Pole pozwalające na blokowanie konta użytkownika, domyślnie wartość true (nie zablokowane).
+    enabled                                   BOOL DEFAULT FALSE NOT NULL,                    -- Pole reprezentujące czy konto zostało aktywowane po rejestracji, domyśnie wartość fałsz (nie aktywowane).
+    last_successful_login                     TIMESTAMPTZ,                                    -- Pole reprezentujące datę ostatniego logowania użytkownika
+    last_successful_login_ip                  VARCHAR(15),                                    -- Pole reprezentujące ip ostatniego logowania użytkownika
+    last_unsuccessful_login                   TIMESTAMPTZ,                                    -- Pole reprezentujące datę ostatniego nieudanego logowania użytkownika
+    last_unsuccessful_login_ip                VARCHAR(15),                                    -- Pole reprezentujące ip ostatniego nieudanego logowania użytkownika
+    unsuccessful_login_count_since_last_login INT  DEFAULT 0                                  -- Ilość nieudanych logowań od czasu ostatniego udanego logowania
+        CONSTRAINT acc_unsuccessful_login_count_since_last_login_gr0 CHECK
+            ( unsuccessful_login_count_since_last_login >= 0 ),                               -- bigger than 0
+    modified_by                               BIGINT                                          -- ID konta które ostatnio modyfikowało dane tabeli
         CONSTRAINT acc_modified_by_fk REFERENCES accounts (id)   NULL,
-    modification_date_time                    TIMESTAMPTZ,
-    created_by                                BIGINT             NOT NULL
+    modification_date_time                    TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji tabeli
+    created_by                                BIGINT             NOT NULL                     -- ID konta które utworzyło tabelę
         CONSTRAINT created_by_id_fk REFERENCES accounts (id),
-    creation_date_time                        TIMESTAMPTZ        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    creation_date_time                        TIMESTAMPTZ        NOT NULL DEFAULT
+        CURRENT_TIMESTAMP,                                                                    -- Data utworzenia konta
     language                                  CHAR(2)
-        CONSTRAINT acc_languages_available_values CHECK (language IN ('en', 'pl', 'EN', 'PL')
+        CONSTRAINT acc_languages_available_values CHECK (language IN ('en', 'pl', 'EN', 'PL') -- Język konta, angielski albo polski
             ),
-    version                                   BIGINT
+    version                                   BIGINT                                          -- Wersja
         CONSTRAINT acc_version_gr0 CHECK (version >= 0)
 );
 CREATE
