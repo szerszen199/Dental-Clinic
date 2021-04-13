@@ -159,7 +159,7 @@ CREATE SEQUENCE appointments_seq -- Sekwencja wykorzystywana do tworzenia kluczy
 CREATE TABLE medical_documentations
 (
     id                     BIGINT PRIMARY KEY,                             -- Klucz głowny tabeli
-    patient_id             BIGINT      NOT NULL
+    patient_id             BIGINT UNIQUE      NOT NULL
         CONSTRAINT patient_id_fk REFERENCES accounts (id),                 -- ID pacjenta którego dotyczy dokumentacja
     allergies              TEXT,                                           -- Tekstowy opis alergii pacjenta
     medications_taken      TEXT,                                           -- Tekstowy opis przyjmowanych lekarstw uzytkownika
