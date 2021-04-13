@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.common;
 
 import java.util.List;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -12,6 +13,7 @@ import javax.persistence.criteria.Root;
  *
  * @param <T> klasa encyjna
  */
+@Stateless
 public abstract class AbstractFacade<T> {
 
     private Class<T> entityClass;

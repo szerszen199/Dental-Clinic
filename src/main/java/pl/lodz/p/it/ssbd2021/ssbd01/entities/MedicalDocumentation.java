@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -51,7 +52,7 @@ public class MedicalDocumentation extends AbstractEntity implements Serializable
     private String medicationsTaken;
 
     @JoinColumn(name = "patient_id", referencedColumnName = "id", nullable = false, updatable = false)
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     private Account patient;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})

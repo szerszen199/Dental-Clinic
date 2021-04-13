@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.facades;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
@@ -8,6 +9,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 /**
  * Typ Appointment facade.
  */
+@Stateless
 public class AppointmentFacade extends AbstractFacade<Appointment> {
 
     @PersistenceContext(unitName = "ssbd01mowPU")
