@@ -14,36 +14,38 @@ DROP SEQUENCE IF EXISTS medical_documentations_seq;
 DROP SEQUENCE IF EXISTS documentation_entries_seq;
 DROP SEQUENCE IF EXISTS prescriptions_seq;
 
-
+-- Tabela reprezentująca dane użytkownika
 CREATE TABLE accounts
 (
-    id                                        BIGINT PRIMARY KEY,
-    email                                     VARCHAR(100)       NOT NULL
-        CONSTRAINT acc_email_unique UNIQUE,                                                                                    -- size?
-    password                                  CHAR(64)           NOT NULL,
-    first_name                                VARCHAR(50)        NOT NULL,
-    last_name                                 VARCHAR(80)        NOT NULL,
-    phone_number                              VARCHAR(15),
-    pesel                                     CHAR(11)
+    id                                        BIGINT PRIMARY KEY,                             -- klucz główny tabeli
+    email                                     VARCHAR(100)       NOT NULL                     -- Adres email użytkownika, wykorzystany przy rejestracji, w założeniu jest niezmienny i wykorzystywany jako login użytkownika.
+        CONSTRAINT acc_email_unique UNIQUE,
+    password                                  CHAR(64)           NOT NULL,                    -- Skrót hasła uzytkownika - SHA-256.
+    first_name                                VARCHAR(50)        NOT NULL,                    -- Imię użytkownika
+    last_name                                 VARCHAR(80)        NOT NULL,                    -- Nazwisko użytkownika
+    phone_number                              VARCHAR(15),                                    -- Numer telefonu użytkownika
+    pesel                                     CHAR(11)                                        -- Numer pesel użytkownika
         CONSTRAINT acc_pesel_unique UNIQUE,
-    active                                    BOOL DEFAULT TRUE  NOT NULL,
-    enabled                                   BOOL DEFAULT FALSE NOT NULL,
-    last_successful_login                     TIMESTAMPTZ,
-    last_successful_login_ip                  VARCHAR(15),
-    last_unsuccessful_login                   TIMESTAMPTZ,
-    last_unsuccessful_login_ip                VARCHAR(15),
-    unsuccessful_login_count_since_last_login INT  DEFAULT 0
-        CONSTRAINT acc_unsuccessful_login_count_since_last_login_gr0 CHECK ( unsuccessful_login_count_since_last_login >= 0 ), -- bigger than 0
-    modified_by                               BIGINT
+    active                                    BOOL DEFAULT TRUE  NOT NULL,                    -- Pole pozwalające na blokowanie konta użytkownika, domyślnie wartość true (nie zablokowane).
+    enabled                                   BOOL DEFAULT FALSE NOT NULL,                    -- Pole reprezentujące czy konto zostało aktywowane po rejestracji, domyśnie wartość fałsz (nie aktywowane).
+    last_successful_login                     TIMESTAMPTZ,                                    -- Pole reprezentujące datę ostatniego logowania użytkownika
+    last_successful_login_ip                  VARCHAR(15),                                    -- Pole reprezentujące ip ostatniego logowania użytkownika
+    last_unsuccessful_login                   TIMESTAMPTZ,                                    -- Pole reprezentujące datę ostatniego nieudanego logowania użytkownika
+    last_unsuccessful_login_ip                VARCHAR(15),                                    -- Pole reprezentujące ip ostatniego nieudanego logowania użytkownika
+    unsuccessful_login_count_since_last_login INT  DEFAULT 0                                  -- Ilość nieudanych logowań od czasu ostatniego udanego logowania
+        CONSTRAINT acc_unsuccessful_login_count_since_last_login_gr0 CHECK
+            ( unsuccessful_login_count_since_last_login >= 0 ),                               -- bigger than 0
+    modified_by                               BIGINT                                          -- ID konta które ostatnio modyfikowało dane tabeli
         CONSTRAINT acc_modified_by_fk REFERENCES accounts (id)   NULL,
-    modification_date_time                    TIMESTAMPTZ,
-    created_by                                BIGINT             NOT NULL
+    modification_date_time                    TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji tabeli
+    created_by                                BIGINT             NOT NULL                     -- ID konta które utworzyło tabelę
         CONSTRAINT created_by_id_fk REFERENCES accounts (id),
-    creation_date_time                        TIMESTAMPTZ        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    creation_date_time                        TIMESTAMPTZ        NOT NULL DEFAULT
+        CURRENT_TIMESTAMP,                                                                    -- Data utworzenia konta
     language                                  CHAR(2)
-        CONSTRAINT acc_languages_available_values CHECK (language IN ('en', 'pl', 'EN', 'PL')
+        CONSTRAINT acc_languages_available_values CHECK (language IN ('en', 'pl', 'EN', 'PL') -- Język konta, angielski albo polski
             ),
-    version                                   BIGINT
+    version                                   BIGINT                                          -- Wersja
         CONSTRAINT acc_version_gr0 CHECK (version >= 0)
 );
 CREATE
@@ -55,7 +57,7 @@ CREATE
 CREATE
     INDEX acc_created_by_index ON accounts (created_by);
 
-CREATE SEQUENCE accounts_seq
+CREATE SEQUENCE accounts_seq -- Sekwencja wykorzystywana przy tworzeniu pola klucza głównego tabeli account
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -63,21 +65,21 @@ CREATE SEQUENCE accounts_seq
 
 CREATE TABLE access_levels
 (
-    id                     BIGINT PRIMARY KEY,
+    id                     BIGINT PRIMARY KEY,                                                                                 -- klucz główny tabeli
     level                  VARCHAR(32) NOT NULL
         CONSTRAINT access_levels_level_values CHECK (level IN
-                                                     ('level.patient', 'level.receptionist', 'level.admin', 'level.doctor') ),
+                                                     ('level.patient', 'level.receptionist', 'level.admin', 'level.doctor') ), -- Poziom dostępu, jedyne możliwe wartości: 'level.patient', 'level.receptionist', 'level.admin', 'level.doctor'
     account_id             BIGINT      NOT NULL
-        CONSTRAINT acc_lvl_account_fk REFERENCES accounts (id),
-    active                 BOOL        NOT NULL DEFAULT TRUE,
-    CONSTRAINT acc_lvl_level_account_pair_unique UNIQUE (level, account_id),
-    version                BIGINT
+        CONSTRAINT acc_lvl_account_fk REFERENCES accounts (id),                                                                -- Konto przypisane do poziomu dostepu
+    active                 BOOL        NOT NULL DEFAULT TRUE,                                                                  -- Czy przypisany poziom dostępu jest aktywny, domyślnie prawda (jest aktywny). Pole pozwala na wyłączanie użytkownikom poziomów dostepu bez usuwania wiersza tabeli.
+    CONSTRAINT acc_lvl_level_account_pair_unique UNIQUE (level, account_id),                                                   -- Para poziom dostepu i konta użytkownika jest unikalna
+    version                BIGINT                                                                                              -- Wersja
         CONSTRAINT acc_lvl_version_gr0 CHECK (version >= 0),
-    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_by             BIGINT      NOT NULL
+    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,                                                     -- Data utworzenia tabeli
+    created_by             BIGINT      NOT NULL                                                                                -- ID konta które utworzyło tabelę
         CONSTRAINT created_by_id_fk REFERENCES accounts (id),
-    modification_date_time TIMESTAMPTZ,
-    modified_by            BIGINT
+    modification_date_time TIMESTAMPTZ,                                                                                        -- Data ostatniej modyfikacji tabeli
+    modified_by            BIGINT                                                                                              -- Użytkownik który ostatni modyfikował tabelę
         CONSTRAINT modified_by_id_fk REFERENCES accounts (id)
 
 );
@@ -91,7 +93,8 @@ CREATE
 CREATE
     INDEX acc_lvl_modified_by_id_index ON access_levels (modified_by);
 
-CREATE VIEW glassfish_auth_view AS
+CREATE VIEW glassfish_auth_view AS -- Widok wykorzystywany w procesie autentykacji i autoryzacji,
+-- zawiera pola email, hasło i poziom dostepu dla każdej kombinacji tabel account i access_level dla której konto jest i aktywne i aktywowane oraz poziom dostępu jest aktywny
 SELECT a.email, a.password, al.level
 FROM accounts a,
      access_levels al
@@ -101,7 +104,7 @@ WHERE (al.account_id = a.id)
   AND (al.active = TRUE);
 
 
-CREATE SEQUENCE access_levels_seq
+CREATE SEQUENCE access_levels_seq -- Sekwencja wykorzystywana przy tworzeniu pola klucza głównego tabeli access_level
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -112,23 +115,23 @@ CREATE SEQUENCE access_levels_seq
 
 CREATE TABLE appointments
 (
-    id                     BIGINT PRIMARY KEY,
-    doctor_id              BIGINT
+    id                     BIGINT PRIMARY KEY,                                                       -- Klucz głowny tabeli
+    doctor_id              BIGINT                                                                    -- Id konta lekarza dla wizyty
         CONSTRAINT appoint_doctor_id_fk REFERENCES accounts (id)  NOT NULL,
-    patient_id             BIGINT
+    patient_id             BIGINT                                                                    -- Id konta pacjenta dla wizyty
         CONSTRAINT appoint_patient_id_fk REFERENCES accounts (id) NULL,
-    appointment_date       TIMESTAMPTZ                            NOT NULL,
-    confirmed              BOOL DEFAULT FALSE                     NOT NULL,
-    canceled               BOOL DEFAULT FALSE                     NOT NULL,
-    rating                 NUMERIC(2, 1)
+    appointment_date       TIMESTAMPTZ                            NOT NULL,                          -- Data wizyty
+    confirmed              BOOL DEFAULT FALSE                     NOT NULL,                          -- Czy wizyta została potwierdzona, domyślnie fałsz.
+    canceled               BOOL DEFAULT FALSE                     NOT NULL,                          -- Czy wizyta została anulowana, domyślnie fałsz.
+    rating                 NUMERIC(2, 1)                                                             -- Ocena wizyty
         CONSTRAINT appoint_rating_between CHECK (rating >= 0 AND rating <= 5),
-    version                BIGINT
+    version                BIGINT                                                                    -- Wersja
         CONSTRAINT appoint_version_gr0 CHECK (version >= 0),
-    creation_date_time     TIMESTAMPTZ                            NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_by             BIGINT                                 NOT NULL
+    creation_date_time     TIMESTAMPTZ                            NOT NULL DEFAULT CURRENT_TIMESTAMP,-- Data utworzenia wizyty
+    created_by             BIGINT                                 NOT NULL                           -- Konto które stworzyło wizytę
         CONSTRAINT created_by_id_fk REFERENCES accounts (id),
-    modification_date_time TIMESTAMPTZ,
-    modified_by            BIGINT
+    modification_date_time TIMESTAMPTZ,                                                              -- Data modyfikacji,
+    modified_by            BIGINT                                                                    -- Konto które modyfikowało ostatnio tabelę
         CONSTRAINT modified_by_id_fk REFERENCES accounts (id)
 
 );
@@ -144,7 +147,7 @@ CREATE
 CREATE
     INDEX appoint_modified_by_id_index ON appointments (modified_by);
 
-CREATE SEQUENCE appointments_seq
+CREATE SEQUENCE appointments_seq -- Sekwencja wykorzystywana do tworzenia kluczy głownych dla tabeli appointments
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -152,22 +155,24 @@ CREATE SEQUENCE appointments_seq
 
 -- struktura dla MOD
 
+-- Tabela reprezentująca dkoumentację medyczną użytkownika, będąca w relacji one to ona z tableką account, i one to many z wpisami w tabeli (tabela documentation_entries)
 CREATE TABLE medical_documentations
 (
-    id                     BIGINT PRIMARY KEY,
+    id                     BIGINT PRIMARY KEY,                             -- Klucz głowny tabeli
     patient_id             BIGINT      NOT NULL
-        CONSTRAINT patient_id_fk REFERENCES accounts (id),
-    allergies              TEXT,
-    medications_taken      TEXT,
-    version                BIGINT
+        CONSTRAINT patient_id_fk REFERENCES accounts (id),                 -- ID pacjenta którego dotyczy dokumentacja
+    allergies              TEXT,                                           -- Tekstowy opis alergii pacjenta
+    medications_taken      TEXT,                                           -- Tekstowy opis przyjmowanych lekarstw uzytkownika
+    version                BIGINT                                          -- Wersja
         CONSTRAINT version_gr0 CHECK (version >= 0),
-    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_by             BIGINT      NOT NULL
+    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Data stworzenia wiersza w tabeli
+    created_by             BIGINT      NOT NULL                            -- Id użytkownika
         CONSTRAINT created_by_id_fk REFERENCES accounts (id),
-    modification_date_time TIMESTAMPTZ,
-    modified_by            BIGINT
+    modification_date_time TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji
+    modified_by            BIGINT                                          -- Konto które ostatnio modyfikowało dane tabeli
         CONSTRAINT modified_by_id_fk REFERENCES accounts (id)
 );
+
 
 CREATE
     INDEX med_documentation_id_index ON medical_documentations (id);
@@ -179,28 +184,29 @@ CREATE
     INDEX med_documentation_modified_by_id_index ON medical_documentations (modified_by);
 
 
-CREATE SEQUENCE medical_documentations_seq
+CREATE SEQUENCE medical_documentations_seq -- Sekwencja wykorzystywana do tworzenia klucza głownego dla tabeli medical_documentation
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE CACHE 1;
 
+-- Tabela reprezentująca wpsiy w dokumentację medyczną użytkownika
 CREATE TABLE documentation_entries
 (
-    id                     BIGINT PRIMARY KEY,
-    documentation_id       BIGINT      NOT NULL
+    id                     BIGINT PRIMARY KEY,                             -- Klucz głowny tabeli
+    documentation_id       BIGINT      NOT NULL                            -- Dokumentacja medyczna, do której odnosi się wpis
         CONSTRAINT documentation_id_fk REFERENCES medical_documentations (id),
-    doctor_id              BIGINT      NOT NULL
+    doctor_id              BIGINT      NOT NULL                            -- Lekarz, który tworzy wpis w dokumentacji
         CONSTRAINT doctor_id_fk REFERENCES accounts (id),
-    was_done               TEXT,
-    to_be_done             TEXT,
-    version                BIGINT
+    was_done               TEXT,                                           -- Tekst informujący co zostało wykonane na wizycie reprezentowanej przez wpis w dokumentacji
+    to_be_done             TEXT,                                           -- Tekst informujący co ma zostać wykonane na nastepnej wizycie
+    version                BIGINT                                          -- Wersja
         CONSTRAINT version_gr0 CHECK (version >= 0),
-    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_by             BIGINT      NOT NULL
+    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Data utworzenia wiersza tabeli
+    created_by             BIGINT      NOT NULL                            -- Konto, które tworzyło wiersz tabeli
         CONSTRAINT created_by_id_fk REFERENCES accounts (id),
-    modification_date_time TIMESTAMPTZ,
-    modified_by            BIGINT
+    modification_date_time TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji wiersza w tabelik
+    modified_by            BIGINT                                          -- Konto które ostatnio modyfikowało wiersz w tabeli.
         CONSTRAINT modified_by_id_fk REFERENCES accounts (id)
 );
 
@@ -214,27 +220,28 @@ CREATE
     INDEX documentation_modified_by_index ON documentation_entries (modified_by);
 
 
-CREATE SEQUENCE documentation_entries_seq
+CREATE SEQUENCE documentation_entries_seq -- Sekwencja uzywana do tworzenia pola klucza głównego w tabelii documentation_entries.
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE CACHE 1;
 
+-- Tabela reprezentująca
 CREATE TABLE prescriptions
 (
-    id                     BIGINT PRIMARY KEY,
+    id                     BIGINT PRIMARY KEY,                             -- Klucz główny tabeli
     patient_id             BIGINT      NOT NULL
-        CONSTRAINT patient_id_fk REFERENCES accounts (id),
-    doctor_id              BIGINT      NOT NULL
+        CONSTRAINT patient_id_fk REFERENCES accounts (id),                 -- Id pacjenta, którego dotyczy recepta
+    doctor_id              BIGINT      NOT NULL                            -- Id lekarza który wystawił receptę
         CONSTRAINT doctor_id_fk REFERENCES accounts (id),
-    medications            TEXT        NOT NULL,
-    version                BIGINT
+    medications            TEXT        NOT NULL,                           -- Tekst informujący o przepisanych lekarstwach
+    version                BIGINT                                          -- Wersja
         CONSTRAINT version_gr0 CHECK (version >= 0),
-    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_by             BIGINT      NOT NULL
+    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Czas utworzenia wiersza w tabeli
+    created_by             BIGINT      NOT NULL                            -- Konto które utworzyło wiersz w tabeli
         CONSTRAINT created_by_id_fk REFERENCES accounts (id),
-    modification_date_time TIMESTAMPTZ,
-    modified_by            BIGINT
+    modification_date_time TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji wiersza w tabeli
+    modified_by            BIGINT                                          -- Konto ostatnio modyfikujące wiersza w tabeli
         CONSTRAINT modified_by_id_fk REFERENCES accounts (id)
 );
 
@@ -249,7 +256,7 @@ CREATE
 CREATE
     INDEX prescription_modified_by_id_index ON prescriptions (modified_by);
 
-CREATE SEQUENCE prescriptions_seq
+CREATE SEQUENCE prescriptions_seq -- Sekwencja wykorzystywana do tworzenia klucza głownego w tabeli prescriptions
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
