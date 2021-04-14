@@ -65,7 +65,7 @@ public class Account extends AbstractEntity implements Serializable {
     @Column(name = "password", columnDefinition = "bpchar", nullable = false, length = 64)
     private String password;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
     @JoinColumn(name = "account_id")
     private Set<AccessLevel> accessLevels = new HashSet<>();
 
