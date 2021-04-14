@@ -315,7 +315,8 @@ GRANT SELECT ON glassfish_auth_view TO ssbd01auth;
 GRANT
     SELECT,
     INSERT,
-    UPDATE
+    UPDATE,
+    DELETE
     ON accounts TO ssbd01mok;
 
 GRANT SELECT ON accounts TO ssbd01mok, ssbd01mow;
