@@ -6,7 +6,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-// Ta pula połączeń jest na potrzeby tworzenia struktur przy wdrażaniu aplikacji
+
 @DataSourceDefinition(
 
         name = "java:app/jdbc/ssbd01admin",
@@ -19,9 +19,9 @@ import javax.persistence.PersistenceContext;
         initialPoolSize = 1,
         minPoolSize = 0,
         maxPoolSize = 1,
-        maxIdleTime = 10) //Nie potrzebujemy przetrzymywać połączeń w tej puli
+        maxIdleTime = 10)
 
-// Ta pula połączeń jest na potrzeby operacji realizowanych przez moduł aplikacji
+
 @DataSourceDefinition(
         name = "java:app/jdbc/ssbd01mok",
         className = "org.postgresql.ds.PGSimpleDataSource",
@@ -33,7 +33,7 @@ import javax.persistence.PersistenceContext;
         transactional = true,
         isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 
-// Ta pula połączeń jest na potrzeby implementacji uwierzytelniania w aplikacji
+
 @DataSourceDefinition(
         name = "java:app/jdbc/ssbd01auth",
         className = "org.postgresql.ds.PGSimpleDataSource",
@@ -43,7 +43,7 @@ import javax.persistence.PersistenceContext;
         portNumber = 5432,
         databaseName = "ssbd01")
 
-// Ta pula połączeń jest na potrzeby operacji realizowanych przez moduł aplikacji
+
 @DataSourceDefinition(
         name = "java:app/jdbc/ssbd01mow",
         className = "org.postgresql.ds.PGSimpleDataSource",
@@ -55,7 +55,7 @@ import javax.persistence.PersistenceContext;
         transactional = true,
         isolationLevel = Connection.TRANSACTION_SERIALIZABLE)
 
-// Ta pula połączeń jest na potrzeby operacji realizowanych przez moduł aplikacji
+
 @DataSourceDefinition(
         name = "java:app/jdbc/ssbd01mod",
         className = "org.postgresql.ds.PGSimpleDataSource",
@@ -65,17 +65,13 @@ import javax.persistence.PersistenceContext;
         portNumber = 5432,
         databaseName = "ssbd01",
         transactional = true,
-        isolationLevel = Connection.TRANSACTION_SERIALIZABLE)
+        isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 
 
 @Stateless
 public class JDBCConfig {
 
-    //    Uczynienie z tej klasy komponentu Stateless
-    //    i wstrzykniecie zarzadcy encji korzystajacego z ssbd00adminPU
-    //    powoduje aktywowanie tej jednostki skladowania,
-    //    a w konsekwencji utworzenie (z ew. usunieciem!) struktur w bazie danych
-    //    @see persistence.xml
+
     @PersistenceContext(unitName = "ssbd01adminPU")
     private EntityManager em;
 }
