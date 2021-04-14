@@ -29,10 +29,11 @@ import javax.persistence.PersistenceContext;
         password = "tF?reN@F7Yt9WM-=",
         serverName = "studdev.it.p.lodz.pl",
         portNumber = 5432,
+        databaseName = "ssbd01",
+        transactional = true,
         initialPoolSize = 1,
         minPoolSize = 0,
         maxPoolSize = 32,
-        databaseName = "ssbd01",
         isolationLevel = Connection.TRANSACTION_SERIALIZABLE)
 
 
