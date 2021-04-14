@@ -41,9 +41,9 @@ CREATE TABLE accounts
     created_by                                BIGINT             NOT NULL,                    -- ID konta które utworzyło tabelę,
     creation_date_time                        TIMESTAMPTZ        NOT NULL DEFAULT
                 CURRENT_TIMESTAMP,                                                                    -- Data utworzenia konta
-    language                                  CHAR(2)
-        CONSTRAINT acc_languages_available_values CHECK (language IN ('en', 'pl', 'EN', 'PL') -- Język konta, angielski albo polski
-            ),
+   language                                  CHAR(2),
+ -- Język konta
+
     version                                   BIGINT                                          -- Wersja
         CONSTRAINT acc_version_gr0 CHECK (version >= 0)
 );
