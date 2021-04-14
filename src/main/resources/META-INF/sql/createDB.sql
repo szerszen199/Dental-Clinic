@@ -253,7 +253,7 @@ CREATE SEQUENCE documentation_entries_seq -- Sekwencja uzywana do tworzenia pola
     NO MINVALUE
     NO MAXVALUE CACHE 1;
 
--- Tabela reprezentująca
+-- Tabela reprezentująca recepty
 CREATE TABLE prescriptions
 (
     id                     BIGINT PRIMARY KEY,                             -- Klucz główny tabeli
