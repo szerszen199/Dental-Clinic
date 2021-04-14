@@ -7,20 +7,19 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 
-@DataSourceDefinition(
-
-        name = "java:app/jdbc/ssbd01admin",
-        className = "org.postgresql.ds.PGSimpleDataSource",
-        user = "ssbd01admin",
-        password = "9DQAn2+G+H=$K2Vu",
-        serverName = "studdev.it.p.lodz.pl",
-        portNumber = 5432,
-        databaseName = "ssbd01",
-        initialPoolSize = 1,
-        minPoolSize = 0,
-        maxPoolSize = 1,
-        maxIdleTime = 10)
-
+//@DataSourceDefinition(
+//
+//        name = "java:app/jdbc/ssbd01admin",
+//        className = "org.postgresql.ds.PGSimpleDataSource",
+//        user = "ssbd01admin",
+//        password = "9DQAn2+G+H=$K2Vu",
+//        serverName = "studdev.it.p.lodz.pl",
+//        portNumber = 5432,
+//        databaseName = "ssbd01",
+//        initialPoolSize = 1,
+//        minPoolSize = 0,
+//        maxPoolSize = 1,
+//        maxIdleTime = 10)
 
 @DataSourceDefinition(
         name = "java:app/jdbc/ssbd01mok",
@@ -31,6 +30,9 @@ import javax.persistence.PersistenceContext;
         portNumber = 5432,
         databaseName = "ssbd01",
         transactional = true,
+        initialPoolSize = 1,
+        minPoolSize = 0,
+        maxPoolSize = 32,
         isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 
 
@@ -41,7 +43,12 @@ import javax.persistence.PersistenceContext;
         password = "tF?reN@F7Yt9WM-=",
         serverName = "studdev.it.p.lodz.pl",
         portNumber = 5432,
-        databaseName = "ssbd01")
+        databaseName = "ssbd01",
+        transactional = true,
+        initialPoolSize = 1,
+        minPoolSize = 0,
+        maxPoolSize = 32,
+        isolationLevel = Connection.TRANSACTION_SERIALIZABLE)
 
 
 @DataSourceDefinition(
@@ -53,6 +60,9 @@ import javax.persistence.PersistenceContext;
         portNumber = 5432,
         databaseName = "ssbd01",
         transactional = true,
+        initialPoolSize = 1,
+        minPoolSize = 0,
+        maxPoolSize = 32,
         isolationLevel = Connection.TRANSACTION_SERIALIZABLE)
 
 
@@ -65,6 +75,9 @@ import javax.persistence.PersistenceContext;
         portNumber = 5432,
         databaseName = "ssbd01",
         transactional = true,
+        initialPoolSize = 1,
+        minPoolSize = 0,
+        maxPoolSize = 32,
         isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 
 
@@ -72,6 +85,6 @@ import javax.persistence.PersistenceContext;
 public class JDBCConfig {
 
 
-    @PersistenceContext(unitName = "ssbd01adminPU")
-    private EntityManager em;
+//    @PersistenceContext(unitName = "ssbd01adminPU")
+//    private EntityManager em;
 }
