@@ -55,7 +55,7 @@ public class MedicalDocumentation extends AbstractEntity implements Serializable
     @OneToOne(optional = false)
     private Account patient;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
     @JoinColumn(name = "documentation_id", nullable = false)
     private Collection<DocumentationEntry> documentationEntryCollection = new ArrayList<DocumentationEntry>();
 
