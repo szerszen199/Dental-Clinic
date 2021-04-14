@@ -18,7 +18,9 @@ DROP SEQUENCE IF EXISTS prescriptions_seq;
 CREATE TABLE accounts
 (
     id                                        BIGINT PRIMARY KEY,                             -- klucz główny tabeli
-    email                                     VARCHAR(100)       NOT NULL                     -- Adres email użytkownika, wykorzystany przy rejestracji, w założeniu jest niezmienny i wykorzystywany jako login użytkownika.
+    login                                     VARCHAR(60)        NOT NULL                     -- login użytkownika, niezmienny
+        CONSTRAINT acc_login_unique UNIQUE,
+    email                                     VARCHAR(100)       NOT NULL                     -- Adres email użytkownika, wykorzystywany do wysłania wiadomości z linkiem weryfikacyjnym
         CONSTRAINT acc_email_unique UNIQUE,
     password                                  CHAR(64)           NOT NULL,                    -- Skrót hasła uzytkownika - SHA-256.
     first_name                                VARCHAR(50)        NOT NULL,                    -- Imię użytkownika
@@ -58,7 +60,7 @@ ALTER TABLE accounts
 CREATE
     INDEX acc_id_index ON accounts (id);
 CREATE
-    INDEX acc_email_index ON accounts (email);
+    INDEX acc_login_index ON accounts (login);
 CREATE
     INDEX acc_modified_by_index ON accounts (modified_by);
 CREATE
@@ -73,9 +75,7 @@ CREATE SEQUENCE accounts_seq -- Sekwencja wykorzystywana przy tworzeniu pola klu
 CREATE TABLE access_levels
 (
     id                     BIGINT PRIMARY KEY,                                                                                 -- klucz główny tabeli
-    level                  VARCHAR(32) NOT NULL
-        CONSTRAINT access_levels_level_values CHECK (level IN
-                                                     ('level.patient', 'level.receptionist', 'level.admin', 'level.doctor') ), -- Poziom dostępu, jedyne możliwe wartości: 'level.patient', 'level.receptionist', 'level.admin', 'level.doctor'
+    level                  VARCHAR(32) NOT NULL,                                                                               -- Poziom dostępu,
     account_id             BIGINT      NOT NULL,                                                                               -- Konto przypisane do poziomu dostepu
     active                 BOOL        NOT NULL DEFAULT TRUE,                                                                  -- Czy przypisany poziom dostępu jest aktywny, domyślnie prawda (jest aktywny). Pole pozwala na wyłączanie użytkownikom poziomów dostepu bez usuwania wiersza tabeli.
     CONSTRAINT acc_lvl_level_account_pair_unique UNIQUE (level, account_id),                                                   -- Para poziom dostepu i konta użytkownika jest unikalna
@@ -106,8 +106,8 @@ CREATE
     INDEX acc_lvl_modified_by_id_index ON access_levels (modified_by);
 
 CREATE VIEW glassfish_auth_view AS -- Widok wykorzystywany w procesie autentykacji i autoryzacji,
--- zawiera pola email, hasło i poziom dostepu dla każdej kombinacji tabel account i access_level dla której konto jest i aktywne i aktywowane oraz poziom dostępu jest aktywny
-SELECT a.email, a.password, al.level
+-- zawiera pola login, hasło i poziom dostepu dla każdej kombinacji tabel account i access_level dla której konto jest i aktywne i aktywowane oraz poziom dostępu jest aktywny
+SELECT a.login, a.password, al.level
 FROM accounts a,
      access_levels al
 WHERE (al.account_id = a.id)
@@ -253,7 +253,7 @@ CREATE SEQUENCE documentation_entries_seq -- Sekwencja uzywana do tworzenia pola
     NO MINVALUE
     NO MAXVALUE CACHE 1;
 
--- Tabela reprezentująca
+-- Tabela reprezentująca recepty
 CREATE TABLE prescriptions
 (
     id                     BIGINT PRIMARY KEY,                             -- Klucz główny tabeli
