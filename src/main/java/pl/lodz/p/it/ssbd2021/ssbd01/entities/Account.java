@@ -25,6 +25,7 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "accounts", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"email"}),
+        @UniqueConstraint(columnNames = {"login"}),
         @UniqueConstraint(columnNames = {"pesel"})})
 @NamedQueries({
         @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a"),
@@ -45,7 +46,8 @@ import javax.persistence.UniqueConstraint;
         @NamedQuery(name = "Account.findByModificationDate", query = "SELECT a FROM Account a WHERE a.modificationDateTime = :modificationDate"),
         @NamedQuery(name = "Account.findByCreationDate", query = "SELECT a FROM Account a WHERE a.creationDateTime = :creationDate"),
         @NamedQuery(name = "Account.findByLanguage", query = "SELECT a FROM Account a WHERE a.language = :language"),
-        @NamedQuery(name = "Account.findByVersion", query = "SELECT a FROM Account a WHERE a.version = :version")})
+        @NamedQuery(name = "Account.findByVersion", query = "SELECT a FROM Account a WHERE a.version = :version"),
+        @NamedQuery(name = "Account.findByLogin", query = "SELECT a FROM Account a WHERE a.login = :login")})
 public class Account extends AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -58,9 +60,13 @@ public class Account extends AbstractEntity implements Serializable {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "email", updatable = false, nullable = false, length = 100)
+    @Column(name = "login", updatable = false, nullable = false, length = 60)
+    private String login;
+    
+    @Basic(optional = false)
+    @Column(name = "email", nullable = false, length = 100)
     private String email;
-
+    
     @Basic(optional = false)
     @Column(name = "password", columnDefinition = "bpchar", nullable = false, length = 64)
     private String password;
@@ -118,6 +124,7 @@ public class Account extends AbstractEntity implements Serializable {
     /**
      * Tworzy nową instancję klasy Account reprezentujacej konto użytkownika aplikacji.
      *
+     * @param login     login konta
      * @param email     adres e-mail przypisany do konta
      * @param password  hasło konta
      * @param firstName imię użytkownika
@@ -125,7 +132,8 @@ public class Account extends AbstractEntity implements Serializable {
      * @param active    status konta (aktywne)
      * @param enabled   status konta (potwierdzone)
      */
-    public Account(String email, String password, String firstName, String lastName, Boolean active, Boolean enabled) {
+    public Account(String login, String email, String password, String firstName, String lastName, Boolean active, Boolean enabled) {
+        this.login = login;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
@@ -139,8 +147,16 @@ public class Account extends AbstractEntity implements Serializable {
         return id;
     }
 
+    public String getLogin() {
+        return login;
+    }
+
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -149,6 +165,10 @@ public class Account extends AbstractEntity implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<AccessLevel> getAccessLevels() {
+        return accessLevels;
     }
 
     public String getFirstName() {
