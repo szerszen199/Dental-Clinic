@@ -42,7 +42,7 @@ public class MedicalDocumentation extends AbstractEntity implements Serializable
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medical_documentations_generator")
     @SequenceGenerator(name = "medical_documentations_generator", sequenceName = "medical_documentations_seq", allocationSize = 1)
     @Basic(optional = false)
-    @Column(name = "id", updatable = false ,nullable = false)
+    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
     @Column(name = "allergies")
