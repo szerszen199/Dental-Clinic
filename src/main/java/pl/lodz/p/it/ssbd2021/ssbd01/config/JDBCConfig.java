@@ -7,6 +7,20 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 
+//@DataSourceDefinition(
+//
+//        name = "java:app/jdbc/ssbd01admin",
+//        className = "org.postgresql.ds.PGSimpleDataSource",
+//        user = "ssbd01admin",
+//        password = "9DQAn2+G+H=$K2Vu",
+//        serverName = "studdev.it.p.lodz.pl",
+//        portNumber = 5432,
+//        databaseName = "ssbd01",
+//        initialPoolSize = 1,
+//        minPoolSize = 0,
+//        maxPoolSize = 1,
+//        maxIdleTime = 10)
+
 @DataSourceDefinition(
         name = "java:app/jdbc/ssbd01mok",
         className = "org.postgresql.ds.PGSimpleDataSource",
