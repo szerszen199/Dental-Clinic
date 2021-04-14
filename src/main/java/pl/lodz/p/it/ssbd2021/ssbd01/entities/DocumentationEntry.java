@@ -37,7 +37,7 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "documentation_entries_generator")
     @SequenceGenerator(name = "documentation_entries_generator", sequenceName = "documentation_entries_seq", allocationSize = 1)
     @Basic(optional = false)
-    @Column(name = "id", updatable = false)
+    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
     @Column(name = "was_done")

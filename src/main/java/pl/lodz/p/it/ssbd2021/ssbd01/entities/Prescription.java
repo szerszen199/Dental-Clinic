@@ -35,11 +35,11 @@ public class Prescription extends AbstractEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prescriptions_generator")
     @SequenceGenerator(name = "prescriptions_generator", sequenceName = "prescriptions_seq", allocationSize = 1)
     @Basic(optional = false)
-    @Column(name = "id", updatable = false)
+    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "medications")
+    @Column(name = "medications", nullable = false)
     private String medications;
 
     @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false)
