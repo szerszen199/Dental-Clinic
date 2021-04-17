@@ -42,11 +42,11 @@ public class Prescription extends AbstractEntity implements Serializable {
     @Column(name = "medications", nullable = false)
     private String medications;
 
-    @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
     private Account doctor;
 
-    @JoinColumn(name = "patient_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "patient_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
     private Account patient;
 
@@ -82,16 +82,8 @@ public class Prescription extends AbstractEntity implements Serializable {
         return doctor;
     }
 
-    public void setDoctor(Account doctor) {
-        this.doctor = doctor;
-    }
-
     public Account getPatient() {
         return patient;
-    }
-
-    public void setPatient(Account patient) {
-        this.patient = patient;
     }
 
     @Override
