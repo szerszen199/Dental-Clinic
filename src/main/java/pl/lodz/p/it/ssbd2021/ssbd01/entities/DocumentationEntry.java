@@ -46,7 +46,7 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
     @Column(name = "to_be_done")
     private String toBeDone;
 
-    @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
     private Account doctor;
 
@@ -79,10 +79,6 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
 
     public Account getDoctor() {
         return doctor;
-    }
-
-    public void setDoctor(Account doctor) {
-        this.doctor = doctor;
     }
 
     @Override
