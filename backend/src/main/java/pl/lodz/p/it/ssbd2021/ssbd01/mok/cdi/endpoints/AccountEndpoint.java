@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
-import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -10,7 +9,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.JwtUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtUtils;
 
 
 /**
@@ -31,6 +30,7 @@ public class AccountEndpoint {
      *
      * @param jwt jwt
      */
+    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/confirm/{jwt}
     @PUT
     @Path("/confirm/{jwt}")
     @Produces({MediaType.APPLICATION_JSON})
@@ -38,7 +38,6 @@ public class AccountEndpoint {
         if (jwtUtils.validateRegistrationConfirmationJwtToken(jwt)) {
             accountManager.confirmAccount(jwtUtils.getUserNameFromRegistrationConfirmationJwtToken(jwt));
         }
-
     }
 
 }
