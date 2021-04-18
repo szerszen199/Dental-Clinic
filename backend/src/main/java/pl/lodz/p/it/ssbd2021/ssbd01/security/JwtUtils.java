@@ -21,10 +21,10 @@ public class JwtUtils {
     private final Long registrationConfirmationJwtExpirationMs = PropertiesLoader.getConfirmationJwtExpiration();
 
     /**
-     * Generate registration confirmation jwt token for user string.
+     * Generuje token JWT na potrzeby weryfikacji rejestracji.
      *
      * @param username username
-     * @return string
+     * @return JWT token
      */
     public String generateRegistrationConfirmationJwtTokenForUser(String username) {
 
@@ -37,19 +37,17 @@ public class JwtUtils {
     }
 
     /**
-     * Pobiera pole user name from registration confirmation jwt token.
-     *
-     * @param token token
-     * @return user name from registration confirmation jwt token
+     * Pobiera login użytkownika z tokenu JWT wydanego na potrzebę weryfikacji konta po rejestracji.
+     * @param token JWT token
+     * @return Login użytkownika o zadanym tokenie
      */
     public String getUserNameFromRegistrationConfirmationJwtToken(String token) {
         return Jwts.parser().setSigningKey(registrationConfirmationJwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
 
     /**
-     * Validate registration confirmation jwt token boolean.
-     *
-     * @param authToken auth token
+     * Metoda sprawdzająca token jwt na potrzeby weryfikacji konta poprzez email.
+     * @param authToken JWT token
      * @return boolean
      */
     public boolean validateRegistrationConfirmationJwtToken(String authToken) {
