@@ -18,7 +18,7 @@ public class AccountManagerImplementation implements AccountManager {
 
     @Override
     public void confirmAccount(Long id) {
-        accountFacade.find(id).setActive(true);
+        accountFacade.find(id).setEnabled(true);
     }
 
     @Override
