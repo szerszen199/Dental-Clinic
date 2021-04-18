@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2021.ssbd01.utils;
+package pl.lodz.p.it.ssbd2021.ssbd01.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -6,6 +6,8 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
+
 import java.util.Date;
 import javax.ejb.Stateless;
 
