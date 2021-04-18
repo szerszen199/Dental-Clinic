@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
+import java.text.ParseException;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -10,6 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtUtils;
+
 
 
 /**
@@ -36,7 +38,12 @@ public class AccountEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     public void confirmAccount(@PathParam("jwt") String jwt) {
         if (jwtUtils.validateRegistrationConfirmationJwtToken(jwt)) {
-            accountManager.confirmAccount(jwtUtils.getUserNameFromRegistrationConfirmationJwtToken(jwt));
+            try {
+                accountManager.confirmAccount(jwtUtils.getUserNameFromRegistrationConfirmationJwtToken(jwt));
+            } catch (ParseException e) {
+                // TODO: 18.04.2021
+                e.printStackTrace();
+            }
         }
     }
 
