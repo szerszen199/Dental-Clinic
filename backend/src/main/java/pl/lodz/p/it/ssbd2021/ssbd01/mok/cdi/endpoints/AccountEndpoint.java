@@ -60,7 +60,7 @@ public class AccountEndpoint {
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{id}/{level}
     @PUT
-    @Path("/revokeAccessLevel/{id}/{level}")
+    @Path("/revokeAccessLevelById/{id}/{level}")
     @Produces({MediaType.APPLICATION_JSON})
     public void revokeAccessLevel(@PathParam("id") Long id, @PathParam("level") String level) {
         accessLevelManager.revokeAccessLevel(id, level);
@@ -74,7 +74,7 @@ public class AccountEndpoint {
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{login}/{level}
     @PUT
-    @Path("/revokeAccessLevel/{login}/{level}")
+    @Path("/revokeAccessLevelByLogin/{login}/{level}")
     @Produces({MediaType.APPLICATION_JSON})
     public void revokeAccessLevel(@PathParam("login") String login, @PathParam("level") String level) {
         accessLevelManager.revokeAccessLevel(login, level);
