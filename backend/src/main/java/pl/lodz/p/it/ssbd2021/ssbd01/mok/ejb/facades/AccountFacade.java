@@ -1,8 +1,10 @@
-package pl.lodz.p.it.ssbd2021.ssbd01.mok.facades;
+package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 
@@ -20,6 +22,18 @@ public class AccountFacade extends AbstractFacade<Account> {
      */
     public AccountFacade() {
         super(Account.class);
+    }
+
+    /**
+     * Find by login account.
+     *
+     * @param login login
+     * @return account
+     */
+    public Account findByLogin(String login) {
+        TypedQuery<Account> tq = em.createNamedQuery("Account.findByLogin", Account.class);
+        tq.setParameter("login", login);
+        return tq.getSingleResult();
     }
 
     /**

@@ -21,6 +21,7 @@ import javax.persistence.PersistenceContext;
 //        maxPoolSize = 1,
 //        maxIdleTime = 10)
 
+
 @DataSourceDefinition(
         name = "java:app/jdbc/ssbd01mok",
         className = "org.postgresql.ds.PGSimpleDataSource",
