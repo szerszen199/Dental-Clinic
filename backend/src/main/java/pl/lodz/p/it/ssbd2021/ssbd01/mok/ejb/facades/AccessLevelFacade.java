@@ -35,7 +35,7 @@ public class AccessLevelFacade extends AbstractFacade<AccessLevel> {
     }
 
     /**
-     * Find by account login and access level access level - znalezienie poziomu dostępu dla użytkownika o {@param login}
+     * Find by account login and access level access level - znalezienie poziomu dostępu dla użytkownika o {@param login}.
      *
      * @param login login użytkownika
      * @param level level szukany poziom dostępu
