@@ -47,4 +47,24 @@ public class AccountEndpoint {
         }
     }
 
+    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{jwt}/{id}/{level}
+    @PUT
+    @Path("/revokeAccessLevel/{jwt}/{id}/{level}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public void revokeAccessLevel(@PathParam("jwt") String jwt, @PathParam("id") Long id, @PathParam("level") String level) {
+        if (jwtUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+            accountManager.revokeAccessLevel(id, level);
+        }
+    }
+
+    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{jwt}/{login}/{level}
+    @PUT
+    @Path("/revokeAccessLevel/{jwt}/{login}/{level}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public void revokeAccessLevel(@PathParam("jwt") String jwt, @PathParam("login") String login, @PathParam("level") String level) {
+        if (jwtUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+            accountManager.revokeAccessLevel(login, level);
+        }
+    }
+
 }
