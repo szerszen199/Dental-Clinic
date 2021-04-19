@@ -21,9 +21,6 @@ public class AccountManagerImplementation implements AccountManager {
     @Inject
     private AccountFacade accountFacade;
 
-    @Inject
-    private AccessLevelFacade accessLevelFacade;
-
     @Override
     public void confirmAccount(Long id) {
         accountFacade.find(id).setEnabled(true);
