@@ -47,24 +47,20 @@ public class AccountEndpoint {
         }
     }
 
-    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{jwt}/{id}/{level}
+    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{id}/{level}
     @PUT
-    @Path("/revokeAccessLevel/{jwt}/{id}/{level}")
+    @Path("/revokeAccessLevel/{id}/{level}")
     @Produces({MediaType.APPLICATION_JSON})
-    public void revokeAccessLevel(@PathParam("jwt") String jwt, @PathParam("id") Long id, @PathParam("level") String level) {
-        if (jwtUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+    public void revokeAccessLevel(@PathParam("id") Long id, @PathParam("level") String level) {
             accountManager.revokeAccessLevel(id, level);
-        }
     }
 
-    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{jwt}/{login}/{level}
+    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{login}/{level}
     @PUT
-    @Path("/revokeAccessLevel/{jwt}/{login}/{level}")
+    @Path("/revokeAccessLevel/{login}/{level}")
     @Produces({MediaType.APPLICATION_JSON})
-    public void revokeAccessLevel(@PathParam("jwt") String jwt, @PathParam("login") String login, @PathParam("level") String level) {
-        if (jwtUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+    public void revokeAccessLevel(@PathParam("login") String login, @PathParam("level") String level) {
             accountManager.revokeAccessLevel(login, level);
-        }
     }
 
 }
