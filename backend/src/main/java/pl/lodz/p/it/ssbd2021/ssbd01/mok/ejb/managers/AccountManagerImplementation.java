@@ -37,20 +37,19 @@ public class AccountManagerImplementation implements AccountManager {
     @Override
     public void revokeAccessLevel(Long id, String level) {
         Set<AccessLevel> accessLevelSet = accountFacade.find(id).getAccessLevels();
-        for (var a : accessLevelSet
-        ) {
-            if(a.getLevel().equals(level) && a.getActive()){
-                a.setActive(false);
-            }
-        }
+        revoke(accessLevelSet, level);
     }
 
     @Override
     public void revokeAccessLevel(String login, String level) {
         Set<AccessLevel> accessLevelSet = accountFacade.findByLogin(login).getAccessLevels();
+        revoke(accessLevelSet, level);
+    }
+
+    private void revoke(Set<AccessLevel> accessLevelSet, String level) {
         for (var a : accessLevelSet
-             ) {
-            if(a.getLevel().equals(level) && a.getActive()){
+        ) {
+            if (a.getLevel().equals(level) && a.getActive()) {
                 a.setActive(false);
             }
         }
