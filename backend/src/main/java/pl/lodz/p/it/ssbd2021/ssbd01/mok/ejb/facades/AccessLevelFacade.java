@@ -34,25 +34,39 @@ public class AccessLevelFacade extends AbstractFacade<AccessLevel> {
         super(entityClass);
     }
 
-    public AccessLevel findByAccountLoginAndAccessLevel(String login, String level){
+    /**
+     * Find by account login and access level access level - znalezienie poziomu dostępu dla użytkownika o {@param login}
+     *
+     * @param login login użytkownika
+     * @param level level szukany poziom dostępu
+     * @return access level zadany poziom dostępu dla zadanego użytkownika
+     */
+    public AccessLevel findByAccountLoginAndAccessLevel(String login, String level) {
         TypedQuery<AccessLevel> tq = em.createNamedQuery("AccessLevel.findByAccountLoginAndAccessLevel", AccessLevel.class);
         tq.setParameter("accountLogin", login);
         tq.setParameter("level", level);
-        try{
+        try {
             return tq.getSingleResult();
-        } catch (NoResultException noResultException){
+        } catch (NoResultException noResultException) {
             // TODO: 19.04.2021 opakować w wyjątek zaimplementowany w projekcie
             return null;
         }
     }
 
-    public AccessLevel findByAccountIdAndAccessLevel(Long id, String level){
+    /**
+     * Find by account id and access level access level - znalezienie poziomu dostępu dla użytkownika o  {@param id}.
+     *
+     * @param id    id użytkownika
+     * @param level level szukany poziom dostępu
+     * @return access level zadany poziom dostępu dla zadanego użytkownika
+     */
+    public AccessLevel findByAccountIdAndAccessLevel(Long id, String level) {
         TypedQuery<AccessLevel> tq = em.createNamedQuery("AccessLevel.findByAccountIdAndAccessLevel", AccessLevel.class);
         tq.setParameter("accountId", id);
         tq.setParameter("level", level);
-        try{
+        try {
             return tq.getSingleResult();
-        } catch (NoResultException noResultException){
+        } catch (NoResultException noResultException) {
             // TODO: 19.04.2021 opakować w wyjątek zaimplementowany w projekcie
             return null;
         }

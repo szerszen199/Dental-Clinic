@@ -9,9 +9,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtUtils;
-
 
 
 /**
@@ -26,6 +27,9 @@ public class AccountEndpoint {
 
     @Inject
     private AccountManager accountManager;
+
+    @Inject
+    private AccessLevelManager accessLevelManager;
 
     /**
      * Confirm account.
@@ -47,20 +51,33 @@ public class AccountEndpoint {
         }
     }
 
-    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{id}/{level}
+
+    /**
+     * Revoke access level - enpoint odbierający poziom dostępu {@param level} dla użytkownika o {@param id}.
+     *
+     * @param id    id uzytkownika, któremu zostanie odebrany poziom dostępu
+     * @param level level odbierany poziom odstępu
+     */
+// localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{id}/{level}
     @PUT
     @Path("/revokeAccessLevel/{id}/{level}")
     @Produces({MediaType.APPLICATION_JSON})
     public void revokeAccessLevel(@PathParam("id") Long id, @PathParam("level") String level) {
-            accountManager.revokeAccessLevel(id, level);
+        accessLevelManager.revokeAccessLevel(id, level);
     }
 
-    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{login}/{level}
+    /**
+     * Revoke access level - enpoint odbierający poziom dostępu {@param level} dla użytkownika o {@param login}.
+     *
+     * @param login login uzytkownika, któremu zostanie odebrany poziom dostępu
+     * @param level level odbierany poziom odstępu
+     */
+// localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{login}/{level}
     @PUT
     @Path("/revokeAccessLevel/{login}/{level}")
     @Produces({MediaType.APPLICATION_JSON})
     public void revokeAccessLevel(@PathParam("login") String login, @PathParam("level") String level) {
-            accountManager.revokeAccessLevel(login, level);
+        accessLevelManager.revokeAccessLevel(login, level);
     }
 
 }
