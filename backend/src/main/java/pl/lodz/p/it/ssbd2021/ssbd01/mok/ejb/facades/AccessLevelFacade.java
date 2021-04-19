@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2021.ssbd01.mok.facades;
+package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
