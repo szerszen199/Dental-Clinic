@@ -26,10 +26,6 @@ public abstract class AbstractEntity {
     @Column(name = "creation_date_time", nullable = false, updatable = false)
     private LocalDateTime creationDateTime;
 
-    public void setCreatedBy(Account createdBy) {
-        this.createdBy = createdBy;
-    }
-
     @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
     private Account createdBy;
@@ -81,6 +77,10 @@ public abstract class AbstractEntity {
 
     public void setModifiedBy(Account modifiedBy) {
         this.modifiedBy = modifiedBy;
+    }
+
+    public void setCreatedBy(Account createdBy) {
+        this.createdBy = createdBy;
     }
 
     @Override
