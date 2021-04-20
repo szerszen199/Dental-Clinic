@@ -124,22 +124,22 @@ public class Account extends AbstractEntity implements Serializable {
     /**
      * Tworzy nową instancję klasy Account reprezentujacej konto użytkownika aplikacji.
      *
-     * @param login     login konta
-     * @param email     adres e-mail przypisany do konta
-     * @param password  hasło konta
-     * @param firstName imię użytkownika
-     * @param lastName  nazwisko użytkownika
-     * @param active    status konta (aktywne)
-     * @param enabled   status konta (potwierdzone)
+     * @param login         login konta
+     * @param email         adres e-mail przypisany do konta
+     * @param password      hasło konta
+     * @param firstName     imię użytkownika
+     * @param lastName      nazwisko użytkownika
+     * @param phoneNumber   numer telefonu
+     * @param pesel         pesel
      */
-    public Account(String login, String email, String password, String firstName, String lastName, Boolean active, Boolean enabled) {
+    public Account(String login, String email, String password, String firstName, String lastName, String phoneNumber, String pesel) {
         this.login = login;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.active = active;
-        this.enabled = enabled;
+        this.phoneNumber = phoneNumber;
+        this.pesel = pesel;
     }
 
     @Override
