@@ -27,7 +27,7 @@ public class AccountManagerImplementation implements AccountManager {
     public void createAccount(Account account, AccessLevel accessLevel) {
         account.setPassword(hashGenerator.generateHash(account.getPassword()));
         accessLevel.setCreatedBy(account);
-        //accessLevel.setI
+        accessLevel.setAccountId(account);
         account.getAccessLevels().add(accessLevel);
         account.setCreatedBy(account);
         accountFacade.create(account);
