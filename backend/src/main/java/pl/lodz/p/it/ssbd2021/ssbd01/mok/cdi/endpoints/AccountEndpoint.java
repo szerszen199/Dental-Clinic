@@ -59,7 +59,7 @@ public class AccountEndpoint {
     @PUT
     @Path("/addLevelById/{id}/{level}")
     @Produces({MediaType.APPLICATION_JSON})
-    public void revokeAccessLevel(@PathParam("id") Long id, @PathParam("level") String level) throws AccessLevelException {
+    public void addAccessLevel(@PathParam("id") Long id, @PathParam("level") String level) throws AccessLevelException {
         accountManager.addAccessLevel(id, level);
     }
 
@@ -73,7 +73,7 @@ public class AccountEndpoint {
     @PUT
     @Path("/addLevelByLogin/{login}/{level}")
     @Produces({MediaType.APPLICATION_JSON})
-    public void revokeAccessLevel(@PathParam("login") String login, @PathParam("level") String level) throws AccessLevelException {
+    public void addAccessLevel(@PathParam("login") String login, @PathParam("level") String level) throws AccessLevelException {
         accountManager.addAccessLevel(login, level);
     }
 
