@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
 import javax.ejb.Local;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 
 /**
  * Interfejs Account manager.
@@ -20,4 +21,12 @@ public interface AccountManager {
      * @param login login
      */
     public void confirmAccount(String login);
+
+
+    /**
+     * Pobiera zalogowane konto.
+     *
+     * @return zalogowane konto
+     */
+    public Account getLoggedInAccount();
 }
