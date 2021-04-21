@@ -75,6 +75,19 @@ public class AccountEndpoint {
         }
     }
 
+    /**
+     *  Edit account data.
+     * @param id Id of edited account.
+     * @param accountDto Account with edited data.
+     * @throws BaseException Base exception.
+     */
+    @POST
+    @Path("edit/{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public void editAccount(@PathParam("id") Long id, AccountDto accountDto) throws BaseException {
+        accountManager.editAccount(id,AccountConverter.createAccountEntityFromDto(accountDto));
+    }
+
 
     /**
      * Revoke access level - enpoint odbierający poziom dostępu {@param level} dla użytkownika o {@param id}.
