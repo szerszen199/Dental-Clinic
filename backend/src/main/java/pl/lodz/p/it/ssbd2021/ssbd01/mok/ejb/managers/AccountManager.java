@@ -31,7 +31,6 @@ public interface AccountManager {
      */
     void confirmAccount(Long id);
 
-    void editAccount(Long id,Account account) throws BaseException;
 
     /**
      * Confirm account.
@@ -76,5 +75,11 @@ public interface AccountManager {
      */
     void addAccessLevel(String login, String level) throws AccessLevelException;
 
-
+    /**
+     *  Edit account data.
+     * @param id Id of edited account.
+     * @param account Account with edited data.
+     * @throws BaseException Base exception.
+     */
+    void editAccount(Long id,Account account) throws BaseException;
 }

@@ -42,16 +42,6 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
-    public void editAccount(Long id, Account account) throws BaseException {
-        account.setModifiedBy(account);
-        Account old = accountFacade.findByLogin(account.getLogin());
-        if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
-            throw new DataValidationException("Niepoprawna walidacja danych wejściowych");
-        }
-        accountFacade.edit(account);
-    }
-
-    @Override
     public void confirmAccount(String login) {
         accountFacade.findByLogin(login).setEnabled(true);
     }
@@ -86,6 +76,16 @@ public class AccountManagerImplementation implements AccountManager {
     public void unlockAccount(Long id) throws BaseException {
         Account account = accountFacade.find(id);
         account.setActive(true);
+        accountFacade.edit(account);
+    }
+
+    @Override
+    public void editAccount(Long id, Account account) throws BaseException {
+        account.setModifiedBy(account);
+        Account old = accountFacade.findByLogin(account.getLogin());
+        if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
+            throw new DataValidationException("Niepoprawna walidacja danych wejściowych");
+        }
         accountFacade.edit(account);
     }
 }
