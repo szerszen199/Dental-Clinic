@@ -5,8 +5,12 @@ import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+
+import pl.lodz.p.it.ssbd2021.ssbd01.common.AccessLevelMapper;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
 
 /**
@@ -29,11 +33,23 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
-    public void editAccountAccessLevels(Account account, Set<AccessLevel> accessLevels) {
-        account.getAccessLevels().retainAll(accessLevels);
-        account.getAccessLevels().addAll(accessLevels);
-        accountFacade.edit(account);
+    public void addAccessLevel(Long id, String level) throws AccessLevelException {
+        Account account = accountFacade.find(id);
+        AccessLevel accessLevel = AccessLevelMapper.mapLevelNameToAccessLevel(level);
+        accessLevel.setAccountId(account);
+        accessLevel.setCreatedBy(account); //TODO FIX THIS -- only for debugging
+        account.getAccessLevels().add(accessLevel);
     }
+
+    @Override
+    public void addAccessLevel(String login, String level) throws AccessLevelException {
+        Account account = accountFacade.findByLogin(login);
+        AccessLevel accessLevel = AccessLevelMapper.mapLevelNameToAccessLevel(level);
+        accessLevel.setAccountId(account);
+        accessLevel.setCreatedBy(account); //TODO FIX THIS -- only for debugging
+        account.getAccessLevels().add(accessLevel);
+    }
+
 
 
 }

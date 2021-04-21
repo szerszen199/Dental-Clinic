@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -12,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
@@ -32,6 +35,10 @@ import javax.persistence.UniqueConstraint;
         @NamedQuery(name = "AccessLevel.findById", query = "SELECT a FROM AccessLevel a WHERE a.id = :id"),
         @NamedQuery(name = "AccessLevel.findByLevel", query = "SELECT a FROM AccessLevel a WHERE a.level = :level"),
         @NamedQuery(name = "AccessLevel.findByActive", query = "SELECT a FROM AccessLevel a WHERE a.active = :active"),
+        @NamedQuery(name = "AccessLevel.findByAccountId", query = "SELECT a FROM AccessLevel a WHERE a.accountId.id = :accountId"),
+        @NamedQuery(name = "AccessLevel.findByAccountIdAndAccessLevel", query = "SELECT a FROM AccessLevel a WHERE a.accountId.id = :accountId AND a.level = :level"),
+        @NamedQuery(name = "AccessLevel.findByAccountLogin", query = "SELECT a FROM AccessLevel a WHERE a.accountId.login = :accountLogin"),
+        @NamedQuery(name = "AccessLevel.findByAccountLoginAndAccessLevel", query = "SELECT a FROM AccessLevel a WHERE a.accountId.login = :accountLogin AND a.level = :level"),
         @NamedQuery(name = "AccessLevel.findByVersion", query = "SELECT a FROM AccessLevel a WHERE a.version = :version"),
         @NamedQuery(name = "AccessLevel.findByCreationDateTime", query = "SELECT a FROM AccessLevel a WHERE a.creationDateTime = :creationDateTime"),
         @NamedQuery(name = "AccessLevel.findByModificationDateTime", query = "SELECT a FROM AccessLevel a WHERE a.modificationDateTime = :modificationDateTime")})
@@ -48,11 +55,15 @@ public class AccessLevel extends AbstractEntity implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "active", nullable = false)
-    private Boolean active;
+    private Boolean active = true;
 
     @Basic(optional = false)
     @Column(name = "level", nullable = false, length = 32, updatable = false, insertable = false)
     private String level;
+
+    @ManyToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
+    @JoinColumn(name = "account_id", referencedColumnName = "id", updatable = false)
+    private Account accountId;
 
     /**
      * Tworzy nową instancję klasy Access level.
@@ -86,6 +97,10 @@ public class AccessLevel extends AbstractEntity implements Serializable {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public void setAccountId(Account accountId) {
+        this.accountId = accountId;
     }
 
     @Override

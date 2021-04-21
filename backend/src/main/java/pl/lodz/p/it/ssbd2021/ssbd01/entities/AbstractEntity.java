@@ -79,6 +79,10 @@ public abstract class AbstractEntity {
         this.modifiedBy = modifiedBy;
     }
 
+    public void setCreatedBy(Account createdBy) {
+        this.createdBy = createdBy;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
