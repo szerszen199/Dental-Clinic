@@ -1,11 +1,11 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.common;
 
 import java.util.List;
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
 
 /**
  * Klasa abstrakcyjna definiująca główne operacje wykonywane na encjach
@@ -42,9 +42,11 @@ public abstract class AbstractFacade<T> {
      * Aktualizuje dane encji w bazie danych.
      *
      * @param entity obiekt encji.
+     * @throws BaseException bazowy wyjątek aplikacji
      */
-    public void edit(T entity) {
+    public void edit(T entity) throws BaseException {
         getEntityManager().merge(entity);
+        getEntityManager().flush();
     }
 
     /**
