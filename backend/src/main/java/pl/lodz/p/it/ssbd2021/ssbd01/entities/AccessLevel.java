@@ -55,7 +55,7 @@ public class AccessLevel extends AbstractEntity implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "active", nullable = false)
-    private Boolean active;
+    private Boolean active = true;
 
     @Basic(optional = false)
     @Column(name = "level", nullable = false, length = 32, updatable = false, insertable = false)
@@ -97,6 +97,10 @@ public class AccessLevel extends AbstractEntity implements Serializable {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public void setAccountId(Account accountId) {
+        this.accountId = accountId;
     }
 
     @Override
