@@ -1,12 +1,12 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
 
 /**
  * Klasa definiująca główne operacje wykonywane na encjach typu Account.
@@ -49,4 +49,16 @@ public class AccountFacade extends AbstractFacade<Account> {
     protected EntityManager getEntityManager() {
         return em;
     }
+
+    @Override
+    public void edit(Account entity) throws BaseException {
+        try {
+            super.edit(entity);
+        } catch (BaseException e) {
+            throw e;
+            // TODO: 20.04.2021 - uzupełnić o wyjątki aplikacyjne
+        }
+    }
+    
+    
 }
