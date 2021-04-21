@@ -75,6 +75,12 @@ public class AccountEndpoint {
         }
     }
 
+    /**
+     *  Edit account data.
+     * @param id Id of edited account.
+     * @param accountDto Account with edited data.
+     * @throws BaseException Base exception.
+     */
     @POST
     @Path("edit/{id}")
     @Produces({MediaType.APPLICATION_JSON})
