@@ -31,6 +31,8 @@ public interface AccountManager {
      */
     void confirmAccount(Long id);
 
+    void editAccount(Long id,Account account) throws BaseException;
+
     /**
      * Confirm account.
      *
