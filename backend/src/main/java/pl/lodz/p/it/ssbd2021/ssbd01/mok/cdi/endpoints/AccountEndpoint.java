@@ -9,9 +9,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtUtils;
-
 
 
 /**
@@ -45,6 +46,35 @@ public class AccountEndpoint {
                 e.printStackTrace();
             }
         }
+    }
+
+
+    /**
+     * Dodanie poziomu dostępu {@param level} dla użytkownika o id równym {@param id}.
+     *
+     * @param id    id uzytkownika, któremu zostanie dodany poziom dostępu
+     * @param level dodawany poziom odstępu
+     * @throws AccessLevelException wyjątek gdy nie ma takiego poziomu dostępu
+     */
+    @PUT
+    @Path("/addLevelById/{id}/{level}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public void revokeAccessLevel(@PathParam("id") Long id, @PathParam("level") String level) throws AccessLevelException {
+        accountManager.addAccessLevel(id, level);
+    }
+
+    /**
+     * Dodanie poziomu dostępu {@param level} dla użytkownika o {@param login}.
+     *
+     * @param login login uzytkownika, któremu zostanie dodany poziom dostępu
+     * @param level dodawany poziom odstępu
+     * @throws AccessLevelException wyjątek gdy nie ma takiego poziomu dostępu
+     */
+    @PUT
+    @Path("/addLevelByLogin/{login}/{level}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public void revokeAccessLevel(@PathParam("login") String login, @PathParam("level") String level) throws AccessLevelException {
+        accountManager.addAccessLevel(login, level);
     }
 
 }
