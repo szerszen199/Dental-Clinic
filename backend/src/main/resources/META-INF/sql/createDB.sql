@@ -43,7 +43,9 @@ CREATE TABLE accounts
     created_by                                BIGINT             NOT NULL,                    -- ID konta które utworzyło tabelę,
     creation_date_time                        TIMESTAMPTZ        NOT NULL DEFAULT
                 CURRENT_TIMESTAMP,                                                                    -- Data utworzenia konta
-   language                                  CHAR(2),
+    language                                  CHAR(2)
+        CONSTRAINT acc_language CHECK
+            (language in ('pl', 'PL', 'en', 'EN')),
  -- Język konta
 
     version                                   BIGINT                                          -- Wersja
@@ -75,7 +77,9 @@ CREATE SEQUENCE accounts_seq -- Sekwencja wykorzystywana przy tworzeniu pola klu
 CREATE TABLE access_levels
 (
     id                     BIGINT PRIMARY KEY,                                                                                 -- klucz główny tabeli
-    level                  VARCHAR(32) NOT NULL,                                                                               -- Poziom dostępu,
+    level                  VARCHAR(32) NOT NULL
+        CONSTRAINT acc_lvl_level CHECK
+            (level in ('level.patient', 'level.receptionist', 'level.doctor', 'level.administrator')),                                                                               -- Poziom dostępu,
     account_id             BIGINT      NOT NULL,                                                                               -- Konto przypisane do poziomu dostepu
     active                 BOOL        NOT NULL DEFAULT TRUE,                                                                  -- Czy przypisany poziom dostępu jest aktywny, domyślnie prawda (jest aktywny). Pole pozwala na wyłączanie użytkownikom poziomów dostepu bez usuwania wiersza tabeli.
     CONSTRAINT acc_lvl_level_account_pair_unique UNIQUE (level, account_id),                                                   -- Para poziom dostepu i konta użytkownika jest unikalna
