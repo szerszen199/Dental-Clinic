@@ -11,8 +11,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
@@ -21,6 +21,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccessLevelConverter;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 
 
@@ -168,15 +169,14 @@ public class AccountEndpoint {
     /**
      * Dodanie poziomu dostępu {@param level} dla użytkownika o {@param login}.
      *
-     * @param login login uzytkownika, któremu zostanie dodany poziom dostępu
-     * @param level dodawany poziom odstępu
+     * @param accessLevelDto obiekt zawierający poziom oraz login
      * @throws AccessLevelException wyjątek gdy nie ma takiego poziomu dostępu
      */
     @PUT
-    @Path("/addLevelByLogin/{login}/{level}")
+    @Path("/addLevelByLogin")
     @Produces({MediaType.APPLICATION_JSON})
-    public void addAccessLevel(@PathParam("login") String login, @PathParam("level") String level) throws AccessLevelException {
-        accountManager.addAccessLevel(login, level);
+    public void addAccessLevel(AccessLevelDto accessLevelDto) throws AccessLevelException {
+        accountManager.addAccessLevel(AccessLevelConverter.createAccessLevelEntityFromDto(accessLevelDto), accessLevelDto.getLogin());
     }
 
 }
