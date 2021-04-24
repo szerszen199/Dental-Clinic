@@ -14,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtUtils;
 
@@ -59,7 +60,7 @@ public class AccountEndpoint {
     @GET
     @Path("/info")
     public Response getLoggedInAccountInfo() {
-            Account account = accountManager.getLoggedInAccount();
+        AccountDto account = new AccountDto(accountManager.getLoggedInAccount());
             return Response.ok(account).build();
     }
 }
