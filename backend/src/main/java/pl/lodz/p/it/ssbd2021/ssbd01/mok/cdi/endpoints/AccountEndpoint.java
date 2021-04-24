@@ -153,20 +153,6 @@ public class AccountEndpoint {
     }
 
     /**
-     * Dodanie poziomu dostępu {@param level} dla użytkownika o id równym {@param id}.
-     *
-     * @param id    id uzytkownika, któremu zostanie dodany poziom dostępu
-     * @param level dodawany poziom odstępu
-     * @throws AccessLevelException wyjątek gdy nie ma takiego poziomu dostępu
-     */
-    @PUT
-    @Path("/addLevelById/{id}/{level}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public void addAccessLevel(@PathParam("id") Long id, @PathParam("level") String level) throws AccessLevelException {
-        accountManager.addAccessLevel(id, level);
-    }
-
-    /**
      * Dodanie poziomu dostępu {@param level} dla użytkownika o {@param login}.
      *
      * @param accessLevelDto obiekt zawierający poziom oraz login
