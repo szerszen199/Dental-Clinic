@@ -12,7 +12,10 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import java.text.ParseException;
 import java.util.Date;
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
+
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
 /**
@@ -21,8 +24,17 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 @Stateless
 public class JwtUtils {
 
-    private final String registrationConfirmationJwtSecret = PropertiesLoader.getConfirmationJwtSecret();
-    private final Long registrationConfirmationJwtExpirationMs = PropertiesLoader.getConfirmationJwtExpiration();
+    @Inject
+    private PropertiesLoader propertiesLoader;
+
+    private String registrationConfirmationJwtSecret;
+    private Long registrationConfirmationJwtExpirationMs;
+
+    @PostConstruct
+    private void init() {
+        registrationConfirmationJwtSecret = propertiesLoader.getConfirmationJwtSecret();
+        registrationConfirmationJwtExpirationMs = propertiesLoader.getConfirmationJwtExpiration();
+    }
 
     /**
      * Generuje token JWT na potrzeby weryfikacji rejestracji.
