@@ -37,6 +37,21 @@ public abstract class AbstractEntity {
     @ManyToOne
     private Account modifiedBy;
 
+    /**
+     * Tworzy nową instancję klasy AbstractEntity.
+     */
+    public AbstractEntity() {
+    }
+
+    /**
+     * Tworzy nową instancję klasy AbstractEntity.
+     *
+     * @param createdBy konto użytkownika tworzącego encję
+     */
+    public AbstractEntity(Account createdBy) {
+        this.createdBy = createdBy;
+    }
+
     @PrePersist
     private void init() {
         creationDateTime = LocalDateTime.now();
