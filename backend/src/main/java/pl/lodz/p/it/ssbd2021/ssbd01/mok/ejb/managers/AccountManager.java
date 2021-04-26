@@ -9,6 +9,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 
 /**
  * Interfejs Account manager.
@@ -37,7 +38,15 @@ public interface AccountManager {
      *
      * @param login login
      */
-    void confirmAccount(String login);
+    public void confirmAccount(String login);
+
+
+    /**
+     * Pobiera zalogowane konto.
+     *
+     * @return zalogowane konto
+     */
+    public Account getLoggedInAccount();
 
     /**
      * Metoda służąca do blokowania konta.
