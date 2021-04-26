@@ -1,5 +1,8 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -7,16 +10,18 @@ import java.util.Properties;
 /**
  * Typ Properties loader.
  */
+@Startup
+@Singleton
 public class PropertiesLoader {
 
-    private static String confirmationJwtSecret;
+    private String confirmationJwtSecret;
 
     /**
      * Pobiera pole confirmation jwt secret.
      *
      * @return confirmation jwt secret
      */
-    public static String getConfirmationJwtSecret() {
+    public String getConfirmationJwtSecret() {
         return confirmationJwtSecret;
     }
 
@@ -25,19 +30,14 @@ public class PropertiesLoader {
      *
      * @return confirmation jwt expiration
      */
-    public static Long getConfirmationJwtExpiration() {
+    public Long getConfirmationJwtExpiration() {
         return confirmationJwtExpiration;
     }
 
-    private static Long confirmationJwtExpiration;
+    private Long confirmationJwtExpiration;
 
-    private static final PropertiesLoader INSTANCE = new PropertiesLoader();
-
-    private PropertiesLoader() {
-        loadProperties();
-    }
-
-    private static void loadProperties() {
+    @PostConstruct
+    private void loadProperties() {
         Properties prop = null;
         try {
             prop = new Properties();
