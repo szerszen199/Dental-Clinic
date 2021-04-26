@@ -107,8 +107,8 @@ export default function Registration() {
                     />
                 </Form.Group>
                 {/*Todo: co z peselem dla obcokrajowca? Nic czy coś innnego? Narazie zrobiłem że może być pusty*/}
-                <Form.Group size="lg" controlId="phoneNumber">
-                    <Form.Label>Phone Number</Form.Label>
+                <Form.Group size="lg" controlId="pesel">
+                    <Form.Label>Pesel</Form.Label>
                     <Form.Control
                         type="text"
                         value={pesel}
