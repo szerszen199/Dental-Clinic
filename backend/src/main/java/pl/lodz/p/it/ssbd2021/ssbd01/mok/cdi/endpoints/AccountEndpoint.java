@@ -1,17 +1,26 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 import java.text.ParseException;
+import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
+import javax.security.enterprise.SecurityContext;
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
+
+import javax.ws.rs.core.Response;
+
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
 
@@ -22,7 +31,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
-
 
 
 /**
@@ -76,8 +84,9 @@ public class AccountEndpoint {
     }
 
     /**
-     *  Edit account data.
-     * @param id Id of edited account.
+     * Edit account data.
+     *
+     * @param id         Id of edited account.
      * @param accountDto Account with edited data.
      * @throws BaseException Base exception.
      */
@@ -85,7 +94,7 @@ public class AccountEndpoint {
     @Path("edit/{id}")
     @Produces({MediaType.APPLICATION_JSON})
     public void editAccount(@PathParam("id") Long id, AccountDto accountDto) throws BaseException {
-        accountManager.editAccount(id,AccountConverter.createAccountEntityFromDto(accountDto));
+        accountManager.editAccount(id, AccountConverter.createAccountEntityFromDto(accountDto));
     }
 
 
@@ -179,4 +188,16 @@ public class AccountEndpoint {
         accountManager.addAccessLevel(login, level);
     }
 
+    /**
+     * Pobiera informacje o zalogowanm koncie.
+     *
+     * @return informacje o zalogowanym koncie
+     */
+    @GET
+    @Path("/info")
+    public Response getLoggedInAccountInfo() {
+        AccountDto account = new AccountDto(accountManager.getLoggedInAccount());
+        return Response.ok(account).build();
+    }
 }
+
