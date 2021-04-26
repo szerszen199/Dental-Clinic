@@ -54,7 +54,7 @@ export default function Registration() {
 
     // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
     return (
-        <div className="Login">
+        <div className="Registration">
             <Form onSubmit={handleSubmit}>
                 <Form.Group size="lg" controlId="login">
                     <Form.Label>Login</Form.Label>
