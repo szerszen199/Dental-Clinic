@@ -6,11 +6,11 @@ import javax.validation.constraints.Size;
 
 public class AccessLevelDto {
     @NotNull
-    @Size(min=7, max=32)
+    @Size(min = 7, max = 32)
     @Pattern(regexp = "(level\\.)([a-z]{1,26})")
     private String level;
     @NotNull
-    @Size(min=1, max=60)
+    @Size(min = 1, max = 60)
     private String login;
 
     /**
