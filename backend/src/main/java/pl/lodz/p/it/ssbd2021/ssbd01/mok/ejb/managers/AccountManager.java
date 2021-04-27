@@ -80,15 +80,27 @@ public interface AccountManager {
      * @param login login użytkownika, któremu zostanie dodany poziom dostępu
      * @param level dodawany poziom odstępu
      *
-     * @throws AccessLevelException wyjątek gdy nie znaleziono poziomu dostępu
+     * @throws AccessLevelException wyjątek gdy nie znaleziono poziomu dostępu 
      */
     void addAccessLevel(String login, String level) throws AccessLevelException;
 
     /**
-     *  Edit account data.
-     * @param id Id of edited account.
-     * @param account Account with edited data.
-     * @throws BaseException Base exception.
+     *  Edytuje dane konta {@param account} o podanym id {@param id}.
+     * @param id id edytowanego konta
+     * @param account zmodyfikowane konto.
+     * @throws BaseException wyjątek, gdy któreś z wymaganych z pól 
+     *                       przekazanego konta jest puste.
      */
     void editAccount(Long id,Account account) throws BaseException;
+
+    /**
+     * Zmienia hasło {@param newPassword} wskazanego konta {@param account}.
+     *
+     * @param account     konto, którego hasło jest edytowane
+     * @param oldPassword stare hasło podane przez użytkownika
+     * @param newPassword nowe hasło
+     * @throws BaseException wyjątek, gdy utrwalanie stanu konta w bazie danych
+     *                       nie powiedzie się.
+     */
+    void changePassword(Account account, String oldPassword, String newPassword) throws BaseException;
 }
