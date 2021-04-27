@@ -5,6 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class SHA256HashGenerator implements HashGenerator {
+    
     @Override
     public String generateHash(String input) {
         try {

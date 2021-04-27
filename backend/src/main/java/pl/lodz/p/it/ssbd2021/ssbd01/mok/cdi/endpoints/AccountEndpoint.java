@@ -1,13 +1,11 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 import java.text.ParseException;
-import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
-import javax.security.enterprise.SecurityContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -17,19 +15,22 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
 
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.SHA256HashGenerator;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 
 
@@ -199,5 +200,42 @@ public class AccountEndpoint {
         AccountDto account = new AccountDto(accountManager.getLoggedInAccount());
         return Response.ok(account).build();
     }
+
+    /**
+     * Zmienia hasło do własnego konta.
+     *
+     * @param newPassword informacje uwierzytelniające o starym haśle i nowym, 
+     *                    które ma zostać ustawione
+     * @return odpowiedź na żądanie
+     */
+    @PUT
+    @Path("new-password")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changeOwnPassword(NewPasswordDTO newPassword) {
+        Account account = accountManager.getLoggedInAccount();
+        if (account == null) {
+            return Response.status(Status.UNAUTHORIZED).build();
+        }
+        
+        try {
+            this.validatePassword(newPassword);
+            accountManager.changePassword(account, newPassword.getOldPassword(), newPassword.getFirstPassword());
+            return Response.status(Status.OK).build();
+        } catch (BaseException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+    
+    private void validatePassword(NewPasswordDTO newPassword) throws BaseException {
+        if (!newPassword.getFirstPassword().equals(newPassword.getSecondPassword())) {
+            throw new PasswordsNotMatchException(PasswordsNotMatchException.NEW_PASSWORDS_NOT_MATCH);
+        }
+        if (newPassword.getFirstPassword().length() < 8) {
+            throw new PasswordTooShortException(PasswordTooShortException.PASSWORD_TOO_SHORT);
+        }
+    }
+    
+    
 }
 
