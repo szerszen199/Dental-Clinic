@@ -1,13 +1,20 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto;
 
 
+import javax.validation.constraints.Size;
+
 /**
  * Typ NewPasswordDTO.
  */
 public class NewPasswordDTO {
     
+    @Size(min = 8)
     private String oldPassword;
+    
+    @Size(min = 8)
     private String firstPassword;
+    
+    @Size(min = 8)
     private String secondPassword;
 
     /**
