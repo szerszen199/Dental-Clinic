@@ -15,8 +15,11 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.security.enterprise.SecurityContext;
 import javax.ws.rs.core.Context;
+
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
+
+import java.util.List;
 
 
 /**
@@ -94,5 +97,10 @@ public class AccountManagerImplementation implements AccountManager {
             throw new DataValidationException("Niepoprawna walidacja danych wejściowych");
         }
         accountFacade.edit(account);
+    }
+
+    @Override
+    public List<Account> getAllAccounts() {
+        return accountFacade.findAll();
     }
 }
