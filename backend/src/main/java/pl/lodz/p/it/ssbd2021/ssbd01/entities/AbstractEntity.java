@@ -8,6 +8,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Version;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
@@ -20,6 +21,7 @@ public abstract class AbstractEntity {
     public abstract Long getId();
 
     @Column(name = "version")
+    @Version
     private Long version;
 
     @Basic(optional = false)

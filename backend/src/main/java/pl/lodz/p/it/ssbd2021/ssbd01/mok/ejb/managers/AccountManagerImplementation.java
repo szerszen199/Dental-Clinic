@@ -64,18 +64,8 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
-    public void addAccessLevel(Long id, String level) throws AccessLevelException {
-        Account account = accountFacade.find(id);
-        AccessLevel accessLevel = AccessLevelMapper.mapLevelNameToAccessLevel(level);
-        accessLevel.setAccountId(account);
-        accessLevel.setCreatedBy(account);
-        account.getAccessLevels().add(accessLevel);
-    }
-
-    @Override
-    public void addAccessLevel(String login, String level) throws AccessLevelException {
+    public void addAccessLevel(AccessLevel accessLevel, String login) throws AccessLevelException {
         Account account = accountFacade.findByLogin(login);
-        AccessLevel accessLevel = AccessLevelMapper.mapLevelNameToAccessLevel(level);
         accessLevel.setAccountId(account);
         accessLevel.setCreatedBy(account);
         account.getAccessLevels().add(accessLevel);
