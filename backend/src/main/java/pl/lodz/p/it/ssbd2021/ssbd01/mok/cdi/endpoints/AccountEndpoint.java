@@ -1,6 +1,8 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 import java.text.ParseException;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -185,6 +187,21 @@ public class AccountEndpoint {
     public Response getLoggedInAccountInfo() {
         AccountDto account = new AccountDto(accountManager.getLoggedInAccount());
         return Response.ok(account).build();
+    }
+
+    /**
+     * Pobiera listę wszystkich kont
+     *
+     * @return lista wszystkich kont
+     */
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getAllAccounts() {
+        List<AccountDto> accountDtoList = accountManager.getAllAccounts()
+                .stream()
+                .map(AccountDto::new)
+                .collect(Collectors.toList());
+        return Response.ok(accountDtoList).build();
     }
 }
 

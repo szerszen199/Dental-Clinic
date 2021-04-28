@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
+import java.util.List;
 import java.util.Set;
 import javax.ejb.Local;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
@@ -81,4 +82,11 @@ public interface AccountManager {
      * @throws BaseException Base exception.
      */
     void editAccount(Long id,Account account) throws BaseException;
+
+
+    /**
+     * Pobranie listy wszystkich kont.
+     * @return lista wszystkich kont
+     */
+    List<Account> getAllAccounts();
 }
