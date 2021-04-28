@@ -65,24 +65,14 @@ public interface AccountManager {
     void unlockAccount(Long id) throws BaseException;
 
     /**
-     * Dodaje poziom dostępu {@param level} kontowi o id równym {@param id}.
-     *
-     * @param id    id użytkownika, któremu zostanie dodany poziom dostępu
-     * @param level dodawany poziom odstępu
-     *
-     * @throws AccessLevelException wyjątek gdy nie znaleziono poziomu dostępu
-     */
-    void addAccessLevel(Long id, String level) throws AccessLevelException;
-
-    /**
      * Dodaje poziom dostępu {@param level} kontowi o loginie równym {@param logon}.
      *
+     * @param accessLevel poziom dostępu konta
      * @param login login użytkownika, któremu zostanie dodany poziom dostępu
-     * @param level dodawany poziom odstępu
      *
      * @throws AccessLevelException wyjątek gdy nie znaleziono poziomu dostępu
      */
-    void addAccessLevel(String login, String level) throws AccessLevelException;
+    void addAccessLevel(AccessLevel accessLevel, String login) throws AccessLevelException;
 
     /**
      *  Edit account data.
