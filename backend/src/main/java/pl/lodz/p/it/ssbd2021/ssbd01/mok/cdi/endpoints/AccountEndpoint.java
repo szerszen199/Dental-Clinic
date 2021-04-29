@@ -190,7 +190,7 @@ public class AccountEndpoint {
     }
 
     /**
-     * Pobiera listę wszystkich kont
+     * Pobiera listę wszystkich kont.
      *
      * @return lista wszystkich kont
      */
