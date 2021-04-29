@@ -85,4 +85,15 @@ public interface AccountManager {
      * @return lista wszystkich kont
      */
     List<Account> getAllAccounts();
+
+    /**
+     * Zmienia hasło {@param newPassword} wskazanego konta {@param account}.
+     *
+     * @param account     konto, którego hasło jest edytowane
+     * @param oldPassword stare hasło podane przez użytkownika
+     * @param newPassword nowe hasło
+     * @throws BaseException wyjątek, gdy utrwalanie stanu konta w bazie danych
+     *                       nie powiedzie się.
+     */
+    void changePassword(Account account, String oldPassword, String newPassword) throws BaseException;
 }

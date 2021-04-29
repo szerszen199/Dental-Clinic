@@ -1,10 +1,14 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtUtils;
@@ -23,6 +27,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -193,5 +198,42 @@ public class AccountEndpoint {
                 .collect(Collectors.toList());
         return Response.ok(accountDtoList).build();
     }
+
+    /**
+     * Zmienia hasło do własnego konta.
+     *
+     * @param newPassword informacje uwierzytelniające o starym haśle i nowym,
+     *                    które ma zostać ustawione
+     * @return odpowiedź na żądanie
+     */
+    @PUT
+    @Path("new-password")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changeOwnPassword(NewPasswordDTO newPassword) {
+        Account account = accountManager.getLoggedInAccount();
+        if (account == null) {
+            return Response.status(Status.UNAUTHORIZED).build();
+        }
+
+        try {
+            this.validatePassword(newPassword);
+            accountManager.changePassword(account, newPassword.getOldPassword(), newPassword.getFirstPassword());
+            return Response.status(Status.OK).build();
+        } catch (BaseException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+
+    private void validatePassword(NewPasswordDTO newPassword) throws BaseException {
+        if (!newPassword.getFirstPassword().equals(newPassword.getSecondPassword())) {
+            throw new PasswordsNotMatchException(PasswordsNotMatchException.NEW_PASSWORDS_NOT_MATCH);
+        }
+        if (newPassword.getFirstPassword().length() < 8) {
+            throw new PasswordTooShortException(PasswordTooShortException.PASSWORD_TOO_SHORT);
+        }
+    }
+
+
 }
 
