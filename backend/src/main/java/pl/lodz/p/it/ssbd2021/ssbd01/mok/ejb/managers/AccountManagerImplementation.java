@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.AccessLevelMapper;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
@@ -15,10 +14,6 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.security.enterprise.SecurityContext;
 import javax.ws.rs.core.Context;
-
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
-
 import java.util.List;
 
 
@@ -90,7 +85,7 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
-    public void editAccount(Long id, Account account) throws BaseException {
+    public void editAccount(Account account) throws BaseException {
         account.setModifiedBy(account);
         Account old = accountFacade.findByLogin(account.getLogin());
         if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
