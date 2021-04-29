@@ -323,7 +323,7 @@ GRANT
     DELETE
     ON accounts TO ssbd01mok;
 
-GRANT SELECT ON accounts TO ssbd01mok, ssbd01mow;
+GRANT SELECT ON accounts TO ssbd01mok, ssbd01mow, ssbd01mod;
 
 GRANT SELECT, USAGE ON accounts_seq TO ssbd01mok;
 GRANT SELECT ON accounts_seq TO ssbd01mod;
@@ -335,7 +335,7 @@ GRANT
     UPDATE
     ON access_levels TO ssbd01mok;
 
-GRANT SELECT ON access_levels TO ssbd01mok, ssbd01mow;
+GRANT SELECT ON access_levels TO ssbd01mok, ssbd01mow, ssbd01mod;
 
 GRANT SELECT, USAGE ON access_levels_seq TO ssbd01mok;
 GRANT SELECT ON access_levels_seq TO ssbd01mod;
