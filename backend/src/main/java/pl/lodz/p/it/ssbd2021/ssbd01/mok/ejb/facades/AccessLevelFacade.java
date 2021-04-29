@@ -1,6 +1,8 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -13,6 +15,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
  * Klasa definiująca główne operacje wykonywane na encjach typu AccessLevel.
  */
 @Stateless
+@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class AccessLevelFacade extends AbstractFacade<AccessLevel> {
 
     @PersistenceContext(unitName = "ssbd01mokPU")

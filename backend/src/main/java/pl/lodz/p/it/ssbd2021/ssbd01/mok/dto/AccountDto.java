@@ -14,7 +14,6 @@ public class AccountDto {
     private Long id;
     private String login;
     private String email;
-    private Set<AccessLevel> accessLevels;
     private String firstName;
     private String password;
     private String lastName;
@@ -59,7 +58,6 @@ public class AccountDto {
         this.id = account.getId();
         this.login = account.getLogin();
         this.email = account.getEmail();
-        this.accessLevels = account.getAccessLevels();
         this.firstName = account.getFirstName();
         this.lastName = account.getLastName();
         this.phoneNumber = account.getPhoneNumber();
@@ -96,14 +94,6 @@ public class AccountDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Set<AccessLevel> getAccessLevels() {
-        return accessLevels;
-    }
-
-    public void setAccessLevels(Set<AccessLevel> accessLevels) {
-        this.accessLevels = accessLevels;
     }
 
     public String getPassword() {

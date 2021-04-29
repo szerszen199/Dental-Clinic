@@ -8,6 +8,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Version;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
@@ -20,6 +21,7 @@ public abstract class AbstractEntity {
     public abstract Long getId();
 
     @Column(name = "version")
+    @Version
     private Long version;
 
     @Basic(optional = false)
@@ -36,6 +38,21 @@ public abstract class AbstractEntity {
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     @ManyToOne
     private Account modifiedBy;
+
+    /**
+     * Tworzy nową instancję klasy AbstractEntity.
+     */
+    public AbstractEntity() {
+    }
+
+    /**
+     * Tworzy nową instancję klasy AbstractEntity.
+     *
+     * @param createdBy konto użytkownika tworzącego encję
+     */
+    public AbstractEntity(Account createdBy) {
+        this.createdBy = createdBy;
+    }
 
     @PrePersist
     private void init() {
