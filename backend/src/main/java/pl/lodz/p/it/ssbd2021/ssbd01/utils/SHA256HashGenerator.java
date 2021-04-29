@@ -1,10 +1,19 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
+import javax.annotation.ManagedBean;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+@ManagedBean
 public class SHA256HashGenerator implements HashGenerator {
+
+    /**
+     * Tworzy nową instancję klasy SHA256HashGenerator.
+     */
+    public SHA256HashGenerator() {
+    }
+
     @Override
     public String generateHash(String input) {
         try {

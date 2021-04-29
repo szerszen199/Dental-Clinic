@@ -6,7 +6,7 @@
 
     <groupId>pl.lodz.p.it.ssbd2021</groupId>
     <artifactId>ssbd01</artifactId>
-    <version>0.0.10-SNAPSHOT</version>
+    <version>0.0.15-SNAPSHOT</version>
     <name>ssbd01</name>
     <packaging>war</packaging>
 
@@ -150,6 +150,11 @@
             <artifactId>mockito-junit-jupiter</artifactId>
             <version>3.7.7</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.5.0-b01</version>
         </dependency>
     </dependencies>
 
