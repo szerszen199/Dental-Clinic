@@ -1,14 +1,15 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
 
 /**
  * Klasa definiująca główne operacje wykonywane na encjach typu Account.
@@ -56,12 +57,15 @@ public class AccountFacade extends AbstractFacade<Account> {
     @Override
     public void edit(Account entity) throws BaseException {
         try {
-            super.edit(entity);
+            Account oldAcc = findByLogin(entity.getLogin());
+            Account newAcc = new Account(oldAcc.getId(), entity.getLogin(), entity.getEmail(),
+                    entity.getPassword(), entity.getFirstName(), entity.getLastName(), entity.getPhoneNumber(), entity.getPesel());
+            super.edit(newAcc);
         } catch (BaseException e) {
             throw e;
             // TODO: 20.04.2021 - uzupełnić o wyjątki aplikacyjne
         }
     }
-    
-    
+
+
 }
