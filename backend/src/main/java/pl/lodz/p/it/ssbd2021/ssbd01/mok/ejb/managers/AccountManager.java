@@ -1,16 +1,12 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
-import java.util.List;
-import java.util.Set;
-import javax.ejb.Local;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
+
+import javax.ejb.Local;
+import java.util.List;
 
 /**
  * Interfejs Account manager.
@@ -21,7 +17,7 @@ public interface AccountManager {
     /**
      * Create account.
      *
-     * @param account nowe konto
+     * @param account     nowe konto
      * @param accessLevel poziom dostępu nowego konta
      */
     public void createAccount(Account account, AccessLevel accessLevel);
@@ -69,23 +65,23 @@ public interface AccountManager {
      * Dodaje poziom dostępu {@param level} kontowi o loginie równym {@param logon}.
      *
      * @param accessLevel poziom dostępu konta
-     * @param login login użytkownika, któremu zostanie dodany poziom dostępu
-     *
+     * @param login       login użytkownika, któremu zostanie dodany poziom dostępu
      * @throws AccessLevelException wyjątek gdy nie znaleziono poziomu dostępu
      */
     void addAccessLevel(AccessLevel accessLevel, String login) throws AccessLevelException;
 
     /**
-     *  Edit account data.
-     * @param id Id of edited account.
+     * Edit account data.
+     *
      * @param account Account with edited data.
      * @throws BaseException Base exception.
      */
-    void editAccount(Long id,Account account) throws BaseException;
+    void editAccount(Account account) throws BaseException;
 
 
     /**
      * Pobranie listy wszystkich kont.
+     *
      * @return lista wszystkich kont
      */
     List<Account> getAllAccounts();
