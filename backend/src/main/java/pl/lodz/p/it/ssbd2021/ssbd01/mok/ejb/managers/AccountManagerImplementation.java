@@ -5,6 +5,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.DataValidationException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
 
@@ -97,5 +99,25 @@ public class AccountManagerImplementation implements AccountManager {
     @Override
     public List<Account> getAllAccounts() {
         return accountFacade.findAll();
+    }
+
+    @Override
+    public void changePassword(Account account, String oldPassword, String newPassword) throws BaseException {
+        this.verifyOldPassword(account.getPassword(), oldPassword);
+        this.validateNewPassword(account.getPassword(), newPassword);
+        account.setPassword(hashGenerator.generateHash(newPassword));
+        accountFacade.edit(account);
+    }
+
+    private void verifyOldPassword(String currentPasswordHash, String oldPassword) throws BaseException {
+        if (!currentPasswordHash.contentEquals(hashGenerator.generateHash(oldPassword))) {
+            throw new PasswordsNotMatchException(PasswordsNotMatchException.CURRENT_PASSWORD_NOT_MATCH);
+        }
+    }
+
+    private void validateNewPassword(String currentPasswordHash, String newPassword) throws BaseException {
+        if (currentPasswordHash.contentEquals(hashGenerator.generateHash(newPassword))) {
+            throw new PasswordsSameException(PasswordsSameException.PASSWORDS_NOT_DIFFER);
+        }
     }
 }
