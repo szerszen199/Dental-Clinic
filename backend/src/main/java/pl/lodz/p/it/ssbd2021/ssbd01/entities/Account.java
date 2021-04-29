@@ -1,9 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,6 +14,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Typ Account.
@@ -62,11 +62,11 @@ public class Account extends AbstractEntity implements Serializable {
     @Basic(optional = false)
     @Column(name = "login", updatable = false, nullable = false, length = 60)
     private String login;
-    
+
     @Basic(optional = false)
     @Column(name = "email", nullable = false, length = 100)
     private String email;
-    
+
     @Basic(optional = false)
     @Column(name = "password", columnDefinition = "bpchar", nullable = false, length = 64)
     private String password;
@@ -91,7 +91,7 @@ public class Account extends AbstractEntity implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "active", nullable = false)
-    private Boolean active  = true;
+    private Boolean active = true;
 
     @Basic(optional = false)
     @Column(name = "enabled", nullable = false)
@@ -124,15 +124,38 @@ public class Account extends AbstractEntity implements Serializable {
     /**
      * Tworzy nową instancję klasy Account reprezentujacej konto użytkownika aplikacji.
      *
-     * @param login         login konta
-     * @param email         adres e-mail przypisany do konta
-     * @param password      hasło konta
-     * @param firstName     imię użytkownika
-     * @param lastName      nazwisko użytkownika
-     * @param phoneNumber   numer telefonu
-     * @param pesel         pesel
+     * @param login       login konta
+     * @param email       adres e-mail przypisany do konta
+     * @param password    hasło konta
+     * @param firstName   imię użytkownika
+     * @param lastName    nazwisko użytkownika
+     * @param phoneNumber numer telefonu
+     * @param pesel       pesel
      */
     public Account(String login, String email, String password, String firstName, String lastName, String phoneNumber, String pesel) {
+        this.login = login;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.pesel = pesel;
+    }
+
+    /**
+     * Tworzy nową instancję klasy Account reprezentujacej konto użytkownika aplikacji.
+     *
+     * @param id          id konta
+     * @param login       login konta
+     * @param email       adres e-mail przypisany do konta
+     * @param password    hasło konta
+     * @param firstName   imię użytkownika
+     * @param lastName    nazwisko użytkownika
+     * @param phoneNumber numer telefonu
+     * @param pesel       pesel
+     */
+    public Account(long id, String login, String email, String password, String firstName, String lastName, String phoneNumber, String pesel) {
+        this.id = id;
         this.login = login;
         this.email = email;
         this.password = password;
