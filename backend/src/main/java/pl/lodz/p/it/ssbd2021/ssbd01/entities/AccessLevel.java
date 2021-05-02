@@ -20,6 +20,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 
 /**
@@ -51,18 +53,23 @@ public class AccessLevel extends AbstractEntity implements Serializable {
     @SequenceGenerator(name = "access_levels_generator", sequenceName = "access_levels_seq", allocationSize = 1)
     @Basic(optional = false)
     @Column(name = "id", nullable = false, updatable = false)
+    @NotNull
     private Long id;
 
     @Basic(optional = false)
     @Column(name = "active", nullable = false)
+    @NotNull
     private Boolean active = true;
 
     @Basic(optional = false)
     @Column(name = "level", nullable = false, length = 32, updatable = false, insertable = false)
+    @NotNull
+    @Size(min = 7, max = 32)
     private String level;
 
     @ManyToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
     @JoinColumn(name = "account_id", referencedColumnName = "id", updatable = false)
+    @NotNull
     private Account accountId;
 
     /**
