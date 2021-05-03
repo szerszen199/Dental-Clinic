@@ -71,13 +71,21 @@ public interface AccountManager {
     void addAccessLevel(AccessLevel accessLevel, String login) throws AccessLevelException;
 
     /**
-     * Edit account data.
+     * Edytuje wlasne konto.
      *
-     * @param account Account with edited data.
+     * @param account edytowane konto
      * @throws BaseException Base exception.
      */
     void editAccount(Account account) throws BaseException;
 
+
+    /**
+     * Edytuje konto innego urzytkownika.
+     *
+     * @param account edytowane konto
+     * @throws BaseException the base exception
+     */
+    void editOtherAccount(Account account) throws BaseException;
 
     /**
      * Pobranie listy wszystkich kont.
