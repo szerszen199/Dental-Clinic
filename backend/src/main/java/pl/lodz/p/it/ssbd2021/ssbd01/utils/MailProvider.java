@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
-
+import java.util.Properties;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -13,7 +12,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import java.util.Properties;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
 
 public class MailProvider {
 
@@ -70,6 +69,5 @@ public class MailProvider {
         message.setContent(multipart);
 
         Transport.send(message);
-
     }
 }

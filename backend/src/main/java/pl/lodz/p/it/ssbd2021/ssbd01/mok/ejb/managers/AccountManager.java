@@ -1,12 +1,11 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
+import java.util.List;
+import javax.ejb.Local;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
-
-import javax.ejb.Local;
-import java.util.List;
 
 /**
  * Interfejs Account manager.
@@ -96,4 +95,20 @@ public interface AccountManager {
      *                       nie powiedzie się.
      */
     void changePassword(Account account, String oldPassword, String newPassword) throws BaseException;
+
+    /**
+     * Resetuje hasło do konta o podanym id. Ustawia alfanumeryczne hasło
+     * o długości 8 znaków.
+     *
+     * @param id identyfikator konta
+     */
+    void resetPassword(Long id);
+
+    /**
+     * Sprawdza, czy podane konto ma aktywny poziom dostępu administratora.
+     *
+     * @param account sprawdzane konto
+     * @return czy konto posiada aktywne uprawnienia administratora
+     */
+    boolean isAdmin(Account account);
 }
