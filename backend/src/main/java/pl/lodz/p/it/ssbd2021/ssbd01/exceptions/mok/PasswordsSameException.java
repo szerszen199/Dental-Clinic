@@ -25,7 +25,7 @@ public class PasswordsSameException extends BaseException {
      * @param message wiadomość zawarta w wyjątu
      * @param cause   przyczyna wystąpienia wyjątku
      */
-    protected PasswordsSameException(String message, Throwable cause) {
+    public PasswordsSameException(String message, Throwable cause) {
         super(message, cause);
     }
 }
