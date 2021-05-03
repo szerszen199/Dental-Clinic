@@ -1,5 +1,14 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
+import java.util.List;
+import java.util.stream.Stream;
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+import javax.security.enterprise.SecurityContext;
+import javax.ws.rs.core.Context;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.Levels;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
@@ -9,14 +18,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
-
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.security.enterprise.SecurityContext;
-import javax.ws.rs.core.Context;
-import java.util.List;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 
 
 /**
@@ -33,6 +35,9 @@ public class AccountManagerImplementation implements AccountManager {
 
     @Inject
     private HashGenerator hashGenerator;
+    
+    @Inject
+    private RandomPasswordGenerator passwordGenerator;
 
     @Override
     public void createAccount(Account account, AccessLevel accessLevel) {
@@ -109,9 +114,19 @@ public class AccountManagerImplementation implements AccountManager {
         accountFacade.edit(account);
     }
 
+    @Override
+    public void resetPassword(Long id) {
+        Account account = accountFacade.find(id);
+        String generatedPassword = passwordGenerator.generate(8);
+        String newPasswordHash = hashGenerator.generateHash(generatedPassword);
+        
+        account.setPassword(newPasswordHash);
+        // TODO: send mail with new password
+    }
+
     private void verifyOldPassword(String currentPasswordHash, String oldPassword) throws BaseException {
         if (!currentPasswordHash.contentEquals(hashGenerator.generateHash(oldPassword))) {
-            throw new PasswordsNotMatchException(PasswordsNotMatchException.CURRENT_PASSWORD_NOT_MATCH);
+            throw PasswordsNotMatchException.currentPasswordNotMatch();
         }
     }
 
@@ -119,5 +134,14 @@ public class AccountManagerImplementation implements AccountManager {
         if (currentPasswordHash.contentEquals(hashGenerator.generateHash(newPassword))) {
             throw new PasswordsSameException(PasswordsSameException.PASSWORDS_NOT_DIFFER);
         }
+    }
+
+    @Override
+    public boolean isAdmin(Account account) {
+        Stream<AccessLevel> accessLevels = account.getAccessLevels().stream();
+        return accessLevels.anyMatch(level -> (
+                level.getLevel().equals(Levels.ADMINISTRATOR.getLevel())
+                        && level.getActive()
+        ));
     }
 }
