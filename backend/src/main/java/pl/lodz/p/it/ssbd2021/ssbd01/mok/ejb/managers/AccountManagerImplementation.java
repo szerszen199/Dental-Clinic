@@ -91,6 +91,16 @@ public class AccountManagerImplementation implements AccountManager {
         account.setModifiedBy(account);
         Account old = accountFacade.findByLogin(account.getLogin());
         if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
+            throw new DataValidationException("Niepoprawna Valida danych wejściowych");
+        }
+        accountFacade.edit(account);
+    }
+
+    @Override
+    public void editOtherAccount(Account account) throws BaseException {
+        account.setModifiedBy(getLoggedInAccount());
+        Account old = accountFacade.findByLogin(account.getLogin());
+        if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
             throw new DataValidationException("Niepoprawna walidacja danych wejściowych");
         }
         accountFacade.edit(account);

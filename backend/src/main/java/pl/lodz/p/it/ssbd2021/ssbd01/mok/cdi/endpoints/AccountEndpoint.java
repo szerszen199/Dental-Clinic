@@ -89,6 +89,7 @@ public class AccountEndpoint {
      * @param accountDto Account with edited data.
      * @throws BaseException Base exception.
      */
+    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit
     @POST
     @Path("edit")
     @Produces({MediaType.APPLICATION_JSON})
@@ -96,6 +97,20 @@ public class AccountEndpoint {
         accountManager.editAccount(AccountConverter.createAccountEntityFromDto(accountDto));
     }
 
+
+    /**
+     * Edit other account.
+     *
+     * @param accountDto the edited account
+     * @throws BaseException the base exception
+     */
+    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit/other
+    @POST
+    @Path("edit/other")
+    @Produces({MediaType.APPLICATION_JSON})
+    public void editOtherAccount(AccountDto accountDto) throws BaseException {
+        accountManager.editOtherAccount(AccountConverter.createAccountEntityFromDto(accountDto));
+    }
 
     /**
      * Revoke access level - enpoint odbierający poziom dostępu {@param level} dla użytkownika o {@param id}.
