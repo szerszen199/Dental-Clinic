@@ -9,7 +9,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
 public class PasswordsNotMatchException extends BaseException {
     
     private static final String NEW_PASSWORDS_NOT_MATCH = "new_passwords_do_not_match";
-    private static final String CURRENT_PASSWORD_NOT_MATCH = "current_password_do_not_match";
+    private static final String CURRENT_PASSWORD_NOT_MATCH = "current_password_does_not_match";
 
     /**
      * Tworzy nową instancję wyjątku PasswordsNotMatchException.
