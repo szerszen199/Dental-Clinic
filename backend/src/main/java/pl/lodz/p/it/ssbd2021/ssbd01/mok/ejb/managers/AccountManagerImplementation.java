@@ -1,13 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
-import java.util.List;
-import java.util.stream.Stream;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.security.enterprise.SecurityContext;
-import javax.ws.rs.core.Context;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.Levels;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
@@ -19,6 +11,15 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
+
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+import javax.security.enterprise.SecurityContext;
+import javax.ws.rs.core.Context;
+import java.util.List;
+import java.util.stream.Stream;
 
 
 /**
@@ -35,7 +36,7 @@ public class AccountManagerImplementation implements AccountManager {
 
     @Inject
     private HashGenerator hashGenerator;
-    
+
     @Inject
     private RandomPasswordGenerator passwordGenerator;
 
@@ -117,11 +118,19 @@ public class AccountManagerImplementation implements AccountManager {
     @Override
     public void resetPassword(Long id) {
         Account account = accountFacade.find(id);
-        String generatedPassword = passwordGenerator.generate(8);
-        String newPasswordHash = hashGenerator.generateHash(generatedPassword);
-        
-        account.setPassword(newPasswordHash);
+        account.setPassword(generateNewRandomPassword());
         // TODO: send mail with new password
+    }
+
+    @Override
+    public void resetPassword(Account account) {
+        account.setPassword(generateNewRandomPassword());
+        // TODO: send mail with new password
+    }
+
+    private String generateNewRandomPassword() {
+        String generatedPassword = passwordGenerator.generate(8);
+        return hashGenerator.generateHash(generatedPassword);
     }
 
     private void verifyOldPassword(String currentPasswordHash, String oldPassword) throws BaseException {
