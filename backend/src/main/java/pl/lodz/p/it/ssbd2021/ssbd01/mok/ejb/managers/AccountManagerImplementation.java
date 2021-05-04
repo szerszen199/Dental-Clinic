@@ -132,7 +132,7 @@ public class AccountManagerImplementation implements AccountManager {
 
     private void validateNewPassword(String currentPasswordHash, String newPassword) throws BaseException {
         if (currentPasswordHash.contentEquals(hashGenerator.generateHash(newPassword))) {
-            throw new PasswordsSameException(PasswordsSameException.PASSWORDS_NOT_DIFFER);
+            throw PasswordsSameException.passwordsNotDifferent();
         }
     }
 
