@@ -9,6 +9,8 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Version;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotNull;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
@@ -26,13 +28,16 @@ public abstract class AbstractEntity {
 
     @Basic(optional = false)
     @Column(name = "creation_date_time", nullable = false, updatable = false)
+    @NotNull
     private LocalDateTime creationDateTime;
 
     @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
+    @NotNull
     private Account createdBy;
 
     @Column(name = "modification_date_time")
+    @FutureOrPresent
     private LocalDateTime modificationDateTime;
 
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
