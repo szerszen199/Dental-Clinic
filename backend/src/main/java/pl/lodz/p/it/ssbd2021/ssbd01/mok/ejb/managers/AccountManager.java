@@ -122,6 +122,14 @@ public interface AccountManager {
     void resetPassword(Long id);
 
     /**
+     * Resetuje hasło podanego konta. Ustawia alfanumeryczne hasło o długości
+     * 8 znaków.
+     *
+     * @param account konto, któego hasło ma zostać zresetowane
+     */
+    void resetPassword(Account account);
+
+    /**
      * Sprawdza, czy podane konto ma aktywny poziom dostępu administratora.
      *
      * @param account sprawdzane konto
