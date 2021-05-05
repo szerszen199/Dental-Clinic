@@ -5,6 +5,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
@@ -46,11 +47,18 @@ public class AccountFacade extends AbstractFacade<Account> {
      *
      * @param login login
      * @return account
+     * @throws PersistenceException wyjątek typu PersistenceException
      */
-    public Account findByLogin(String login) {
-        TypedQuery<Account> tq = em.createNamedQuery("Account.findByLogin", Account.class);
-        tq.setParameter("login", login);
-        return tq.getSingleResult();
+    public Account findByLogin(String login) throws PersistenceException {
+        try {
+            TypedQuery<Account> tq = em.createNamedQuery("Account.findByLogin", Account.class);
+            tq.setParameter("login", login);
+            return tq.getSingleResult();
+        } catch (PersistenceException e) {
+            throw e;
+            // TODO: 05.05.2021 - uzupełnić o wyjątki aplikacyjne
+        }
+
     }
 
     @Override
