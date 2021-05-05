@@ -35,7 +35,7 @@ public class AccountManagerImplementation implements AccountManager {
 
     @Inject
     private HashGenerator hashGenerator;
-    
+
     @Inject
     private RandomPasswordGenerator passwordGenerator;
 
@@ -125,11 +125,16 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
+    public Account findByLogin(String login) {
+        return accountFacade.findByLogin(login);
+    }
+
+    @Override
     public void resetPassword(Long id) {
         Account account = accountFacade.find(id);
         String generatedPassword = passwordGenerator.generate(8);
         String newPasswordHash = hashGenerator.generateHash(generatedPassword);
-        
+
         account.setPassword(newPasswordHash);
         // TODO: send mail with new password
     }
