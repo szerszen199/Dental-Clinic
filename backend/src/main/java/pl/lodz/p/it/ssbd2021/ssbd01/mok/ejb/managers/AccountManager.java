@@ -92,8 +92,16 @@ public interface AccountManager {
      * @param account     konto, którego hasło jest edytowane
      * @param oldPassword stare hasło podane przez użytkownika
      * @param newPassword nowe hasło
-     * @throws BaseException wyjątek, gdy utrwalanie stanu konta w bazie danych
-     *                       nie powiedzie się.
+     * @throws BaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                       nie powiedzie się.
      */
     void changePassword(Account account, String oldPassword, String newPassword) throws BaseException;
+
+    /**
+     * Ustawia pole dark mode na {@param isDarkMode} w koncie {@param account}.
+     *
+     * @param account    zmieniane konto
+     * @param isDarkMode tryb dark mode
+     * @throws BaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                       nie powiedzie się.
+     */
+    void setDarkMode(Account account, boolean isDarkMode) throws BaseException;
 }

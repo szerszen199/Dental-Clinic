@@ -67,6 +67,18 @@ public class Account extends AbstractEntity implements Serializable {
     @Column(name = "email", nullable = false, length = 100)
     private String email;
 
+    public boolean isDarkMode() {
+        return isDarkMode;
+    }
+
+    public void setDarkMode(boolean darkMode) {
+        isDarkMode = darkMode;
+    }
+
+    @Basic(optional = true)
+    @Column(name = "is_dark_mode", nullable = true)
+    private boolean isDarkMode = false;
+
     @Basic(optional = false)
     @Column(name = "password", columnDefinition = "bpchar", nullable = false, length = 64)
     private String password;

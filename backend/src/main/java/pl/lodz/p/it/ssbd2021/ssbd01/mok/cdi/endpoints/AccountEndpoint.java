@@ -25,6 +25,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -45,7 +46,8 @@ public class AccountEndpoint {
 
     @Inject
     private AccountManager accountManager;
-
+    @Inject
+    private AccessLevelManager accessLevelManager;
 
     /**
      * Tworzy nowe konto.
@@ -58,10 +60,6 @@ public class AccountEndpoint {
     public void createAccount(AccountDto accountDto) {
         accountManager.createAccount(AccountConverter.createAccountEntityFromDto(accountDto), new PatientData());
     }
-
-
-    @Inject
-    private AccessLevelManager accessLevelManager;
 
     /**
      * Confirm account.
@@ -202,8 +200,7 @@ public class AccountEndpoint {
     /**
      * Zmienia hasło do własnego konta.
      *
-     * @param newPassword informacje uwierzytelniające o starym haśle i nowym,
-     *                    które ma zostać ustawione
+     * @param newPassword informacje uwierzytelniające o starym haśle i nowym,                    które ma zostać ustawione
      * @return odpowiedź na żądanie
      */
     @PUT
@@ -223,6 +220,29 @@ public class AccountEndpoint {
         } catch (BaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
+    }
+
+
+    /**
+     * Endpoint dla ustawiania w aktualnym koncie trybu ciemnego.
+     *
+     * @param isDarkMode true jeśli chcemy ustawić tryb ciemny, inaczej false.
+     * @return Response 401 jeśli użytkownik jest unauthorised, 200 jeśli udało się ustawić tryb ciemny, inaczej 400
+     */
+    @PUT
+    @Path("dark-mode")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changeDarkMode(@QueryParam("dark-mode") boolean isDarkMode) {
+        Account account = accountManager.getLoggedInAccount();
+        if (account == null) {
+            return Response.status(Status.UNAUTHORIZED).build();
+        }
+        try {
+            accountManager.setDarkMode(account, isDarkMode);
+        } catch (BaseException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.status(Status.OK).build();
     }
 
     private void validatePassword(NewPasswordDTO newPassword) throws BaseException {

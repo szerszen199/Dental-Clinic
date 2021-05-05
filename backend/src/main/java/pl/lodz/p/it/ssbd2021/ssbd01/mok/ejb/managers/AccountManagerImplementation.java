@@ -109,6 +109,12 @@ public class AccountManagerImplementation implements AccountManager {
         accountFacade.edit(account);
     }
 
+    @Override
+    public void setDarkMode(Account account, boolean isDarkMode) throws BaseException {
+        account.setDarkMode(isDarkMode);
+        accountFacade.edit(account);
+    }
+
     private void verifyOldPassword(String currentPasswordHash, String oldPassword) throws BaseException {
         if (!currentPasswordHash.contentEquals(hashGenerator.generateHash(oldPassword))) {
             throw new PasswordsNotMatchException(PasswordsNotMatchException.CURRENT_PASSWORD_NOT_MATCH);
