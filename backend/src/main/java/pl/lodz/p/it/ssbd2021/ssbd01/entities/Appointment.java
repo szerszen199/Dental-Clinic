@@ -15,6 +15,13 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "appointments")
@@ -36,22 +43,35 @@ public class Appointment extends AbstractEntity implements Serializable {
     @SequenceGenerator(name = "appointments_generator", sequenceName = "appointments_seq", allocationSize = 1)
     @Basic(optional = false)
     @Column(name = "id", nullable = false, updatable = false)
+    @NotNull
     private Long id;
+
     @Basic(optional = false)
     @Column(name = "appointment_date", nullable = false)
+    @NotNull
+    @Future
     private LocalDateTime appointmentDate;
+
     @Basic(optional = false)
     @Column(name = "confirmed", nullable = false)
+    @NotNull
     private Boolean confirmed = false;
+
     @Basic(optional = false)
     @Column(name = "canceled", nullable = false)
+    @NotNull
     private Boolean canceled = false;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+
     @Column(name = "rating", columnDefinition = "numeric", precision = 2, scale = 1)
+    @DecimalMin(value = "0.0")
+    @DecimalMax(value = "5.0")
+    @Digits(integer = 1, fraction = 1)
     private Double rating;
+
     @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Account doctor;
+
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     @ManyToOne
     private Account patient;

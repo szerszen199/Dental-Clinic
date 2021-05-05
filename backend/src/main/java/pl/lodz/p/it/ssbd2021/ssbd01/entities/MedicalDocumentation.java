@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -43,6 +44,7 @@ public class MedicalDocumentation extends AbstractEntity implements Serializable
     @SequenceGenerator(name = "medical_documentations_generator", sequenceName = "medical_documentations_seq", allocationSize = 1)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, nullable = false)
+    @NotNull
     private Long id;
 
     @Column(name = "allergies")
@@ -53,6 +55,7 @@ public class MedicalDocumentation extends AbstractEntity implements Serializable
 
     @JoinColumn(name = "patient_id", referencedColumnName = "id", nullable = false, updatable = false)
     @OneToOne(optional = false)
+    @NotNull
     private Account patient;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
