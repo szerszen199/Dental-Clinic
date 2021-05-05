@@ -104,6 +104,15 @@ public interface AccountManager {
      */
     void changePassword(Account account, String oldPassword, String newPassword) throws BaseException;
 
+
+    /**
+     * Wyszukuje konto na podstawie loginu.
+     *
+     * @param login login konta do znalezienia
+     * @return znalezione konto
+     */
+    Account findByLogin(String login);
+
     /**
      * Resetuje hasło do konta o podanym id. Ustawia alfanumeryczne hasło
      * o długości 8 znaków.

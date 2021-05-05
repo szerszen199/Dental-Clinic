@@ -198,6 +198,20 @@ public class AccountEndpoint {
         return Response.ok(account).build();
     }
 
+
+    /**
+     * Pobiera informacje o koncie o {@param login}.
+     *
+     * @param login login konta o jakim pobrane zostaną informacje
+     * @return informacje o zalogowanym koncie
+     */
+    @GET
+    @Path("/info/{login}")
+    public Response getAccountInfoWithLogin(@PathParam("login") String login) {
+        AccountDto account = new AccountDto(accountManager.findByLogin(login));
+        return Response.ok(account).build();
+    }
+
     /**
      * Pobiera listę wszystkich kont.
      *
