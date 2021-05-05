@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,6 +16,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -57,18 +63,39 @@ public class Account extends AbstractEntity implements Serializable {
     @SequenceGenerator(name = "accounts_generator", sequenceName = "accounts_seq", allocationSize = 1)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, nullable = false)
+    @NotNull
     private Long id;
 
     @Basic(optional = false)
     @Column(name = "login", updatable = false, nullable = false, length = 60)
+    @NotNull
+    @Login
+    @Size(min = 1, max = 60)
     private String login;
 
     @Basic(optional = false)
     @Column(name = "email", nullable = false, length = 100)
+    @NotNull
+    @Email
+    @Size(min = 4, max = 100)
     private String email;
+
+    public boolean isDarkMode() {
+        return isDarkMode;
+    }
+
+    public void setDarkMode(boolean darkMode) {
+        isDarkMode = darkMode;
+    }
+
+    @Basic(optional = true)
+    @Column(name = "is_dark_mode", nullable = true)
+    private boolean isDarkMode = false;
 
     @Basic(optional = false)
     @Column(name = "password", columnDefinition = "bpchar", nullable = false, length = 64)
+    @NotNull
+    @Size(min = 64, max = 64)
     private String password;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
@@ -77,42 +104,54 @@ public class Account extends AbstractEntity implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "first_name", nullable = false, length = 50)
+    @NotNull
+    @Size(min = 1, max = 50)
     private String firstName;
 
     @Basic(optional = false)
     @Column(name = "last_name", nullable = false, length = 80)
+    @NotNull
+    @Size(min = 1, max = 80)
     private String lastName;
 
     @Column(name = "phone_number", length = 15)
+    @Size(min = 9, max = 15)
     private String phoneNumber;
 
     @Column(name = "pesel", columnDefinition = "bpchar", length = 11)
+    @Size(min = 9, max = 9)
     private String pesel;
 
     @Basic(optional = false)
     @Column(name = "active", nullable = false)
+    @NotNull
     private Boolean active = true;
 
     @Basic(optional = false)
     @Column(name = "enabled", nullable = false)
+    @NotNull
     private Boolean enabled = false;
 
     @Column(name = "last_successful_login")
     private LocalDateTime lastSuccessfulLogin;
 
     @Column(name = "last_successful_login_ip", length = 15)
+    @Size(min = 7, max = 15)
     private String lastSuccessfulLoginIp;
 
     @Column(name = "last_unsuccessful_login")
     private LocalDateTime lastUnsuccessfulLogin;
 
     @Column(name = "last_unsuccessful_login_ip", length = 15)
+    @Size(min = 7, max = 15)
     private String lastUnsuccessfulLoginIp;
 
     @Column(name = "unsuccessful_login_count_since_last_login")
+    @Min(0)
     private Integer unsuccessfulLoginCounter = 0;
 
     @Column(name = "language", columnDefinition = "bpchar", length = 2)
+    @Size(min = 2, max = 2)
     private String language;
 
     /**
