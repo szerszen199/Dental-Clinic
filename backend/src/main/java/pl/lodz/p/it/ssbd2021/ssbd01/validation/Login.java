@@ -18,7 +18,26 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = {})
 @Retention(RUNTIME)
 @Size(min = 3, max = 30)
-@Pattern(regexp = "[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*", message = "{validation.error.login}")
+@Pattern(regexp = "[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*")
 public @interface Login {
+    /**
+     * Message string.
+     *
+     * @return string
+     */
+    String message() default "{validation.error.login}";
 
+    /**
+     * Groups class [ ].
+     *
+     * @return class [ ]
+     */
+    Class<?>[] groups() default {};
+
+    /**
+     * Payload class [ ].
+     *
+     * @return class [ ]
+     */
+    Class<? extends Payload>[] payload() default {};
 }
