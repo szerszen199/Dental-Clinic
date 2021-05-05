@@ -2,9 +2,13 @@ package pl.lodz.p.it.ssbd2021.ssbd01.common;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
 
 /**
@@ -63,20 +67,33 @@ public abstract class AbstractFacade<T> {
      *
      * @param id obiekt klucza głównego.
      * @return obiekt encji.
+     * @throws PersistenceException wyjątek typu PersistenceException
      */
-    public T find(Object id) {
-        return getEntityManager().find(entityClass, id);
+    public T find(Object id) throws PersistenceException {
+        try {
+            return getEntityManager().find(entityClass, id);
+        } catch (PersistenceException e) {
+            throw e;
+            // TODO: 05.05.2021 - uzupełnić o wyjątki aplikacyjne
+        }
     }
 
     /**
      * Pobiera listę wszystkich encji znajdujących się w bazie danych.
      *
      * @return lista wszystkich encji.
+     * @throws PersistenceException wyjątek typu PersistenceException
      */
-    public List<T> findAll() {
-        CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
-        cq.select(cq.from(entityClass));
-        return getEntityManager().createQuery(cq).getResultList();
+    public List<T> findAll() throws PersistenceException {
+        try {
+            CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
+            cq.select(cq.from(entityClass));
+            return getEntityManager().createQuery(cq).getResultList();
+        } catch (PersistenceException e) {
+            throw e;
+            // TODO: 05.05.2021 - uzupełnić o wyjątki aplikacyjne
+        }
+
     }
 
     /**
