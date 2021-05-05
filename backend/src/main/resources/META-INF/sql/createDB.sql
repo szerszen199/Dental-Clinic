@@ -17,38 +17,39 @@ DROP SEQUENCE IF EXISTS prescriptions_seq;
 -- Tabela reprezentująca dane użytkownika
 CREATE TABLE accounts
 (
-    id                                        BIGINT PRIMARY KEY,                             -- klucz główny tabeli
-    login                                     VARCHAR(60)        NOT NULL                     -- login użytkownika, niezmienny
+    id                                        BIGINT PRIMARY KEY,          -- klucz główny tabeli
+    login                                     VARCHAR(60)        NOT NULL  -- login użytkownika, niezmienny
         CONSTRAINT acc_login_unique UNIQUE,
-    email                                     VARCHAR(100)       NOT NULL                     -- Adres email użytkownika, wykorzystywany do wysłania wiadomości z linkiem weryfikacyjnym
+    email                                     VARCHAR(100)       NOT NULL  -- Adres email użytkownika, wykorzystywany do wysłania wiadomości z linkiem weryfikacyjnym
         CONSTRAINT acc_email_unique UNIQUE,
-    password                                  CHAR(64)           NOT NULL,                    -- Skrót hasła uzytkownika - SHA-256.
-    first_name                                VARCHAR(50)        NOT NULL,                    -- Imię użytkownika
-    last_name                                 VARCHAR(80)        NOT NULL,                    -- Nazwisko użytkownika
-    phone_number                              VARCHAR(15),                                    -- Numer telefonu użytkownika
-    pesel                                     CHAR(11)                                        -- Numer pesel użytkownika
+    password                                  CHAR(64)           NOT NULL, -- Skrót hasła uzytkownika - SHA-256.
+    first_name                                VARCHAR(50)        NOT NULL, -- Imię użytkownika
+    last_name                                 VARCHAR(80)        NOT NULL, -- Nazwisko użytkownika
+    phone_number                              VARCHAR(15),                 -- Numer telefonu użytkownika
+    pesel                                     CHAR(11)                     -- Numer pesel użytkownika
         CONSTRAINT acc_pesel_unique UNIQUE,
-    active                                    BOOL DEFAULT TRUE  NOT NULL,                    -- Pole pozwalające na blokowanie konta użytkownika, domyślnie wartość true (nie zablokowane).
-    enabled                                   BOOL DEFAULT FALSE NOT NULL,                    -- Pole reprezentujące czy konto zostało aktywowane po rejestracji, domyśnie wartość fałsz (nie aktywowane).
-    last_successful_login                     TIMESTAMPTZ,                                    -- Pole reprezentujące datę ostatniego logowania użytkownika
-    last_successful_login_ip                  VARCHAR(15),                                    -- Pole reprezentujące ip ostatniego logowania użytkownika
-    last_unsuccessful_login                   TIMESTAMPTZ,                                    -- Pole reprezentujące datę ostatniego nieudanego logowania użytkownika
-    last_unsuccessful_login_ip                VARCHAR(15),                                    -- Pole reprezentujące ip ostatniego nieudanego logowania użytkownika
-    unsuccessful_login_count_since_last_login INT  DEFAULT 0                                  -- Ilość nieudanych logowań od czasu ostatniego udanego logowania
+    active                                    BOOL DEFAULT TRUE  NOT NULL, -- Pole pozwalające na blokowanie konta użytkownika, domyślnie wartość true (nie zablokowane).
+    enabled                                   BOOL DEFAULT FALSE NOT NULL, -- Pole reprezentujące czy konto zostało aktywowane po rejestracji, domyśnie wartość fałsz (nie aktywowane).
+    is_dark_mode                              bool default false,
+    last_successful_login                     TIMESTAMPTZ,                 -- Pole reprezentujące datę ostatniego logowania użytkownika
+    last_successful_login_ip                  VARCHAR(15),                 -- Pole reprezentujące ip ostatniego logowania użytkownika
+    last_unsuccessful_login                   TIMESTAMPTZ,                 -- Pole reprezentujące datę ostatniego nieudanego logowania użytkownika
+    last_unsuccessful_login_ip                VARCHAR(15),                 -- Pole reprezentujące ip ostatniego nieudanego logowania użytkownika
+    unsuccessful_login_count_since_last_login INT  DEFAULT 0               -- Ilość nieudanych logowań od czasu ostatniego udanego logowania
         CONSTRAINT acc_unsuccessful_login_count_since_last_login_gr0 CHECK
-            ( unsuccessful_login_count_since_last_login >= 0 ),                               -- bigger than 0
-    modified_by                               BIGINT,                                         -- ID konta które ostatnio modyfikowało dane tabeli
+            ( unsuccessful_login_count_since_last_login >= 0 ),            -- bigger than 0
+    modified_by                               BIGINT,                      -- ID konta które ostatnio modyfikowało dane tabeli
 
-    modification_date_time                    TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji tabeli
-    created_by                                BIGINT             NOT NULL,                    -- ID konta które utworzyło tabelę,
+    modification_date_time                    TIMESTAMPTZ,                 -- Data ostatniej modyfikacji tabeli
+    created_by                                BIGINT             NOT NULL, -- ID konta które utworzyło tabelę,
     creation_date_time                        TIMESTAMPTZ        NOT NULL DEFAULT
-                CURRENT_TIMESTAMP,                                                                    -- Data utworzenia konta
+        CURRENT_TIMESTAMP,                                                 -- Data utworzenia konta
     language                                  CHAR(2)
         CONSTRAINT acc_language CHECK
             (language in ('pl', 'PL', 'en', 'EN')),
- -- Język konta
+    -- Język konta
 
-    version                                   BIGINT                                          -- Wersja
+    version                                   BIGINT                       -- Wersja
         CONSTRAINT acc_version_gr0 CHECK (version >= 0)
 );
 
@@ -76,19 +77,20 @@ CREATE SEQUENCE accounts_seq -- Sekwencja wykorzystywana przy tworzeniu pola klu
 
 CREATE TABLE access_levels
 (
-    id                     BIGINT PRIMARY KEY,                                                                                 -- klucz główny tabeli
+    id                     BIGINT PRIMARY KEY,                                                -- klucz główny tabeli
     level                  VARCHAR(32) NOT NULL
         CONSTRAINT acc_lvl_level CHECK
-            (level in ('level.patient', 'level.receptionist', 'level.doctor', 'level.administrator')),                                                                               -- Poziom dostępu,
-    account_id             BIGINT      NOT NULL,                                                                               -- Konto przypisane do poziomu dostepu
-    active                 BOOL        NOT NULL DEFAULT TRUE,                                                                  -- Czy przypisany poziom dostępu jest aktywny, domyślnie prawda (jest aktywny). Pole pozwala na wyłączanie użytkownikom poziomów dostepu bez usuwania wiersza tabeli.
-    CONSTRAINT acc_lvl_level_account_pair_unique UNIQUE (level, account_id),                                                   -- Para poziom dostepu i konta użytkownika jest unikalna
-    version                BIGINT                                                                                              -- Wersja
+            (level in
+             ('level.patient', 'level.receptionist', 'level.doctor', 'level.administrator')), -- Poziom dostępu,
+    account_id             BIGINT      NOT NULL,                                              -- Konto przypisane do poziomu dostepu
+    active                 BOOL        NOT NULL DEFAULT TRUE,                                 -- Czy przypisany poziom dostępu jest aktywny, domyślnie prawda (jest aktywny). Pole pozwala na wyłączanie użytkownikom poziomów dostepu bez usuwania wiersza tabeli.
+    CONSTRAINT acc_lvl_level_account_pair_unique UNIQUE (level, account_id),                  -- Para poziom dostepu i konta użytkownika jest unikalna
+    version                BIGINT                                                             -- Wersja
         CONSTRAINT acc_lvl_version_gr0 CHECK (version >= 0),
-    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,                                                     -- Data utworzenia tabeli
-    created_by             BIGINT      NOT NULL,                                                                               -- ID konta które utworzyło tabelę
-    modification_date_time TIMESTAMPTZ,                                                                                        -- Data ostatniej modyfikacji tabeli
-    modified_by            BIGINT                                                                                              -- Użytkownik który ostatni modyfikował tabelę
+    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,                    -- Data utworzenia tabeli
+    created_by             BIGINT      NOT NULL,                                              -- ID konta które utworzyło tabelę
+    modification_date_time TIMESTAMPTZ,                                                       -- Data ostatniej modyfikacji tabeli
+    modified_by            BIGINT                                                             -- Użytkownik który ostatni modyfikował tabelę
 );
 
 -- Klucze obce dla tabeli access_levels

@@ -136,4 +136,13 @@ public interface AccountManager {
      * @return czy konto posiada aktywne uprawnienia administratora
      */
     boolean isAdmin(Account account);
+
+    /**
+     * Ustawia pole dark mode na {@param isDarkMode} w koncie {@param account}.
+     *
+     * @param account    zmieniane konto
+     * @param isDarkMode tryb dark mode
+     * @throws BaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                       nie powiedzie się.
+     */
+    void setDarkMode(Account account, boolean isDarkMode) throws BaseException;
 }
