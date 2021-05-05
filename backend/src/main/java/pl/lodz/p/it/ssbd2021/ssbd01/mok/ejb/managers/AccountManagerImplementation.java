@@ -109,6 +109,11 @@ public class AccountManagerImplementation implements AccountManager {
         accountFacade.edit(account);
     }
 
+    @Override
+    public Account findByLogin(String login) {
+        return accountFacade.findByLogin(login);
+    }
+
     private void verifyOldPassword(String currentPasswordHash, String oldPassword) throws BaseException {
         if (!currentPasswordHash.contentEquals(hashGenerator.generateHash(oldPassword))) {
             throw new PasswordsNotMatchException(PasswordsNotMatchException.CURRENT_PASSWORD_NOT_MATCH);
