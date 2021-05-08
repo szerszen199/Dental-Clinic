@@ -1,6 +1,8 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
 import java.util.Properties;
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -12,56 +14,64 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 
+@ApplicationScoped
 public class MailProvider {
 
+    private static final String FROM = "ssbd202101@gmail.com";
+    private static final String PASSWORD = "GenWydvam0";
+    private Session session;
 
-    Properties properties = new Properties();
-    Session session;
-    String address;
+    @PostConstruct
+    public void init() {
 
-    /**
-     * Tworzy nowy MailProvider.
-     *
-     * @param username nazwa użytkownika dla poczty
-     * @param password hasło do poczty
-     * @param port     numer portu poczty
-     * @param host     nazwa hosta poczty
-     * @param tls      czy użyuwać tls
-     * @param auth     czy używać auth
-     */
-    public MailProvider(String username, String password, int port, String host, boolean tls, boolean auth) {
-        properties.put("mail.smtp.auth", String.valueOf(auth));
-        properties.put("mail.smtp.starttls.enable", String.valueOf(tls));
-        properties.put("mail.smtp.host", host);
-        properties.put("mail.smtp.port", String.valueOf(port));
-        properties.put("mail.smtp.ssl.trust", host);
+        Properties properties = new Properties();
+        properties.put("mail.smtp.host", "smtp.gmail.com");
+        properties.put("mail.smtp.port", "465");
+        properties.put("mail.smtp.ssl.enable", "true");
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
-        session = Session.getInstance(properties, new Authenticator() {
+        Authenticator authenticator = new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
+                return new PasswordAuthentication(FROM, PASSWORD);
             }
-        });
+        };
+
+        session = Session.getInstance(properties, authenticator);
     }
+
 
     /**
      * Wysyła wiadomość z linkiem aktywacyjnym.
      *
-     * @param accountDto     Konto na adres którego zostanie wysłana wiadomość.
+     * @param to             Adres, na który zostanie wysłana wiadomość.
      * @param activationLink link aktywacyjny do wysłania na konto.
-     * @throws MessagingException Błąd wysyłania wiadomości.
+     * @throws MailSendingException Błąd wysyłania wiadomości.
      */
-    public void sendActivationMail(AccountDto accountDto, String activationLink) throws MessagingException {
-        Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(address));
-        message.setRecipient(Message.RecipientType.TO, new InternetAddress(accountDto.getEmail()));
-        message.setSubject("Activate your account");
-        String messageText = "Please click link below to verify your account: \n" + activationLink;
+    public void sendActivationMail(String to, String activationLink) throws MailSendingException {
+        String subject = "Activate your account!";
+        String messageText = 
+                p("Please click link below to verify your account: ") 
+                + aHref(activationLink, "Activate");
+
+        try {
+            sendMail(to, subject, messageText);
+        } catch (MessagingException e) {
+            throw MailSendingException.activationLink();
+        }
+    }
+
+    private void sendMail(String to, String subject, String mailMessage) throws MessagingException {
+        MimeMessage message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(FROM));
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+        message.setSubject(subject);
 
         MimeBodyPart mimeBodyPart = new MimeBodyPart();
-        mimeBodyPart.setContent(messageText, "text/html");
+        mimeBodyPart.setContent(mailMessage, "text/html");
 
         Multipart multipart = new MimeMultipart();
         multipart.addBodyPart(mimeBodyPart);
@@ -69,5 +79,13 @@ public class MailProvider {
         message.setContent(multipart);
 
         Transport.send(message);
+    }
+
+    private String p(String text) {
+        return "<p>" + text + "</p>";
+    }
+    
+    private String aHref(String link, String content) {
+        return "<a href=\"" + link + "\">" + content + "</a>";
     }
 }

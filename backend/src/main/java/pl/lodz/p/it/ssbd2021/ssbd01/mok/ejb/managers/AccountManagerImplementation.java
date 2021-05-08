@@ -1,5 +1,13 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
+import java.util.List;
+import java.util.stream.Stream;
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+import javax.security.enterprise.SecurityContext;
+import javax.ws.rs.core.Context;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.Levels;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
@@ -11,15 +19,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
-
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.security.enterprise.SecurityContext;
-import javax.ws.rs.core.Context;
-import java.util.List;
-import java.util.stream.Stream;
 
 
 /**
@@ -158,6 +157,15 @@ public class AccountManagerImplementation implements AccountManager {
         accountFacade.edit(account);
     }
 
+    @Override
+    public boolean isAdmin(Account account) {
+        Stream<AccessLevel> accessLevels = account.getAccessLevels().stream();
+        return accessLevels.anyMatch(level -> (
+                level.getLevel().equals(Levels.ADMINISTRATOR.getLevel())
+                        && level.getActive()
+        ));
+    }
+
     private void verifyOldPassword(String currentPasswordHash, String oldPassword) throws BaseException {
         if (!currentPasswordHash.contentEquals(hashGenerator.generateHash(oldPassword))) {
             throw PasswordsNotMatchException.currentPasswordNotMatch();
@@ -168,14 +176,5 @@ public class AccountManagerImplementation implements AccountManager {
         if (currentPasswordHash.contentEquals(hashGenerator.generateHash(newPassword))) {
             throw PasswordsSameException.passwordsNotDifferent();
         }
-    }
-
-    @Override
-    public boolean isAdmin(Account account) {
-        Stream<AccessLevel> accessLevels = account.getAccessLevels().stream();
-        return accessLevels.anyMatch(level -> (
-                level.getLevel().equals(Levels.ADMINISTRATOR.getLevel())
-                        && level.getActive()
-        ));
     }
 }
