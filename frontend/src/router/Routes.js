@@ -6,6 +6,14 @@ import Registration from "../containers/Registration/Registration";
 import Login from "../containers/Login/Login";
 import Accounts from "../containers/AccountsList/Accounts";
 
+const breadcrumbNameMap = {
+    // TODO: internacjonalizacja :(
+    '/register': 'Rejestracja',
+    '/login/': 'Logowanie',
+    '/accounts': 'Konta',
+};
+
+
 export default function Routes() {
     return (
         <Switch>
