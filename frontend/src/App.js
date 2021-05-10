@@ -37,7 +37,7 @@ function App() {
         return (
             <div className="App container py-3">
                 <Navbar collapseOnSelect bg="light" expand="md" className="mb-3">
-                    <LinkContainer to="/">
+                    <LinkContainer to="/dashboard">
                         <Navbar.Brand className="font-weight-bold text-muted">
                             Home
                         </Navbar.Brand>

@@ -23,7 +23,7 @@ export default function Routes() {
             <Route exact path="/accounts">
                 <Accounts/>
             </Route>
-            <PrivateRoute authed={false} path='/dashboard' component={Dashboard} />
+            <PrivateRoute authed={true} path='/dashboard' component={Dashboard} />
             <Route>
                 <Error404 />
             </Route>
