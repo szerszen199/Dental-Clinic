@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
+
 import javax.ejb.Local;
 
 /**
@@ -23,5 +25,14 @@ public interface AccessLevelManager {
      * @param level level odbierany poziom odstępu
      */
     void revokeAccessLevel(String login, String level);
+
+
+    /**
+     * Dodaje poziom dostępu {@param level} kontowi o loginie równym {@param login}.
+     *
+     * @param level       nazwa poziomu dostępu konta
+     * @param login       login użytkownika, któremu zostanie dodany poziom dostępu
+     */
+    void addAccessLevel(String login, String level);
 
 }
