@@ -3,11 +3,15 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.Levels;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.AdminData;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorData;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.DataValidationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
@@ -46,6 +50,25 @@ public class AccountManagerImplementation implements AccountManager {
         accessLevel.setCreatedBy(account);
         accessLevel.setAccountId(account);
         account.getAccessLevels().add(accessLevel);
+
+        AccessLevel receptionistData = new ReceptionistData();
+        receptionistData.setActive(false);
+        receptionistData.setCreatedBy(account);
+        receptionistData.setAccountId(account);
+        account.getAccessLevels().add(receptionistData);
+
+        AccessLevel doctorData = new DoctorData();
+        doctorData.setActive(false);
+        doctorData.setCreatedBy(account);
+        doctorData.setAccountId(account);
+        account.getAccessLevels().add(doctorData);
+
+        AccessLevel adminData = new AdminData();
+        adminData.setActive(false);
+        adminData.setCreatedBy(account);
+        adminData.setAccountId(account);
+        account.getAccessLevels().add(adminData);
+
         account.setCreatedBy(account);
         accountFacade.create(account);
     }
