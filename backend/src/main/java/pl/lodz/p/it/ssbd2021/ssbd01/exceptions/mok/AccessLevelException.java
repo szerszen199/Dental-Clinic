@@ -1,9 +1,14 @@
-package pl.lodz.p.it.ssbd2021.ssbd01.exceptions;
+package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok;
+
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCESS_LEVEL_ALREADY_ASSIGNED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCESS_LEVEL_NOT_FOUND;
 
 /**
  * Wyjątek dla AccountLevel.
  */
-public class AccessLevelException extends Throwable {
+public class AccessLevelException extends AppBaseException {
 
     /**
      * Tworzy nową instancję klasy wyjątku AccessLevelException.
@@ -30,6 +35,15 @@ public class AccessLevelException extends Throwable {
      * @return wyjatek AccessLevelException
      */
     public static AccessLevelException noSuchAccessLevel() {
-        return new AccessLevelException("Nie istnieje taki poziom dostępu");
+        return new AccessLevelException(ACCESS_LEVEL_NOT_FOUND);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę przypisania poziomu dostępu, który już jest przypisany.
+     *
+     * @return wyjatek AccessLevelException
+     */
+    public static AccessLevelException accessLevelAlreadyAssigned() {
+        return new AccessLevelException(ACCESS_LEVEL_ALREADY_ASSIGNED);
     }
 }

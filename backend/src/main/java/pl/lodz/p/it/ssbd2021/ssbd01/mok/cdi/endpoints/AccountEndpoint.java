@@ -2,8 +2,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
@@ -53,12 +52,14 @@ public class AccountEndpoint {
     /**
      * Tworzy nowe konto.
      *
+     *
      * @param accountDto obiekt zawierający login, email, hasło i inne wymagane dane
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @POST
     @Path("create")
     @Consumes({MediaType.APPLICATION_JSON})
-    public void createAccount(AccountDto accountDto) {
+    public void createAccount(AccountDto accountDto) throws AppBaseException {
         accountManager.createAccount(AccountConverter.createAccountEntityFromDto(accountDto), new PatientData());
     }
 
@@ -66,12 +67,13 @@ public class AccountEndpoint {
      * Confirm account.
      *
      * @param jwt jwt
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/confirm/{jwt}
     @PUT
     @Path("confirm/{jwt}")
     @Produces({MediaType.APPLICATION_JSON})
-    public void confirmAccount(@PathParam("jwt") String jwt) {
+    public void confirmAccount(@PathParam("jwt") String jwt) throws AppBaseException {
         if (jwtUtils.validateRegistrationConfirmationJwtToken(jwt)) {
             try {
                 accountManager.confirmAccount(jwtUtils.getUserNameFromRegistrationConfirmationJwtToken(jwt));
@@ -86,13 +88,13 @@ public class AccountEndpoint {
      * Edit account data.
      *
      * @param accountDto Account with edited data.
-     * @throws BaseException Base exception.
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit
     @POST
     @Path("edit")
     @Produces({MediaType.APPLICATION_JSON})
-    public void editAccount(AccountDto accountDto) throws BaseException {
+    public void editAccount(AccountDto accountDto) throws AppBaseException {
         accountManager.editAccount(AccountConverter.createAccountEntityFromDto(accountDto));
     }
 
@@ -101,13 +103,13 @@ public class AccountEndpoint {
      * Edit other account.
      *
      * @param accountDto the edited account
-     * @throws BaseException the base exception
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit/other
     @POST
     @Path("edit/other")
     @Produces({MediaType.APPLICATION_JSON})
-    public void editOtherAccount(AccountDto accountDto) throws BaseException {
+    public void editOtherAccount(AccountDto accountDto) throws AppBaseException {
         accountManager.editOtherAccount(AccountConverter.createAccountEntityFromDto(accountDto));
     }
 
@@ -143,46 +145,38 @@ public class AccountEndpoint {
      * Metoda służąca do blokowania konta przez administratora.
      *
      * @param id id blokowanego konta
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
     @Path("lock/{id}")
     @Produces({MediaType.APPLICATION_JSON})
-    public void lockAccount(@PathParam("id") Long id) {
-        try {
-            accountManager.lockAccount(id);
-        } catch (BaseException e) {
-            e.printStackTrace();
-            // TODO: 20.04.2021 add application exception
-        }
+    public void lockAccount(@PathParam("id") Long id) throws AppBaseException {
+        accountManager.lockAccount(id);
     }
 
     /**
      * Metoda służąca do odblokowywania konta przez administratora.
      *
      * @param id id odblokowywanego konta
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
     @Path("unlock/{id}")
     @Produces({MediaType.APPLICATION_JSON})
-    public void unlockAccount(@PathParam("id") Long id) {
-        try {
-            accountManager.unlockAccount(id);
-        } catch (BaseException e) {
-            e.printStackTrace();
-            // TODO: 20.04.2021 add application exception
-        }
+    public void unlockAccount(@PathParam("id") Long id) throws AppBaseException {
+        accountManager.unlockAccount(id);
     }
 
     /**
      * Dodanie poziomu dostępu {@param level} dla użytkownika o {@param login}.
      *
      * @param accessLevelDto obiekt zawierający poziom oraz login
-     * @throws AccessLevelException wyjątek gdy nie ma takiego poziomu dostępu
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
     @Path("/addLevelByLogin")
     @Produces({MediaType.APPLICATION_JSON})
-    public void addAccessLevel(AccessLevelDto accessLevelDto) throws AccessLevelException {
+    public void addAccessLevel(AccessLevelDto accessLevelDto) throws AppBaseException {
         accountManager.addAccessLevel(AccessLevelConverter.createAccessLevelEntityFromDto(accessLevelDto), accessLevelDto.getLogin());
     }
 
@@ -190,10 +184,11 @@ public class AccountEndpoint {
      * Pobiera informacje o zalogowanm koncie.
      *
      * @return informacje o zalogowanym koncie
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @GET
     @Path("/info")
-    public Response getLoggedInAccountInfo() {
+    public Response getLoggedInAccountInfo() throws AppBaseException {
         AccountDto account = new AccountDto(accountManager.getLoggedInAccount());
         return Response.ok(account).build();
     }
@@ -204,10 +199,11 @@ public class AccountEndpoint {
      *
      * @param login login konta o jakim pobrane zostaną informacje
      * @return informacje o zalogowanym koncie
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @GET
     @Path("/info/{login}")
-    public Response getAccountInfoWithLogin(@PathParam("login") String login) {
+    public Response getAccountInfoWithLogin(@PathParam("login") String login) throws AppBaseException {
         AccountDto account = new AccountDto(accountManager.findByLogin(login));
         return Response.ok(account).build();
     }
@@ -216,10 +212,11 @@ public class AccountEndpoint {
      * Pobiera listę wszystkich kont.
      *
      * @return lista wszystkich kont
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getAllAccounts() {
+    public Response getAllAccounts() throws AppBaseException {
         List<AccountDto> accountDtoList = accountManager.getAllAccounts()
                 .stream()
                 .map(AccountDto::new)
@@ -230,14 +227,15 @@ public class AccountEndpoint {
     /**
      * Zmienia hasło do własnego konta.
      *
-     * @param newPassword informacje uwierzytelniające o starym haśle i nowym,                    które ma zostać ustawione
+     * @param newPassword informacje uwierzytelniające o starym haśle i nowym, które ma zostać ustawione
      * @return odpowiedź na żądanie
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
     @Path("new-password")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changeOwnPassword(NewPasswordDTO newPassword) {
+    public Response changeOwnPassword(NewPasswordDTO newPassword) throws AppBaseException {
         Account account = accountManager.getLoggedInAccount();
         if (account == null) {
             return Response.status(Status.UNAUTHORIZED).build();
@@ -247,7 +245,7 @@ public class AccountEndpoint {
             this.validatePassword(newPassword);
             accountManager.changePassword(account, newPassword.getOldPassword(), newPassword.getFirstPassword());
             return Response.status(Status.OK).build();
-        } catch (BaseException e) {
+        } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
@@ -257,12 +255,13 @@ public class AccountEndpoint {
      *
      * @param id id konta, którego hasło chcemy zresetować
      * @return odpowiedź na żądanie
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
     @Path("reset-password/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response resetOthersPassword(@PathParam("id") Long id) {
+    public Response resetOthersPassword(@PathParam("id") Long id) throws AppBaseException {
         Account account = accountManager.getLoggedInAccount();
         if (account == null) {
             return Response.status(Status.BAD_REQUEST).build();
@@ -279,12 +278,13 @@ public class AccountEndpoint {
      * Resetuje hasło zalogowanemu użytkownikowi.
      *
      * @return odpowiedź na żądanie
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
     @Path("reset-password")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response resetOwnPassword() {
+    public Response resetOwnPassword() throws AppBaseException {
         Account account = accountManager.getLoggedInAccount();
         if (account == null) {
             return Response.status(Status.BAD_REQUEST).build();
@@ -302,24 +302,25 @@ public class AccountEndpoint {
      *
      * @param isDarkMode true jeśli chcemy ustawić tryb ciemny, inaczej false.
      * @return Response 401 jeśli użytkownik jest unauthorised, 200 jeśli udało się ustawić tryb ciemny, inaczej 400
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
     @Path("dark-mode")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changeDarkMode(@QueryParam("dark-mode") boolean isDarkMode) {
+    public Response changeDarkMode(@QueryParam("dark-mode") boolean isDarkMode) throws AppBaseException {
         Account account = accountManager.getLoggedInAccount();
         if (account == null) {
             return Response.status(Status.UNAUTHORIZED).build();
         }
         try {
             accountManager.setDarkMode(account, isDarkMode);
-        } catch (BaseException e) {
+        } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
         return Response.status(Status.OK).build();
     }
 
-    private void validatePassword(NewPasswordDTO newPassword) throws BaseException {
+    private void validatePassword(NewPasswordDTO newPassword) throws AppBaseException {
         if (!newPassword.getFirstPassword().equals(newPassword.getSecondPassword())) {
             throw PasswordsNotMatchException.newPasswordsNotMatch();
         }

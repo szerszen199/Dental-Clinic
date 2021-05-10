@@ -5,7 +5,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.AdminData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
 
 /**
  * Klasa mapująca nazwę poziomu dostępu na obiekt.
