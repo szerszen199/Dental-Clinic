@@ -85,6 +85,7 @@ export default class Account extends React.Component {
 
     // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
     render() {
+
         return (
             <div className="Registration">
                 <Form onSubmit={this.handleSubmit}>
