@@ -58,8 +58,7 @@ public class AccountEndpoint {
     @Path("create")
     @Consumes({MediaType.APPLICATION_JSON})
     public void createAccount(AccountDto accountDto) {
-        Account account = AccountConverter.createAccountEntityFromDto(accountDto);
-        accountManager.createAccount(account, new PatientData());
+        accountManager.createAccount(AccountConverter.createAccountEntityFromDto(accountDto), new PatientData());
     }
 
     /**
