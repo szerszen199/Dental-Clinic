@@ -1,11 +1,11 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
-import java.util.List;
-import javax.ejb.Local;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
+
+import javax.ejb.Local;
+import java.util.List;
 
 /**
  * Interfejs Account manager.
@@ -19,7 +19,7 @@ public interface AccountManager {
      * @param account     nowe konto
      * @param accessLevel poziom dostępu nowego konta
      */
-    public void createAccount(Account account, AccessLevel accessLevel);
+    void createAccount(Account account, AccessLevel accessLevel);
 
     /**
      * Confirm account.
@@ -34,7 +34,7 @@ public interface AccountManager {
      *
      * @param login login
      */
-    public void confirmAccount(String login);
+    void confirmAccount(String login);
 
 
     /**
@@ -42,7 +42,7 @@ public interface AccountManager {
      *
      * @return zalogowane konto
      */
-    public Account getLoggedInAccount();
+    Account getLoggedInAccount();
 
     /**
      * Metoda służąca do blokowania konta.
@@ -59,15 +59,6 @@ public interface AccountManager {
      * @throws BaseException bazowy wyjątek aplikacji
      */
     void unlockAccount(Long id) throws BaseException;
-
-    /**
-     * Dodaje poziom dostępu {@param level} kontowi o loginie równym {@param logon}.
-     *
-     * @param accessLevel poziom dostępu konta
-     * @param login       login użytkownika, któremu zostanie dodany poziom dostępu
-     * @throws AccessLevelException wyjątek gdy nie znaleziono poziomu dostępu
-     */
-    void addAccessLevel(AccessLevel accessLevel, String login) throws AccessLevelException;
 
     /**
      * Edytuje wlasne konto.

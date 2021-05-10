@@ -34,4 +34,12 @@ public class AccessLevelManagerImplementation implements AccessLevelManager {
         }
     }
 
+    @Override
+    public void addAccessLevel(String login, String level) {
+        AccessLevel accessLevel = accessLevelFacade.findByAccountLoginAndAccessLevel(login, level);
+        if (!accessLevel.getActive()) {
+            accessLevel.setActive(true);
+        }
+    }
+
 }
