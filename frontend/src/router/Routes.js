@@ -5,6 +5,7 @@ import Error404 from "../components/Error404/Error404"
 import Registration from "../components/Registration/Registration";
 import Login from "../components/Login/Login";
 import Accounts from "../components/AccountsList/Accounts";
+import Account from "../components/Account/Account";
 import Dashboard from "../components/Dashboard/Dashboard"
 import PrivateRoute from "../PrivateRoute";
 
@@ -19,6 +20,9 @@ export default function Routes() {
             </Route>
             <Route exact path="/login">
                 <Login />
+            </Route>
+            <Route exact path="/account">
+                <Account/>
             </Route>
             <Route exact path="/accounts">
                 <Accounts/>
