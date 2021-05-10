@@ -2,7 +2,6 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
@@ -12,7 +11,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtUtils;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccessLevelConverter;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 
 import javax.ejb.EJB;
@@ -177,7 +175,6 @@ public class AccountEndpoint {
      * Dodanie poziomu dostępu {@param level} dla użytkownika o {@param login}.
      *
      * @param accessLevelDto obiekt zawierający poziom oraz login
-     * @throws AccessLevelException wyjątek gdy nie ma takiego poziomu dostępu
      */
     @PUT
     @Path("/addLevelByLogin")
