@@ -15,6 +15,7 @@ import java.util.Properties;
 public class PropertiesLoader {
 
     private String confirmationJwtSecret;
+    private String jwtSecret;
 
     /**
      * Pobiera pole confirmation jwt secret.
@@ -36,6 +37,16 @@ public class PropertiesLoader {
 
     private Long confirmationJwtExpiration;
 
+    public String getJwtSecret() {
+        return jwtSecret;
+    }
+
+    public Long getJwtExpiration() {
+        return jwtExpiration;
+    }
+
+    private Long jwtExpiration;
+
     @PostConstruct
     private void loadProperties() {
         Properties prop = null;
@@ -50,6 +61,8 @@ public class PropertiesLoader {
             // TODO: 18.04.2021
         }
         confirmationJwtSecret = prop.getProperty("confirmation.jwt.secret");
+        jwtSecret = prop.getProperty("jwt.secret");
         confirmationJwtExpiration = Long.valueOf(prop.getProperty("confirmation.jwt.expirationMs"));
+        jwtExpiration = Long.valueOf(prop.getProperty("jwt.expirationMs"));
     }
 }
