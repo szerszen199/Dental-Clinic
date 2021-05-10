@@ -10,7 +10,6 @@ import javax.validation.constraints.Size;
  * Typ Login request dto.
  */
 public class LoginRequestDTO {
-    // TODO: 09.05.2021 Ograniczenia
     @NotNull
     @Login
     private String username;
