@@ -1,69 +1,58 @@
-import React, {useState} from "react";
+import React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./Account.css";
-
-// const [login, setLogin] = useState("");
-// const [email, setEmail] = useState("");
-// const [password, setPassword] = useState("");
-// const [firstName, setFirstName] = useState("");
-// const [lastName, setLastName] = useState("");
-// const [phoneNumber, setPhoneNumber] = useState("");
-// const [, setPesel] = useState("");
 
 export default class Account extends React.Component {
     constructor(props) {
         super(props);
 
-        this.data = {
+        this.state = {
+            isDisabled: true,
+            text: "Edit",
             login: "",
-            emial:"",
+            email:"",
             password: "",
             firstName: "",
             lastName: "",
             phoneNumber : "",
             pesel: ""
         }
-
-        this.state = {
-            isDisabled: true,
-            text: "Edit",
-        }
     }
 
-    // validateForm() {
-    //     // Todo: zrobić walidację taką jaką wymaga projekt
-    //     function loginCorrect() {
-    //         return login.length > 0;
-    //     }
-    //
-    //     function emailCorrect() {
-    //         return email.length > 0;
-    //     }
-    //
-    //     function passwordCorrect() {
-    //         return password.length > 0;
-    //     }
-    //
-    //     function firstNameCorrect() {
-    //         return firstName.length > 0;
-    //     }
-    //
-    //     function lastNameCorrect() {
-    //         return lastName.length > 0;
-    //     }
-    //
-    //     function phoneNumberCorrect() {
-    //         return phoneNumber.length > 0;
-    //     }
-    //
-    //     // TODO: przypadek obcokrajowca wymusza że peselu może nie być ale nadal warto by go zwalidowac, tylko jak?
-    //     function peselCorrect() {
-    //         return true;
-    //     }
-    //
-    //     return emailCorrect() && passwordCorrect() && loginCorrect() && firstNameCorrect() && lastNameCorrect() && phoneNumberCorrect() && peselCorrect();
-    // }
+    validateForm() {
+        // Todo: zrobić walidację taką jaką wymaga projekt
+        function loginCorrect() {
+            return this.state.login.length > 0;
+        }
+
+        function emailCorrect() {
+            return this.state.email.length > 0;
+        }
+
+        function passwordCorrect() {
+            return this.state.password.length > 0;
+        }
+
+        function firstNameCorrect() {
+            return this.state.firstName.length > 0;
+        }
+
+        function lastNameCorrect() {
+            return this.state.lastName.length > 0;
+        }
+
+        function phoneNumberCorrect() {
+            return this.state.phoneNumber.length > 0;
+        }
+
+        // TODO: przypadek obcokrajowca wymusza że peselu może nie być ale nadal warto by go zwalidowac, tylko jak?
+        function peselCorrect() {
+            return true;
+        }
+
+        return emailCorrect() && passwordCorrect() && loginCorrect() && firstNameCorrect() && lastNameCorrect() && phoneNumberCorrect() && peselCorrect();
+    }
 
 
     // Todo: prawdopodobnie wysyłać zapytanie do backendu tutaj, chciałbym zrobić tak jak w vue się da żeby jeśli odpalam w trybie debug front to łącze z localhostem, narazie nie ruszam.
@@ -87,6 +76,7 @@ export default class Account extends React.Component {
     }
 
     setUneditable(){
+        this.validateForm()
         this.setState({
             isDisabled: true,
             text: "Edit"
@@ -103,9 +93,9 @@ export default class Account extends React.Component {
                         <Form.Control
                             autoFocus
                             type="login"
-                            value={this.data.login}
-                            disabled={this.state.isDisabled}
-                            onChange={(e) => this.setData({login: e.target.value})}
+                            value={this.state.login}
+                            disabled={true}
+                            onChange={(e) => this.setState({login: e.target.value})}
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="email">
@@ -113,45 +103,45 @@ export default class Account extends React.Component {
                         <Form.Control
                             autoFocus
                             type="email"
-                            value={this.data.email}
+                            value={this.state.email}
                             disabled={this.state.isDisabled}
-                            onChange={(e) => this.setData({email: e.target.value})}
+                            onChange={(e) => this.setState({email: e.target.value})}
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="password">
                         <Form.Label>Password</Form.Label>
                         <Form.Control
                             type="password"
-                            value={this.data.password}
+                            value={this.state.password}
                             disabled={this.state.isDisabled}
-                            onChange={(e) => this.setData({password: e.target.value})}
+                            onChange={(e) => this.setState({password: e.target.value})}
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="firstName">
                         <Form.Label>First Name</Form.Label>
                         <Form.Control
                             type="text"
-                            value={this.data.firstName}
+                            value={this.state.firstName}
                             disabled={this.state.isDisabled}
-                            onChange={(e) => this.setData({pesel: e.target.value})}
+                            onChange={(e) => this.setState({pesel: e.target.value})}
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="lastName">
                         <Form.Label>Last Name</Form.Label>
                         <Form.Control
                             type="text"
-                            value={this.data.lastName}
+                            value={this.state.lastName}
                             disabled={this.state.isDisabled}
-                            onChange={(e) => this.setData({lastName: e.target.value})}
+                            onChange={(e) => this.setState({lastName: e.target.value})}
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="phoneNumber">
                         <Form.Label>Phone Number</Form.Label>
                         <Form.Control
                             type="text"
-                            value={this.data.phoneNumber}
+                            value={this.state.phoneNumber}
                             disabled={this.state.isDisabled}
-                            onChange={(e) => this.setData({phoneNumber: e.target.value})}
+                            onChange={(e) => this.setState({phoneNumber: e.target.value})}
                         />
                     </Form.Group>
                     {/*Todo: co z peselem dla obcokrajowca? Nic czy coś innnego? Narazie zrobiłem że może być pusty*/}
@@ -159,9 +149,9 @@ export default class Account extends React.Component {
                         <Form.Label>Pesel</Form.Label>
                         <Form.Control
                             type="text"
-                            value={this.data.pesel}
+                            value={this.state.pesel}
                             disabled={this.state.isDisabled}
-                            onChange={(e) => this.setData({pesel: e.target.value})}
+                            onChange={(e) => this.setState({pesel: e.target.value})}
                         />
                     </Form.Group>
                     <Button block size="lg" type="submit"
