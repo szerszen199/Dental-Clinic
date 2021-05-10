@@ -23,6 +23,9 @@ public class MailProvider {
     private static final String PASSWORD = "GenWydvam0";
     private Session session;
 
+    /**
+     * Metoda inicjująca parametry serwera SMTP.
+     */
     @PostConstruct
     public void init() {
 
@@ -54,8 +57,8 @@ public class MailProvider {
     public void sendActivationMail(String to, String activationLink) throws MailSendingException {
         String subject = "Activate your account!";
         String messageText = 
-                p("Please click link below to verify your account: ") 
-                + aHref(activationLink, "Activate");
+                paragraph("Please click link below to verify your account: ") 
+                + hyperlink(activationLink, "Activate");
 
         try {
             sendMail(to, subject, messageText);
@@ -81,11 +84,11 @@ public class MailProvider {
         Transport.send(message);
     }
 
-    private String p(String text) {
+    private String paragraph(String text) {
         return "<p>" + text + "</p>";
     }
     
-    private String aHref(String link, String content) {
+    private String hyperlink(String link, String content) {
         return "<a href=\"" + link + "\">" + content + "</a>";
     }
 }

@@ -313,7 +313,7 @@
                 <executions>
                     <execution>
                         <id>deploy</id>
-                        <phase>pre-integration-test</phase>
+<!--                        <phase>pre-integration-test</phase>-->
                         <goals>
                             <goal>start</goal>
                             <goal>redeploy</goal>
@@ -321,7 +321,7 @@
                     </execution>
                     <execution>
                         <id>undeploy</id>
-                        <phase>post-integration-test</phase>
+<!--                        <phase>post-integration-test</phase>-->
                         <goals>
                             <goal>undeploy</goal>
                             <goal>stop</goal>
