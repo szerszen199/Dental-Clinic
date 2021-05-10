@@ -64,7 +64,7 @@ export default class Account extends React.Component {
         if(this.state.isDisabled === true){
             this.setEditable()
         } else{
-            this.setUneditable()
+            this.setNotEditable()
         }
     }
 
@@ -75,7 +75,7 @@ export default class Account extends React.Component {
         });
     }
 
-    setUneditable(){
+    setNotEditable(){
         this.validateForm()
         this.setState({
             isDisabled: true,
