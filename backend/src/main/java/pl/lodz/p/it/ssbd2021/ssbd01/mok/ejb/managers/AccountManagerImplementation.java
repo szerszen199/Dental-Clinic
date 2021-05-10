@@ -3,9 +3,8 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.Levels;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.DataValidationException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.DataValidationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
@@ -41,7 +40,7 @@ public class AccountManagerImplementation implements AccountManager {
     private RandomPasswordGenerator passwordGenerator;
 
     @Override
-    public void createAccount(Account account, AccessLevel accessLevel) {
+    public void createAccount(Account account, AccessLevel accessLevel) throws AppBaseException {
         account.setPassword(hashGenerator.generateHash(account.getPassword()));
         accessLevel.setCreatedBy(account);
         accessLevel.setAccountId(account);
@@ -51,17 +50,17 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
-    public void confirmAccount(Long id) {
+    public void confirmAccount(Long id) throws AppBaseException {
         accountFacade.find(id).setEnabled(true);
     }
 
     @Override
-    public void confirmAccount(String login) {
+    public void confirmAccount(String login) throws AppBaseException {
         accountFacade.findByLogin(login).setEnabled(true);
     }
 
     @Override
-    public Account getLoggedInAccount() {
+    public Account getLoggedInAccount() throws AppBaseException {
         if (securityContext.getCallerPrincipal() == null) {
             return null;
         } else {
@@ -70,7 +69,7 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
-    public void addAccessLevel(AccessLevel accessLevel, String login) throws AccessLevelException {
+    public void addAccessLevel(AccessLevel accessLevel, String login) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
         accessLevel.setAccountId(account);
         accessLevel.setCreatedBy(account);
@@ -79,46 +78,46 @@ public class AccountManagerImplementation implements AccountManager {
 
 
     @Override
-    public void lockAccount(Long id) throws BaseException {
+    public void lockAccount(Long id) throws AppBaseException {
         Account account = accountFacade.find(id);
         account.setActive(false);
         accountFacade.edit(account);
     }
 
     @Override
-    public void unlockAccount(Long id) throws BaseException {
+    public void unlockAccount(Long id) throws AppBaseException {
         Account account = accountFacade.find(id);
         account.setActive(true);
         accountFacade.edit(account);
     }
 
     @Override
-    public void editAccount(Account account) throws BaseException {
+    public void editAccount(Account account) throws AppBaseException {
         account.setModifiedBy(account);
         Account old = accountFacade.findByLogin(account.getLogin());
         if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
-            throw new DataValidationException("Niepoprawna Valida danych wejściowych");
+            throw DataValidationException.accountEditValidationError();
         }
         accountFacade.edit(account);
     }
 
     @Override
-    public void editOtherAccount(Account account) throws BaseException {
+    public void editOtherAccount(Account account) throws AppBaseException {
         account.setModifiedBy(getLoggedInAccount());
         Account old = accountFacade.findByLogin(account.getLogin());
         if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
-            throw new DataValidationException("Niepoprawna walidacja danych wejściowych");
+            throw DataValidationException.accountEditValidationError();
         }
         accountFacade.edit(account);
     }
 
     @Override
-    public List<Account> getAllAccounts() {
+    public List<Account> getAllAccounts() throws AppBaseException {
         return accountFacade.findAll();
     }
 
     @Override
-    public void changePassword(Account account, String oldPassword, String newPassword) throws BaseException {
+    public void changePassword(Account account, String oldPassword, String newPassword) throws AppBaseException {
         this.verifyOldPassword(account.getPassword(), oldPassword);
         this.validateNewPassword(account.getPassword(), newPassword);
         account.setPassword(hashGenerator.generateHash(newPassword));
@@ -126,12 +125,12 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
-    public Account findByLogin(String login) {
+    public Account findByLogin(String login) throws AppBaseException {
         return accountFacade.findByLogin(login);
     }
 
     @Override
-    public void resetPassword(Long id) {
+    public void resetPassword(Long id) throws AppBaseException {
         Account account = accountFacade.find(id);
         String generatedPassword = passwordGenerator.generate(8);
         String newPasswordHash = hashGenerator.generateHash(generatedPassword);
@@ -153,18 +152,18 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
-    public void setDarkMode(Account account, boolean isDarkMode) throws BaseException {
+    public void setDarkMode(Account account, boolean isDarkMode) throws AppBaseException {
         account.setDarkMode(isDarkMode);
         accountFacade.edit(account);
     }
 
-    private void verifyOldPassword(String currentPasswordHash, String oldPassword) throws BaseException {
+    private void verifyOldPassword(String currentPasswordHash, String oldPassword) throws AppBaseException {
         if (!currentPasswordHash.contentEquals(hashGenerator.generateHash(oldPassword))) {
             throw PasswordsNotMatchException.currentPasswordNotMatch();
         }
     }
 
-    private void validateNewPassword(String currentPasswordHash, String newPassword) throws BaseException {
+    private void validateNewPassword(String currentPasswordHash, String newPassword) throws AppBaseException {
         if (currentPasswordHash.contentEquals(hashGenerator.generateHash(newPassword))) {
             throw PasswordsSameException.passwordsNotDifferent();
         }

@@ -2,14 +2,13 @@ package pl.lodz.p.it.ssbd2021.ssbd01.common;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
 /**
  * Klasa abstrakcyjna definiująca główne operacje wykonywane na encjach
@@ -37,20 +36,33 @@ public abstract class AbstractFacade<T> {
      * Utrwala encję w bazie danych.
      *
      * @param entity obiekt encji.
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    public void create(T entity) {
-        getEntityManager().persist(entity);
+    public void create(T entity) throws AppBaseException {
+        try {
+            getEntityManager().persist(entity);
+        } catch (OptimisticLockException e) {
+            throw AppBaseException.optimisticLockError(e);
+        }
+
     }
 
     /**
      * Aktualizuje dane encji w bazie danych.
      *
      * @param entity obiekt encji.
-     * @throws BaseException bazowy wyjątek aplikacji
+     * @throws AppBaseException bazowy wyjątek aplikacji
      */
-    public void edit(T entity) throws BaseException {
-        getEntityManager().merge(entity);
-        getEntityManager().flush();
+    public void edit(T entity) throws AppBaseException {
+        try {
+            getEntityManager().merge(entity);
+            getEntityManager().flush();
+        } catch (OptimisticLockException e) {
+            throw AppBaseException.optimisticLockError(e);
+        } catch (PersistenceException e) {
+            throw AppBaseException.databaseError(e);
+        }
+
     }
 
     /**
@@ -67,14 +79,13 @@ public abstract class AbstractFacade<T> {
      *
      * @param id obiekt klucza głównego.
      * @return obiekt encji.
-     * @throws PersistenceException wyjątek typu PersistenceException
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    public T find(Object id) throws PersistenceException {
+    public T find(Object id) throws AppBaseException {
         try {
             return getEntityManager().find(entityClass, id);
         } catch (PersistenceException e) {
-            throw e;
-            // TODO: 05.05.2021 - uzupełnić o wyjątki aplikacyjne
+            throw AppBaseException.databaseError(e);
         }
     }
 
@@ -82,16 +93,15 @@ public abstract class AbstractFacade<T> {
      * Pobiera listę wszystkich encji znajdujących się w bazie danych.
      *
      * @return lista wszystkich encji.
-     * @throws PersistenceException wyjątek typu PersistenceException
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    public List<T> findAll() throws PersistenceException {
+    public List<T> findAll() throws AppBaseException {
         try {
             CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
             cq.select(cq.from(entityClass));
             return getEntityManager().createQuery(cq).getResultList();
         } catch (PersistenceException e) {
-            throw e;
-            // TODO: 05.05.2021 - uzupełnić o wyjątki aplikacyjne
+            throw AppBaseException.databaseError(e);
         }
 
     }
