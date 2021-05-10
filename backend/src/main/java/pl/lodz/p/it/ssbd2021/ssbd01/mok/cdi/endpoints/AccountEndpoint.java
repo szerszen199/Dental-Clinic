@@ -11,7 +11,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccessLevelConverter;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 
@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 public class AccountEndpoint {
 
     @EJB
-    private JwtUtils jwtUtils;
+    private JwtEmailConfirmationUtils jwtEmailConfirmationUtils;
 
     @Inject
     private AccountManager accountManager;
@@ -72,9 +72,9 @@ public class AccountEndpoint {
     @Path("confirm/{jwt}")
     @Produces({MediaType.APPLICATION_JSON})
     public void confirmAccount(@PathParam("jwt") String jwt) {
-        if (jwtUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+        if (jwtEmailConfirmationUtils.validateRegistrationConfirmationJwtToken(jwt)) {
             try {
-                accountManager.confirmAccount(jwtUtils.getUserNameFromRegistrationConfirmationJwtToken(jwt));
+                accountManager.confirmAccount(jwtEmailConfirmationUtils.getUserNameFromRegistrationConfirmationJwtToken(jwt));
             } catch (ParseException e) {
                 // TODO: 18.04.2021
                 e.printStackTrace();
