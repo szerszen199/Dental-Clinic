@@ -182,8 +182,8 @@ public class AccountEndpoint {
     @PUT
     @Path("/addLevelByLogin")
     @Produces({MediaType.APPLICATION_JSON})
-    public void addAccessLevel(AccessLevelDto accessLevelDto) throws AccessLevelException {
-        accountManager.addAccessLevel(AccessLevelConverter.createAccessLevelEntityFromDto(accessLevelDto), accessLevelDto.getLogin());
+    public void addAccessLevel(AccessLevelDto accessLevelDto) {
+        accessLevelManager.addAccessLevel(accessLevelDto.getLogin(), accessLevelDto.getLevel());
     }
 
     /**

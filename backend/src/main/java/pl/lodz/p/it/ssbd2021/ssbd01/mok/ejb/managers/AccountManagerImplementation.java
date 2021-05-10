@@ -6,7 +6,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AdminData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.DataValidationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
@@ -34,6 +33,9 @@ import java.util.stream.Stream;
 public class AccountManagerImplementation implements AccountManager {
     @Inject
     private AccountFacade accountFacade;
+
+    @Inject
+    private AccessLevelFacade accessLevelFacade;
 
     @Context
     private SecurityContext securityContext;
@@ -91,15 +93,6 @@ public class AccountManagerImplementation implements AccountManager {
             return accountFacade.findByLogin(securityContext.getCallerPrincipal().getName());
         }
     }
-
-    @Override
-    public void addAccessLevel(AccessLevel accessLevel, String login) throws AccessLevelException {
-        Account account = accountFacade.findByLogin(login);
-        accessLevel.setAccountId(account);
-        accessLevel.setCreatedBy(account);
-        account.getAccessLevels().add(accessLevel);
-    }
-
 
     @Override
     public void lockAccount(Long id) throws BaseException {
