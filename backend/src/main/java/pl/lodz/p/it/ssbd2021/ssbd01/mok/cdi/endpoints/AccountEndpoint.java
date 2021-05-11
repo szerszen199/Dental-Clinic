@@ -1,5 +1,18 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
+
 import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,19 +30,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtUtils;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
-
 
 /**
  * Typ Account endpoint.
@@ -39,7 +39,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 public class AccountEndpoint {
 
     @EJB
-    private JwtUtils jwtUtils;
+    private JwtEmailConfirmationUtils jwtEmailConfirmationUtils;
 
     @Inject
     private AccountManager accountManager;
@@ -69,9 +69,9 @@ public class AccountEndpoint {
     @Path("confirm/{jwt}")
     @Produces({MediaType.APPLICATION_JSON})
     public void confirmAccount(@PathParam("jwt") String jwt) {
-        if (jwtUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+        if (jwtEmailConfirmationUtils.validateRegistrationConfirmationJwtToken(jwt)) {
             try {
-                accountManager.confirmAccount(jwtUtils.getUserNameFromRegistrationConfirmationJwtToken(jwt));
+                accountManager.confirmAccount(jwtEmailConfirmationUtils.getUserNameFromRegistrationConfirmationJwtToken(jwt));
             } catch (ParseException e) {
                 // TODO: 18.04.2021
                 e.printStackTrace();
