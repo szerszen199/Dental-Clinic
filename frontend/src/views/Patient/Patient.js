@@ -6,10 +6,34 @@ import Nav from "react-bootstrap/Nav";
 import {LinkContainer} from "react-router-bootstrap";
 import {DarkModeSwitch} from 'react-toggle-dark-mode';
 import {NavDropdown} from "react-bootstrap";
+import "react-custom-flag-select/lib/react-custom-flag-select.min.css";
 
 
 function Patient() {
     const [isDarkMode, setIsDarkMode] = useState(() => false);
+    const urlPL = "https://img.icons8.com/color/96/000000/poland-circular.png"
+    const urlEN = "https://img.icons8.com/color/48/000000/great-britain-circular.png"
+    const [language, setLanguage] = useState(() => "PL");
+    const [flag, setFlag] = useState(() => urlEN);
+
+    function handleOnClick() {
+        if (language === "EN") {
+            setPL()
+        } else {
+            setEN()
+        }
+    }
+
+    function setEN() {
+        setLanguage("EN");
+        setFlag(urlPL);
+    }
+
+    function setPL() {
+        setLanguage("PL");
+        setFlag(urlEN);
+    }
+
     return (
         <div className="App container py-3 ">
             <Navbar collapseOnSelect bg="light" expand="md" className="shadow-box-example mb-3">
@@ -57,6 +81,8 @@ function Patient() {
                         sunColor={"#FFDF37"}
                         moonColor={"#bfbfbb"}
                     />
+                    <img onClick={handleOnClick} style={{marginLeft: "10px", maxWidth:"30px"}} src={flag} alt="Logo" />
+
                 </Navbar.Collapse>
             </Navbar>
             <Routes/>
