@@ -19,7 +19,7 @@ VALUES (-1,'jkow123', 'jkowalski@mail.com', 'b03ddf3ca2e714a6548e7495e2a03f5e824
 INSERT INTO access_levels (id, level, account_id, created_by)
 VALUES (-1, 'level.patient', -1, -1),
        (-2, 'level.receptionist', -1, -1),
-       (-3, 'level.admin', -1, -1),
+       (-3, 'level.administrator', -1, -1),
        (-4, 'level.doctor', -2, -1),
        (-5, 'level.patient', -3, -1),
        (-6, 'level.receptionist', -4, -1);
