@@ -28,7 +28,7 @@ function Patient() {
                                 </LinkContainer>
                             </NavDropdown.Item>
                             <NavDropdown.Item>
-                                <LinkContainer to="/my-appointments">
+                                <LinkContainer to="/plan-appointment">
                                     <Nav.Link>Plan an appointment</Nav.Link>
                                 </LinkContainer>
                             </NavDropdown.Item>
