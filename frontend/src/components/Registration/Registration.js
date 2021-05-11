@@ -87,12 +87,12 @@ export default function Registration() {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </Form.Group>
-                <Form.Group size="lg" controlId="password">
+                <Form.Group size="lg" controlId="repeatedPassword">
                     <Form.Label>Repeat new password</Form.Label>
                     <Form.Control
                         type="password"
                         value={repeatedPassword}
-                        onChange={(e) => setRepeatedPassword({repeatedPassword: e.target.value})}
+                        onChange={(e) => setRepeatedPassword(e.target.value)}
                     />
                 </Form.Group>
                 <Form.Group size="lg" controlId="firstName">
