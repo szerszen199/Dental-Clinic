@@ -1,9 +1,10 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
-import javax.annotation.ManagedBean;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import javax.annotation.ManagedBean;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.InvalidHashAlgorithmException;
 
 @ManagedBean
 public class SHA256HashGenerator implements HashGenerator {
@@ -19,10 +20,8 @@ public class SHA256HashGenerator implements HashGenerator {
         try {
             return bytesToHex(MessageDigest.getInstance("SHA-256").digest(input.getBytes(StandardCharsets.UTF_8)));
         } catch (NoSuchAlgorithmException e) {
-            // TODO: 20.04.2021
-            e.printStackTrace();
+            throw new InvalidHashAlgorithmException();
         }
-        return null;
     }
 
     private static String bytesToHex(byte[] hash) {

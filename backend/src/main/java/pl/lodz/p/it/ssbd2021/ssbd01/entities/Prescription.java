@@ -14,6 +14,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  * Typ Prescription.
@@ -36,18 +37,22 @@ public class Prescription extends AbstractEntity implements Serializable {
     @SequenceGenerator(name = "prescriptions_generator", sequenceName = "prescriptions_seq", allocationSize = 1)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, nullable = false)
+    @NotNull
     private Long id;
 
     @Basic(optional = false)
     @Column(name = "medications", nullable = false)
+    @NotNull
     private String medications;
 
     @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
+    @NotNull
     private Account doctor;
 
     @JoinColumn(name = "patient_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
+    @NotNull
     private Account patient;
 
     /**

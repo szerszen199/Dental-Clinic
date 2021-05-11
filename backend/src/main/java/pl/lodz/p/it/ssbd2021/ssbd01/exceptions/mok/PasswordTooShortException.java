@@ -8,7 +8,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
  */
 public class PasswordTooShortException extends BaseException {
     
-    public static final String PASSWORD_TOO_SHORT = "password_too_short";
+    private static final String PASSWORD_TOO_SHORT = "password_too_short";
 
     /**
      * Tworzy nową instancję wyjątku PasswordTooShortException.
@@ -25,7 +25,19 @@ public class PasswordTooShortException extends BaseException {
      * @param message wiadomość zawarta w wyjątu
      * @param cause   przyczyna wystąpienia wyjątku
      */
-    protected PasswordTooShortException(String message, Throwable cause) {
+    public PasswordTooShortException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    /**
+     * Metoda opakowująca wyjątek PasswordTooShortException
+     * z dedykowaną wiadomością dołączoną do niego sygnalizującą
+     * powód wystąpienia wyjątku.
+     *
+     * @return obiekt wyjątku PasswordTooShortException z wiadomością sygnalizującą
+     *         niewystarczającą długość hasła podczas jego tworzenia
+     */
+    public static PasswordTooShortException passwordTooShort() {
+        return new PasswordTooShortException(PASSWORD_TOO_SHORT);
     }
 }

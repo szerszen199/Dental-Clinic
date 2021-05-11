@@ -25,6 +25,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -46,6 +47,8 @@ public class AccountEndpoint {
     @Inject
     private AccountManager accountManager;
 
+    @Inject
+    private AccessLevelManager accessLevelManager;
 
     /**
      * Tworzy nowe konto.
@@ -58,10 +61,6 @@ public class AccountEndpoint {
     public void createAccount(AccountDto accountDto) {
         accountManager.createAccount(AccountConverter.createAccountEntityFromDto(accountDto), new PatientData());
     }
-
-
-    @Inject
-    private AccessLevelManager accessLevelManager;
 
     /**
      * Confirm account.
@@ -89,6 +88,7 @@ public class AccountEndpoint {
      * @param accountDto Account with edited data.
      * @throws BaseException Base exception.
      */
+    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit
     @POST
     @Path("edit")
     @Produces({MediaType.APPLICATION_JSON})
@@ -96,6 +96,20 @@ public class AccountEndpoint {
         accountManager.editAccount(AccountConverter.createAccountEntityFromDto(accountDto));
     }
 
+
+    /**
+     * Edit other account.
+     *
+     * @param accountDto the edited account
+     * @throws BaseException the base exception
+     */
+    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit/other
+    @POST
+    @Path("edit/other")
+    @Produces({MediaType.APPLICATION_JSON})
+    public void editOtherAccount(AccountDto accountDto) throws BaseException {
+        accountManager.editOtherAccount(AccountConverter.createAccountEntityFromDto(accountDto));
+    }
 
     /**
      * Revoke access level - enpoint odbierający poziom dostępu {@param level} dla użytkownika o {@param id}.
@@ -184,6 +198,20 @@ public class AccountEndpoint {
         return Response.ok(account).build();
     }
 
+
+    /**
+     * Pobiera informacje o koncie o {@param login}.
+     *
+     * @param login login konta o jakim pobrane zostaną informacje
+     * @return informacje o zalogowanym koncie
+     */
+    @GET
+    @Path("/info/{login}")
+    public Response getAccountInfoWithLogin(@PathParam("login") String login) {
+        AccountDto account = new AccountDto(accountManager.findByLogin(login));
+        return Response.ok(account).build();
+    }
+
     /**
      * Pobiera listę wszystkich kont.
      *
@@ -202,8 +230,7 @@ public class AccountEndpoint {
     /**
      * Zmienia hasło do własnego konta.
      *
-     * @param newPassword informacje uwierzytelniające o starym haśle i nowym,
-     *                    które ma zostać ustawione
+     * @param newPassword informacje uwierzytelniające o starym haśle i nowym,                    które ma zostać ustawione
      * @return odpowiedź na żądanie
      */
     @PUT
@@ -225,12 +252,79 @@ public class AccountEndpoint {
         }
     }
 
+    /**
+     * Resetuje hasło innego użytkownika z poziomu konta administratora.
+     *
+     * @param id id konta, którego hasło chcemy zresetować
+     * @return odpowiedź na żądanie
+     */
+    @PUT
+    @Path("reset-password/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response resetOthersPassword(@PathParam("id") Long id) {
+        Account account = accountManager.getLoggedInAccount();
+        if (account == null) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
+        if (!accountManager.isAdmin(account)) {
+            return Response.status(Status.UNAUTHORIZED).build();
+        }
+
+        accountManager.resetPassword(id);
+        return Response.status(Status.OK).build();
+    }
+
+    /**
+     * Resetuje hasło zalogowanemu użytkownikowi.
+     *
+     * @return odpowiedź na żądanie
+     */
+    @PUT
+    @Path("reset-password")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response resetOwnPassword() {
+        Account account = accountManager.getLoggedInAccount();
+        if (account == null) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
+        if (!account.getActive()) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
+        accountManager.resetPassword(account);
+        return Response.status(Status.OK).build();
+    }
+
+
+    /**
+     * Endpoint dla ustawiania w aktualnym koncie trybu ciemnego.
+     *
+     * @param isDarkMode true jeśli chcemy ustawić tryb ciemny, inaczej false.
+     * @return Response 401 jeśli użytkownik jest unauthorised, 200 jeśli udało się ustawić tryb ciemny, inaczej 400
+     */
+    @PUT
+    @Path("dark-mode")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changeDarkMode(@QueryParam("dark-mode") boolean isDarkMode) {
+        Account account = accountManager.getLoggedInAccount();
+        if (account == null) {
+            return Response.status(Status.UNAUTHORIZED).build();
+        }
+        try {
+            accountManager.setDarkMode(account, isDarkMode);
+        } catch (BaseException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.status(Status.OK).build();
+    }
+
     private void validatePassword(NewPasswordDTO newPassword) throws BaseException {
         if (!newPassword.getFirstPassword().equals(newPassword.getSecondPassword())) {
-            throw new PasswordsNotMatchException(PasswordsNotMatchException.NEW_PASSWORDS_NOT_MATCH);
+            throw PasswordsNotMatchException.newPasswordsNotMatch();
         }
         if (newPassword.getFirstPassword().length() < 8) {
-            throw new PasswordTooShortException(PasswordTooShortException.PASSWORD_TOO_SHORT);
+            throw PasswordTooShortException.passwordTooShort();
         }
     }
 

@@ -15,6 +15,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  * Typ Documentation entry reprezentujący wpisy do dokumentacji.
@@ -38,6 +39,7 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
     @SequenceGenerator(name = "documentation_entries_generator", sequenceName = "documentation_entries_seq", allocationSize = 1)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, nullable = false)
+    @NotNull
     private Long id;
 
     @Column(name = "was_done")
@@ -48,6 +50,7 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
 
     @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
+    @NotNull
     private Account doctor;
 
     /**
