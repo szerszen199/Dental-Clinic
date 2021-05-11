@@ -2,7 +2,6 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./EditAccount.css";
-import Switch from "react-switch";
 
 export default class EditAccount extends React.Component {
     constructor(props) {
@@ -19,7 +18,6 @@ export default class EditAccount extends React.Component {
             lastName: "",
             phoneNumber: "",
             pesel: "",
-            darkMode: false,
         }
     }
 
@@ -147,15 +145,6 @@ export default class EditAccount extends React.Component {
                             disabled={this.state.isDisabled}
                             onChange={(e) => this.setState({pesel: e.target.value})}
                         />
-                    </Form.Group>
-                    <Form.Group style={{marginTop: "20px"}}>
-                        <Form.Label style={{marginRight: "10px", transform: "translateY(-30%)"}}>Dark mode</Form.Label>
-                        <Switch
-                            onChange={(checked: boolean) => {
-                                this.setState({darkMode: checked})
-                            }}
-                            disabled={this.state.isDisabled}
-                            checked={this.state.darkMode}/>
                     </Form.Group>
                     <Button block size="lg" type="submit"
                             onClick={() => this.handleOnClick(this)}>
