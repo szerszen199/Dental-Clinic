@@ -7,8 +7,8 @@ import {LinkContainer} from "react-router-bootstrap";
 
 function Patient() {
     return (
-        <div className="App container py-3">
-            <Navbar collapseOnSelect bg="light" expand="md" className="mb-3">
+        <div className="App container py-3 ">
+            <Navbar collapseOnSelect bg="light" expand="md" className="shadow-box-example mb-3">
                 <LinkContainer to="/dashboard">
                     <Navbar.Brand className="font-weight-bold text-muted">
                         Home

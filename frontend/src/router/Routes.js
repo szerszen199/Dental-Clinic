@@ -4,10 +4,11 @@ import Home from "../components/Home/Home";
 import Error404 from "../components/Error404/Error404"
 import Registration from "../components/Registration/Registration";
 import Login from "../components/Login/Login";
-import Accounts from "../components/AccountsList/Accounts";
-import Account from "../components/Account/Account";
 import Dashboard from "../components/Dashboard/Dashboard"
 import PrivateRoute from "../PrivateRoute";
+import Account from "../components/Account/Account"
+import Accounts from "../components/AccountsList/Accounts"
+import Prescription from "../components/Prescription/Prescription"
 
 export default function Routes() {
     return (
@@ -21,13 +22,11 @@ export default function Routes() {
             <Route exact path="/login">
                 <Login />
             </Route>
-            <Route exact path="/account">
-                <Account/>
-            </Route>
-            <Route exact path="/accounts">
-                <Accounts/>
-            </Route>
             <PrivateRoute authed={true} path='/dashboard' component={Dashboard} />
+            {/*<PrivateRoute authed={true} path='/appointments' component={} />*/}
+            <PrivateRoute authed={true} path='/prescriptions' component={Prescription} />
+            <PrivateRoute authed={true} path='/account' component={Account} />
+            <PrivateRoute authed={true} path='/accounts' component={Accounts} />
             <Route>
                 <Error404 />
             </Route>
