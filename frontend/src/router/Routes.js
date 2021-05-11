@@ -11,6 +11,7 @@ import Accounts from "../components/AccountsList/Accounts"
 import Prescription from "../components/Prescription/Prescription"
 import MyAppointment from "../components/Appointment/MyAppointment/MyAppointment";
 import PlanAppointment from "../components/Appointment/PlanAppointment/PlanAppointment";
+import ListDoctors from "../components/Appointment/ListDoctors/ListDoctors";
 
 export default function Routes() {
     return (
@@ -30,6 +31,7 @@ export default function Routes() {
             <PrivateRoute authed={true} path='/accounts' component={Accounts} />
             <PrivateRoute authed={true} path='/my-appointments' component={MyAppointment} />
             <PrivateRoute authed={true} path='/plan-appointment' component={PlanAppointment} />
+            <PrivateRoute authed={true} path='/list-doctors' component={ListDoctors} />
             <Route>
                 <Error404 />
             </Route>
