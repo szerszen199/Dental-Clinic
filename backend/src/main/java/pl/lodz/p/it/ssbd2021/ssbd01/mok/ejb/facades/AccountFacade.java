@@ -11,6 +11,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
 
+import java.util.List;
+
 /**
  * Klasa definiująca główne operacje wykonywane na encjach typu Account.
  */
@@ -74,5 +76,21 @@ public class AccountFacade extends AbstractFacade<Account> {
         }
     }
 
+    /**
+     * Find by enabled list.
+     *
+     * @param enabled the enabled
+     * @return the list
+     * @throws PersistenceException the persistence exception
+     */
+    public List<Account> findByEnabled(Boolean enabled) throws PersistenceException {
+        try {
+            TypedQuery<Account> tq = em.createNamedQuery("Account.findByEnabled", Account.class);
+            tq.setParameter("enabled", enabled);
+            return tq.getResultList();
+        } catch (PersistenceException e) {
+            throw e;
+        }
+    }
 
 }

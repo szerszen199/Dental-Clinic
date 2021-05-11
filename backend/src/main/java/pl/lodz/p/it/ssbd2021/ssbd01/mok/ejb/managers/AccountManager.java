@@ -22,6 +22,13 @@ public interface AccountManager {
     public void createAccount(Account account, AccessLevel accessLevel);
 
     /**
+     * usun konto.
+     *
+     * @param account     konto do usuniecia
+     */
+    public void removeAccount(Account account);
+
+    /**
      * Confirm account.
      *
      * @param id id
@@ -112,6 +119,14 @@ public interface AccountManager {
      * @return znalezione konto
      */
     Account findByLogin(String login);
+
+    /**
+     * Wyszukuje Listę kont na podstawie aktywacji.
+     *
+     * @param enabled konta o danej wartosci do znalezienia
+     * @return znalezione konto
+     */
+    List<Account> findByEnabled(boolean enabled);
 
     /**
      * Resetuje hasło do konta o podanym id. Ustawia alfanumeryczne hasło

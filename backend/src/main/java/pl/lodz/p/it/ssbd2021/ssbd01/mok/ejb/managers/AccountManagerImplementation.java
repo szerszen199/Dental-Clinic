@@ -51,6 +51,11 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
+    public void removeAccount(Account account) {
+        accountFacade.remove(account);
+    }
+
+    @Override
     public void confirmAccount(Long id) {
         accountFacade.find(id).setEnabled(true);
     }
@@ -128,6 +133,11 @@ public class AccountManagerImplementation implements AccountManager {
     @Override
     public Account findByLogin(String login) {
         return accountFacade.findByLogin(login);
+    }
+
+    @Override
+    public List<Account> findByEnabled(boolean enabled) {
+        return accountFacade.findByEnabled(enabled);
     }
 
     @Override
