@@ -20,15 +20,15 @@ export default function Registration() {
         }
 
         function emailCorrect() {
-            return email.length > 0;
+            return email.length > 7;
         }
 
         function passwordCorrect() {
-            return password.length > 0;
+            return password.length > 7;
         }
 
         function repeatedPasswordCorrect() {
-            return repeatedPassword.length > 0;
+            return repeatedPassword.length > 0 && password === repeatedPassword;
         }
 
         function firstNameCorrect() {
@@ -40,7 +40,7 @@ export default function Registration() {
         }
 
         function phoneNumberCorrect() {
-            return phoneNumber.length > 0;
+            return phoneNumber.length > 0 && /^\d+$/.test(phoneNumber);
         }
 
         // TODO: przypadek obcokrajowca wymusza że peselu może nie być ale nadal warto by go zwalidowac, tylko jak?
