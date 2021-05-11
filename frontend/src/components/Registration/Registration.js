@@ -7,6 +7,7 @@ export default function Registration() {
     const [login, setLogin] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [repeatedPassword, setRepeatedPassword] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
@@ -26,6 +27,10 @@ export default function Registration() {
             return password.length > 0;
         }
 
+        function repeatedPasswordCorrect() {
+            return repeatedPassword.length > 0;
+        }
+
         function firstNameCorrect() {
             return firstName.length > 0;
         }
@@ -43,7 +48,7 @@ export default function Registration() {
             return true;
         }
 
-        return emailCorrect() && passwordCorrect() && loginCorrect() && firstNameCorrect() && lastNameCorrect() && phoneNumberCorrect() && peselCorrect();
+        return emailCorrect() && passwordCorrect() && repeatedPasswordCorrect() && loginCorrect() && firstNameCorrect() && lastNameCorrect() && phoneNumberCorrect() && peselCorrect();
     }
 
 
@@ -80,6 +85,14 @@ export default function Registration() {
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                    />
+                </Form.Group>
+                <Form.Group size="lg" controlId="password">
+                    <Form.Label>Repeat new password</Form.Label>
+                    <Form.Control
+                        type="password"
+                        value={repeatedPassword}
+                        onChange={(e) => setRepeatedPassword({repeatedPassword: e.target.value})}
                     />
                 </Form.Group>
                 <Form.Group size="lg" controlId="firstName">
