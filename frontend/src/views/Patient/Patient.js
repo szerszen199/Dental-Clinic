@@ -4,8 +4,6 @@ import "./Patient.css";
 import Routes from "../../router/Routes";
 import Nav from "react-bootstrap/Nav";
 import {LinkContainer} from "react-router-bootstrap";
-import DarkModeToggle from "react-dark-mode-toggle";
-import Switch from "react-switch";
 import {DarkModeSwitch} from 'react-toggle-dark-mode';
 
 
@@ -35,17 +33,6 @@ function Patient() {
                             <Nav.Link>Accounts</Nav.Link>
                         </LinkContainer>
                     </Nav>
-                    {/*<Switch*/}
-                    {/*    onChange={(checked: boolean) => {*/}
-                    {/*        this.a = checked*/}
-                    {/*    }}*/}
-                    {/*     checked/>*/}
-                    {/*<DarkModeToggle*/}
-                    {/*    style={{ paddingTop: '5rem' }}*/}
-                    {/*    onChange={setIsDarkMode}*/}
-                    {/*    checked={isDarkMode}*/}
-                    {/*    size={50}*/}
-                    {/*/>*/}
                     <DarkModeSwitch
                         style={{marginLeft: '1rem'}}
                         checked={isDarkMode}
