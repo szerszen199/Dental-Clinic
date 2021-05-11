@@ -17,7 +17,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Constraint(validatedBy = {})
 @Retention(RUNTIME)
-@Size(min = 3, max = 30)
+@Size(min = 3, max = 60)
 @Pattern(regexp = "[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*")
 public @interface Login {
     /**

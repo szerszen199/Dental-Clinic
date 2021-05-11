@@ -14,16 +14,15 @@ import java.util.List;
 public interface AccountManager {
 
     /**
-     * Create account.
+     * Utworzenie konta przy rejestracji.
      *
      * @param account     nowe konto
-     * @param accessLevel poziom dostępu nowego konta
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void createAccount(Account account, AccessLevel accessLevel) throws AppBaseException;
+    void createAccount(Account account) throws AppBaseException;
 
     /**
-     * Confirm account.
+     * Potwierdzenie konta.
      *
      * @param id id
      * @throws AppBaseException wyjątek typu AppBaseException
@@ -32,7 +31,7 @@ public interface AccountManager {
 
 
     /**
-     * Confirm account.
+     * Potwierdzenie konta.
      *
      * @param login login
      * @throws AppBaseException wyjątek typu AppBaseException

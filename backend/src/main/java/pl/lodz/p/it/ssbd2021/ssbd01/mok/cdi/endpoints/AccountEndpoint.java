@@ -2,13 +2,15 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.RolesStringsTmp;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountAccessLevelDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountEditDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
@@ -22,7 +24,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.management.relation.Role;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -54,16 +55,15 @@ public class AccountEndpoint {
     /**
      * Tworzy nowe konto.
      *
-     *
-     * @param accountDto obiekt zawierający login, email, hasło i inne wymagane dane
+     * @param newAccountDto obiekt zawierający login, email, hasło i inne wymagane dane
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @POST
     @PermitAll
     @Path("create")
     @Consumes({MediaType.APPLICATION_JSON})
-    public void createAccount(AccountDto accountDto) throws AppBaseException {
-        accountManager.createAccount(AccountConverter.createAccountEntityFromDto(accountDto), new PatientData());
+    public void createAccount(NewAccountDto newAccountDto) throws AppBaseException {
+        accountManager.createAccount(AccountConverter.createAccountEntityFromDto(newAccountDto));
     }
 
     /**
@@ -99,25 +99,27 @@ public class AccountEndpoint {
     @Path("edit")
     @RolesAllowed({RolesStringsTmp.receptionist, RolesStringsTmp.doctor, RolesStringsTmp.admin, RolesStringsTmp.user})
     @Produces({MediaType.APPLICATION_JSON})
-    public void editAccount(AccountDto accountDto) throws AppBaseException {
-        accountManager.editAccount(AccountConverter.createAccountEntityFromDto(accountDto));
+    public void editAccount(AccountEditDto accountDto) throws AppBaseException {
+        Account account = accountManager.getLoggedInAccount();
+        accountManager.editAccount(AccountConverter.createAccountEntityFromDto(accountDto, account));
     }
 
 
     /**
-     * Edit other account.
+     * Edycja konta innego użytkownika.
      *
      * @param accountDto the edited account
+     * @param login  login edytowanego konta
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit/other
     @POST
-    @Path("edit/other")
+    @Path("edit/{login}")
     @RolesAllowed({RolesStringsTmp.admin})
     @Produces({MediaType.APPLICATION_JSON})
-    // TODO: 11.05.2021 Tutaj musi byc inne dto niz w editAccount
-    public void editOtherAccount(AccountDto accountDto) throws AppBaseException {
-        accountManager.editOtherAccount(AccountConverter.createAccountEntityFromDto(accountDto));
+    public void editOtherAccount(@PathParam("login") String login, AccountEditDto accountDto) throws AppBaseException {
+        Account account = accountManager.findByLogin(login);
+        accountManager.editOtherAccount(AccountConverter.createAccountEntityFromDto(accountDto, account));
     }
 
     /**
@@ -231,10 +233,29 @@ public class AccountEndpoint {
     @GET
     @RolesAllowed({RolesStringsTmp.admin})
     @Produces({MediaType.APPLICATION_JSON})
+    @Path("/accounts")
     public Response getAllAccounts() throws AppBaseException {
         List<AccountDto> accountDtoList = accountManager.getAllAccounts()
                 .stream()
                 .map(AccountDto::new)
+                .collect(Collectors.toList());
+        return Response.ok(accountDtoList).build();
+    }
+
+    /**
+     * Pobiera listę wszystkich kont z poziomami dostępu.
+     *
+     * @return lista wszystkich kont
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    @GET
+    @RolesAllowed({RolesStringsTmp.admin})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/accounts-with-levels")
+    public Response getAllAccountsWithLevels() throws AppBaseException {
+        List<AccountAccessLevelDto> accountDtoList = accountManager.getAllAccounts()
+                .stream()
+                .map(AccountAccessLevelDto::new)
                 .collect(Collectors.toList());
         return Response.ok(accountDtoList).build();
     }
@@ -251,7 +272,7 @@ public class AccountEndpoint {
     @Path("new-password")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changeOwnPassword(NewPasswordDTO newPassword) throws AppBaseException {
+    public Response changeOwnPassword(NewPasswordDto newPassword) throws AppBaseException {
         Account account = accountManager.getLoggedInAccount();
         if (account == null) {
             return Response.status(Status.UNAUTHORIZED).build();
@@ -339,7 +360,7 @@ public class AccountEndpoint {
         return Response.status(Status.OK).build();
     }
 
-    private void validatePassword(NewPasswordDTO newPassword) throws AppBaseException {
+    private void validatePassword(NewPasswordDto newPassword) throws AppBaseException {
         if (!newPassword.getFirstPassword().equals(newPassword.getSecondPassword())) {
             throw PasswordsNotMatchException.newPasswordsNotMatch();
         }
