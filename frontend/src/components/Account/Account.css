@@ -1,11 +1,13 @@
 @media all and (min-width: 480px) {
-    .Registration {
-        padding: -10px 0;
+    .EditAccount {
+        padding: 10px 0;
+        /*margin-left: 60px;*/
+        /*margin-right: 60px;*/
     }
 
-    .Registration form {
-        margin: 0 auto;
-        max-width: 520px;
+    .EditPassword {
+        padding: 10px 0;
+        margin-left: 10px;
+        margin-right: 10px;
     }
-
 }
