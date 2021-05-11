@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.ejb.Stateful;
@@ -8,6 +9,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.security.enterprise.SecurityContext;
 import javax.ws.rs.core.Context;
+
 import pl.lodz.p.it.ssbd2021.ssbd01.common.Levels;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
@@ -97,7 +99,6 @@ public class AccountManagerImplementation implements AccountManager {
     public void lockAccount(Long id) throws AppBaseException {
         Account account = accountFacade.find(id);
         account.setActive(false);
-        accountFacade.edit(account);
     }
 
     @Override
@@ -167,18 +168,68 @@ public class AccountManagerImplementation implements AccountManager {
         return hashGenerator.generateHash(generatedPassword);
     }
 
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
+    private void setLastSuccessfulLoginIp(Account account, String ip) throws AppBaseException {
+        account.setLastSuccessfulLoginIp(ip);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
+    private void setLastSuccessfulLoginTime(Account account, LocalDateTime time) throws AppBaseException {
+        account.setLastSuccessfulLogin(time);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
+    private void increaseInvalidLoginCount(Account account) throws AppBaseException {
+        account.setUnsuccessfulLoginCounter(account.getUnsuccessfulLoginCounter() + 1);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
+    private void zeroInvalidLoginCount(Account account) throws AppBaseException {
+        account.setUnsuccessfulLoginCounter(0);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
+    private void setLastUnsuccessfulLoginTime(Account account, LocalDateTime time) throws AppBaseException {
+        account.setLastUnsuccessfulLogin(time);
+    }
+
+    @Override
+    public void updateAfterSuccessfulLogin(String login, String ip, LocalDateTime time) throws AppBaseException {
+        Account account = findByLogin(login);
+        setLastSuccessfulLoginIp(account, ip);
+        setLastSuccessfulLoginTime(account, time);
+        zeroInvalidLoginCount(account);
+        //        accountFacade.edit(account);
+    }
+
+    @Override
+    public void updateAfterUnsuccessfulLogin(String login, String ip, LocalDateTime time) throws AppBaseException {
+        Account account = findByLogin(login);
+        setLastUnsuccessfulLoginIp(account, ip);
+        setLastUnsuccessfulLoginTime(account, time);
+        increaseInvalidLoginCount(account);
+        //        accountFacade.edit(account);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
+    private void setLastUnsuccessfulLoginIp(Account account, String ip) throws AppBaseException {
+        account.setLastUnsuccessfulLoginIp(ip);
+    }
+
     @Override
     public void setDarkMode(Account account, boolean isDarkMode) throws AppBaseException {
         account.setDarkMode(isDarkMode);
         accountFacade.edit(account);
     }
 
+    // TODO: 11.05.2021 bug
     private void verifyOldPassword(String currentPasswordHash, String oldPassword) throws AppBaseException {
         if (!currentPasswordHash.contentEquals(hashGenerator.generateHash(oldPassword))) {
             throw PasswordsNotMatchException.currentPasswordNotMatch();
         }
     }
 
+    // TODO: 11.05.2021 bug
     private void validateNewPassword(String currentPasswordHash, String newPassword) throws AppBaseException {
         if (currentPasswordHash.contentEquals(hashGenerator.generateHash(newPassword))) {
             throw PasswordsSameException.passwordsNotDifferent();

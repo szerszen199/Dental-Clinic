@@ -37,7 +37,6 @@ public abstract class AbstractEntity {
     private Account createdBy;
 
     @Column(name = "modification_date_time")
-    @FutureOrPresent
     private LocalDateTime modificationDateTime;
 
     @JoinColumn(name = "modified_by", referencedColumnName = "id")

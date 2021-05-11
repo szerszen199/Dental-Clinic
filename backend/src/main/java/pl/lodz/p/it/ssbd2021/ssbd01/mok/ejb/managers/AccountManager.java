@@ -5,6 +5,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
 import javax.ejb.Local;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -95,8 +97,7 @@ public interface AccountManager {
      * @param account     konto, którego hasło jest edytowane
      * @param oldPassword stare hasło podane przez użytkownika
      * @param newPassword nowe hasło
-     * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych
-     *                       nie powiedzie się.
+     * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                          nie powiedzie się.
      */
     void changePassword(Account account, String oldPassword, String newPassword) throws AppBaseException;
 
@@ -143,4 +144,25 @@ public interface AccountManager {
      * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych nie powiedzie się.
      */
     void setDarkMode(Account account, boolean isDarkMode) throws AppBaseException;
+
+
+    /**
+     * Update after successful login.
+     *
+     * @param login login
+     * @param ip    ip
+     * @param time  time
+     * @throws AppBaseException app base exception
+     */
+    void updateAfterSuccessfulLogin(String login, String ip, LocalDateTime time) throws AppBaseException;
+
+    /**
+     * Update after unsuccessful login.
+     *
+     * @param login login
+     * @param ip    ip
+     * @param time  time
+     * @throws AppBaseException app base exception
+     */
+    void updateAfterUnsuccessfulLogin(String login, String ip, LocalDateTime time) throws AppBaseException;
 }
