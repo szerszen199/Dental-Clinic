@@ -2,7 +2,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
@@ -75,7 +75,7 @@ public class AccountEndpoint {
         if (jwtEmailConfirmationUtils.validateRegistrationConfirmationJwtToken(jwt)) {
             try {
                 accountManager.confirmAccount(jwtEmailConfirmationUtils.getUserNameFromRegistrationConfirmationJwtToken(jwt));
-            } catch (ParseException e) {
+            } catch (ParseException | AppBaseException e) {
                 // TODO: 18.04.2021
                 e.printStackTrace();
             }

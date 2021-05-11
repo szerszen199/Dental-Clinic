@@ -1,6 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.exceptions;
 
-public class MailSendingException extends BaseException {
+public class MailSendingException extends AppBaseException {
     
     private static final String ACTIVATION_LINK = "Activation link couldn't be sent.";
 

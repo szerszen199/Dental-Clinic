@@ -14,8 +14,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AdminData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.DataValidationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.DataValidationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
