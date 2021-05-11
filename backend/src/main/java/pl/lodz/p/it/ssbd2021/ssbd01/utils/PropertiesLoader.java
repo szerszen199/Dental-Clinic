@@ -16,6 +16,11 @@ public class PropertiesLoader {
 
     private String confirmationJwtSecret;
     private String jwtSecret;
+    private Long invalidLoginCountBlock;
+
+    public Long getInvalidLoginCountBlock() {
+        return invalidLoginCountBlock;
+    }
 
     /**
      * Pobiera pole confirmation jwt secret.
@@ -64,5 +69,6 @@ public class PropertiesLoader {
         jwtSecret = prop.getProperty("jwt.secret");
         confirmationJwtExpiration = Long.valueOf(prop.getProperty("confirmation.jwt.expirationMs"));
         jwtExpiration = Long.valueOf(prop.getProperty("jwt.expirationMs"));
+        invalidLoginCountBlock = Long.valueOf(prop.getProperty("invalid.login.count.block"));
     }
 }

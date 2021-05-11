@@ -135,15 +135,15 @@ public class Account extends AbstractEntity implements Serializable {
     @Column(name = "last_successful_login")
     private LocalDateTime lastSuccessfulLogin;
 
-    @Column(name = "last_successful_login_ip", length = 15)
-    @Size(min = 7, max = 15)
+    @Column(name = "last_successful_login_ip", length = 256)
+    @Size(min = 0, max = 256)
     private String lastSuccessfulLoginIp;
 
     @Column(name = "last_unsuccessful_login")
     private LocalDateTime lastUnsuccessfulLogin;
 
-    @Column(name = "last_unsuccessful_login_ip", length = 15)
-    @Size(min = 7, max = 15)
+    @Column(name = "last_unsuccessful_login_ip", length = 256)
+    @Size(min = 7, max = 256)
     private String lastUnsuccessfulLoginIp;
 
     @Column(name = "unsuccessful_login_count_since_last_login")
