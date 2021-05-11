@@ -23,30 +23,30 @@ export default class EditAccount extends React.Component {
         }
     }
 
-    validateForm() {
+    validateForm(t) {
         // Todo: zrobić walidację taką jaką wymaga projekt
         function loginCorrect() {
-            return this.state.login.length > 0;
+            return t.state.login.length > 0;
         }
 
         function emailCorrect() {
-            return this.state.email.length > 0;
+            return t.state.email.length > 0;
         }
 
         function passwordCorrect() {
-            return this.state.password.length > 0;
+            return t.state.password.length > 0;
         }
 
         function firstNameCorrect() {
-            return this.state.firstName.length > 0;
+            return t.state.firstName.length > 0;
         }
 
         function lastNameCorrect() {
-            return this.state.lastName.length > 0;
+            return t.state.lastName.length > 0;
         }
 
         function phoneNumberCorrect() {
-            return this.state.phoneNumber.length > 0;
+            return t.state.phoneNumber.length > 0;
         }
 
         // TODO: przypadek obcokrajowca wymusza że peselu może nie być ale nadal warto by go zwalidowac, tylko jak?
@@ -63,11 +63,11 @@ export default class EditAccount extends React.Component {
         event.preventDefault();
     }
 
-    handleOnClick() {
+    handleOnClick(t) {
         if (this.state.isDisabled === true) {
             this.setEditable()
         } else {
-            this.setNotEditable()
+            this.setNotEditable(t)
         }
     }
 
@@ -78,8 +78,8 @@ export default class EditAccount extends React.Component {
         });
     }
 
-    setNotEditable() {
-        this.validateForm()
+    setNotEditable(t) {
+        this.validateForm(t)
         this.setState({
             isDisabled: true,
             text: "Edit"
@@ -89,7 +89,7 @@ export default class EditAccount extends React.Component {
     // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
     render() {
         return (
-            <div className="Registration">
+            <div className="EditAccount">
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group size="lg" controlId="login">
                         <Form.Label>Login</Form.Label>
@@ -111,31 +111,13 @@ export default class EditAccount extends React.Component {
                             onChange={(e) => this.setState({email: e.target.value})}
                         />
                     </Form.Group>
-                    {/*<Form.Group size="lg" controlId="password">*/}
-                    {/*    <Form.Label>Password</Form.Label>*/}
-                    {/*    <Form.Control*/}
-                    {/*        type="password"*/}
-                    {/*        value={this.state.password}*/}
-                    {/*        disabled={this.state.isDisabled}*/}
-                    {/*        onChange={(e) => this.setState({password: e.target.value})}*/}
-                    {/*    />*/}
-                    {/*</Form.Group>*/}
-                    {/*<Form.Group size="lg" controlId="password">*/}
-                    {/*    <Form.Label> Repeat password</Form.Label>*/}
-                    {/*    <Form.Control*/}
-                    {/*        type="password"*/}
-                    {/*        value={this.state.repeatedPassword}*/}
-                    {/*        disabled={this.state.isDisabled}*/}
-                    {/*        onChange={(e) => this.setState({password: e.target.value})}*/}
-                    {/*    />*/}
-                    {/*</Form.Group>*/}
                     <Form.Group size="lg" controlId="firstName">
                         <Form.Label>First Name</Form.Label>
                         <Form.Control
                             type="text"
                             value={this.state.firstName}
                             disabled={this.state.isDisabled}
-                            onChange={(e) => this.setState({pesel: e.target.value})}
+                            onChange={(e) => this.setState({firstName: e.target.value})}
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="lastName">
@@ -170,14 +152,13 @@ export default class EditAccount extends React.Component {
                         <Form.Label style={{marginRight: "10px", transform: "translateY(-30%)"}}>Dark mode</Form.Label>
                         <Switch
                             onChange={(checked: boolean) => {
-                                this.setState({ darkMode: checked })
+                                this.setState({darkMode: checked})
                             }}
                             disabled={this.state.isDisabled}
-                            checked={this.state.darkMode} />
+                            checked={this.state.darkMode}/>
                     </Form.Group>
                     <Button block size="lg" type="submit"
-                        // disabled={!validateForm()}
-                            onClick={this.handleOnClick.bind(this)}>
+                            onClick={() => this.handleOnClick(this)}>
                         {this.state.text}
                     </Button>
                 </Form>
