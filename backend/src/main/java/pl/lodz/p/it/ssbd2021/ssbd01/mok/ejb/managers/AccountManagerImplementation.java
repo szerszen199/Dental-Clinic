@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.common.Levels;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
@@ -9,6 +10,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
@@ -17,6 +19,7 @@ import javax.inject.Inject;
 import javax.security.enterprise.SecurityContext;
 import javax.ws.rs.core.Context;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 /**
@@ -33,6 +36,9 @@ public class AccountManagerImplementation implements AccountManager {
 
     @Inject
     private HashGenerator hashGenerator;
+
+    @Inject
+    private RandomPasswordGenerator passwordGenerator;
 
     @Override
     public void createAccount(Account account, AccessLevel accessLevel) {
@@ -91,6 +97,16 @@ public class AccountManagerImplementation implements AccountManager {
         account.setModifiedBy(account);
         Account old = accountFacade.findByLogin(account.getLogin());
         if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
+            throw new DataValidationException("Niepoprawna Valida danych wejściowych");
+        }
+        accountFacade.edit(account);
+    }
+
+    @Override
+    public void editOtherAccount(Account account) throws BaseException {
+        account.setModifiedBy(getLoggedInAccount());
+        Account old = accountFacade.findByLogin(account.getLogin());
+        if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
             throw new DataValidationException("Niepoprawna walidacja danych wejściowych");
         }
         accountFacade.edit(account);
@@ -109,15 +125,57 @@ public class AccountManagerImplementation implements AccountManager {
         accountFacade.edit(account);
     }
 
+    @Override
+    public Account findByLogin(String login) {
+        return accountFacade.findByLogin(login);
+    }
+
+    @Override
+    public void resetPassword(Long id) {
+        Account account = accountFacade.find(id);
+        String generatedPassword = passwordGenerator.generate(8);
+        String newPasswordHash = hashGenerator.generateHash(generatedPassword);
+
+        account.setPassword(newPasswordHash);
+        account.setPassword(generateNewRandomPassword());
+        // TODO: send mail with new password
+    }
+
+    @Override
+    public void resetPassword(Account account) {
+        account.setPassword(generateNewRandomPassword());
+        // TODO: send mail with new password
+    }
+
+    private String generateNewRandomPassword() {
+        String generatedPassword = passwordGenerator.generate(8);
+        return hashGenerator.generateHash(generatedPassword);
+    }
+
+    @Override
+    public void setDarkMode(Account account, boolean isDarkMode) throws BaseException {
+        account.setDarkMode(isDarkMode);
+        accountFacade.edit(account);
+    }
+
     private void verifyOldPassword(String currentPasswordHash, String oldPassword) throws BaseException {
         if (!currentPasswordHash.contentEquals(hashGenerator.generateHash(oldPassword))) {
-            throw new PasswordsNotMatchException(PasswordsNotMatchException.CURRENT_PASSWORD_NOT_MATCH);
+            throw PasswordsNotMatchException.currentPasswordNotMatch();
         }
     }
 
     private void validateNewPassword(String currentPasswordHash, String newPassword) throws BaseException {
         if (currentPasswordHash.contentEquals(hashGenerator.generateHash(newPassword))) {
-            throw new PasswordsSameException(PasswordsSameException.PASSWORDS_NOT_DIFFER);
+            throw PasswordsSameException.passwordsNotDifferent();
         }
+    }
+
+    @Override
+    public boolean isAdmin(Account account) {
+        Stream<AccessLevel> accessLevels = account.getAccessLevels().stream();
+        return accessLevels.anyMatch(level -> (
+                level.getLevel().equals(Levels.ADMINISTRATOR.getLevel())
+                        && level.getActive()
+        ));
     }
 }
