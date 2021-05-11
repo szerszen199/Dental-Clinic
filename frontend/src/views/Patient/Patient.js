@@ -5,6 +5,7 @@ import Routes from "../../router/Routes";
 import Nav from "react-bootstrap/Nav";
 import {LinkContainer} from "react-router-bootstrap";
 import {DarkModeSwitch} from 'react-toggle-dark-mode';
+import {NavDropdown} from "react-bootstrap";
 
 
 function Patient() {
@@ -20,9 +21,24 @@ function Patient() {
                 <Navbar.Toggle/>
                 <Navbar.Collapse className="justify-content-end">
                     <Nav activeKey={window.location.pathname}>
-                        <LinkContainer to="/appointments">
-                            <Nav.Link>Appointments</Nav.Link>
-                        </LinkContainer>
+                        <NavDropdown title="Appointments" id="navbarScrollingDropdown">
+                            <NavDropdown.Item>
+                                <LinkContainer to="/my-appointments">
+                                    <Nav.Link>My appointments</Nav.Link>
+                                </LinkContainer>
+                            </NavDropdown.Item>
+                            <NavDropdown.Item>
+                                <LinkContainer to="/my-appointments">
+                                    <Nav.Link>Plan an appointment</Nav.Link>
+                                </LinkContainer>
+                            </NavDropdown.Item>
+                            <NavDropdown.Divider/>
+                            <NavDropdown.Item>
+                                <LinkContainer to="/my-appointments">
+                                    <Nav.Link>List of doctors</Nav.Link>
+                                </LinkContainer>
+                            </NavDropdown.Item>
+                        </NavDropdown>
                         <LinkContainer to="/prescriptions">
                             <Nav.Link>Prescriptions</Nav.Link>
                         </LinkContainer>
