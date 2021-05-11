@@ -78,7 +78,6 @@ public class LoginEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response authenticate(LoginRequestDTO loginRequestDTO) {
         String ip = getClientIpAddress(request);
-        // TODO: 11.05.2021 Sprawdzić czy zablokowany :S
         CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(loginRequestDTO.toCredential());
         if (credentialValidationResult.getStatus() != CredentialValidationResult.Status.VALID) {
             // TODO: 11.05.2021 Trzeba jakoś sprawdzić czy konto jest zablokowane i wtedy inny err
