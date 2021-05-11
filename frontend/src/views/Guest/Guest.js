@@ -1,11 +1,13 @@
-import React from "react";
+import React, {useState} from "react";
 import Navbar from "react-bootstrap/Navbar";
 import "./Guest.css";
 import Routes from "../../router/Routes";
 import Nav from "react-bootstrap/Nav";
 import {LinkContainer} from "react-router-bootstrap";
+import {DarkModeSwitch} from 'react-toggle-dark-mode';
 
 function Guest() {
+    const [isDarkMode, setIsDarkMode] = useState(() => false);
     return (
         <div className="App container py-3">
             <Navbar collapseOnSelect bg="light" expand="md" className="mb-3">
@@ -24,6 +26,14 @@ function Guest() {
                             <Nav.Link>Login</Nav.Link>
                         </LinkContainer>
                     </Nav>
+                    <DarkModeSwitch
+                        style={{marginLeft: '1rem'}}
+                        checked={isDarkMode}
+                        onChange={setIsDarkMode}
+                        size={30}
+                        sunColor={"#FFDF37"}
+                        moonColor={"#bfbfbb"}
+                    />
                 </Navbar.Collapse>
             </Navbar>
             <Routes/>
