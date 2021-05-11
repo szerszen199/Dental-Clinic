@@ -6,12 +6,12 @@ import {Col, Container, Row} from "react-bootstrap";
 
 function Account() {
     return (
-        <div className="EditAccount">
+        <div className="Account">
             <Container>
                 <Row>
-                    <Col><EditAccount/></Col>
+                    <Col><EditAccount className="EditAccount"/></Col>
                     <Col style={{maxWidth: "60px"}}/>
-                    <Col><EditPassword/></Col>
+                    <Col><EditPassword className="EditPassword"/></Col>
 
                 </Row>
             </Container>

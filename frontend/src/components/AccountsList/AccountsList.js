@@ -1,29 +1,43 @@
 import React from "react";
 import "./AccountsList.css";
+import {Table} from "react-bootstrap";
 
 export default class AccountsList extends Comment {
 
 
     constructor(props) {
         super(props);
-        //let accounts = props.accounts;
-        let accounts = [new Account("Jan Kowalski", "jkowalski@yahoo.com"), new Account("Adam Nowak", "adamnowak@gmail.com"), new Account("Anna Kowalska", "aka@gmail.com"), new Account("Janek Kowal", "janektoja@gmail.com")]
-        this.accountsList = accounts.map((account) => <div className="Account">
-            <div className="Name">{account.name}</div>
-            <div className="Email">{account.email}</div>
-        </div>)
-        this.nameList = accounts.map((account) =>
-            <div className="Name">{account.name}</div>)
-        this.emailList = accounts.map((account) =>
-            <div className="Email">{account.email}</div>)
+        this.accountsList = [new Account("Jan Kowalski", "jkowalski@yahoo.com"), new Account("Adam Nowak", "adamnowak@gmail.com"), new Account("Anna Kowalska", "aka@gmail.com"), new Account("Janek Kowal", "janektoja@gmail.com")]
+    }
+
+    renderAccount(person, index) {
+        return (
+            <tr key={index}>
+                <td>1</td>
+                <td>{person.name}</td>
+                <td>{person.email}</td>
+            </tr>
+        )
     }
 
     render() {
-        return <div className="Home">
-            <div className="lander">
-                <div className="AccountInfo"><div className="NameInfo"> Imie i Nazwisko</div> <div className="EmailInfo"> Email</div> </div>
-                <div className="AccountsList"> {this.accountsList} </div>
-            </div>
+        return <div className="AccountListGroup">
+            <Table striped bordered hover>
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>
+                        <div className="NameInfo">Name and surname</div>
+                    </th>
+                    <th>
+                        <div className="EmailInfo">Email</div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {this.accountsList.map(this.renderAccount)}
+                </tbody>
+            </Table>
         </div>
     }
 }
