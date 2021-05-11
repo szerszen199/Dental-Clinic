@@ -4,9 +4,9 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto;
 import javax.validation.constraints.Size;
 
 /**
- * Typ NewPasswordDTO.
+ * Klasa NewPasswordDTO dla zmiany hasła.
  */
-public class NewPasswordDTO {
+public class NewPasswordDto {
     
     @Size(min = 8)
     private String oldPassword;
@@ -24,7 +24,7 @@ public class NewPasswordDTO {
      * @param firstPassword  pierwsze powtórzenie nowego hasła
      * @param secondPassword drugie powtórzenie nowego hasła
      */
-    public NewPasswordDTO(String oldPassword, String firstPassword, String secondPassword) {
+    public NewPasswordDto(String oldPassword, String firstPassword, String secondPassword) {
         this.oldPassword = oldPassword;
         this.firstPassword = firstPassword;
         this.secondPassword = secondPassword;
