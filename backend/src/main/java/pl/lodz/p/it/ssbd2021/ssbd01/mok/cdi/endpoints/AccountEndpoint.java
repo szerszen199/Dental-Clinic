@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.common.RolesStringsTmp;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
@@ -16,9 +17,12 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.management.relation.Role;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -55,6 +59,7 @@ public class AccountEndpoint {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @POST
+    @PermitAll
     @Path("create")
     @Consumes({MediaType.APPLICATION_JSON})
     public void createAccount(AccountDto accountDto) throws AppBaseException {
@@ -70,6 +75,7 @@ public class AccountEndpoint {
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/confirm/{jwt}
     @PUT
     @Path("confirm/{jwt}")
+    @PermitAll
     @Produces({MediaType.APPLICATION_JSON})
     public void confirmAccount(@PathParam("jwt") String jwt) {
         if (jwtEmailConfirmationUtils.validateRegistrationConfirmationJwtToken(jwt)) {
@@ -91,6 +97,7 @@ public class AccountEndpoint {
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit
     @POST
     @Path("edit")
+    @RolesAllowed({RolesStringsTmp.receptionist, RolesStringsTmp.doctor, RolesStringsTmp.admin, RolesStringsTmp.user})
     @Produces({MediaType.APPLICATION_JSON})
     public void editAccount(AccountDto accountDto) throws AppBaseException {
         accountManager.editAccount(AccountConverter.createAccountEntityFromDto(accountDto));
@@ -106,7 +113,9 @@ public class AccountEndpoint {
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit/other
     @POST
     @Path("edit/other")
+    @RolesAllowed({RolesStringsTmp.admin})
     @Produces({MediaType.APPLICATION_JSON})
+    // TODO: 11.05.2021 Tutaj musi byc inne dto niz w editAccount
     public void editOtherAccount(AccountDto accountDto) throws AppBaseException {
         accountManager.editOtherAccount(AccountConverter.createAccountEntityFromDto(accountDto));
     }
@@ -119,6 +128,7 @@ public class AccountEndpoint {
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{id}/{level}
     @PUT
+    @RolesAllowed({RolesStringsTmp.admin})
     @Path("/revokeAccessLevelById/{id}/{level}")
     @Produces({MediaType.APPLICATION_JSON})
     public void revokeAccessLevel(@PathParam("id") Long id, @PathParam("level") String level) {
@@ -133,6 +143,7 @@ public class AccountEndpoint {
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{login}/{level}
     @PUT
+    @RolesAllowed({RolesStringsTmp.admin})
     @Path("/revokeAccessLevelByLogin/{login}/{level}")
     @Produces({MediaType.APPLICATION_JSON})
     public void revokeAccessLevel(@PathParam("login") String login, @PathParam("level") String level) {
@@ -146,6 +157,7 @@ public class AccountEndpoint {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
+    @RolesAllowed({RolesStringsTmp.admin})
     @Path("lock/{id}")
     @Produces({MediaType.APPLICATION_JSON})
     public void lockAccount(@PathParam("id") Long id) throws AppBaseException {
@@ -159,6 +171,7 @@ public class AccountEndpoint {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
+    @RolesAllowed({RolesStringsTmp.admin})
     @Path("unlock/{id}")
     @Produces({MediaType.APPLICATION_JSON})
     public void unlockAccount(@PathParam("id") Long id) throws AppBaseException {
@@ -172,6 +185,7 @@ public class AccountEndpoint {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
+    @RolesAllowed({RolesStringsTmp.admin})
     @Path("/addLevelByLogin")
     @Produces({MediaType.APPLICATION_JSON})
     public void addAccessLevel(AccessLevelDto accessLevelDto) {
@@ -185,6 +199,7 @@ public class AccountEndpoint {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @GET
+    @RolesAllowed({RolesStringsTmp.receptionist, RolesStringsTmp.doctor, RolesStringsTmp.admin, RolesStringsTmp.user})
     @Path("/info")
     public Response getLoggedInAccountInfo() throws AppBaseException {
         AccountDto account = new AccountDto(accountManager.getLoggedInAccount());
@@ -200,6 +215,7 @@ public class AccountEndpoint {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @GET
+    @RolesAllowed({RolesStringsTmp.admin})
     @Path("/info/{login}")
     public Response getAccountInfoWithLogin(@PathParam("login") String login) throws AppBaseException {
         AccountDto account = new AccountDto(accountManager.findByLogin(login));
@@ -213,6 +229,7 @@ public class AccountEndpoint {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @GET
+    @RolesAllowed({RolesStringsTmp.admin})
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAllAccounts() throws AppBaseException {
         List<AccountDto> accountDtoList = accountManager.getAllAccounts()
@@ -230,6 +247,7 @@ public class AccountEndpoint {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
+    @RolesAllowed({RolesStringsTmp.receptionist, RolesStringsTmp.doctor, RolesStringsTmp.admin, RolesStringsTmp.user})
     @Path("new-password")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -256,6 +274,7 @@ public class AccountEndpoint {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
+    @RolesAllowed({RolesStringsTmp.admin})
     @Path("reset-password/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -280,6 +299,7 @@ public class AccountEndpoint {
      */
     @PUT
     @Path("reset-password")
+    @RolesAllowed({RolesStringsTmp.receptionist, RolesStringsTmp.doctor, RolesStringsTmp.admin, RolesStringsTmp.user})
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response resetOwnPassword() throws AppBaseException {
@@ -304,6 +324,7 @@ public class AccountEndpoint {
      */
     @PUT
     @Path("dark-mode")
+    @RolesAllowed({RolesStringsTmp.receptionist, RolesStringsTmp.doctor, RolesStringsTmp.admin, RolesStringsTmp.user})
     @Produces(MediaType.APPLICATION_JSON)
     public Response changeDarkMode(@QueryParam("dark-mode") boolean isDarkMode) throws AppBaseException {
         Account account = accountManager.getLoggedInAccount();
