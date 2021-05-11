@@ -4,12 +4,15 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 
 /**
  * Klasa definiująca główne operacje wykonywane na encjach typu Account.
@@ -47,30 +50,32 @@ public class AccountFacade extends AbstractFacade<Account> {
      *
      * @param login login
      * @return account
-     * @throws PersistenceException wyjątek typu PersistenceException
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    public Account findByLogin(String login) throws PersistenceException {
+    public Account findByLogin(String login) throws AppBaseException {
         try {
             TypedQuery<Account> tq = em.createNamedQuery("Account.findByLogin", Account.class);
             tq.setParameter("login", login);
             return tq.getSingleResult();
+        } catch (NoResultException e) {
+            throw AccountException.noSuchAccount(e);
         } catch (PersistenceException e) {
-            throw e;
-            // TODO: 05.05.2021 - uzupełnić o wyjątki aplikacyjne
+            throw AppBaseException.databaseError(e);
         }
 
     }
 
     @Override
-    public void edit(Account entity) throws BaseException {
+    public void edit(Account entity) throws AppBaseException {
         try {
             Account oldAcc = findByLogin(entity.getLogin());
             Account newAcc = new Account(oldAcc.getId(), entity.getLogin(), entity.getEmail(),
                     entity.getPassword(), entity.getFirstName(), entity.getLastName(), entity.getPhoneNumber(), entity.getPesel());
             super.edit(newAcc);
-        } catch (BaseException e) {
-            throw e;
-            // TODO: 20.04.2021 - uzupełnić o wyjątki aplikacyjne
+        } catch (OptimisticLockException e) {
+            throw AppBaseException.optimisticLockError(e);
+        } catch (PersistenceException e) {
+            throw AppBaseException.databaseError(e);
         }
     }
 

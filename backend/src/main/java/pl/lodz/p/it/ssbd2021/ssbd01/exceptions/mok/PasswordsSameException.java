@@ -1,14 +1,14 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORDS_NOT_DIFFER;
 
 /**
  * Wyjątek reprezentujący błąd związany z takimi samymi wartościami starego
  * i nowego hasła podczas operacji zmiany hasła.
  */
-public class PasswordsSameException extends BaseException {
-    
-    private static final String PASSWORDS_NOT_DIFFER = "both_passwords_are_same";
+public class PasswordsSameException extends AppBaseException {
+
 
     /**
      * Tworzy nową instancję wyjątku PasswordsSameException.
