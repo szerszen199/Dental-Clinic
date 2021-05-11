@@ -4,8 +4,11 @@ import "./Patient.css";
 import Routes from "../../router/Routes";
 import Nav from "react-bootstrap/Nav";
 import {LinkContainer} from "react-router-bootstrap";
+import Switch from "react-switch";
+import Form from "react-bootstrap/Form";
 
 function Patient() {
+    let a = false;
     return (
         <div className="App container py-3 ">
             <Navbar collapseOnSelect bg="light" expand="md" className="shadow-box-example mb-3">
@@ -30,6 +33,11 @@ function Patient() {
                             <Nav.Link>Accounts</Nav.Link>
                         </LinkContainer>
                     </Nav>
+                    <Switch
+                        onChange={(checked: boolean) => {
+                            this.a = checked
+                        }}
+                         checked/>
                 </Navbar.Collapse>
             </Navbar>
             <Routes/>
