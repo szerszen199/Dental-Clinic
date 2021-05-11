@@ -34,7 +34,7 @@ function Patient() {
                             </NavDropdown.Item>
                             <NavDropdown.Divider/>
                             <NavDropdown.Item>
-                                <LinkContainer to="/my-appointments">
+                                <LinkContainer to="/list-doctors">
                                     <Nav.Link>List of doctors</Nav.Link>
                                 </LinkContainer>
                             </NavDropdown.Item>
