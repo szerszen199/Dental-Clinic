@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -53,17 +55,17 @@ public class PropertiesLoader {
     private Long jwtExpiration;
 
     @PostConstruct
-    private void loadProperties() {
+    private void loadProperties() throws AppBaseException {
         Properties prop = null;
         try {
             prop = new Properties();
-            InputStream inputStream  = PropertiesLoader.class.getClassLoader()
+            InputStream inputStream = PropertiesLoader.class.getClassLoader()
                     .getResourceAsStream("application.properties");
             if (inputStream != null) {
                 prop.load(inputStream);
             }
         } catch (IOException e) {
-            // TODO: 18.04.2021
+            throw AppBaseException.propertiesError(e);
         }
         confirmationJwtSecret = prop.getProperty("confirmation.jwt.secret");
         jwtSecret = prop.getProperty("jwt.secret");
