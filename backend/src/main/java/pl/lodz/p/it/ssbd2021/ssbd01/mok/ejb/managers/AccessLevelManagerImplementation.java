@@ -2,17 +2,20 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.interceptor.Interceptors;
 
 /**
  * Typ Access level manager implementation - implementacja AccessLevelManager.
  */
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@Interceptors(LogInterceptor.class)
 public class AccessLevelManagerImplementation implements AccessLevelManager {
     @Inject
     private AccessLevelFacade accessLevelFacade;
