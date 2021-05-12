@@ -13,6 +13,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.interceptor.Interceptors;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -40,6 +42,7 @@ import javax.ws.rs.core.Response.Status;
  */
 @Path("account")
 @RequestScoped
+@Interceptors(LogInterceptor.class)
 public class AccountEndpoint {
 
     @Inject
