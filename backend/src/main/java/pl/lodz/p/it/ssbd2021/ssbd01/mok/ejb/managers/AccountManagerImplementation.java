@@ -1,13 +1,16 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
 import java.time.LocalDateTime;
+import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Stream;
+import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.security.enterprise.SecurityContext;
+import javax.servlet.ServletContext;
 import javax.ws.rs.core.Context;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.Levels;
@@ -18,12 +21,15 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.DataValidationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 
 
@@ -33,6 +39,9 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class AccountManagerImplementation implements AccountManager {
+
+    private static final String DEFAULT_URL = "http://studapp.it.p.lodz.pl:8001";
+
     @Inject
     private AccountFacade accountFacade;
 
@@ -48,8 +57,14 @@ public class AccountManagerImplementation implements AccountManager {
     @Inject
     private RandomPasswordGenerator passwordGenerator;
 
+    @Inject
+    private MailProvider mailProvider;
+
+    @EJB
+    private JwtEmailConfirmationUtils jwtEmailConfirmationUtils;
+
     @Override
-    public void createAccount(Account account) throws AppBaseException {
+    public void createAccount(Account account, ServletContext servletContext) throws AppBaseException {
         account.setPassword(hashGenerator.generateHash(account.getPassword()));
 
         AccessLevel patientData = new PatientData();
@@ -78,6 +93,11 @@ public class AccountManagerImplementation implements AccountManager {
 
         account.setCreatedBy(account);
         accountFacade.create(account);
+
+        this.sendConfirmationLink(
+                account.getEmail(),
+                buildConfirmationLink(account.getLogin(), servletContext.getContextPath())
+        );
     }
 
     @Override
@@ -91,8 +111,16 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
-    public void confirmAccount(String login) throws AppBaseException {
-        accountFacade.findByLogin(login).setEnabled(true);
+    public void confirmAccountByToken(String jwt) throws AppBaseException {
+        if (!jwtEmailConfirmationUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+            throw AccountException.invalidConfirmationToken();
+        }
+        try {
+            String login = jwtEmailConfirmationUtils.getUserNameFromRegistrationConfirmationJwtToken(jwt);
+            accountFacade.findByLogin(login).setEnabled(true);
+        } catch (AppBaseException | ParseException e) {
+            throw AccountException.noSuchAccount(e);
+        }
     }
 
     @Override
@@ -257,5 +285,19 @@ public class AccountManagerImplementation implements AccountManager {
                 level.getLevel().equals(Levels.ADMINISTRATOR.getLevel())
                         && level.getActive()
         ));
+    }
+
+    private void sendConfirmationLink(String email, String link) throws AppBaseException {
+        mailProvider.sendActivationMail(email, link);
+    }
+
+    private String buildConfirmationLink(String login, String defaultContext) {
+        StringBuilder sb = new StringBuilder(DEFAULT_URL);
+
+        sb.append(defaultContext);
+        sb.append("/api/account/confirm?token=");
+        sb.append(jwtEmailConfirmationUtils.generateRegistrationConfirmationJwtTokenForUser(login));
+
+        return sb.toString();
     }
 }
