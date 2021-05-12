@@ -66,7 +66,7 @@ public class PropertiesLoader {
     private Long jwtExpiration;
 
     @PostConstruct
-    private void loadProperties() throws AppBaseException {
+    private void loadProperties() {
         Properties prop = null;
         try {
             prop = new Properties();
@@ -76,7 +76,8 @@ public class PropertiesLoader {
                 prop.load(inputStream);
             }
         } catch (IOException e) {
-            throw AppBaseException.propertiesError(e);
+            //TODO naprawić nie może byc checked exception
+            e.printStackTrace();
         }
         confirmationJwtSecret = prop.getProperty("confirmation.jwt.secret");
         jwtSecret = prop.getProperty("jwt.secret");
