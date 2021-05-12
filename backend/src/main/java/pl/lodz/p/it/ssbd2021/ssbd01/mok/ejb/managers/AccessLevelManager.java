@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+
 import javax.ejb.Local;
 
 /**
@@ -14,7 +16,7 @@ public interface AccessLevelManager {
      * @param id    id uzytkownika, któremu zostanie odebrany poziom dostępu
      * @param level level odbierany poziom odstępu
      */
-    void revokeAccessLevel(Long id, String level);
+    void revokeAccessLevel(Long id, String level) throws AppBaseException;
 
     /**
      * Revoke access level - odebranie poziomu dostępu {@param level} kontowi o zadanym {@param login}.
@@ -22,7 +24,7 @@ public interface AccessLevelManager {
      * @param login login uzytkownika, któremu zostanie odebrany poziom dostępu
      * @param level level odbierany poziom odstępu
      */
-    void revokeAccessLevel(String login, String level);
+    void revokeAccessLevel(String login, String level) throws AppBaseException;
 
 
     /**
@@ -31,6 +33,6 @@ public interface AccessLevelManager {
      * @param level nazwa poziomu dostępu konta
      * @param login login użytkownika, któremu zostanie dodany poziom dostępu
      */
-    void addAccessLevel(String login, String level);
+    void addAccessLevel(String login, String level) throws AppBaseException;
 
 }
