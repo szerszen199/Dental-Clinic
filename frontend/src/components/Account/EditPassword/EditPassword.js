@@ -19,15 +19,15 @@ export default class EditPassword extends React.Component {
     validateForm(t) {
         // Todo: zrobić walidację taką jaką wymaga projekt
         function currentPasswordCorrect() {
-            return t.state.currentPassword.length > 0;
+            return t.state.currentPassword.length > 7;
         }
 
         function newPasswordCorrect() {
-            return t.state.password.length > 0;
+            return t.state.password.length > 7;
         }
 
         function newRepeatedPasswordCorrect() {
-            return t.state.repeatedPassword.length > 0;
+            return t.state.repeatedPassword.length > 7 && t.state.password === t.state.repeatedPassword;
         }
 
         return currentPasswordCorrect() && newPasswordCorrect() && newRepeatedPasswordCorrect();

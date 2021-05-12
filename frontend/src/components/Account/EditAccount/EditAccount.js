@@ -12,8 +12,6 @@ export default class EditAccount extends React.Component {
             text: "Edit",
             login: "",
             email: "",
-            password: "",
-            repeatedPassword: "",
             firstName: "",
             lastName: "",
             phoneNumber: "",
@@ -23,16 +21,9 @@ export default class EditAccount extends React.Component {
 
     validateForm(t) {
         // Todo: zrobić walidację taką jaką wymaga projekt
-        function loginCorrect() {
-            return t.state.login.length > 0;
-        }
 
         function emailCorrect() {
             return t.state.email.length > 0;
-        }
-
-        function passwordCorrect() {
-            return t.state.password.length > 0;
         }
 
         function firstNameCorrect() {
@@ -44,7 +35,7 @@ export default class EditAccount extends React.Component {
         }
 
         function phoneNumberCorrect() {
-            return t.state.phoneNumber.length > 0;
+            return t.state.phoneNumber.length > 0 && /^\d+$/.test(t.state.phoneNumber);
         }
 
         // TODO: przypadek obcokrajowca wymusza że peselu może nie być ale nadal warto by go zwalidowac, tylko jak?
@@ -52,7 +43,7 @@ export default class EditAccount extends React.Component {
             return true;
         }
 
-        return emailCorrect() && passwordCorrect() && loginCorrect() && firstNameCorrect() && lastNameCorrect() && phoneNumberCorrect() && peselCorrect();
+        return emailCorrect() && firstNameCorrect() && lastNameCorrect() && phoneNumberCorrect() && peselCorrect();
     }
 
 
