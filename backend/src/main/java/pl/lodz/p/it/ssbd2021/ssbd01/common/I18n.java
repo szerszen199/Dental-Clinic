@@ -20,6 +20,7 @@ public class I18n {
     public static final String DATABASE_OPTIMISTIC_LOCK_ERROR = "database_optimistic_lock_error";
     public static final String ACCOUNT_EDIT_VALIDATION_ERROR = "account_edit_validation_error";
     public static final String LOAD_PROPERTIES_ERROR = "load_properties_error";
+    public static final String INVALID_CONFIRMATION_TOKEN = "invalid_registration_confirmation_token";
 
 
 }

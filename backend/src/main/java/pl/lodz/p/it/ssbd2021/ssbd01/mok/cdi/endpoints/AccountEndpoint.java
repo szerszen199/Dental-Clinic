@@ -16,7 +16,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.security.PermitAll;
@@ -24,6 +23,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -32,9 +32,22 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.RolesStringsTmp;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 
 /**
  * Typ Account endpoint.
@@ -55,15 +68,24 @@ public class AccountEndpoint {
     /**
      * Tworzy nowe konto.
      *
-     * @param newAccountDto obiekt zawierający login, email, hasło i inne wymagane dane
+     *
+     * @param accountDto obiekt zawierający login, email, hasło i inne wymagane dane
+     * @param servletContext kontekst serwletów, służy do współdzielenia informacji
+     *                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @POST
     @PermitAll
     @Path("create")
     @Consumes({MediaType.APPLICATION_JSON})
-    public void createAccount(NewAccountDto newAccountDto) throws AppBaseException {
-        accountManager.createAccount(AccountConverter.createAccountEntityFromDto(newAccountDto));
+    public void createAccount(NewAccountDto accountDto, @Context ServletContext servletContext)
+            throws AppBaseException {
+
+        accountManager.createAccount(
+                AccountConverter.createAccountEntityFromDto(accountDto),
+                new PatientData(),
+                servletContext
+        );
     }
 
     /**
@@ -74,18 +96,11 @@ public class AccountEndpoint {
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/confirm/{jwt}
     @PUT
-    @Path("confirm/{jwt}")
+    @Path("confirm")
     @PermitAll
     @Produces({MediaType.APPLICATION_JSON})
-    public void confirmAccount(@PathParam("jwt") String jwt) {
-        if (jwtEmailConfirmationUtils.validateRegistrationConfirmationJwtToken(jwt)) {
-            try {
-                accountManager.confirmAccount(jwtEmailConfirmationUtils.getUserNameFromRegistrationConfirmationJwtToken(jwt));
-            } catch (ParseException | AppBaseException e) {
-                // TODO: 18.04.2021
-                e.printStackTrace();
-            }
-        }
+    public void confirmAccount(@QueryParam("token") String jwt) throws AppBaseException {
+        accountManager.confirmAccountByToken(jwt);
     }
 
     /**

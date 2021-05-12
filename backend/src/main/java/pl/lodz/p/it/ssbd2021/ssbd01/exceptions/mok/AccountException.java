@@ -6,6 +6,7 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EMAIL_ALREADY_EXI
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_IS_BLOCKED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOGIN_ALREADY_EXISTS;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_NOT_FOUND;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.INVALID_CONFIRMATION_TOKEN;
 
 public class AccountException extends AppBaseException {
 
@@ -67,4 +68,24 @@ public class AccountException extends AppBaseException {
         return new AccountException(ACCOUNT_NOT_FOUND, cause);
     }
 
+    /**
+     * Tworzy wyjątek reprezentujący próbę aktywacji konta z użyciem niepoprawnego
+     * tokenu aktywacyjnego.
+     *
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException invalidConfirmationToken() {
+        return new AccountException(INVALID_CONFIRMATION_TOKEN);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę aktywacji konta z użyciem niepoprawnego
+     * tokenu aktywacyjnego.
+     *
+     * @param cause przyczyna wystąpienia wyjątku
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException invalidConfirmationToken(Throwable cause) {
+        return new AccountException(INVALID_CONFIRMATION_TOKEN, cause);
+    }
 }
