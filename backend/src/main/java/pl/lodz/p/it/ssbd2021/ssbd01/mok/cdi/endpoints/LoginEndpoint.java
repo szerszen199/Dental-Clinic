@@ -4,9 +4,11 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.JwtResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.LoginRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtLoginUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
+import javax.interceptor.Interceptors;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStoreHandler;
 import javax.ws.rs.Consumes;
@@ -21,6 +23,7 @@ import javax.ws.rs.core.Response;
  */
 @Path("login")
 @PermitAll
+@Interceptors({LogInterceptor.class})
 public class LoginEndpoint {
 
     private final IdentityStoreHandler identityStoreHandler;
