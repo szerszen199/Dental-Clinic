@@ -264,14 +264,14 @@ public class AccountManagerImplementation implements AccountManager {
         accountFacade.edit(account);
     }
 
-    // TODO: 11.05.2021 bug
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void verifyOldPassword(String currentPasswordHash, String oldPassword) throws AppBaseException {
         if (!currentPasswordHash.contentEquals(hashGenerator.generateHash(oldPassword))) {
             throw PasswordsNotMatchException.currentPasswordNotMatch();
         }
     }
 
-    // TODO: 11.05.2021 bug
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void validateNewPassword(String currentPasswordHash, String newPassword) throws AppBaseException {
         if (currentPasswordHash.contentEquals(hashGenerator.generateHash(newPassword))) {
             throw PasswordsSameException.passwordsNotDifferent();
@@ -279,6 +279,7 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public boolean isAdmin(Account account) {
         Stream<AccessLevel> accessLevels = account.getAccessLevels().stream();
         return accessLevels.anyMatch(level -> (
