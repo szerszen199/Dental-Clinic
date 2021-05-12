@@ -48,9 +48,9 @@ public class Prescription extends AbstractEntity implements Serializable {
     private String business;
 
     @Basic(optional = false)
-    @Column(name = "expiration", nullable = false)
+    @Column(name = "expiration", updatable = false, nullable = false)
     @NotNull
-    private String expiration;
+    private LocalDateTime expiration;
 
     @Basic(optional = false)
     @Column(name = "medications", nullable = false)
@@ -91,7 +91,7 @@ public class Prescription extends AbstractEntity implements Serializable {
         return business;
     }
 
-    public String getExpiration() {
+    public LocalDateTime getExpiration() {
         return expiration;
     }
 
