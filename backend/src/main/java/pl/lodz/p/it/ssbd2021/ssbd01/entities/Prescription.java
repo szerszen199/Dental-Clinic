@@ -24,6 +24,8 @@ import javax.validation.constraints.NotNull;
 @NamedQueries({
         @NamedQuery(name = "Prescription.findAll", query = "SELECT p FROM Prescription p"),
         @NamedQuery(name = "Prescription.findById", query = "SELECT p FROM Prescription p WHERE p.id = :id"),
+        @NamedQuery(name = "Prescription.findByBusinessId", query = "SELECT p FROM Prescription p WHERE p.business = :business"),
+        @NamedQuery(name = "Prescription.findByExpiration", query = "SELECT p FROM Prescription p WHERE p.expiration = :expiration"),
         @NamedQuery(name = "Prescription.findByMedications", query = "SELECT p FROM Prescription p WHERE p.medications = :medications"),
         @NamedQuery(name = "Prescription.findByVersion", query = "SELECT p FROM Prescription p WHERE p.version = :version"),
         @NamedQuery(name = "Prescription.findByCreationDateTime", query = "SELECT p FROM Prescription p WHERE p.creationDateTime = :creationDateTime"),
@@ -39,6 +41,16 @@ public class Prescription extends AbstractEntity implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     @NotNull
     private Long id;
+
+    @Basic(optional = false)
+    @Column(name = "business_id", nullable = false)
+    @NotNull
+    private String business;
+
+    @Basic(optional = false)
+    @Column(name = "expiration", updatable = false, nullable = false)
+    @NotNull
+    private LocalDateTime expiration;
 
     @Basic(optional = false)
     @Column(name = "medications", nullable = false)
@@ -73,6 +85,14 @@ public class Prescription extends AbstractEntity implements Serializable {
     @Override
     public Long getId() {
         return id;
+    }
+
+    public String getBusiness() {
+        return business;
+    }
+
+    public LocalDateTime getExpiration() {
+        return expiration;
     }
 
     public String getMedications() {
