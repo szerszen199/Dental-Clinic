@@ -6,6 +6,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.JwtResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.LoginRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.UserInfoResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtLoginUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
@@ -95,8 +96,13 @@ public class LoginEndpoint {
 
             return Response.status(Response.Status.UNAUTHORIZED).entity(new MessageResponseDto(I18n.AUTHENTICATION_FAILURE)).build();
         }
+        UserInfoResponseDTO userInfoResponseDTO = new UserInfoResponseDTO();
         try {
             accountManager.updateAfterSuccessfulLogin(credentialValidationResult.getCallerPrincipal().getName(), ip, LocalDateTime.now());
+            userInfoResponseDTO.setFirstName(accountManager.getLoggedInAccount().getFirstName());
+            userInfoResponseDTO.setLastName(accountManager.getLoggedInAccount().getLastName());
+            userInfoResponseDTO.setDarkMode(accountManager.getLoggedInAccount().isDarkMode());
+            userInfoResponseDTO.setLanguage(accountManager.getLoggedInAccount().getLanguage());
         } catch (AppBaseException e) {
             // TODO: 11.05.2021 Moze tutaj cos zrobic?
             e.printStackTrace();
@@ -105,7 +111,8 @@ public class LoginEndpoint {
         return Response.ok().entity(
                 new JwtResponseDTO(credentialValidationResult.getCallerPrincipal().getName(),
                         credentialValidationResult.getCallerGroups(),
-                        jwtUtils.generateJwtTokenForUser(credentialValidationResult.getCallerPrincipal().getName()))).build();
+                        jwtUtils.generateJwtTokenForUser(credentialValidationResult.getCallerPrincipal().getName()),
+                        userInfoResponseDTO)).build();
     }
 
 
