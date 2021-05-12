@@ -70,7 +70,6 @@ public class Account extends AbstractEntity implements Serializable {
     @Column(name = "login", updatable = false, nullable = false, length = 60)
     @NotNull
     @Login
-    @Size(min = 1, max = 60)
     private String login;
 
     @Basic(optional = false)
@@ -79,14 +78,6 @@ public class Account extends AbstractEntity implements Serializable {
     @Email
     @Size(min = 4, max = 100)
     private String email;
-
-    public boolean isDarkMode() {
-        return isDarkMode;
-    }
-
-    public void setDarkMode(boolean darkMode) {
-        isDarkMode = darkMode;
-    }
 
     @Basic(optional = true)
     @Column(name = "is_dark_mode", nullable = true)
@@ -135,15 +126,15 @@ public class Account extends AbstractEntity implements Serializable {
     @Column(name = "last_successful_login")
     private LocalDateTime lastSuccessfulLogin;
 
-    @Column(name = "last_successful_login_ip", length = 15)
-    @Size(min = 7, max = 15)
+    @Column(name = "last_successful_login_ip", length = 256)
+    @Size(min = 0, max = 256)
     private String lastSuccessfulLoginIp;
 
     @Column(name = "last_unsuccessful_login")
     private LocalDateTime lastUnsuccessfulLogin;
 
-    @Column(name = "last_unsuccessful_login_ip", length = 15)
-    @Size(min = 7, max = 15)
+    @Column(name = "last_unsuccessful_login_ip", length = 256)
+    @Size(min = 7, max = 256)
     private String lastUnsuccessfulLoginIp;
 
     @Column(name = "unsuccessful_login_count_since_last_login")
@@ -219,6 +210,14 @@ public class Account extends AbstractEntity implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isDarkMode() {
+        return isDarkMode;
+    }
+
+    public void setDarkMode(boolean darkMode) {
+        isDarkMode = darkMode;
     }
 
     public String getPassword() {

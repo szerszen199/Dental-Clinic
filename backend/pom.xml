@@ -6,7 +6,7 @@
 
     <groupId>pl.lodz.p.it.ssbd2021</groupId>
     <artifactId>ssbd01</artifactId>
-    <version>0.0.20-SNAPSHOT</version>
+    <version>0.0.25-SNAPSHOT</version>
     <name>ssbd01</name>
     <packaging>war</packaging>
 
@@ -50,6 +50,12 @@
         <junit.version>5.7.0</junit.version>
         <hibernate.version>5.4.30.Final</hibernate.version>
         <hibernate.validator.version>7.0.1.Final</hibernate.validator.version>
+
+        <payara.adminPort>4801</payara.adminPort>
+        <payara.username>admin</payara.username>
+        <payara.password>GenWydvam0</payara.password>
+        <payara.hostname>studapp.it.p.lodz.pl</payara.hostname>
+        <servlet.port>8001</servlet.port>
     </properties>
 
     <dependencies>
@@ -152,9 +158,24 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.5.0-b01</version>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>smtp</artifactId>
+            <version>1.4.5</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
         </dependency>
     </dependencies>
 
@@ -164,6 +185,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.0</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -262,8 +286,60 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven3-plugin</artifactId>
+                <version>1.9.3</version>
+                <configuration>
+                    <container>
+                        <containerId>payara</containerId>
+                        <type>remote</type>
+                        <artifactInstaller>
+                            <groupId>fish.payara.distributions</groupId>
+                            <artifactId>payara</artifactId>
+                            <version>5.2021.1</version>
+                        </artifactInstaller>
+                    </container>
+                    <configuration>
+                        <type>runtime</type>
+                        <properties>
+                            <cargo.remote.username>${payara.username}</cargo.remote.username>
+                            <cargo.remote.password>${payara.password}</cargo.remote.password>
+                            <cargo.glassfish.admin.port>${payara.adminPort}</cargo.glassfish.admin.port>
+                            <cargo.hostname>${payara.hostname}</cargo.hostname>
+                            <cargo.servlet.port>${servlet.port}</cargo.servlet.port>
+                        </properties>
+                    </configuration>
+                </configuration>
+                <dependencies>
+                <dependency>
+                    <groupId>org.glassfish.main.deployment</groupId>
+                    <artifactId>deployment-client</artifactId>
+                    <version>5.1.0</version>
+                </dependency>
+                <dependency>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                    <version>2.3.0</version>
+                </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>deploy</id>
+                        <goals>
+                            <goal>start</goal>
+                            <goal>redeploy</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>undeploy</id>
+                        <goals>
+                            <goal>undeploy</goal>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
-
 </project>

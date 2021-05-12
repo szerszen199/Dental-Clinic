@@ -1,14 +1,14 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_TOO_SHORT;
 
 /**
  * Wyjątek reprezentujący błąd związany z niewystarczającą długością nowego hasła
  * podczas operacji zmiany hasła.
  */
-public class PasswordTooShortException extends BaseException {
-    
-    private static final String PASSWORD_TOO_SHORT = "password_too_short";
+public class PasswordTooShortException extends AppBaseException {
 
     /**
      * Tworzy nową instancję wyjątku PasswordTooShortException.

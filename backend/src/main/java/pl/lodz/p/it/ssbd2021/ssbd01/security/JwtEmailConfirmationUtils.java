@@ -22,7 +22,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
  * Typ Jwt utils.
  */
 @Stateless
-public class JwtUtils {
+public class JwtEmailConfirmationUtils {
 
     @Inject
     private PropertiesLoader propertiesLoader;

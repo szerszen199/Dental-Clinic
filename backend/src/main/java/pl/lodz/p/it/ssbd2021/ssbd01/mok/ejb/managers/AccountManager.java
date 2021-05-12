@@ -2,10 +2,13 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
 import java.util.List;
 import javax.ejb.Local;
+import javax.servlet.ServletContext;
+
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AccessLevelException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+
+import java.time.LocalDateTime;
 
 /**
  * Interfejs Account manager.
@@ -14,84 +17,88 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
 public interface AccountManager {
 
     /**
-     * Create account.
+     * Utworzenie konta przy rejestracji.
      *
-     * @param account     nowe konto
-     * @param accessLevel poziom dostępu nowego konta
+     * @param account        nowe konto
+     * @param servletContext kontekst serwletów, służy do współdzielenia informacji
+     *                       w ramach aplikacji
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    public void createAccount(Account account, AccessLevel accessLevel);
+    void createAccount(Account account, ServletContext servletContext) throws AppBaseException;
 
     /**
-     * Confirm account.
+     * usun konto.
+     *
+     * @param account konto do usuniecia
+     */
+    void removeAccount(Account account);
+
+    /**
+     * Potwierdzenie konta.
      *
      * @param id id
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void confirmAccount(Long id);
+    void confirmAccount(Long id) throws AppBaseException;
 
 
     /**
-     * Confirm account.
+     * Potwierdzenie konta.
      *
-     * @param login login
+     * @param jwt token jwt
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    public void confirmAccount(String login);
+    void confirmAccountByToken(String jwt) throws AppBaseException;
 
 
     /**
      * Pobiera zalogowane konto.
      *
      * @return zalogowane konto
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    public Account getLoggedInAccount();
+    Account getLoggedInAccount() throws AppBaseException;
 
     /**
      * Metoda służąca do blokowania konta.
      *
      * @param id identyfikator blokowanego konta
-     * @throws BaseException bazowy wyjątek aplikacji
+     * @throws AppBaseException bazowy wyjątek aplikacji
      */
-    void lockAccount(Long id) throws BaseException;
+    void lockAccount(Long id) throws AppBaseException;
 
     /**
      * Metoda służąca do odblokowywania konta.
      *
      * @param id identyfikator odblokowywanego konta
-     * @throws BaseException bazowy wyjątek aplikacji
+     * @throws AppBaseException bazowy wyjątek aplikacji
      */
-    void unlockAccount(Long id) throws BaseException;
-
-    /**
-     * Dodaje poziom dostępu {@param level} kontowi o loginie równym {@param logon}.
-     *
-     * @param accessLevel poziom dostępu konta
-     * @param login       login użytkownika, któremu zostanie dodany poziom dostępu
-     * @throws AccessLevelException wyjątek gdy nie znaleziono poziomu dostępu
-     */
-    void addAccessLevel(AccessLevel accessLevel, String login) throws AccessLevelException;
+    void unlockAccount(Long id) throws AppBaseException;
 
     /**
      * Edytuje wlasne konto.
      *
      * @param account edytowane konto
-     * @throws BaseException Base exception.
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void editAccount(Account account) throws BaseException;
+    void editAccount(Account account) throws AppBaseException;
 
 
     /**
-     * Edytuje konto innego urzytkownika.
+     * Edytuje konto innego użytkownika.
      *
      * @param account edytowane konto
-     * @throws BaseException the base exception
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void editOtherAccount(Account account) throws BaseException;
+    void editOtherAccount(Account account) throws AppBaseException;
 
     /**
      * Pobranie listy wszystkich kont.
      *
      * @return lista wszystkich kont
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    List<Account> getAllAccounts();
+    List<Account> getAllAccounts() throws AppBaseException;
 
     /**
      * Zmienia hasło {@param newPassword} wskazanego konta {@param account}.
@@ -99,10 +106,9 @@ public interface AccountManager {
      * @param account     konto, którego hasło jest edytowane
      * @param oldPassword stare hasło podane przez użytkownika
      * @param newPassword nowe hasło
-     * @throws BaseException wyjątek, gdy utrwalanie stanu konta w bazie danych
-     *                       nie powiedzie się.
+     * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                          nie powiedzie się.
      */
-    void changePassword(Account account, String oldPassword, String newPassword) throws BaseException;
+    void changePassword(Account account, String oldPassword, String newPassword) throws AppBaseException;
 
 
     /**
@@ -110,16 +116,26 @@ public interface AccountManager {
      *
      * @param login login konta do znalezienia
      * @return znalezione konto
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    Account findByLogin(String login);
+    Account findByLogin(String login) throws AppBaseException;
+
+    /**
+     * Wyszukuje Listę kont na podstawie aktywacji.
+     *
+     * @param enabled konta o danej wartosci do znalezienia
+     * @return znalezione konto
+     */
+    List<Account> findByEnabled(boolean enabled);
 
     /**
      * Resetuje hasło do konta o podanym id. Ustawia alfanumeryczne hasło
      * o długości 8 znaków.
      *
      * @param id identyfikator konta
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void resetPassword(Long id);
+    void resetPassword(Long id) throws AppBaseException;
 
     /**
      * Resetuje hasło podanego konta. Ustawia alfanumeryczne hasło o długości
@@ -142,7 +158,28 @@ public interface AccountManager {
      *
      * @param account    zmieniane konto
      * @param isDarkMode tryb dark mode
-     * @throws BaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                       nie powiedzie się.
+     * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych nie powiedzie się.
      */
-    void setDarkMode(Account account, boolean isDarkMode) throws BaseException;
+    void setDarkMode(Account account, boolean isDarkMode) throws AppBaseException;
+
+
+    /**
+     * Update after successful login.
+     *
+     * @param login login
+     * @param ip    ip
+     * @param time  time
+     * @throws AppBaseException app base exception
+     */
+    void updateAfterSuccessfulLogin(String login, String ip, LocalDateTime time) throws AppBaseException;
+
+    /**
+     * Update after unsuccessful login.
+     *
+     * @param login login
+     * @param ip    ip
+     * @param time  time
+     * @throws AppBaseException app base exception
+     */
+    void updateAfterUnsuccessfulLogin(String login, String ip, LocalDateTime time) throws AppBaseException;
 }
