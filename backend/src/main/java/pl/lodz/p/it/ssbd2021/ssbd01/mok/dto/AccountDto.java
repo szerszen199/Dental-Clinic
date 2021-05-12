@@ -5,49 +5,46 @@ import java.util.Set;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Klasa dla AccountDto.
  */
 public class AccountDto {
 
-    private Long id;
+    @NotNull
+    @Login
     private String login;
+
+    @NotNull
+    @Email
     private String email;
+
+    @NotNull
+    @Size(min = 1, max = 50)
     private String firstName;
-    private String password;
+    @NotNull
+    @Size(min = 1, max = 80)
     private String lastName;
+
+    @Size(min = 9, max = 15)
     private String phoneNumber;
+
+    @Size(min = 9, max = 9)
     private String pesel;
+
+    @NotNull
     private Boolean active;
-    private Boolean enabled;
-    private LocalDateTime lastSuccessfulLogin;
-    private String lastSuccessfulLoginIp;
-    private LocalDateTime lastUnsuccessfulLogin;
-    private String lastUnsuccessfulLoginIp;
-    private Integer unsuccessfulLoginCounter;
+
+    @NotNull
     private String language;
 
-    /**
-     * Tworzy nową instancję klasy AccountDto.
-     *
-     * @param login       login konta
-     * @param email       adres e-mail przypisany do konta
-     * @param password    hasło konta
-     * @param firstName   imię użytkownika
-     * @param lastName    nazwisko użytkownika
-     * @param phoneNumber numer telefonu
-     * @param pesel       pesel
-     */
-    public AccountDto(String login, String email, String password, String firstName, String lastName, String phoneNumber, String pesel) {
-        this.login = login;
-        this.email = email;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.pesel = pesel;
-    }
+    @NotNull
+    private Long version;
 
     /**
      * Tworzy nową instancję klasy AccountDto.
@@ -55,7 +52,6 @@ public class AccountDto {
      * @param account klasa reprezentujacea konto użytkownika aplikacji
      */
     public AccountDto(Account account) {
-        this.id = account.getId();
         this.login = account.getLogin();
         this.email = account.getEmail();
         this.firstName = account.getFirstName();
@@ -63,21 +59,8 @@ public class AccountDto {
         this.phoneNumber = account.getPhoneNumber();
         this.pesel = account.getPesel();
         this.active = account.getActive();
-        this.enabled = account.getEnabled();
-        this.lastSuccessfulLogin = account.getLastSuccessfulLogin();
-        this.lastSuccessfulLoginIp = account.getLastSuccessfulLoginIp();
-        this.lastUnsuccessfulLogin = account.getLastUnsuccessfulLogin();
-        this.lastUnsuccessfulLoginIp = account.getLastUnsuccessfulLoginIp();
-        this.unsuccessfulLoginCounter = account.getUnsuccessfulLoginCounter();
         this.language = account.getLanguage();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        this.version = account.getVersion();
     }
 
     public String getLogin() {
@@ -94,10 +77,6 @@ public class AccountDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getFirstName() {
@@ -124,10 +103,6 @@ public class AccountDto {
         return pesel;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -144,59 +119,19 @@ public class AccountDto {
         this.active = active;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public LocalDateTime getLastSuccessfulLogin() {
-        return lastSuccessfulLogin;
-    }
-
-    public void setLastSuccessfulLogin(LocalDateTime lastSuccessfulLogin) {
-        this.lastSuccessfulLogin = lastSuccessfulLogin;
-    }
-
-    public String getLastSuccessfulLoginIp() {
-        return lastSuccessfulLoginIp;
-    }
-
-    public void setLastSuccessfulLoginIp(String lastSuccessfulLoginIp) {
-        this.lastSuccessfulLoginIp = lastSuccessfulLoginIp;
-    }
-
-    public LocalDateTime getLastUnsuccessfulLogin() {
-        return lastUnsuccessfulLogin;
-    }
-
-    public void setLastUnsuccessfulLogin(LocalDateTime lastUnsuccessfulLogin) {
-        this.lastUnsuccessfulLogin = lastUnsuccessfulLogin;
-    }
-
-    public String getLastUnsuccessfulLoginIp() {
-        return lastUnsuccessfulLoginIp;
-    }
-
-    public void setLastUnsuccessfulLoginIp(String lastUnsuccessfulLoginIp) {
-        this.lastUnsuccessfulLoginIp = lastUnsuccessfulLoginIp;
-    }
-
-    public Integer getUnsuccessfulLoginCounter() {
-        return unsuccessfulLoginCounter;
-    }
-
-    public void setUnsuccessfulLoginCounter(Integer unsuccessfulLoginCounter) {
-        this.unsuccessfulLoginCounter = unsuccessfulLoginCounter;
-    }
-
     public String getLanguage() {
         return language;
     }
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }
