@@ -1,11 +1,11 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
+import java.util.List;
+import javax.ejb.Local;
+import javax.servlet.ServletContext;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-
-import javax.ejb.Local;
-import java.util.List;
 
 /**
  * Interfejs Account manager.
@@ -18,9 +18,11 @@ public interface AccountManager {
      *
      * @param account     nowe konto
      * @param accessLevel poziom dostępu nowego konta
+     * @param servletContext kontekst serwletów, służy do współdzielenia informacji
+     *                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void createAccount(Account account, AccessLevel accessLevel) throws AppBaseException;
+    void createAccount(Account account, AccessLevel accessLevel, ServletContext servletContext) throws AppBaseException;
 
     /**
      * Confirm account.
@@ -34,10 +36,10 @@ public interface AccountManager {
     /**
      * Confirm account.
      *
-     * @param login login
+     * @param jwt token jwt
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void confirmAccount(String login) throws AppBaseException;
+    void confirmAccountByToken(String jwt) throws AppBaseException;
 
 
     /**
