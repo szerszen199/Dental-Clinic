@@ -23,7 +23,7 @@ public class InactivatedAccountDeleter {
     /**
      * automatycznie kolejkuje usuwanie nie aktywnych kont.
      */
-    @Schedule(hour = "*/1", minute = "*", second = "*", info = "Every 1 hour timer")
+    @Schedule(hour = "*", minute = "1", second = "1", info = "Every 1 hour timer")
     public void automaticallyScheduled() {
         List<Account> notEnabledAccounts = accountManager.findByEnabled(false);
         for (Account notEnabledAccount : notEnabledAccounts) {
