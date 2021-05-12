@@ -17,6 +17,10 @@ import java.util.Properties;
 public class PropertiesLoader {
 
     private String confirmationJwtSecret;
+    private Long confirmationJwtExpiration;
+    private Long deleteInactiveAccount;
+
+
     private String jwtSecret;
     private Long invalidLoginCountBlock;
 
@@ -42,7 +46,14 @@ public class PropertiesLoader {
         return confirmationJwtExpiration;
     }
 
-    private Long confirmationJwtExpiration;
+    /**
+     * Pobiera pole delete inactive account.
+     *
+     * @return the delete inactive account
+     */
+    public Long getDeleteInactiveAccount() {
+        return deleteInactiveAccount;
+    }
 
     public String getJwtSecret() {
         return jwtSecret;
@@ -70,6 +81,7 @@ public class PropertiesLoader {
         confirmationJwtSecret = prop.getProperty("confirmation.jwt.secret");
         jwtSecret = prop.getProperty("jwt.secret");
         confirmationJwtExpiration = Long.valueOf(prop.getProperty("confirmation.jwt.expirationMs"));
+        deleteInactiveAccount = Long.valueOf(prop.getProperty("delete.inactive.accountMs"));
         jwtExpiration = Long.valueOf(prop.getProperty("jwt.expirationMs"));
         invalidLoginCountBlock = Long.valueOf(prop.getProperty("invalid.login.count.block"));
     }
