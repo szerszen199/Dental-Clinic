@@ -56,6 +56,7 @@
         <payara.password>GenWydvam0</payara.password>
         <payara.hostname>studapp.it.p.lodz.pl</payara.hostname>
         <payara.domainName>domain1</payara.domainName>
+        <servlet.port>8001</servlet.port>
     </properties>
 
     <dependencies>
@@ -185,6 +186,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.0</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -291,6 +295,11 @@
                     <container>
                         <containerId>payara</containerId>
                         <type>remote</type>
+                        <artifactInstaller>
+                            <groupId>fish.payara.distributions</groupId>
+                            <artifactId>payara</artifactId>
+                            <version>5.2021.1</version>
+                        </artifactInstaller>
                     </container>
                     <configuration>
                         <type>runtime</type>
@@ -299,7 +308,7 @@
                             <cargo.remote.password>${payara.password}</cargo.remote.password>
                             <cargo.glassfish.admin.port>${payara.adminPort}</cargo.glassfish.admin.port>
                             <cargo.hostname>${payara.hostname}</cargo.hostname>
-                            <servlet.port>8080</servlet.port>
+                            <cargo.servlet.port>${servlet.port}</cargo.servlet.port>
                         </properties>
                     </configuration>
                 </configuration>
@@ -309,27 +318,13 @@
                         <artifactId>deployment-client</artifactId>
                         <version>5.1.0</version>
                     </dependency>
+                    <dependency>
+                        <groupId>javax.xml.bind</groupId>
+                        <artifactId>jaxb-api</artifactId>
+                        <version>2.3.0</version>
+                    </dependency>
                 </dependencies>
-                <executions>
-                    <execution>
-                        <id>deploy</id>
-<!--                        <phase>pre-integration-test</phase>-->
-                        <goals>
-                            <goal>start</goal>
-                            <goal>redeploy</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>undeploy</id>
-<!--                        <phase>post-integration-test</phase>-->
-                        <goals>
-                            <goal>undeploy</goal>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
-
 </project>
