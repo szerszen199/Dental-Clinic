@@ -127,6 +127,7 @@ public class AccountEndpoint {
      *
      * @param id    id uzytkownika, któremu zostanie odebrany poziom dostępu
      * @param level level odbierany poziom odstępu
+     * @throws AppBaseException typu AppBaseException
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{id}/{level}
     @PUT
@@ -142,6 +143,7 @@ public class AccountEndpoint {
      *
      * @param login login uzytkownika, któremu zostanie odebrany poziom dostępu
      * @param level level odbierany poziom odstępu
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{login}/{level}
     @PUT
