@@ -24,6 +24,13 @@ public interface AccountManager {
     void createAccount(Account account) throws AppBaseException;
 
     /**
+     * usun konto.
+     *
+     * @param account     konto do usuniecia
+     */
+    public void removeAccount(Account account);
+
+    /**
      * Potwierdzenie konta.
      *
      * @param id id
@@ -109,6 +116,14 @@ public interface AccountManager {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     Account findByLogin(String login) throws AppBaseException;
+
+    /**
+     * Wyszukuje Listę kont na podstawie aktywacji.
+     *
+     * @param enabled konta o danej wartosci do znalezienia
+     * @return znalezione konto
+     */
+    List<Account> findByEnabled(boolean enabled);
 
     /**
      * Resetuje hasło do konta o podanym id. Ustawia alfanumeryczne hasło
