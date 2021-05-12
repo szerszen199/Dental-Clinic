@@ -10,9 +10,11 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.UserInfoResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtLoginUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
+import javax.interceptor.Interceptors;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStoreHandler;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +31,7 @@ import java.time.LocalDateTime;
  */
 @Path("login")
 @PermitAll
+@Interceptors({LogInterceptor.class})
 public class LoginEndpoint {
 
     private static final String[] HEADERS_TO_TRY = {

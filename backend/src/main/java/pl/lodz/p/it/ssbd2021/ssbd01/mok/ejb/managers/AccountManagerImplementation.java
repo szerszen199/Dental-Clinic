@@ -9,6 +9,7 @@ import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.interceptor.Interceptors;
 import javax.security.enterprise.SecurityContext;
 import javax.servlet.ServletContext;
 import javax.ws.rs.core.Context;
@@ -29,6 +30,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 
@@ -38,6 +40,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
  */
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@Interceptors(LogInterceptor.class)
 public class AccountManagerImplementation implements AccountManager {
 
     private static final String DEFAULT_URL = "http://studapp.it.p.lodz.pl:8001";
