@@ -133,7 +133,7 @@ public class AccountEndpoint {
     @RolesAllowed({RolesStringsTmp.admin})
     @Path("/revokeAccessLevelById/{id}/{level}")
     @Produces({MediaType.APPLICATION_JSON})
-    public void revokeAccessLevel(@PathParam("id") Long id, @PathParam("level") String level) {
+    public void revokeAccessLevel(@PathParam("id") Long id, @PathParam("level") String level) throws AppBaseException {
         accessLevelManager.revokeAccessLevel(id, level);
     }
 
@@ -148,7 +148,7 @@ public class AccountEndpoint {
     @RolesAllowed({RolesStringsTmp.admin})
     @Path("/revokeAccessLevelByLogin/{login}/{level}")
     @Produces({MediaType.APPLICATION_JSON})
-    public void revokeAccessLevel(@PathParam("login") String login, @PathParam("level") String level) {
+    public void revokeAccessLevel(@PathParam("login") String login, @PathParam("level") String level) throws AppBaseException {
         accessLevelManager.revokeAccessLevel(login, level);
     }
 
@@ -190,7 +190,7 @@ public class AccountEndpoint {
     @RolesAllowed({RolesStringsTmp.admin})
     @Path("/addLevelByLogin")
     @Produces({MediaType.APPLICATION_JSON})
-    public void addAccessLevel(AccessLevelDto accessLevelDto) {
+    public void addAccessLevel(AccessLevelDto accessLevelDto) throws AppBaseException {
         accessLevelManager.addAccessLevel(accessLevelDto.getLogin(), accessLevelDto.getLevel());
     }
 

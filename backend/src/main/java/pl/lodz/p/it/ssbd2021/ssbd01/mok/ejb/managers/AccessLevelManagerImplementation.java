@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
 
 import javax.ejb.Stateful;
@@ -19,7 +20,7 @@ public class AccessLevelManagerImplementation implements AccessLevelManager {
 
 
     @Override
-    public void revokeAccessLevel(Long id, String level) {
+    public void revokeAccessLevel(Long id, String level) throws AppBaseException {
         AccessLevel accessLevel = accessLevelFacade.findByAccountIdAndAccessLevel(id, level);
         if (accessLevel.getActive()) {
             accessLevel.setActive(false);
@@ -27,7 +28,7 @@ public class AccessLevelManagerImplementation implements AccessLevelManager {
     }
 
     @Override
-    public void revokeAccessLevel(String login, String level) {
+    public void revokeAccessLevel(String login, String level) throws AppBaseException {
         AccessLevel accessLevel = accessLevelFacade.findByAccountLoginAndAccessLevel(login, level);
         if (accessLevel.getActive()) {
             accessLevel.setActive(false);
@@ -35,7 +36,7 @@ public class AccessLevelManagerImplementation implements AccessLevelManager {
     }
 
     @Override
-    public void addAccessLevel(String login, String level) {
+    public void addAccessLevel(String login, String level) throws AppBaseException {
         AccessLevel accessLevel = accessLevelFacade.findByAccountLoginAndAccessLevel(login, level);
         if (!accessLevel.getActive()) {
             accessLevel.setActive(true);
