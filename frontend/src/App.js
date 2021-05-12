@@ -1,37 +1,18 @@
 import React from "react";
-import Navbar from "react-bootstrap/Navbar";
 import "./App.css";
-import Routes from "./router/Routes";
-import Nav from "react-bootstrap/Nav";
-import { LinkContainer } from "react-router-bootstrap";
+import Patient from "./views/Patient/Patient";
+import Guest from "./views/Guest/Guest";
 
 function App() {
-    return (
-        <div className="App container py-3">
-            <Navbar collapseOnSelect bg="light" expand="md" className="mb-3">
-                <LinkContainer to="/">
-                    <Navbar.Brand className="font-weight-bold text-muted">
-                        Home
-                    </Navbar.Brand>
-                </LinkContainer>
-                <Navbar.Toggle />
-                <Navbar.Collapse className="justify-content-end">
-                    <Nav activeKey={window.location.pathname}>
-                        <LinkContainer to="/register">
-                            <Nav.Link>Register</Nav.Link>
-                        </LinkContainer>
-                        <LinkContainer to="/login">
-                            <Nav.Link>Login</Nav.Link>
-                        </LinkContainer>
-                        <LinkContainer to="/accounts">
-                            <Nav.Link>Accounts</Nav.Link>
-                        </LinkContainer>
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar>
-            <Routes />
-        </div>
-    );
+    if (false === true) {
+        return (
+            <Guest/>
+        );
+    } else {
+        return (
+            <Patient/>
+        );
+    }
 }
 
 export default App;

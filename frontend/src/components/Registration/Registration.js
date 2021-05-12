@@ -7,6 +7,7 @@ export default function Registration() {
     const [login, setLogin] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [repeatedPassword, setRepeatedPassword] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
@@ -19,11 +20,15 @@ export default function Registration() {
         }
 
         function emailCorrect() {
-            return email.length > 0;
+            return email.length > 7;
         }
 
         function passwordCorrect() {
-            return password.length > 0;
+            return password.length > 7;
+        }
+
+        function repeatedPasswordCorrect() {
+            return repeatedPassword.length > 0 && password === repeatedPassword;
         }
 
         function firstNameCorrect() {
@@ -35,7 +40,7 @@ export default function Registration() {
         }
 
         function phoneNumberCorrect() {
-            return phoneNumber.length > 0;
+            return phoneNumber.length > 0 && /^\d+$/.test(phoneNumber);
         }
 
         // TODO: przypadek obcokrajowca wymusza że peselu może nie być ale nadal warto by go zwalidowac, tylko jak?
@@ -43,7 +48,7 @@ export default function Registration() {
             return true;
         }
 
-        return emailCorrect() && passwordCorrect() && loginCorrect() && firstNameCorrect() && lastNameCorrect() && phoneNumberCorrect() && peselCorrect();
+        return emailCorrect() && passwordCorrect() && repeatedPasswordCorrect() && loginCorrect() && firstNameCorrect() && lastNameCorrect() && phoneNumberCorrect() && peselCorrect();
     }
 
 
@@ -80,6 +85,14 @@ export default function Registration() {
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                    />
+                </Form.Group>
+                <Form.Group size="lg" controlId="repeatedPassword">
+                    <Form.Label>Repeat new password</Form.Label>
+                    <Form.Control
+                        type="password"
+                        value={repeatedPassword}
+                        onChange={(e) => setRepeatedPassword(e.target.value)}
                     />
                 </Form.Group>
                 <Form.Group size="lg" controlId="firstName">

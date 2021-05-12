@@ -1,15 +1,15 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.CURRENT_PASSWORD_NOT_MATCH;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.NEW_PASSWORDS_NOT_MATCH;
 
 /**
  * Wyjątek reprezentujący błą związany z różniącymi się powtórzeniami 
  * nowego hasła podczas operacji zmiany hasła.
  */
-public class PasswordsNotMatchException extends BaseException {
-    
-    private static final String NEW_PASSWORDS_NOT_MATCH = "new_passwords_do_not_match";
-    private static final String CURRENT_PASSWORD_NOT_MATCH = "current_password_does_not_match";
+public class PasswordsNotMatchException extends AppBaseException {
 
     /**
      * Tworzy nową instancję wyjątku PasswordsNotMatchException.
@@ -54,4 +54,5 @@ public class PasswordsNotMatchException extends BaseException {
     public static PasswordsNotMatchException currentPasswordNotMatch() {
         return new PasswordsNotMatchException(CURRENT_PASSWORD_NOT_MATCH);
     }
+
 }

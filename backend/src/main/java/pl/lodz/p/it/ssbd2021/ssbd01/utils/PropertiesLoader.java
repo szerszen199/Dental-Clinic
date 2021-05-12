@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -15,6 +17,16 @@ import java.util.Properties;
 public class PropertiesLoader {
 
     private String confirmationJwtSecret;
+    private Long confirmationJwtExpiration;
+    private Long deleteInactiveAccount;
+
+
+    private String jwtSecret;
+    private Long invalidLoginCountBlock;
+
+    public Long getInvalidLoginCountBlock() {
+        return invalidLoginCountBlock;
+    }
 
     /**
      * Pobiera pole confirmation jwt secret.
@@ -34,22 +46,44 @@ public class PropertiesLoader {
         return confirmationJwtExpiration;
     }
 
-    private Long confirmationJwtExpiration;
+    /**
+     * Pobiera pole delete inactive account.
+     *
+     * @return the delete inactive account
+     */
+    public Long getDeleteInactiveAccount() {
+        return deleteInactiveAccount;
+    }
+
+    public String getJwtSecret() {
+        return jwtSecret;
+    }
+
+    public Long getJwtExpiration() {
+        return jwtExpiration;
+    }
+
+    private Long jwtExpiration;
 
     @PostConstruct
     private void loadProperties() {
         Properties prop = null;
         try {
             prop = new Properties();
-            InputStream inputStream  = PropertiesLoader.class.getClassLoader()
+            InputStream inputStream = PropertiesLoader.class.getClassLoader()
                     .getResourceAsStream("application.properties");
             if (inputStream != null) {
                 prop.load(inputStream);
             }
         } catch (IOException e) {
-            // TODO: 18.04.2021
+            //TODO naprawić nie może byc checked exception
+            e.printStackTrace();
         }
         confirmationJwtSecret = prop.getProperty("confirmation.jwt.secret");
+        jwtSecret = prop.getProperty("jwt.secret");
         confirmationJwtExpiration = Long.valueOf(prop.getProperty("confirmation.jwt.expirationMs"));
+        deleteInactiveAccount = Long.valueOf(prop.getProperty("delete.inactive.accountMs"));
+        jwtExpiration = Long.valueOf(prop.getProperty("jwt.expirationMs"));
+        invalidLoginCountBlock = Long.valueOf(prop.getProperty("invalid.login.count.block"));
     }
 }

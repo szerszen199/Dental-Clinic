@@ -1,9 +1,13 @@
-package pl.lodz.p.it.ssbd2021.ssbd01.exceptions;
+package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok;
+
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EDIT_VALIDATION_ERROR;
 
 /**
  * Wyjątek.
  */
-public class DataValidationException extends BaseException {
+public class DataValidationException extends AppBaseException {
 
     /**
      * Tworzy nową instancję klasy wyjątku DataValidationException.
@@ -25,11 +29,12 @@ public class DataValidationException extends BaseException {
     }
 
     /**
-     * Tworzy wyjątek reprezentujący brak danego poziomu dostępu.
+     * Wyjątek reprezentujący błędną walidację danych konta podczas edycji.
      *
-     * @return wyjatek DataValidationException
+     * @return wyjątek typu DataValidationExceptionApp
      */
-    public static DataValidationException noSuchAccessLevel() {
-        return new DataValidationException("Nie istnieje taki poziom dostępu");
+    public static DataValidationException accountEditValidationError() {
+        return new DataValidationException(ACCOUNT_EDIT_VALIDATION_ERROR);
     }
+
 }

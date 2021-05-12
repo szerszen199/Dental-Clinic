@@ -1,0 +1,11 @@
+@media all and (min-width: 480px) {
+    .EditAccount {
+        padding: -60px 0;
+    }
+
+    .EditAccount form {
+        margin: 0 auto;
+        max-width: 520px;
+    }
+
+}
