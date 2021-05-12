@@ -55,7 +55,6 @@
         <payara.username>admin</payara.username>
         <payara.password>GenWydvam0</payara.password>
         <payara.hostname>studapp.it.p.lodz.pl</payara.hostname>
-        <payara.domainName>domain1</payara.domainName>
         <servlet.port>8001</servlet.port>
     </properties>
 
@@ -313,17 +312,33 @@
                     </configuration>
                 </configuration>
                 <dependencies>
-                    <dependency>
-                        <groupId>org.glassfish.main.deployment</groupId>
-                        <artifactId>deployment-client</artifactId>
-                        <version>5.1.0</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>javax.xml.bind</groupId>
-                        <artifactId>jaxb-api</artifactId>
-                        <version>2.3.0</version>
-                    </dependency>
+                <dependency>
+                    <groupId>org.glassfish.main.deployment</groupId>
+                    <artifactId>deployment-client</artifactId>
+                    <version>5.1.0</version>
+                </dependency>
+                <dependency>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                    <version>2.3.0</version>
+                </dependency>
                 </dependencies>
+                <executions>
+                    <execution>
+                        <id>deploy</id>
+                        <goals>
+                            <goal>start</goal>
+                            <goal>redeploy</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>undeploy</id>
+                        <goals>
+                            <goal>undeploy</goal>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
