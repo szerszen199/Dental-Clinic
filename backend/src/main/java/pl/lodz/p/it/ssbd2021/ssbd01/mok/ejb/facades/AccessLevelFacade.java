@@ -46,6 +46,7 @@ public class AccessLevelFacade extends AbstractFacade<AccessLevel> {
      * @param login login użytkownika
      * @param level level szukany poziom dostępu
      * @return access level zadany poziom dostępu dla zadanego użytkownika
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     public AccessLevel findByAccountLoginAndAccessLevel(String login, String level) throws AppBaseException {
         TypedQuery<AccessLevel> tq = em.createNamedQuery("AccessLevel.findByAccountLoginAndAccessLevel", AccessLevel.class);
@@ -66,6 +67,7 @@ public class AccessLevelFacade extends AbstractFacade<AccessLevel> {
      * @param id    id użytkownika
      * @param level level szukany poziom dostępu
      * @return access level zadany poziom dostępu dla zadanego użytkownika
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     public AccessLevel findByAccountIdAndAccessLevel(Long id, String level) throws AppBaseException {
         TypedQuery<AccessLevel> tq = em.createNamedQuery("AccessLevel.findByAccountIdAndAccessLevel", AccessLevel.class);

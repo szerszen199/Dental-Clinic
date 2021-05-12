@@ -15,6 +15,7 @@ public interface AccessLevelManager {
      *
      * @param id    id uzytkownika, któremu zostanie odebrany poziom dostępu
      * @param level level odbierany poziom odstępu
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     void revokeAccessLevel(Long id, String level) throws AppBaseException;
 
@@ -23,6 +24,7 @@ public interface AccessLevelManager {
      *
      * @param login login uzytkownika, któremu zostanie odebrany poziom dostępu
      * @param level level odbierany poziom odstępu
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     void revokeAccessLevel(String login, String level) throws AppBaseException;
 
@@ -32,6 +34,7 @@ public interface AccessLevelManager {
      *
      * @param level nazwa poziomu dostępu konta
      * @param login login użytkownika, któremu zostanie dodany poziom dostępu
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     void addAccessLevel(String login, String level) throws AppBaseException;
 
