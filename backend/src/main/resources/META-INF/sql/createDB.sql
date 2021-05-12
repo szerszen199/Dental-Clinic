@@ -263,7 +263,7 @@ CREATE SEQUENCE documentation_entries_seq -- Sekwencja uzywana do tworzenia pola
 CREATE TABLE prescriptions
 (
     id                     BIGINT PRIMARY KEY,                             -- Klucz główny tabeli
-    business_id            CHAR(8)     NOT NULL,                           -- biznes id
+    business_id            CHAR(8)     NOT NULL                           -- biznes id
         CONSTRAINT pre_business_id_unique UNIQUE,
     expiration             TIMESTAMPTZ NOT NULL,                           -- data ważności recepty
     patient_id             BIGINT      NOT NULL,                           -- Id pacjenta, którego dotyczy recepta
