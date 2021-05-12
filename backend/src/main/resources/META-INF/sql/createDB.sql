@@ -32,9 +32,9 @@ CREATE TABLE accounts
     enabled                                   BOOL DEFAULT FALSE NOT NULL, -- Pole reprezentujące czy konto zostało aktywowane po rejestracji, domyśnie wartość fałsz (nie aktywowane).
     is_dark_mode                              bool default false,
     last_successful_login                     TIMESTAMPTZ,                 -- Pole reprezentujące datę ostatniego logowania użytkownika
-    last_successful_login_ip                  VARCHAR(15),                 -- Pole reprezentujące ip ostatniego logowania użytkownika
+    last_successful_login_ip                  VARCHAR(256),                 -- Pole reprezentujące ip ostatniego logowania użytkownika
     last_unsuccessful_login                   TIMESTAMPTZ,                 -- Pole reprezentujące datę ostatniego nieudanego logowania użytkownika
-    last_unsuccessful_login_ip                VARCHAR(15),                 -- Pole reprezentujące ip ostatniego nieudanego logowania użytkownika
+    last_unsuccessful_login_ip                VARCHAR(256),                 -- Pole reprezentujące ip ostatniego nieudanego logowania użytkownika
     unsuccessful_login_count_since_last_login INT  DEFAULT 0               -- Ilość nieudanych logowań od czasu ostatniego udanego logowania
         CONSTRAINT acc_unsuccessful_login_count_since_last_login_gr0 CHECK
             ( unsuccessful_login_count_since_last_login >= 0 ),            -- bigger than 0

@@ -6,6 +6,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.common;
 public class I18n {
 
     public static final String PASSWORDS_NOT_DIFFER = "both_passwords_are_same";
+    public static final String AUTHENTICATION_FAILURE = "invalid_login_password_combination";
     public static final String PASSWORD_TOO_SHORT = "password_too_short";
     public static final String NEW_PASSWORDS_NOT_MATCH = "new_passwords_do_not_match";
     public static final String CURRENT_PASSWORD_NOT_MATCH = "current_password_does_not_match";
