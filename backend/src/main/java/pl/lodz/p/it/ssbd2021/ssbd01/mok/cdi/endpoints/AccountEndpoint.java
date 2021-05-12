@@ -13,14 +13,12 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
-import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
@@ -36,18 +34,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import pl.lodz.p.it.ssbd2021.ssbd01.common.RolesStringsTmp;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 
 /**
  * Typ Account endpoint.
@@ -55,9 +41,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 @Path("account")
 @RequestScoped
 public class AccountEndpoint {
-
-    @EJB
-    private JwtEmailConfirmationUtils jwtEmailConfirmationUtils;
 
     @Inject
     private AccountManager accountManager;
@@ -68,8 +51,7 @@ public class AccountEndpoint {
     /**
      * Tworzy nowe konto.
      *
-     *
-     * @param accountDto obiekt zawierający login, email, hasło i inne wymagane dane
+     * @param accountDto     obiekt zawierający login, email, hasło i inne wymagane dane
      * @param servletContext kontekst serwletów, służy do współdzielenia informacji
      *                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
@@ -83,7 +65,6 @@ public class AccountEndpoint {
 
         accountManager.createAccount(
                 AccountConverter.createAccountEntityFromDto(accountDto),
-                new PatientData(),
                 servletContext
         );
     }
@@ -124,7 +105,7 @@ public class AccountEndpoint {
      * Edycja konta innego użytkownika.
      *
      * @param accountDto the edited account
-     * @param login  login edytowanego konta
+     * @param login      login edytowanego konta
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit/other

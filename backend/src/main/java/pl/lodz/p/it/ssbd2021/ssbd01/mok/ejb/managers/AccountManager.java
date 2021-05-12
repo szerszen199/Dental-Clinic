@@ -20,12 +20,11 @@ public interface AccountManager {
      * Utworzenie konta przy rejestracji.
      *
      * @param account        nowe konto
-     * @param accessLevel    poziom dostępu nowego konta
      * @param servletContext kontekst serwletów, służy do współdzielenia informacji
      *                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void createAccount(Account account, AccessLevel accessLevel, ServletContext servletContext) throws AppBaseException;
+    void createAccount(Account account, ServletContext servletContext) throws AppBaseException;
 
     /**
      * usun konto.
