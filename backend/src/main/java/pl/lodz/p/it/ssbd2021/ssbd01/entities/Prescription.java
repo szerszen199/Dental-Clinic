@@ -15,6 +15,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Typ Prescription.
@@ -43,7 +44,8 @@ public class Prescription extends AbstractEntity implements Serializable {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "business_id", nullable = false)
+    @Column(name = "business_id", columnDefinition = "bpchar", nullable = false)
+    @Size(min = 8, max = 8)
     @NotNull
     private String business;
 
