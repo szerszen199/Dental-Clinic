@@ -70,7 +70,6 @@ public class Account extends AbstractEntity implements Serializable {
     @Column(name = "login", updatable = false, nullable = false, length = 60)
     @NotNull
     @Login
-    @Size(min = 1, max = 60)
     private String login;
 
     @Basic(optional = false)

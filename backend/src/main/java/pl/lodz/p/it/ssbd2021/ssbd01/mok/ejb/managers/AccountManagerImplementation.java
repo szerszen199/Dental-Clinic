@@ -15,6 +15,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AdminData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorData;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.DataValidationException;
@@ -48,11 +49,14 @@ public class AccountManagerImplementation implements AccountManager {
     private RandomPasswordGenerator passwordGenerator;
 
     @Override
-    public void createAccount(Account account, AccessLevel accessLevel) throws AppBaseException {
+    public void createAccount(Account account) throws AppBaseException {
         account.setPassword(hashGenerator.generateHash(account.getPassword()));
-        accessLevel.setCreatedBy(account);
-        accessLevel.setAccountId(account);
-        account.getAccessLevels().add(accessLevel);
+
+        AccessLevel patientData = new PatientData();
+        patientData.setActive(true);
+        patientData.setCreatedBy(account);
+        patientData.setAccountId(account);
+        account.getAccessLevels().add(patientData);
 
         AccessLevel receptionistData = new ReceptionistData();
         receptionistData.setActive(false);
