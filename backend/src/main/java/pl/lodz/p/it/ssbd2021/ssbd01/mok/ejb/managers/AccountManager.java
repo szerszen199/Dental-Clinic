@@ -1,14 +1,11 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.ejb.Local;
 import javax.servlet.ServletContext;
-
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-
-import java.time.LocalDateTime;
 
 /**
  * Interfejs Account manager.
@@ -144,14 +141,6 @@ public interface AccountManager {
      * @param account konto, któego hasło ma zostać zresetowane
      */
     void resetPassword(Account account);
-
-    /**
-     * Sprawdza, czy podane konto ma aktywny poziom dostępu administratora.
-     *
-     * @param account sprawdzane konto
-     * @return czy konto posiada aktywne uprawnienia administratora
-     */
-    boolean isAdmin(Account account);
 
     /**
      * Ustawia pole dark mode na {@param isDarkMode} w koncie {@param account}.
