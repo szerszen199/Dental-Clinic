@@ -40,8 +40,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 @Interceptors(LogInterceptor.class)
 public class AccountManagerImplementation implements AccountManager {
 
-    private static final String DEFAULT_URL = "http://studapp.it.p.lodz.pl:8001";
-
     @Inject
     private AccountFacade accountFacade;
 
@@ -94,9 +92,10 @@ public class AccountManagerImplementation implements AccountManager {
         account.setCreatedBy(account);
         accountFacade.create(account);
 
-        this.sendConfirmationLink(
+        mailProvider.sendActivationMail(
                 account.getEmail(),
-                buildConfirmationLink(account.getLogin(), servletContext.getContextPath())
+                servletContext.getContextPath(),
+                jwtEmailConfirmationUtils.generateRegistrationConfirmationJwtTokenForUser(account.getLogin())
         );
     }
 
@@ -276,19 +275,5 @@ public class AccountManagerImplementation implements AccountManager {
         if (currentPasswordHash.contentEquals(hashGenerator.generateHash(newPassword))) {
             throw PasswordsSameException.passwordsNotDifferent();
         }
-    }
-
-    private void sendConfirmationLink(String email, String link) throws AppBaseException {
-        mailProvider.sendActivationMail(email, link);
-    }
-
-    private String buildConfirmationLink(String login, String defaultContext) {
-        StringBuilder sb = new StringBuilder(DEFAULT_URL);
-
-        sb.append(defaultContext);
-        sb.append("/api/account/confirm?token=");
-        sb.append(jwtEmailConfirmationUtils.generateRegistrationConfirmationJwtTokenForUser(login));
-
-        return sb.toString();
     }
 }
