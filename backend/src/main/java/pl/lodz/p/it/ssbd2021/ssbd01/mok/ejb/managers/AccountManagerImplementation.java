@@ -1,9 +1,8 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
-import java.time.LocalDateTime;
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Stream;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
@@ -13,8 +12,6 @@ import javax.interceptor.Interceptors;
 import javax.security.enterprise.SecurityContext;
 import javax.servlet.ServletContext;
 import javax.ws.rs.core.Context;
-
-import pl.lodz.p.it.ssbd2021.ssbd01.common.Levels;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AdminData;
@@ -279,16 +276,6 @@ public class AccountManagerImplementation implements AccountManager {
         if (currentPasswordHash.contentEquals(hashGenerator.generateHash(newPassword))) {
             throw PasswordsSameException.passwordsNotDifferent();
         }
-    }
-
-    @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public boolean isAdmin(Account account) {
-        Stream<AccessLevel> accessLevels = account.getAccessLevels().stream();
-        return accessLevels.anyMatch(level -> (
-                level.getLevel().equals(Levels.ADMINISTRATOR.getLevel())
-                        && level.getActive()
-        ));
     }
 
     private void sendConfirmationLink(String email, String link) throws AppBaseException {
