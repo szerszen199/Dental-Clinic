@@ -47,15 +47,6 @@ public interface AccountManager {
      */
     void confirmAccountByToken(String jwt) throws AppBaseException;
 
-
-    /**
-     * Pobiera zalogowane konto.
-     *
-     * @return zalogowane konto
-     * @throws AppBaseException wyjątek typu AppBaseException
-     */
-    Account getLoggedInAccount() throws AppBaseException;
-
     /**
      * Metoda służąca do blokowania konta.
      *
