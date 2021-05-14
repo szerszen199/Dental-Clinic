@@ -21,6 +21,7 @@ public class MailProvider {
 
     private static final String FROM = "ssbd202101@gmail.com";
     private static final String PASSWORD = "GenWydvam0";
+    private static final String DEFAULT_URL = "http://studapp.it.p.lodz.pl:8001";
     private Session session;
 
     /**
@@ -50,18 +51,20 @@ public class MailProvider {
     /**
      * Wysyła wiadomość z linkiem aktywacyjnym.
      *
-     * @param to             Adres, na który zostanie wysłana wiadomość.
-     * @param activationLink link aktywacyjny do wysłania na konto.
+     * @param email          Adres, na który zostanie wysłana wiadomość.
+     * @param token          Login konta, którego link aktywacyjny wysyłamy.
+     * @param defaultContext link aktywacyjny do wysłania na konto.
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
-    public void sendActivationMail(String to, String activationLink) throws MailSendingException {
+    public void sendActivationMail(String email, String defaultContext, String token) throws MailSendingException {
         String subject = "Activate your account!";
-        String messageText = 
-                paragraph("Please click link below to verify your account: ") 
-                + hyperlink(activationLink, "Activate");
+        String activationLink = buildConfirmationLink(defaultContext, token);
+        String messageText =
+                paragraph("Please click link below to verify your account: ")
+                        + hyperlink(activationLink, "Activate");
 
         try {
-            sendMail(to, subject, messageText);
+            sendMail(email, subject, messageText);
         } catch (MessagingException e) {
             throw MailSendingException.activationLink();
         }
@@ -87,8 +90,18 @@ public class MailProvider {
     private String paragraph(String text) {
         return "<p>" + text + "</p>";
     }
-    
+
     private String hyperlink(String link, String content) {
         return "<a href=\"" + link + "\">" + content + "</a>";
+    }
+
+    private String buildConfirmationLink(String defaultContext, String token) {
+        StringBuilder sb = new StringBuilder(DEFAULT_URL);
+
+        sb.append(defaultContext);
+        sb.append("/api/account/confirm?token=");
+        sb.append(token);
+
+        return sb.toString();
     }
 }
