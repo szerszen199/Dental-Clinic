@@ -300,11 +300,6 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response resetOthersPassword(@PathParam("id") Long id) throws AppBaseException {
-        Account account = accountManager.getLoggedInAccount();
-        if (account == null) {
-            return Response.status(Status.BAD_REQUEST).build();
-        }
-
         accountManager.resetPassword(id);
         return Response.status(Status.OK).build();
     }
