@@ -113,7 +113,7 @@ CREATE
 
 CREATE VIEW glassfish_auth_view AS -- Widok wykorzystywany w procesie autentykacji i autoryzacji,
 -- zawiera pola login, hasło i poziom dostepu dla każdej kombinacji tabel account i access_level dla której konto jest i aktywne i aktywowane oraz poziom dostępu jest aktywny
-SELECT a.login, a.password, al.level
+SELECT al.id, a.login, a.password, al.level
 FROM accounts a,
      access_levels al
 WHERE (al.account_id = a.id)

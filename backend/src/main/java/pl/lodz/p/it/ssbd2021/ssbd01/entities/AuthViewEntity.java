@@ -29,8 +29,12 @@ import javax.validation.constraints.Size;
         @NamedQuery(name = "AuthViewEntity.findByLogin", query = "SELECT a FROM AuthViewEntity a where a.login = :login")})
 public class AuthViewEntity {
 
-
     @Id
+    @Basic(optional = false)
+    @Column(name = "id", nullable = false, updatable = false, insertable = false)
+    @NotNull
+    private Long id;
+
     @Basic(optional = false)
     @Column(name = "login", updatable = false, nullable = false, length = 60)
     @NotNull
