@@ -9,6 +9,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.UserInfoResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtLoginUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
@@ -63,7 +64,11 @@ public class LoginEndpoint {
      * @param propertiesLoader     properties loader
      */
     @Inject
-    public LoginEndpoint(IdentityStoreHandler identityStoreHandler, JwtLoginUtils jwtUtils, HttpServletRequest httpServletRequest, AccountManager accountManager, PropertiesLoader propertiesLoader) {
+    public LoginEndpoint(IdentityStoreHandler identityStoreHandler,
+                         JwtLoginUtils jwtUtils,
+                         HttpServletRequest httpServletRequest,
+                         AccountManager accountManager,
+                         PropertiesLoader propertiesLoader) {
         this.identityStoreHandler = identityStoreHandler;
         this.jwtUtils = jwtUtils;
         this.request = httpServletRequest;
@@ -102,10 +107,12 @@ public class LoginEndpoint {
         UserInfoResponseDTO userInfoResponseDTO = new UserInfoResponseDTO();
         try {
             accountManager.updateAfterSuccessfulLogin(credentialValidationResult.getCallerPrincipal().getName(), ip, LocalDateTime.now());
-            userInfoResponseDTO.setFirstName(accountManager.getLoggedInAccount().getFirstName());
-            userInfoResponseDTO.setLastName(accountManager.getLoggedInAccount().getLastName());
-            userInfoResponseDTO.setDarkMode(accountManager.getLoggedInAccount().isDarkMode());
-            userInfoResponseDTO.setLanguage(accountManager.getLoggedInAccount().getLanguage());
+
+            Account loggedInAccount = accountManager.findByLogin(loginRequestDTO.getUsername());
+            userInfoResponseDTO.setFirstName(loggedInAccount.getFirstName());
+            userInfoResponseDTO.setLastName(loggedInAccount.getLastName());
+            userInfoResponseDTO.setDarkMode(loggedInAccount.isDarkMode());
+            userInfoResponseDTO.setLanguage(loggedInAccount.getLanguage());
         } catch (AppBaseException e) {
             // TODO: 11.05.2021 Moze tutaj cos zrobic?
             e.printStackTrace();

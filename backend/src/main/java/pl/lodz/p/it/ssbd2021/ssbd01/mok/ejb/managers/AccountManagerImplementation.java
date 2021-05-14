@@ -28,6 +28,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 
@@ -44,10 +45,10 @@ public class AccountManagerImplementation implements AccountManager {
     private AccountFacade accountFacade;
 
     @Inject
-    private AccessLevelFacade accessLevelFacade;
+    private LoggedInAccountUtil loggedInAccountUtil;
 
-    @Context
-    private SecurityContext securityContext;
+    @Inject
+    private AccessLevelFacade accessLevelFacade;
 
     @Inject
     private HashGenerator hashGenerator;
@@ -122,14 +123,6 @@ public class AccountManagerImplementation implements AccountManager {
         }
     }
 
-    @Override
-    public Account getLoggedInAccount() throws AppBaseException {
-        if (securityContext.getCallerPrincipal() == null) {
-            return null;
-        } else {
-            return accountFacade.findByLogin(securityContext.getCallerPrincipal().getName());
-        }
-    }
 
     @Override
     public void lockAccount(Long id) throws AppBaseException {
@@ -156,7 +149,7 @@ public class AccountManagerImplementation implements AccountManager {
 
     @Override
     public void editOtherAccount(Account account) throws AppBaseException {
-        account.setModifiedBy(getLoggedInAccount());
+        account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
         Account old = accountFacade.findByLogin(account.getLogin());
         if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
             throw DataValidationException.accountEditValidationError();
