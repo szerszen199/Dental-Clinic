@@ -26,9 +26,10 @@ public interface AccountManager {
     /**
      * usun konto.
      *
-     * @param account konto do usuniecia
+     * @param id id konta do usuniecia
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void removeAccount(Account account);
+    void removeAccount(Long id) throws AppBaseException;
 
     /**
      * Potwierdzenie konta.
@@ -91,12 +92,12 @@ public interface AccountManager {
     /**
      * Zmienia hasło {@param newPassword} wskazanego konta {@param account}.
      *
-     * @param account     konto, którego hasło jest edytowane
+     * @param login       login konta, którego hasło jest edytowane
      * @param oldPassword stare hasło podane przez użytkownika
      * @param newPassword nowe hasło
      * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                          nie powiedzie się.
      */
-    void changePassword(Account account, String oldPassword, String newPassword) throws AppBaseException;
+    void changePassword(String login, String oldPassword, String newPassword) throws AppBaseException;
 
 
     /**
@@ -129,18 +130,19 @@ public interface AccountManager {
      * Resetuje hasło podanego konta. Ustawia alfanumeryczne hasło o długości
      * 8 znaków.
      *
-     * @param account konto, któego hasło ma zostać zresetowane
+     * @param login login konta, którego hasło ma zostać zresetowane
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void resetPassword(Account account);
+    void resetPassword(String login) throws AppBaseException;
 
     /**
      * Ustawia pole dark mode na {@param isDarkMode} w koncie {@param account}.
      *
-     * @param account    zmieniane konto
+     * @param login      login zmienianego konta
      * @param isDarkMode tryb dark mode
      * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych nie powiedzie się.
      */
-    void setDarkMode(Account account, boolean isDarkMode) throws AppBaseException;
+    void setDarkMode(String login, boolean isDarkMode) throws AppBaseException;
 
 
     /**
