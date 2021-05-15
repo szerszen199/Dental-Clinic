@@ -1,17 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
-import java.text.ParseException;
-import java.time.LocalDateTime;
-import java.util.List;
-import javax.ejb.EJB;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.security.enterprise.SecurityContext;
-import javax.servlet.ServletContext;
-import javax.ws.rs.core.Context;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AdminData;
@@ -26,11 +14,23 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
+import javax.servlet.ServletContext;
+import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.util.List;
 
 
 /**
@@ -39,7 +39,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
-public class AccountManagerImplementation implements AccountManager {
+public class AccountManagerImplementation extends AbstractManager implements AccountManager {
 
     @Inject
     private AccountFacade accountFacade;
