@@ -9,9 +9,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
-import javax.security.enterprise.SecurityContext;
 import javax.servlet.ServletContext;
-import javax.ws.rs.core.Context;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AdminData;
@@ -101,7 +99,8 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
-    public void removeAccount(Account account) {
+    public void removeAccount(Long id) throws AppBaseException {
+        Account account = accountFacade.find(id);
         accountFacade.remove(account);
     }
 
@@ -163,7 +162,8 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
-    public void changePassword(Account account, String oldPassword, String newPassword) throws AppBaseException {
+    public void changePassword(String login, String oldPassword, String newPassword) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
         this.verifyOldPassword(account.getPassword(), oldPassword);
         this.validateNewPassword(account.getPassword(), newPassword);
         account.setPassword(hashGenerator.generateHash(newPassword));
@@ -183,16 +183,13 @@ public class AccountManagerImplementation implements AccountManager {
     @Override
     public void resetPassword(Long id) throws AppBaseException {
         Account account = accountFacade.find(id);
-        String generatedPassword = passwordGenerator.generate(8);
-        String newPasswordHash = hashGenerator.generateHash(generatedPassword);
-
-        account.setPassword(newPasswordHash);
         account.setPassword(generateNewRandomPassword());
         // TODO: send mail with new password
     }
 
     @Override
-    public void resetPassword(Account account) {
+    public void resetPassword(String login) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
         account.setPassword(generateNewRandomPassword());
         // TODO: send mail with new password
     }
@@ -251,7 +248,8 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
-    public void setDarkMode(Account account, boolean isDarkMode) throws AppBaseException {
+    public void setDarkMode(String login, boolean isDarkMode) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
         account.setDarkMode(isDarkMode);
         accountFacade.edit(account);
     }
