@@ -1,10 +1,12 @@
 import React, {useState} from "react";
 import Navbar from "react-bootstrap/Navbar";
 import "./Guest.css";
+import { useLocation } from "react-router-dom";
 import Routes from "../../router/Routes";
 import Nav from "react-bootstrap/Nav";
 import {LinkContainer} from "react-router-bootstrap";
 import {DarkModeSwitch} from 'react-toggle-dark-mode';
+import BreadCrumbs from "../../components/Breadcrumbs/Breadcrumbs";
 
 function Guest() {
     const [isDarkMode, setIsDarkMode] = useState(() => false);
@@ -36,9 +38,11 @@ function Guest() {
                     />
                 </Navbar.Collapse>
             </Navbar>
+            <BreadCrumbs/>
             <Routes/>
         </div>
     );
 }
+
 
 export default Guest;
