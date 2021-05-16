@@ -3,6 +3,7 @@ import "./App.css";
 import Patient from "./views/Patient/Patient";
 import Guest from "./views/Guest/Guest";
 import Admin from "./views/Admin/Admin";
+import Receptionist from "./views/Receptionist/Receptionist";
 
 function App() {
     if (false === true) {
@@ -12,7 +13,8 @@ function App() {
     } else {
         return (
             // <Patient/>
-            <Admin/>
+            // <Admin/>
+            <Receptionist/>
         );
     }
 }
