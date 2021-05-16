@@ -24,10 +24,9 @@ export default function Routes() {
             <Route exact path="/register">
                 <Registration/>
             </Route>
-            <Route exact path="/home">
+            <Route exact path="/guest-home">
                 <Home/>
             </Route>
-
             <Route exact path="/login">
                 <Login />
             </Route>

@@ -7,7 +7,7 @@ const HomeRoute = ({component: Component, authed, ...rest}) => {
             {...rest}
             render={(props) => authed === true
                 ? <Component {...props} />
-                : <Redirect to={{pathname: '/home', state: {from: props.location}}}/>}
+                : <Redirect to={{pathname: '/guest-home', state: {from: props.location}}}/>}
         />
     )
 }
