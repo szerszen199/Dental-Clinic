@@ -41,7 +41,7 @@ function Patient() {
                     <Container fluid>
                         <Row>
                             <Col>
-                                <LinkContainer to="/dashboard">
+                                <LinkContainer to="/">
                                     <Navbar.Brand className="font-weight-bold text-muted">
                                         Home
                                     </Navbar.Brand>
