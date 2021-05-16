@@ -1,15 +1,14 @@
 import React, {useState} from "react";
 import Navbar from "react-bootstrap/Navbar";
-import "./Patient.css";
+import "./Admin.css";
 import Routes from "../../router/Routes";
 import Nav from "react-bootstrap/Nav";
 import {LinkContainer} from "react-router-bootstrap";
 import {DarkModeSwitch} from 'react-toggle-dark-mode';
-import {NavDropdown} from "react-bootstrap";
 import "react-custom-flag-select/lib/react-custom-flag-select.min.css";
 
 
-function Patient() {
+function Admin() {
     const [isDarkMode, setIsDarkMode] = useState(() => false);
     const urlPL = "https://img.icons8.com/color/96/000000/poland-circular.png"
     const urlEN = "https://img.icons8.com/color/48/000000/great-britain-circular.png"
@@ -45,32 +44,11 @@ function Patient() {
                 <Navbar.Toggle/>
                 <Navbar.Collapse className="justify-content-end">
                     <Nav activeKey={window.location.pathname}>
-                        <NavDropdown title="Appointments" id="navbarScrollingDropdown">
-                            <NavDropdown.Item>
-                                <LinkContainer to="/my-appointments">
-                                    <Nav.Link>My appointments</Nav.Link>
-                                </LinkContainer>
-                            </NavDropdown.Item>
-                            <NavDropdown.Item>
-                                <LinkContainer to="/plan-appointment">
-                                    <Nav.Link>Plan an appointment</Nav.Link>
-                                </LinkContainer>
-                            </NavDropdown.Item>
-                            <NavDropdown.Divider/>
-                            <NavDropdown.Item>
-                                <LinkContainer to="/list-doctors">
-                                    <Nav.Link>List of doctors</Nav.Link>
-                                </LinkContainer>
-                            </NavDropdown.Item>
-                        </NavDropdown>
-                        <LinkContainer to="/prescriptions">
-                            <Nav.Link>Prescriptions</Nav.Link>
-                        </LinkContainer>
                         <LinkContainer to="/account">
                             <Nav.Link>My Account</Nav.Link>
                         </LinkContainer>
                         <LinkContainer to="/accounts">
-                            <Nav.Link>Accounts</Nav.Link>
+                            <Nav.Link>User's Accounts</Nav.Link>
                         </LinkContainer>
                     </Nav>
                     <DarkModeSwitch
@@ -90,4 +68,4 @@ function Patient() {
     );
 }
 
-export default Patient;
+export default Admin;
