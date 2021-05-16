@@ -88,21 +88,19 @@ public class LoginEndpoint {
     public Response authenticate(LoginRequestDTO loginRequestDTO) {
         String ip = getClientIpAddress(request);
         CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(loginRequestDTO.toCredential());
-        if (credentialValidationResult.getStatus() != CredentialValidationResult.Status.VALID) {
-            // TODO: 11.05.2021 Trzeba jakoś sprawdzić czy konto jest zablokowane i wtedy inny err
-            try {
+        try {
+        Account account = accountManager.findByLogin(loginRequestDTO.getUsername());
+        if (credentialValidationResult.getStatus() != CredentialValidationResult.Status.VALID||!account.getActive()) {
                 accountManager.updateAfterUnsuccessfulLogin(loginRequestDTO.getUsername(), ip, LocalDateTime.now());
-                Account account = accountManager.findByLogin(loginRequestDTO.getUsername());
-                if (account.getUnsuccessfulLoginCounter() >= propertiesLoader.getInvalidLoginCountBlock()) {
+                if (account.getUnsuccessfulLoginCounter() >= propertiesLoader.getInvalidLoginCountBlock() && account.getActive()) {
                     accountManager.lockAccount(account.getId());
                     // TODO: 11.05.2021 informacja na maila? Idk
                 }
-            } catch (AppBaseException e) {
-                // TODO: 11.05.2021 Moze tutaj cos zrobic?
-                e.printStackTrace();
-            }
-
             return Response.status(Response.Status.UNAUTHORIZED).entity(new MessageResponseDto(I18n.AUTHENTICATION_FAILURE)).build();
+        }
+        } catch (AppBaseException e) {
+            // TODO: 11.05.2021 Moze tutaj cos zrobic?
+            e.printStackTrace();
         }
         UserInfoResponseDTO userInfoResponseDTO = new UserInfoResponseDTO();
         try {
