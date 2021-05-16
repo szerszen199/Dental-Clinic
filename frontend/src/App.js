@@ -4,6 +4,7 @@ import Patient from "./views/Patient/Patient";
 import Guest from "./views/Guest/Guest";
 import Admin from "./views/Admin/Admin";
 import Receptionist from "./views/Receptionist/Receptionist";
+import Doctor from "./views/Doctor/Doctor";
 
 function App() {
     if (false === true) {
@@ -14,7 +15,8 @@ function App() {
         return (
             // <Patient/>
             // <Admin/>
-            <Receptionist/>
+            // <Receptionist/>
+            <Doctor/>
         );
     }
 }
