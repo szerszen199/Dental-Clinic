@@ -37,7 +37,7 @@ function Patient() {
     return (
         <div className="App container py-3 ">
             <Navbar collapseOnSelect bg="light" expand="md" className="shadow-box-example mb-3">
-                <LinkContainer to="/dashboard">
+                <LinkContainer to="/">
                     <Navbar.Brand className="font-weight-bold text-muted">
                         Home
                     </Navbar.Brand>
