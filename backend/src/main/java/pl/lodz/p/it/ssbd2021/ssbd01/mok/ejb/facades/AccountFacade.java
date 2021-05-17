@@ -73,10 +73,10 @@ public class AccountFacade extends AbstractFacade<Account> {
     @Override
     public void edit(Account entity) throws AppBaseException {
         try {
-            Account oldAcc = findByLogin(entity.getLogin());
-            Account newAcc = new Account(oldAcc.getId(), entity.getLogin(), entity.getEmail(),
-                    entity.getPassword(), entity.getFirstName(), entity.getLastName(), entity.getPhoneNumber(), entity.getPesel());
-            super.edit(newAcc);
+//            Account oldAcc = findByLogin(entity.getLogin());
+//            Account newAcc = new Account(oldAcc.getId(), entity.getLogin(), entity.getEmail(),
+//                    entity.getPassword(), entity.getFirstName(), entity.getLastName(), entity.getPhoneNumber(), entity.getPesel());
+            super.edit(entity);
         } catch (OptimisticLockException e) {
             throw AppBaseException.optimisticLockError(e);
         } catch (PersistenceException e) {
