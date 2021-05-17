@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import Navbar from "react-bootstrap/Navbar";
 import {LinkContainer} from "react-router-bootstrap";
-import Nav from "react-bootstrap/Nav";
 import {Col, Container, Row} from "react-bootstrap";
 import {DarkModeSwitch} from "react-toggle-dark-mode";
 import Routes from "../../router/Routes";
@@ -10,6 +9,15 @@ import Guest from "../Guest/Guest";
 import Receptionist from "../Receptionist/Receptionist";
 import Admin from "../Admin/Admin";
 import Patient from "../Patient/Patient";
+
+const accessLevelDictionary = {
+    "Guest": "rgba(1, 1, 1, 0.1)",
+    "Patient": "rgba(93, 188, 242, 0.2)",
+    "Receptionist": "rgba(192, 255, 0, 0.4)",
+    "Doctor": "rgba(255, 216, 0, 0.2)",
+    "Admin": "rgba(238, 0, 0, 0.1)",
+};
+var actualAccessLevel = "Doctor";
 
 function MainView() {
     const [isDarkMode, setIsDarkMode] = useState(() => false);
@@ -38,8 +46,9 @@ function MainView() {
 
     return (
         <div className="App container py-3 ">
-            <Navbar collapseOnSelect bg="light" expand="md" className="shadow-box-example mb-3">
+            <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"  style={{ backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
                 <div style={{width: "100%"}}>
+                    {/*style={{ backgroundColor: "rgba(5, 5, 5, 0.2);"}}*/}
                     <Container fluid>
                         <Row>
                             <Col>
@@ -79,6 +88,7 @@ function MainView() {
 
 function Wybierz() {
     // TODO: Wybór na podstawie aktualnej roli
+    actualAccessLevel = "Patient"
     return Patient();
 }
 
