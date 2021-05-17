@@ -15,6 +15,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 
 import java.util.List;
@@ -54,6 +55,9 @@ public class AccountEndpoint {
 
     @Inject
     private AccessLevelManager accessLevelManager;
+
+    @Inject
+    private MailProvider mailProvider;
 
     /**
      * Tworzy nowe konto.
@@ -160,15 +164,16 @@ public class AccountEndpoint {
     /**
      * Metoda służąca do blokowania konta przez administratora.
      *
-     * @param id id blokowanego konta
+     * @param login id blokowanego konta
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
     @RolesAllowed({RolesStringsTmp.admin})
-    @Path("lock/{id}")
+    @Path("lock/{login}")
     @Produces({MediaType.APPLICATION_JSON})
-    public void lockAccount(@PathParam("id") Long id) throws AppBaseException {
-        accountManager.lockAccount(id);
+    public void lockAccount(@PathParam("login") String login) throws AppBaseException {
+        accountManager.lockAccount(login);
+        mailProvider.sendAccountLockByAdminMail(accountManager.findByLogin(login).getEmail());
     }
 
     /**

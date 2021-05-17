@@ -19,8 +19,10 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATE_BUTTON;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATE_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATE_TEXT;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_SUBJECT;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_TEXT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_ADMIN_SUBJECT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_ADMIN_TEXT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_SUBJECT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_TEXT;
 
 @ApplicationScoped
 public class MailProvider {
@@ -77,14 +79,30 @@ public class MailProvider {
     }
 
     /**
-     * Wysyła wiadomość informującą o zablokowanym koncie.
+     * Wysyła wiadomość informującą o zablokowanym koncie przez administratora.
      *
      * @param email          Adres, na który zostanie wysłana wiadomość.
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
-    public void sendAccountLockMail(String email) throws MailSendingException {
-        String subject = ACCOUNT_MAIL_LOCK_SUBJECT;
-        String messageText = paragraph(ACCOUNT_MAIL_LOCK_TEXT);
+    public void sendAccountLockByAdminMail(String email) throws MailSendingException {
+        String subject = ACCOUNT_MAIL_LOCK_BY_ADMIN_SUBJECT;
+        String messageText = paragraph(ACCOUNT_MAIL_LOCK_BY_ADMIN_TEXT);
+        try {
+            sendMail(email, subject, messageText);
+        } catch (MessagingException e) {
+            throw MailSendingException.accountLock();
+        }
+    }
+
+    /**
+     * Wysyła wiadomość informującą o zablokowanym koncie po nieudanych logowaniach.
+     *
+     * @param email          Adres, na który zostanie wysłana wiadomość.
+     * @throws MailSendingException Błąd wysyłania wiadomości.
+     */
+    public void sendAccountLockByUnsuccessfulLoginMail(String email) throws MailSendingException {
+        String subject = ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_SUBJECT;
+        String messageText = paragraph(ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_TEXT);
         try {
             sendMail(email, subject, messageText);
         } catch (MessagingException e) {

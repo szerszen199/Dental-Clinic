@@ -10,6 +10,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.UserInfoResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtLoginUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
@@ -34,6 +35,9 @@ import java.time.LocalDateTime;
 @PermitAll
 @Interceptors({LogInterceptor.class})
 public class LoginEndpoint {
+
+    @Inject
+    private MailProvider mailProvider;
 
     private static final String[] HEADERS_TO_TRY = {
             "X-Forwarded-For",
@@ -93,9 +97,9 @@ public class LoginEndpoint {
             try {
                 accountManager.updateAfterUnsuccessfulLogin(loginRequestDTO.getUsername(), ip, LocalDateTime.now());
                 Account account = accountManager.findByLogin(loginRequestDTO.getUsername());
-                if (account.getUnsuccessfulLoginCounter() >= propertiesLoader.getInvalidLoginCountBlock()) {
-                    accountManager.lockAccount(account.getId());
-                    // TODO: 11.05.2021 informacja na maila? Idk
+                if (account.getUnsuccessfulLoginCounter() >= propertiesLoader.getInvalidLoginCountBlock() && account.getActive()) {
+                    accountManager.lockAccount(account.getLogin());
+                    mailProvider.sendAccountLockByUnsuccessfulLoginMail(account.getEmail());
                 }
             } catch (AppBaseException e) {
                 // TODO: 11.05.2021 Moze tutaj cos zrobic?
