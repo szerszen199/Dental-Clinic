@@ -50,10 +50,10 @@ public interface AccountManager {
     /**
      * Metoda służąca do blokowania konta.
      *
-     * @param id identyfikator blokowanego konta
+     * @param login login blokowanego konta
      * @throws AppBaseException bazowy wyjątek aplikacji
      */
-    void lockAccount(Long id) throws AppBaseException;
+    void lockAccount(String login) throws AppBaseException;
 
     /**
      * Metoda służąca do odblokowywania konta.

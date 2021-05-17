@@ -1,5 +1,16 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
+import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.util.List;
+import javax.ejb.EJB;
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
+import javax.servlet.ServletContext;
+
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AdminData;
@@ -20,17 +31,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
-
-import javax.ejb.EJB;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.servlet.ServletContext;
-import java.text.ParseException;
-import java.time.LocalDateTime;
-import java.util.List;
 
 
 /**
@@ -56,11 +56,11 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @Inject
     private RandomPasswordGenerator passwordGenerator;
 
-    @Inject
-    private MailProvider mailProvider;
-
     @EJB
     private JwtEmailConfirmationUtils jwtEmailConfirmationUtils;
+
+    @Inject
+    private MailProvider mailProvider;
 
     @Override
     public void createAccount(Account account, ServletContext servletContext) throws AppBaseException {
@@ -123,11 +123,12 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         }
     }
 
-
     @Override
-    public void lockAccount(Long id) throws AppBaseException {
-        Account account = accountFacade.find(id);
+    public void lockAccount(String login) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
         account.setActive(false);
+        // TODO: Zastanowić się i ustawić pole modifiedBy po zablokowaniu konta przez system po nieudanych logowaniach
+        //account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
     }
 
     @Override
