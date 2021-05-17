@@ -4,6 +4,8 @@ public class MailSendingException extends AppBaseException {
     
     private static final String ACTIVATION_LINK = "Activation link couldn't be sent.";
 
+    private static final String PASSWORD = "Mail with new password couldn't be sent.";
+
     /**
      * Tworzy nową instancję wyjątku MailSendingException.
      *
@@ -34,5 +36,8 @@ public class MailSendingException extends AppBaseException {
      */
     public static MailSendingException activationLink() {
         return new MailSendingException(ACTIVATION_LINK);
+    }
+    public static MailSendingException password() {
+        return new MailSendingException(PASSWORD);
     }
 }
