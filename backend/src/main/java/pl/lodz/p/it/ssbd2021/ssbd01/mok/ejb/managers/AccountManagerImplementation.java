@@ -55,11 +55,11 @@ public class AccountManagerImplementation implements AccountManager {
     @Inject
     private RandomPasswordGenerator passwordGenerator;
 
-    @Inject
-    private MailProvider mailProvider;
-
     @EJB
     private JwtEmailConfirmationUtils jwtEmailConfirmationUtils;
+
+    @Inject
+    private MailProvider mailProvider;
 
     @Override
     public void createAccount(Account account, ServletContext servletContext) throws AppBaseException {
@@ -123,10 +123,9 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
-    public void lockAccount(Long id) throws AppBaseException {
-        Account account = accountFacade.find(id);
+    public void lockAccount(String login) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
         account.setActive(false);
-        mailProvider.sendAccountLockMail(account.getEmail());
     }
 
     @Override
