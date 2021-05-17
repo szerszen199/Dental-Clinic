@@ -187,20 +187,22 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         String newPasswordHash = hashGenerator.generateHash(generatedPassword);
 
         account.setPassword(newPasswordHash);
-        account.setPassword(generateNewRandomPassword());
-        // TODO: send mail with new password
+        account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+        accountFacade.edit(account);
+        mailProvider.sendNewPasswordEmail(account.getEmail(), generatedPassword);
+        //account.setPassword(generateNewRandomPassword());
     }
 
     @Override
-    public void resetPassword(Account account) {
-        account.setPassword(generateNewRandomPassword());
-        // TODO: send mail with new password
+    public void resetPassword(Account account) throws AppBaseException {
+        String generatedPassword = passwordGenerator.generate(8);
+        String newPasswordHash = hashGenerator.generateHash(generatedPassword);
+        account.setPassword(newPasswordHash);
+        account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+        accountFacade.edit(account);
+        mailProvider.sendNewPasswordEmail(account.getEmail(), generatedPassword);
     }
 
-    private String generateNewRandomPassword() {
-        String generatedPassword = passwordGenerator.generate(8);
-        return hashGenerator.generateHash(generatedPassword);
-    }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void setLastSuccessfulLoginIp(Account account, String ip) throws AppBaseException {
