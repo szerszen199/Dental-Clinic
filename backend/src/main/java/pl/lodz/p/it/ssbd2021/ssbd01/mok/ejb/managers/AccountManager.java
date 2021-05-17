@@ -131,7 +131,7 @@ public interface AccountManager {
      *
      * @param account konto, któego hasło ma zostać zresetowane
      */
-    void resetPassword(Account account);
+    void resetPassword(Account account) throws AppBaseException;
 
     /**
      * Ustawia pole dark mode na {@param isDarkMode} w koncie {@param account}.
