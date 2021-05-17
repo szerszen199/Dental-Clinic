@@ -11,7 +11,7 @@ import Receptionist from "../Receptionist/Receptionist";
 import Admin from "../Admin/Admin";
 import Patient from "../Patient/Patient";
 
-function Wszystko() {
+function MainView() {
     const [isDarkMode, setIsDarkMode] = useState(() => false);
     const urlPL = "https://img.icons8.com/color/96/000000/poland-circular.png"
     const urlEN = "https://img.icons8.com/color/48/000000/great-britain-circular.png"
@@ -82,4 +82,4 @@ function Wybierz() {
     return Patient();
 }
 
-export default Wszystko;
+export default MainView;
