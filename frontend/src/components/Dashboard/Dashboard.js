@@ -3,12 +3,13 @@ import {Card, CardDeck} from "react-bootstrap";
 import tooth from "../../assets/tooth.png"
 import "./Dashboard.css";
 
+
 export default function Dashboard() {
     return (
         <div className="Dashboard">
             <CardDeck>
                 <Card>
-                    <Card.Img variant="top" src={tooth} style={{width: "30px"}} />
+                    <Card.Img variant="top" src={tooth} style={{width: "30px"}}/>
                     <Card.Body>
                         <Card.Title>Nearest appointments</Card.Title>
                         <Card.Text>
@@ -21,7 +22,7 @@ export default function Dashboard() {
                     </Card.Footer>
                 </Card>
                 <Card>
-                    <Card.Img variant="top" src={tooth} style={{width: "30px"}} />
+                    <Card.Img variant="top" src={tooth} style={{width: "30px"}}/>
                     <Card.Body>
                         <Card.Title>Prescriptions</Card.Title>
                         <Card.Text>
@@ -34,7 +35,7 @@ export default function Dashboard() {
                     </Card.Footer>
                 </Card>
                 <Card>
-                    <Card.Img variant="top" src={tooth} style={{width: "30px"}} />
+                    <Card.Img variant="top" src={tooth} style={{width: "30px"}}/>
                     <Card.Body>
                         <Card.Title>Account</Card.Title>
                         <Card.Text>
