@@ -23,11 +23,14 @@ public class I18n {
     public static final String INVALID_CONFIRMATION_TOKEN = "invalid_registration_confirmation_token";
     public static final String MAIL_ACTIVATION_LINK_SEND_ERROR = "mail_activation_link_send_error";
     public static final String MAIL_ACCOUNT_LOCK_SEND_ERROR = "mail_account_lock_send_error";
+    public static final String MAIL_ACTIVATION_CONFIRMATION_SEND_ERROR = "mail_activation_confirmation_send_error";
 
 
     public static final String ACCOUNT_MAIL_ACTIVATE_SUBJECT = "account_mail_active_subject";
     public static final String ACCOUNT_MAIL_ACTIVATE_TEXT = "account_mail_active_text";
     public static final String ACCOUNT_MAIL_ACTIVATE_BUTTON = "account_mail_active_button";
+    public static final String ACCOUNT_MAIL_ACTIVATION_CONFIRMATION_SUBJECT = "account_mail_activation_confirmation_subject";
+    public static final String ACCOUNT_MAIL_ACTIVATION_CONFIRMATION_TEXT = "account_mail_activation_confirmation_text";
     public static final String ACCOUNT_MAIL_LOCK_BY_ADMIN_SUBJECT = "account_mail_lock_by_admin_subject";
     public static final String ACCOUNT_MAIL_LOCK_BY_ADMIN_TEXT = "account_mail_lock_by_admin_text";
     public static final String ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_SUBJECT = "account_mail_lock_by_unsuccessful_login_subject";
