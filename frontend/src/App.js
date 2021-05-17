@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import Wszystko from "./views/Wszystko/Wszystko";
+import Wszystko from "./views/MainView/MainView";
 
 function App() {
     return (

@@ -30,9 +30,6 @@ function Patient() {
             <LinkContainer to="/prescriptions">
                 <Nav.Link>Prescriptions</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/accounts">
-                <Nav.Link>Accounts</Nav.Link>
-            </LinkContainer>
             <NavDropdown title="My Account" id="navbarScrollingDropdown">
                 <NavDropdown.Item>
                     <LinkContainer to="/account">
