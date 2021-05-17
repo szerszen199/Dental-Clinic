@@ -126,6 +126,8 @@ public class AccountManagerImplementation implements AccountManager {
     public void lockAccount(String login) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
         account.setActive(false);
+        // TODO: Zastanowić się i ustawić pole modifiedBy po zablokowaniu konta przez system po nieudanych logowaniach
+        //account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
     }
 
     @Override
