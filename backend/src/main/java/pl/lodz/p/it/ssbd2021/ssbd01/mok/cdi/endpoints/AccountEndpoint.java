@@ -236,6 +236,7 @@ public class AccountEndpoint {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @GET
+    @RolesAllowed({RolesStringsTmp.admin})
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/accounts")
     public Response getAllAccounts() throws AppBaseException {

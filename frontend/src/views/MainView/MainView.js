@@ -8,6 +8,7 @@ import BreadCrumbs from "../../components/Breadcrumbs/Breadcrumbs";
 import Guest from "../Guest/Guest";
 import Receptionist from "../Receptionist/Receptionist";
 import Admin from "../Admin/Admin";
+import ReadinessComponent from "../../components/GetReadinessResource/Readiness"
 import Patient from "../Patient/Patient";
 
 const accessLevelDictionary = {
@@ -80,6 +81,7 @@ function MainView() {
                 </div>
             </Navbar>
             <Routes/>
+            <ReadinessComponent/>
         </div>
     );
 
