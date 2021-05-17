@@ -33,9 +33,6 @@ function Patient() {
         <LinkContainer to="/account">
             <Nav.Link>My Account</Nav.Link>
         </LinkContainer>
-        <LinkContainer to="/accounts">
-            <Nav.Link>Accounts</Nav.Link>
-        </LinkContainer>
         </Nav>
     );
 }
