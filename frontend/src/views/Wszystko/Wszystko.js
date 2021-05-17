@@ -79,7 +79,7 @@ function Wszystko() {
 
 function Wybierz() {
     // TODO: Wybór na podstawie aktualnej roli
-    return Patient();
+    return Receptionist();
 }
 
 export default Wszystko;

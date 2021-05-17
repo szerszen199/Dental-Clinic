@@ -5,6 +5,9 @@ import {LinkContainer} from "react-router-bootstrap";
 import {NavDropdown} from "react-bootstrap";
 import "react-custom-flag-select/lib/react-custom-flag-select.min.css";
 
+function logout(){
+
+}
 
 function Receptionist() {
     return (
@@ -16,12 +19,19 @@ function Receptionist() {
                     </LinkContainer>
                 </NavDropdown.Item>
             </NavDropdown>
-            <LinkContainer to="/account">
-                <Nav.Link>My Account</Nav.Link>
-            </LinkContainer>
             <LinkContainer to="/accounts">
                 <Nav.Link>Accounts</Nav.Link>
             </LinkContainer>
+            <NavDropdown title="My Account" id="navbarScrollingDropdown">
+                <NavDropdown.Item>
+                    <LinkContainer to="/account">
+                        <Nav.Link>Edit My Account</Nav.Link>
+                    </LinkContainer>
+                </NavDropdown.Item>
+                <NavDropdown.Item>
+                    <span onClick={logout} style={{paddingLeft: "8px", color:"rgb(127, 127, 127)"}}>Log out</span>
+                </NavDropdown.Item>
+            </NavDropdown>
         </Nav>
     );
 }
