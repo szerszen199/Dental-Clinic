@@ -5,9 +5,7 @@ import {LinkContainer} from "react-router-bootstrap";
 import {NavDropdown} from "react-bootstrap";
 import "react-custom-flag-select/lib/react-custom-flag-select.min.css";
 
-function logout(){
 
-}
 
 function Receptionist() {
     return (
@@ -34,6 +32,10 @@ function Receptionist() {
             </NavDropdown>
         </Nav>
     );
+}
+
+function logout(){
+
 }
 
 export default Receptionist;
