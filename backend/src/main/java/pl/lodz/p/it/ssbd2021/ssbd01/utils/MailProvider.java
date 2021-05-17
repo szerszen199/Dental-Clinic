@@ -70,6 +70,17 @@ public class MailProvider {
         }
     }
 
+    public void sendNewPasswordEmail(String email, String password) throws MailSendingException
+    {
+        String subject = "New password";
+        String messageText = paragraph("Your new password is: ")+ paragraph(password);
+        try {
+            sendMail(email,subject,messageText);
+        }catch (MessagingException e){
+            throw MailSendingException.password();
+        }
+    }
+
     private void sendMail(String to, String subject, String mailMessage) throws MessagingException {
         MimeMessage message = new MimeMessage(session);
         message.setFrom(new InternetAddress(FROM));
