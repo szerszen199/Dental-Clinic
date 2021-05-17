@@ -19,6 +19,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATE_BUTTON;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATE_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATE_TEXT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATION_CONFIRMATION_SUBJECT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATION_CONFIRMATION_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_ADMIN_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_ADMIN_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_SUBJECT;
@@ -71,6 +73,22 @@ public class MailProvider {
                 paragraph(ACCOUNT_MAIL_ACTIVATE_TEXT)
                         + hyperlink(activationLink, ACCOUNT_MAIL_ACTIVATE_BUTTON);
 
+        try {
+            sendMail(email, subject, messageText);
+        } catch (MessagingException e) {
+            throw MailSendingException.activationLink();
+        }
+    }
+
+    /**
+     * Wysyła wiadomość z potwierdzeniem aktywacji konta.
+     *
+     * @param email          Adres, na który zostanie wysłana wiadomość.
+     * @throws MailSendingException Błąd wysyłania wiadomości.
+     */
+    public void sendActivationConfirmationMail(String email) throws MailSendingException {
+        String subject = ACCOUNT_MAIL_ACTIVATION_CONFIRMATION_SUBJECT;
+        String messageText = paragraph(ACCOUNT_MAIL_ACTIVATION_CONFIRMATION_TEXT);
         try {
             sendMail(email, subject, messageText);
         } catch (MessagingException e) {
