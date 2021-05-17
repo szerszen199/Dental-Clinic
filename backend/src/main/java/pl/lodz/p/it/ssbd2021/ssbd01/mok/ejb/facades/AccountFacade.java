@@ -1,5 +1,11 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -10,12 +16,6 @@ import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
-import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
-
 import java.util.List;
 
 /**
@@ -73,9 +73,9 @@ public class AccountFacade extends AbstractFacade<Account> {
     @Override
     public void edit(Account entity) throws AppBaseException {
         try {
-//            Account oldAcc = findByLogin(entity.getLogin());
-//            Account newAcc = new Account(oldAcc.getId(), entity.getLogin(), entity.getEmail(),
-//                    entity.getPassword(), entity.getFirstName(), entity.getLastName(), entity.getPhoneNumber(), entity.getPesel());
+            //Account oldAcc = findByLogin(entity.getLogin());
+            //Account newAcc = new Account(oldAcc.getId(), entity.getLogin(), entity.getEmail(),
+            //entity.getPassword(), entity.getFirstName(), entity.getLastName(), entity.getPhoneNumber(), entity.getPesel());
             super.edit(entity);
         } catch (OptimisticLockException e) {
             throw AppBaseException.optimisticLockError(e);

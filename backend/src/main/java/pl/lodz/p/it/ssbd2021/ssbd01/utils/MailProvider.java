@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
-import java.util.Properties;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.mail.Authenticator;
@@ -14,7 +15,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+import java.util.Properties;
 
 @ApplicationScoped
 public class MailProvider {
@@ -70,13 +71,19 @@ public class MailProvider {
         }
     }
 
-    public void sendNewPasswordEmail(String email, String password) throws MailSendingException
-    {
+    /**
+     * Wysyła wiadomość z nowym hasłem.
+     *
+     * @param email    Adres, na który zostanie wysłana wiadomość.
+     * @param password Hasło do wysłania.
+     * @throws MailSendingException Błąd wysyłania wiadomości.
+     */
+    public void sendNewPasswordEmail(String email, String password) throws MailSendingException {
         String subject = "New password";
-        String messageText = paragraph("Your new password is: ")+ paragraph(password);
+        String messageText = paragraph("Your new password is: ") + paragraph(password);
         try {
-            sendMail(email,subject,messageText);
-        }catch (MessagingException e){
+            sendMail(email, subject, messageText);
+        } catch (MessagingException e) {
             throw MailSendingException.password();
         }
     }
