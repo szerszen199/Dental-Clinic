@@ -9,9 +9,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
-import javax.security.enterprise.SecurityContext;
 import javax.servlet.ServletContext;
-import javax.ws.rs.core.Context;
+
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AdminData;
@@ -123,11 +122,11 @@ public class AccountManagerImplementation implements AccountManager {
         }
     }
 
-
     @Override
     public void lockAccount(Long id) throws AppBaseException {
         Account account = accountFacade.find(id);
         account.setActive(false);
+        mailProvider.sendAccountLockMail(account.getEmail());
     }
 
     @Override
