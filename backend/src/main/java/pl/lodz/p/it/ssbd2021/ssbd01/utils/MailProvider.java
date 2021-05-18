@@ -23,6 +23,8 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_ADMI
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_ADMIN_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_TEXT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_UNLOCK_BY_ADMIN_SUBJECT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_UNLOCK_BY_ADMIN_TEXT;
 
 @ApplicationScoped
 public class MailProvider {
@@ -93,6 +95,23 @@ public class MailProvider {
             throw MailSendingException.accountLock();
         }
     }
+
+    /**
+     * Wysyła wiadomość informującą o odblokowanym koncie przez administratora.
+     *
+     * @param email          Adres, na który zostanie wysłana wiadomość.
+     * @throws MailSendingException Błąd wysyłania wiadomości.
+     */
+    public void sendAccounUnlockByAdminMail(String email) throws MailSendingException {
+        String subject = ACCOUNT_MAIL_UNLOCK_BY_ADMIN_SUBJECT;
+        String messageText = paragraph(ACCOUNT_MAIL_UNLOCK_BY_ADMIN_TEXT);
+        try {
+            sendMail(email, subject, messageText);
+        } catch (MessagingException e) {
+            throw MailSendingException.accountLock();
+        }
+    }
+
 
     /**
      * Wysyła wiadomość informującą o zablokowanym koncie po nieudanych logowaniach.

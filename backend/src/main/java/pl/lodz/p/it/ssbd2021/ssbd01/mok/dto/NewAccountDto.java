@@ -68,6 +68,12 @@ public class NewAccountDto {
         this.language = language;
     }
 
+    /**
+     * Tworzy nową instancję klasy New account dto.
+     */
+    public NewAccountDto() {
+    }
+
     public String getLogin() {
         return login;
     }

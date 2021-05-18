@@ -59,10 +59,10 @@ public interface AccountManager {
     /**
      * Metoda służąca do odblokowywania konta.
      *
-     * @param id identyfikator odblokowywanego konta
+     * @param login login odblokowywanego konta
      * @throws AppBaseException bazowy wyjątek aplikacji
      */
-    void unlockAccount(Long id) throws AppBaseException;
+    void unlockAccount(String login) throws AppBaseException;
 
     /**
      * Edytuje wlasne konto.
