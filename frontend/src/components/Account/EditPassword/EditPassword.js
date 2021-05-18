@@ -86,7 +86,7 @@ export default class EditPassword extends React.Component {
                             onChange={(e) => this.setState({password: e.target.value})}
                         />
                     </Form.Group>
-                    <Form.Group size="lg" controlId="password">
+                    <Form.Group size="lg" controlId="repeated-password">
                         <Form.Label>Repeat new password</Form.Label>
                         <Form.Control
                             type="password"

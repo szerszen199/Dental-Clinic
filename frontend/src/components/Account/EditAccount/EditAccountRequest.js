@@ -1,4 +1,3 @@
-import React from "react";
 import axios from "axios";
 
 export const JWTTokenStorageName = 'JWTToken'
@@ -18,17 +17,18 @@ export const userRolesStorageName = 'userRoles'
 //     })
 // }
 
-export function makeGetEditRequest() {
-    let r = "";
-    axios.get(process.env.REACT_APP_BACKEND_URL + "account/info", {
+export async function makeGetEditRequest() {
+    // let r = "";
+    return await axios.get(process.env.REACT_APP_BACKEND_URL + "account/info", {
         headers: {
             Authorization: "Bearer " + localStorage.getItem(JWTTokenStorageName)
         }
     }).then((response) => {
         // console.log(response.data)
-        r = response.data;
+        return response.data;
+        // console.log(r)
+        // return r;
     }).catch((response) => {
         // todo Wyświetlić odpowiedni komunikat
-    })
-    return r;
+    });
 }

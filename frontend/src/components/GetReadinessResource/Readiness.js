@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 
 // TODO: Można użyć tego do tego czy mamy połączenie do strony czytaj jesli tutaj się zwróci "ready" i okejka (200) to jest git
@@ -13,7 +13,7 @@ export default class ReadinessComponent extends React.Component {
     componentDidMount() {
         fetch(process.env.REACT_APP_BACKEND_URL + "readiness")
             .then(res => res.json())
-            .then(result => this.setState({ ready: result.message }))
+            .then(result => this.setState({ready: result.message}))
     }
 
     render() {
