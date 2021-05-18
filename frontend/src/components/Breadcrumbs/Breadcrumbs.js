@@ -22,11 +22,12 @@ function HeaderView() {
             url_str.push("/");
             url_str.push(str[j]);
         }
-        const handleOnClick = () => history.push(url_str.join(""));
+        let joined_str = url_str.join("");
+        const handleOnClick = () => history.push(joined_str);
         rows.push(
-            <span>
+            <span key = {str[i]}>
                 {" "} / {" "}
-                <Link href="#" onClick={handleOnClick}>
+                <Link to={joined_str} href="#" onClick={handleOnClick}>
                     {str[i]}
                 </Link>
             </span>
