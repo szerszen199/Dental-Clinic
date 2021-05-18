@@ -21,6 +21,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
 import pl.lodz.p.it.ssbd2021.ssbd01.common.RolesStringsTmp;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
@@ -130,35 +131,18 @@ public class AccountEndpoint {
     }
 
     /**
-     * Revoke access level - enpoint odbierający poziom dostępu {@param level} dla użytkownika o {@param id}.
+     * Revoke access level - enpoint odbierający poziom dostępu.
      *
-     * @param id    id uzytkownika, któremu zostanie odebrany poziom dostępu
-     * @param level level odbierany poziom odstępu
-     * @throws AppBaseException typu AppBaseException
-     */
-    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{id}/{level}
-    @PUT
-    @RolesAllowed({RolesStringsTmp.admin})
-    @Path("/revokeAccessLevelById/{id}/{level}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public void revokeAccessLevel(@PathParam("id") Long id, @PathParam("level") String level) throws AppBaseException {
-        accessLevelManager.revokeAccessLevel(id, level);
-    }
-
-    /**
-     * Revoke access level - enpoint odbierający poziom dostępu {@param level} dla użytkownika o {@param login}.
-     *
-     * @param login login uzytkownika, któremu zostanie odebrany poziom dostępu
-     * @param level level odbierany poziom odstępu
+     * @param accessLevelDto obiekt zawierający poziom oraz login
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{login}/{level}
     @PUT
     @RolesAllowed({RolesStringsTmp.admin})
-    @Path("/revokeAccessLevelByLogin/{login}/{level}")
+    @Path("/revokeAccessLevel}")
     @Produces({MediaType.APPLICATION_JSON})
-    public void revokeAccessLevel(@PathParam("login") String login, @PathParam("level") String level) throws AppBaseException {
-        accessLevelManager.revokeAccessLevel(login, level);
+    public void revokeAccessLevel(AccessLevelDto accessLevelDto) throws AppBaseException {
+        accessLevelManager.revokeAccessLevel(accessLevelDto.getLogin(), accessLevelDto.getLevel());
     }
 
     /**
