@@ -148,7 +148,7 @@ public class AccountEndpoint {
     /**
      * Metoda służąca do blokowania konta przez administratora.
      *
-     * @param login id blokowanego konta
+     * @param login login blokowanego konta
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
@@ -163,15 +163,16 @@ public class AccountEndpoint {
     /**
      * Metoda służąca do odblokowywania konta przez administratora.
      *
-     * @param id id odblokowywanego konta
+     * @param login login odblokowywanego konta
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
     @RolesAllowed({I18n.ADMIN})
-    @Path("unlock/{id}")
+    @Path("unlock/{login}")
     @Produces({MediaType.APPLICATION_JSON})
-    public void unlockAccount(@PathParam("id") Long id) throws AppBaseException {
-        accountManager.unlockAccount(id);
+    public void unlockAccount(@PathParam("login") String login) throws AppBaseException {
+        accountManager.unlockAccount(login);
+        mailProvider.sendAccounUnlockByAdminMail(accountManager.findByLogin(login).getEmail());
     }
 
     /**
