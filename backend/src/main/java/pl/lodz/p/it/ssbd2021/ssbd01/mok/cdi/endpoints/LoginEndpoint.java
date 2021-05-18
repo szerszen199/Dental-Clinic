@@ -90,7 +90,7 @@ public class LoginEndpoint {
         CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(loginRequestDTO.toCredential());
         try {
         Account account = accountManager.findByLogin(loginRequestDTO.getUsername());
-        if (credentialValidationResult.getStatus() != CredentialValidationResult.Status.VALID || !account.getActive()) {
+        if (credentialValidationResult.getStatus() != CredentialValidationResult.Status.VALID) {
                 accountManager.updateAfterUnsuccessfulLogin(loginRequestDTO.getUsername(), ip, LocalDateTime.now());
                 if (account.getUnsuccessfulLoginCounter() >= propertiesLoader.getInvalidLoginCountBlock() && account.getActive()) {
                     accountManager.lockAccount(account.getId());
