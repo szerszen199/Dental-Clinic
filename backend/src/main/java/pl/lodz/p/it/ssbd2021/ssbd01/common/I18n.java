@@ -4,6 +4,11 @@ package pl.lodz.p.it.ssbd2021.ssbd01.common;
  * Klasa odpowiadająca za przechowywanie ciągów znakowych oraz internacjonalizację komunikatów.
  */
 public class I18n {
+    public static final String PATIENT = "level.patient";
+    public static final String ADMIN = "level.administrator";
+    public static final String RECEPTIONIST = "level.receptionist";
+    public static final String DOCTOR = "level.doctor";
+
 
     public static final String PASSWORDS_NOT_DIFFER = "both_passwords_are_same";
     public static final String AUTHENTICATION_FAILURE = "invalid_login_password_combination";
