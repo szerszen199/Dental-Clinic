@@ -93,7 +93,7 @@ function MainView() {
 function Wybierz() {
     // TODO: Ma być możliwość wyboru jaką z ról które mamy chcemy widzieć tzn mamy się móc przełączać między rolami
     //  Nie ma tego narazie więc jest tak
-    let levels = localStorage.getItem(userRolesStorageName)
+    let levels = localStorage.getItem(userRolesStorageName) == null ? [] :  localStorage.getItem(userRolesStorageName);
     if (levels.includes("level.administrator")) {
         return Admin();
     } else if (levels.includes("level.patient")) {
