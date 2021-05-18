@@ -184,6 +184,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             accountFacade.findByLogin(login).setEmail(newEmail);
         } catch (AppBaseException | ParseException e) {
             throw AccountException.noSuchAccount(e);
+        } catch (NullPointerException e) {
+            throw AccountException.mailConfirmationParsingError(e);
         }
     }
 
