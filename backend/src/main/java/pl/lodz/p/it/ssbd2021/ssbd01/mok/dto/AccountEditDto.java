@@ -34,7 +34,7 @@ public class AccountEditDto {
     private String phoneNumber;
 
 
-    @Size(min = 9, max = 9)
+    @Size(min = 11, max = 11)
     private String pesel;
 
 
