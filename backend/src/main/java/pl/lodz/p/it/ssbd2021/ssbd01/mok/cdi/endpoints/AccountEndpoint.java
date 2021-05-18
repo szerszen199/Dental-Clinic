@@ -284,17 +284,17 @@ public class AccountEndpoint {
     /**
      * Resetuje hasło innego użytkownika z poziomu konta administratora.
      *
-     * @param id id konta, którego hasło chcemy zresetować
+     * @param login login konta, którego hasło chcemy zresetować
      * @return odpowiedź na żądanie
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
     @RolesAllowed({I18n.ADMIN})
-    @Path("reset-password/{id}")
+    @Path("reset-password/{login}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response resetOthersPassword(@PathParam("id") Long id) throws AppBaseException {
-        accountManager.resetPassword(id);
+    public Response resetOthersPassword(@PathParam("login") String login) throws AppBaseException {
+        accountManager.resetPassword(login);
         return Response.status(Status.OK).build();
     }
 
