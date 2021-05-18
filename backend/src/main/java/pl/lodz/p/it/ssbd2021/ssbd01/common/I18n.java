@@ -37,6 +37,7 @@ public class I18n {
     public static final String ACCOUNT_MAIL_LOCK_BY_ADMIN_TEXT = "account_mail_lock_by_admin_text";
     public static final String ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_SUBJECT = "account_mail_lock_by_unsuccessful_login_subject";
     public static final String ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_TEXT = "account_mail_lock_by_unsuccessful_login_text";
-
+    public static final String ACCOUNT_MAIL_LOGIN_SUBJECT = "account_mail_login_subject";
+    public static final String ACCOUNT_MAIL_LOGIN_TEXT = "account_mail_login_text";
 
 }
