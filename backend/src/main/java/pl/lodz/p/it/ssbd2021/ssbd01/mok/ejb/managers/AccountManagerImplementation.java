@@ -140,23 +140,51 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void editAccount(Account account) throws AppBaseException {
+    public void editAccount(Account account, ServletContext servletContext) throws AppBaseException {
         account.setModifiedBy(account);
         Account old = accountFacade.findByLogin(account.getLogin());
-        if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
-            throw DataValidationException.accountEditValidationError();
+        if (!old.getEmail().equals(account.getEmail())) {
+            mailProvider.sendEmailChangeConfirmationMail(
+                    account.getEmail(),
+                    servletContext.getContextPath(),
+                    jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(account.getLogin(), account.getEmail())
+            );
         }
+        //if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
+        //    throw DataValidationException.accountEditValidationError();
+        //}
         accountFacade.edit(account);
     }
 
     @Override
-    public void editOtherAccount(Account account) throws AppBaseException {
+    public void editOtherAccount(Account account, ServletContext servletContext) throws AppBaseException {
         account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
         Account old = accountFacade.findByLogin(account.getLogin());
-        if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
-            throw DataValidationException.accountEditValidationError();
+        if (!old.getEmail().equals(account.getEmail())) {
+            mailProvider.sendEmailChangeConfirmationMail(
+                    account.getEmail(),
+                    servletContext.getContextPath(),
+                    jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(account.getLogin(), account.getEmail())
+            );
         }
+        //if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
+        //    throw DataValidationException.accountEditValidationError();
+        //}
         accountFacade.edit(account);
+    }
+
+    @Override
+    public void confirmMailChangeByToken(String jwt) throws AppBaseException {
+        if (!jwtEmailConfirmationUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+            throw AccountException.invalidConfirmationToken();
+        }
+        try {
+            String login = jwtEmailConfirmationUtils.getUserNameAndEmailFromEmailChangeConfirmationJwtToken(jwt).split("/")[0];
+            String newEmail = jwtEmailConfirmationUtils.getUserNameAndEmailFromEmailChangeConfirmationJwtToken(jwt).split("/")[1];
+            accountFacade.findByLogin(login).setEmail(newEmail);
+        } catch (AppBaseException | ParseException e) {
+            throw AccountException.noSuchAccount(e);
+        }
     }
 
     @Override
