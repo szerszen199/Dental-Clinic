@@ -2,23 +2,40 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./EditAccount.css";
-import {makeGetEditRequest} from "./EditAccountRequest";
+import {JWTTokenStorageName} from "./EditAccountRequest";
+import axios from "axios";
 
 export default class EditAccount extends React.Component {
     constructor(props) {
         super(props);
-        let response = makeGetEditRequest();
-        console.log(response)
         this.state = {
             isDisabled: true,
             text: "Edit",
-            login: response.login,
-            email: response.email,
+            login: "",
+            email: "",
             firstName: "",
             lastName: "",
             phoneNumber: "",
             pesel: "",
         }
+    }
+
+    componentDidMount() {
+        axios
+            .get(process.env.REACT_APP_BACKEND_URL + "account/info", {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem(JWTTokenStorageName)
+                }
+            })
+            .then(res => res.data)
+            .then(result => this.setState({
+                login: result.login,
+                email: result.email,
+                firstName: result.firstName,
+                lastName: result.lastName,
+                phoneNumber: result.phoneNumber,
+                pesel: result.pesel
+            }))
     }
 
     validateForm(t) {
