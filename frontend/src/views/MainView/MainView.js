@@ -10,6 +10,9 @@ import Receptionist from "../Receptionist/Receptionist";
 import Admin from "../Admin/Admin";
 import ReadinessComponent from "../../components/GetReadinessResource/Readiness"
 import Patient from "../Patient/Patient";
+import {userRolesStorageName} from "../../components/Login/LoginRequest";
+import {Ad} from "react-flags-select";
+import Doctor from "../Doctor/Doctor";
 
 const accessLevelDictionary = {
     "Guest": "rgba(1, 1, 1, 0.1)",
@@ -88,8 +91,18 @@ function MainView() {
 }
 
 function Wybierz() {
-    // TODO: Wybór na podstawie aktualnej roli
-    actualAccessLevel = "";
+    // TODO: Ma być możliwość wyboru jaką z ról które mamy chcemy widzieć tzn mamy się móc przełączać między rolami
+    //  Nie ma tego narazie więc jest tak
+    let levels = localStorage.getItem(userRolesStorageName)
+    if (levels.includes("level.administrator")) {
+        return Admin();
+    } else if (levels.includes("level.patient")) {
+        return Patient();
+    } else if (levels.includes("level.receptionist")) {
+        return Receptionist();
+    } else if (levels.includes("level.doctor")) {
+        return Doctor();
+    }
     return Guest();
 }
 

@@ -3,18 +3,18 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./Login.css";
 import {makeLoginRequest} from "./LoginRequest";
+import {useHistory} from "react-router-dom";
 
 export default function Login() {
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
 
     function validateForm() {
-        console.log(login);
-        console.log(password);
         return login.length > 0 && login.length <= 60 && password.length > 0;
     }
 
     function handleSubmit(event) {
+        event.preventDefault();
         makeLoginRequest(login, password);
     }
 

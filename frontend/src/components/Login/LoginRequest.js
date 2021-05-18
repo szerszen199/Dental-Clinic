@@ -1,34 +1,26 @@
-import React, {useState} from "react";
+import React from "react";
 import axios from "axios";
+import {useHistory} from "react-router-dom";
+
+// TODO usuwanie tego gdy minie określony czas czytaj przedawni się
 
 
-export let userRoles = [];
-export let JWTToken = "";
+export const JWTTokenStorageName = 'JWTToken'
+export const userRolesStorageName = 'userRoles'
 
 export function makeLoginRequest(login, password) {
-    console.log(process.env.REACT_APP_BACKEND_URL + "login")
     axios.post(process.env.REACT_APP_BACKEND_URL + "login", {
-        username : login,
+        username: login,
         password: password
-    }).then(function (response) {
-        console.log(response)
-        // JWTToken = response.data.token;
-        // userRoles = response.data.roles;
+    }).then ((response) => {
+        localStorage.setItem(userRolesStorageName, response.data.roles);
+        localStorage.setItem(JWTTokenStorageName, response.data.token);
+        // TODO: To redirect po poprawnym zalogowaniu, nie podoba mi się, nie korzysta z routera ale inaczej mi nie chce narazie pojsc.
+        window.location = "/home";
+    }).catch((response) => {
+        // todo Wyświetlić odpowiedni komunikat
     })
+
+
 }
 
-class ReadinessComponent extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    componentDidMount() {
-    }
-
-    render() {
-        console.log(this.state.ready)
-        return (
-            <span/>
-        )
-    }
-}
