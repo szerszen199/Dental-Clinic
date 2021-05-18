@@ -86,5 +86,39 @@ public class JwtEmailConfirmationUtils {
         }
     }
 
+    /**
+     * Generuje token JWT na potrzeby potwierdzenia zmiany adresu email.
+     *
+     * @param username username
+     * @param newEmail nowy email po zmianach
+     * @return JWT token
+     */
+    public String generateEmailChangeConfirmationJwtTokenForUser(String username, String newEmail) {
+        try {
+            final JWSSigner signer = new MACSigner(registrationConfirmationJwtSecret);
+            final JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+                    .subject(username + "/" + newEmail)
+                    .expirationTime(new Date(new Date().getTime() + registrationConfirmationJwtExpirationMs))
+                    .build();
+            final SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS384), claimsSet);
+            signedJWT.sign(signer);
+            return signedJWT.serialize();
+        } catch (JOSEException e) {
+            e.printStackTrace();
+            // TODO: 18.05.2021
+            return "JWT error";
+        }
+    }
+
+    /**
+     * Pobiera login i nowy mail użytkownika z tokenu JWT wydanego na potrzebę potwierdzenia zmiany adresu email.
+     * @param token JWT token
+     * @return Login użytkownika o zadanym tokenie
+     * @throws ParseException ParseException
+     */
+    public String getUserNameAndEmailFromEmailChangeConfirmationJwtToken(String token) throws ParseException {
+        return SignedJWT.parse(token).getJWTClaimsSet().getSubject();
+    }
+
 
 }
