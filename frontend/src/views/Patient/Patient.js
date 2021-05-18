@@ -4,6 +4,7 @@ import Nav from "react-bootstrap/Nav";
 import {LinkContainer} from "react-router-bootstrap";
 import {NavDropdown} from "react-bootstrap";
 import "react-custom-flag-select/lib/react-custom-flag-select.min.css";
+import {logout} from "../../components/Login/Logout";
 
 function Patient() {
 
@@ -44,9 +45,7 @@ function Patient() {
     );
 }
 
-function logout(){
 
-}
 
 
 export default Patient;

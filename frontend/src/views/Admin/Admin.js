@@ -4,6 +4,7 @@ import Nav from "react-bootstrap/Nav";
 import {LinkContainer} from "react-router-bootstrap";
 import "react-custom-flag-select/lib/react-custom-flag-select.min.css";
 import {NavDropdown} from "react-bootstrap";
+import {logout} from "../../components/Login/Logout";
 
 
 function Admin() {
@@ -26,8 +27,6 @@ function Admin() {
     );
 }
 
-function logout(){
 
-}
 
 export default Admin;
