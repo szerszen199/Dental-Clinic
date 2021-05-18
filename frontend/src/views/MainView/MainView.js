@@ -11,7 +11,6 @@ import Admin from "../Admin/Admin";
 import ReadinessComponent from "../../components/GetReadinessResource/Readiness"
 import Patient from "../Patient/Patient";
 import {userRolesStorageName} from "../../components/Login/LoginRequest";
-import {Ad} from "react-flags-select";
 import Doctor from "../Doctor/Doctor";
 
 const accessLevelDictionary = {
@@ -50,7 +49,8 @@ function MainView() {
 
     return (
         <div className="App container py-3 ">
-            <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"  style={{ backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
+            <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"
+                    style={{backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
                 <div style={{width: "100%"}}>
                     <Container fluid>
                         <Row>
@@ -64,7 +64,7 @@ function MainView() {
                             <Col>
                                 <Navbar.Toggle/>
                                 <Navbar.Collapse className="justify-content-end">
-                                   <Wybierz/>
+                                    <Wybierz/>
                                     <DarkModeSwitch
                                         style={{marginLeft: '1rem'}}
                                         checked={isDarkMode}
@@ -93,7 +93,7 @@ function MainView() {
 function Wybierz() {
     // TODO: Ma być możliwość wyboru jaką z ról które mamy chcemy widzieć tzn mamy się móc przełączać między rolami
     //  Nie ma tego narazie więc jest tak
-    let levels = localStorage.getItem(userRolesStorageName) == null ? [] :  localStorage.getItem(userRolesStorageName);
+    let levels = localStorage.getItem(userRolesStorageName) == null ? [] : localStorage.getItem(userRolesStorageName);
     if (levels.includes("level.administrator")) {
         return Admin();
     } else if (levels.includes("level.patient")) {
