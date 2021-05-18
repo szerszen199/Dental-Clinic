@@ -16,17 +16,17 @@ public class AccessLevelMapper {
      * Metoda przekształca nazwę poziomu dostępu na jego obiekt.
      *
      * @param level poziom dostępu do zamiany na obiekt
-     * @return  obiekt poziomu dostępu
+     * @return obiekt poziomu dostępu
      * @throws AccessLevelException wyjątek gdy nie ma taktiego poziomu dostępu
      */
     public static AccessLevel mapLevelNameToAccessLevel(String level) throws AccessLevelException {
-        if (Levels.ADMINISTRATOR.getLevel().equals(level)) {
+        if (I18n.ADMIN.equals(level)) {
             return new AdminData();
-        } else if (Levels.DOCTOR.getLevel().equals(level)) {
+        } else if (I18n.DOCTOR.equals(level)) {
             return new DoctorData();
-        } else if (Levels.RECEPTIONIST.getLevel().equals(level)) {
+        } else if (I18n.RECEPTIONIST.equals(level)) {
             return new ReceptionistData();
-        } else if (Levels.PATIENT.getLevel().equals(level)) {
+        } else if (I18n.PATIENT.equals(level)) {
             return new PatientData();
         }
         throw AccessLevelException.noSuchAccessLevel();
