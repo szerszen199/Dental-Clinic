@@ -2,16 +2,18 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./EditAccount.css";
+import {makeGetEditRequest} from "./EditAccountRequest";
 
 export default class EditAccount extends React.Component {
     constructor(props) {
         super(props);
-
+        let response = makeGetEditRequest();
+        console.log(response)
         this.state = {
             isDisabled: true,
             text: "Edit",
-            login: "",
-            email: "",
+            login: response.login,
+            email: response.email,
             firstName: "",
             lastName: "",
             phoneNumber: "",
