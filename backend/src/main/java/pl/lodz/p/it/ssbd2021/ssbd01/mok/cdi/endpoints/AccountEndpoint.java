@@ -1,22 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.RolesStringsTmp;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountAccessLevelDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountEditDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +21,22 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.RolesStringsTmp;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountAccessLevelDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountEditDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 
 /**
  * Typ Account endpoint.
@@ -86,7 +85,7 @@ public class AccountEndpoint {
      * @param jwt jwt
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/confirm/{jwt}
+    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/confirm?token={token}
     @PUT
     @Path("confirm")
     @PermitAll
@@ -283,14 +282,14 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response changeOwnPassword(NewPasswordDto newPassword) throws AppBaseException {
-        Account account = accountManager.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
-        if (account == null) {
+        String login = loggedInAccountUtil.getLoggedInAccountLogin();
+        if (login == null) {
             return Response.status(Status.UNAUTHORIZED).build();
         }
 
         try {
             this.validatePassword(newPassword);
-            accountManager.changePassword(account, newPassword.getOldPassword(), newPassword.getFirstPassword());
+            accountManager.changePassword(login, newPassword.getOldPassword(), newPassword.getFirstPassword());
             return Response.status(Status.OK).build();
         } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -326,14 +325,13 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response resetOwnPassword() throws AppBaseException {
-        Account account = accountManager.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
-        if (account == null) {
+        String login = loggedInAccountUtil.getLoggedInAccountLogin();
+
+        if (login == null) {
             return Response.status(Status.BAD_REQUEST).build();
         }
-        if (!account.getActive()) {
-            return Response.status(Status.BAD_REQUEST).build();
-        }
-        accountManager.resetPassword(account);
+
+        accountManager.resetPassword(login);
         return Response.status(Status.OK).build();
     }
 
@@ -350,12 +348,12 @@ public class AccountEndpoint {
     @RolesAllowed({RolesStringsTmp.receptionist, RolesStringsTmp.doctor, RolesStringsTmp.admin, RolesStringsTmp.user})
     @Produces(MediaType.APPLICATION_JSON)
     public Response changeDarkMode(@QueryParam("dark-mode") boolean isDarkMode) throws AppBaseException {
-        Account account = accountManager.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
-        if (account == null) {
+        String login = loggedInAccountUtil.getLoggedInAccountLogin();
+        if (login == null) {
             return Response.status(Status.UNAUTHORIZED).build();
         }
         try {
-            accountManager.setDarkMode(account, isDarkMode);
+            accountManager.setDarkMode(login, isDarkMode);
         } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }

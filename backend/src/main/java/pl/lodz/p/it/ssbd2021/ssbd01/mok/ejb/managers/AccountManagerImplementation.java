@@ -101,7 +101,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void removeAccount(Account account) {
+    public void removeAccount(Long id) throws AppBaseException {
+        Account account = accountFacade.find(id);
         accountFacade.remove(account);
     }
 
@@ -164,7 +165,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void changePassword(Account account, String oldPassword, String newPassword) throws AppBaseException {
+    public void changePassword(String login, String oldPassword, String newPassword) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
         this.verifyOldPassword(account.getPassword(), oldPassword);
         this.validateNewPassword(account.getPassword(), newPassword);
         account.setPassword(hashGenerator.generateHash(newPassword));
@@ -184,16 +186,13 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @Override
     public void resetPassword(Long id) throws AppBaseException {
         Account account = accountFacade.find(id);
-        String generatedPassword = passwordGenerator.generate(8);
-        String newPasswordHash = hashGenerator.generateHash(generatedPassword);
-
-        account.setPassword(newPasswordHash);
         account.setPassword(generateNewRandomPassword());
         // TODO: send mail with new password
     }
 
     @Override
-    public void resetPassword(Account account) {
+    public void resetPassword(String login) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
         account.setPassword(generateNewRandomPassword());
         // TODO: send mail with new password
     }
@@ -252,7 +251,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void setDarkMode(Account account, boolean isDarkMode) throws AppBaseException {
+    public void setDarkMode(String login, boolean isDarkMode) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
         account.setDarkMode(isDarkMode);
         accountFacade.edit(account);
     }
