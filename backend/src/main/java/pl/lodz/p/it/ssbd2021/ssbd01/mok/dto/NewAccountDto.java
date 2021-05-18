@@ -64,6 +64,12 @@ public class NewAccountDto {
         this.pesel = pesel;
     }
 
+    /**
+     * Tworzy nową instancję klasy New account dto.
+     */
+    public NewAccountDto() {
+    }
+
     public String getLogin() {
         return login;
     }
