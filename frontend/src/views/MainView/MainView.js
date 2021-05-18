@@ -89,8 +89,8 @@ function MainView() {
 
 function Wybierz() {
     // TODO: Wybór na podstawie aktualnej roli
-    actualAccessLevel = "Patient"
-    return Patient();
+    actualAccessLevel = "";
+    return Guest();
 }
 
 export default MainView;

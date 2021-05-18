@@ -8,6 +8,7 @@
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
+    "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "bootstrap-switch-button-react": "^1.2.0",
     "material-ui-rating": "^4.0.0-beta.2",
