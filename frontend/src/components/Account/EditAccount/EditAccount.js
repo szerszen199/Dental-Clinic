@@ -2,7 +2,6 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./EditAccount.css";
-import {JWTTokenStorageName} from "./EditAccountRequest";
 import axios from "axios";
 
 export default class EditAccount extends React.Component {
@@ -24,7 +23,7 @@ export default class EditAccount extends React.Component {
         axios
             .get(process.env.REACT_APP_BACKEND_URL + "account/info", {
                 headers: {
-                    Authorization: "Bearer " + localStorage.getItem(JWTTokenStorageName)
+                    Authorization: "Bearer " + localStorage.getItem("JWTToken")
                 }
             })
             .then(res => res.data)
