@@ -53,7 +53,8 @@ export default class EditAccount extends React.Component {
         }
 
         function phoneNumberCorrect() {
-            return t.state.phoneNumber.length > 0 && /^\d+$/.test(t.state.phoneNumber);
+            return true;
+            // return t.state.phoneNumber.length > 0 && /^\d+$/.test(t.state.phoneNumber);
         }
 
         // TODO: przypadek obcokrajowca wymusza że peselu może nie być ale nadal warto by go zwalidowac, tylko jak?
@@ -91,6 +92,20 @@ export default class EditAccount extends React.Component {
             isDisabled: true,
             text: "Edit"
         });
+        axios
+            .post(process.env.REACT_APP_BACKEND_URL + "edit", {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("JWTToken")
+                },
+                body: {
+                    email: this.state.email,
+                    firstName: this.state.firstName,
+                    lastName: this.state.lastName,
+                    phoneNumber: this.state.phoneNumber,
+                    pesel: this.state.pesel
+                }
+            })
+            .then(res => console.log(res))
     }
 
     // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
