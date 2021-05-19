@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./Registration.css";
+import {registrationRequest} from "./RegistrationRequest";
 
 export default function Registration() {
     const [login, setLogin] = useState("");
@@ -16,11 +17,13 @@ export default function Registration() {
     function validateForm() {
         // Todo: zrobić walidację taką jaką wymaga projekt
         function loginCorrect() {
-            return login.length > 0;
+            const regex = /[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*/
+            return login.length > 2 && login.length < 61 && regex.test(email);
         }
 
         function emailCorrect() {
-            return email.length > 7;
+            const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return email.length > 3 && email.length < 101 && regex.test(String(email).toLowerCase());
         }
 
         function passwordCorrect() {
@@ -28,33 +31,45 @@ export default function Registration() {
         }
 
         function repeatedPasswordCorrect() {
-            return repeatedPassword.length > 0 && password === repeatedPassword;
+            return repeatedPassword.length > 7 && password === repeatedPassword;
         }
 
         function firstNameCorrect() {
-            return firstName.length > 0;
+            return firstName.length > 0 && firstName.length < 51;
         }
 
         function lastNameCorrect() {
-            return lastName.length > 0;
+            return lastName.length > 0 && lastName.length < 81;
         }
 
         function phoneNumberCorrect() {
-            return phoneNumber.length > 0 && /^\d+$/.test(phoneNumber);
+            const regex = /^\d+$/;
+            return phoneNumber.length > 8 && phoneNumber.length < 16 && regex.test(phoneNumber);
         }
 
-        // TODO: przypadek obcokrajowca wymusza że peselu może nie być ale nadal warto by go zwalidowac, tylko jak?
         function peselCorrect() {
-            return true;
+            if (pesel.length === 0) {
+                return true;
+            }
+
+            let weight = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3];
+            let sum = 0;
+            let controlNumber = parseInt(pesel.substring(10, 11));
+
+            for (let i = 0; i < weight.length; i++) {
+                sum += (parseInt(pesel.substring(i, i + 1)) * weight[i]);
+            }
+            sum = sum % 10;
+            return (10 - sum) % 10 === controlNumber;
         }
 
         return emailCorrect() && passwordCorrect() && repeatedPasswordCorrect() && loginCorrect() && firstNameCorrect() && lastNameCorrect() && phoneNumberCorrect() && peselCorrect();
     }
 
-
     // Todo: prawdopodobnie wysyłać zapytanie do backendu tutaj, chciałbym zrobić tak jak w vue się da żeby jeśli odpalam w trybie debug front to łącze z localhostem, narazie nie ruszam.
     function handleSubmit(event) {
         event.preventDefault();
+        registrationRequest(login, email, password, firstName, lastName, phoneNumber, pesel, 'en');
     }
 
     // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
