@@ -92,20 +92,31 @@ export default class EditAccount extends React.Component {
             isDisabled: true,
             text: "Edit"
         });
-        axios
-            .post(process.env.REACT_APP_BACKEND_URL + "edit", {
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("JWTToken")
-                },
-                body: {
-                    email: this.state.email,
-                    firstName: this.state.firstName,
-                    lastName: this.state.lastName,
-                    phoneNumber: this.state.phoneNumber,
-                    pesel: this.state.pesel
-                }
+
+        let config = {
+            method: 'post',
+            url: process.env.REACT_APP_BACKEND_URL + "account/edit",
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("JWTToken"),
+                'Content-Type': 'application/json'
+            },
+            data: {
+                login: this.state.login,
+                email: this.state.email,
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+                phoneNumber: this.state.phoneNumber,
+                pesel: this.state.pesel
+            }
+        };
+
+        axios(config)
+            .then(function (response) {
+                console.log(JSON.stringify(response.data));
             })
-            .then(res => console.log(res))
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
