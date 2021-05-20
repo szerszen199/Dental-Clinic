@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./EditAccount.css";
 import axios from "axios";
+import {editAccountRequest} from "./EditAccountRequest";
 
 export default class EditAccount extends React.Component {
     constructor(props) {
@@ -92,31 +93,7 @@ export default class EditAccount extends React.Component {
             isDisabled: true,
             text: "Edit"
         });
-
-        let config = {
-            method: 'post',
-            url: process.env.REACT_APP_BACKEND_URL + "account/edit",
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem("JWTToken"),
-                'Content-Type': 'application/json'
-            },
-            data: {
-                login: this.state.login,
-                email: this.state.email,
-                firstName: this.state.firstName,
-                lastName: this.state.lastName,
-                phoneNumber: this.state.phoneNumber,
-                pesel: this.state.pesel
-            }
-        };
-
-        axios(config)
-            .then(function (response) {
-                console.log(JSON.stringify(response.data));
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        editAccountRequest(this.state.login, this.state.email, this.state.firstName, this.state.lastName, this.state.phoneNumber, this.state.pesel)
     }
 
     // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
