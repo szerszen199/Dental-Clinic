@@ -267,15 +267,14 @@ public class AccountEndpoint {
     @Path("new-password")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changeOwnPassword(NewPasswordDto newPassword) throws AppBaseException {
-        String login = loggedInAccountUtil.getLoggedInAccountLogin();
-        if (login == null) {
-            return Response.status(Status.UNAUTHORIZED).build();
-        }
-
+    public Response changeOwnPassword(NewPasswordDto newPassword) {
         try {
             this.validatePassword(newPassword);
-            accountManager.changePassword(login, newPassword.getOldPassword(), newPassword.getFirstPassword());
+            accountManager.changePassword(
+                    loggedInAccountUtil.getLoggedInAccountLogin(), 
+                    newPassword.getOldPassword(), 
+                    newPassword.getFirstPassword()
+            );
             return Response.status(Status.OK).build();
         } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();

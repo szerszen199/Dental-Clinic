@@ -23,7 +23,7 @@
     "react-native-dark-mode-switch": "0.0.0-alpha.1",
     "react-router-bootstrap": "^0.25.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^2.1.8",
     "react-switch": "^6.0.0",
     "react-toggle-dark-mode": "^1.0.4",
     "reactjs-popup": "^2.0.4",
