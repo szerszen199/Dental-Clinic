@@ -105,6 +105,7 @@ public class AccountEndpoint {
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit
     @POST
     @Path("edit")
+    @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
     @Produces({MediaType.APPLICATION_JSON})
     public void editAccount(AccountEditDto accountDto) throws AppBaseException {
