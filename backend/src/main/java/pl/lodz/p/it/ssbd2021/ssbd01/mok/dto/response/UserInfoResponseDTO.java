@@ -45,4 +45,20 @@ public class UserInfoResponseDTO {
     public void setLanguage(String language) {
         this.language = language;
     }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public boolean isDarkMode() {
+        return isDarkMode;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
 }

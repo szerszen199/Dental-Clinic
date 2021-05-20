@@ -1,8 +1,9 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.auth;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.auth.ejb.managers.AuthViewEntityManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.AuthViewEntity;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtLoginUtils;
 
 import javax.enterprise.context.RequestScoped;
@@ -14,6 +15,7 @@ import javax.security.enterprise.authentication.mechanism.http.HttpMessageContex
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RequestScoped
@@ -24,7 +26,7 @@ public class JWTHttpAuthMechanism implements HttpAuthenticationMechanism {
     private JwtLoginUtils jwtLoginUtils;
 
     @Inject
-    private AccountManager accountsManager;
+    private AuthViewEntityManager authViewEntityManager;
 
     @Override
     public AuthenticationStatus validateRequest(HttpServletRequest req, HttpServletResponse res, HttpMessageContext msgContext) {
@@ -32,14 +34,11 @@ public class JWTHttpAuthMechanism implements HttpAuthenticationMechanism {
             String jwt = parseJwt(req);
             if (jwt != null && jwtLoginUtils.validateJwtToken(jwt)) {
                 String username = jwtLoginUtils.getUserNameFromJwtToken(jwt);
-                Account accountsEntity = accountsManager.findByLogin(username);
-                if (accountsEntity.getEnabled() && accountsEntity.getActive()) {
-                    Set<AccessLevel> levelsForUsername = accountsEntity.getAccessLevels();
+                List<AuthViewEntity> authViewEntities = authViewEntityManager.findByLogin(username);
+                if (authViewEntities.size() != 0) {
                     Set<String> levels = new HashSet<>();
-                    for (var i : levelsForUsername) {
-                        if (i.getActive()) {
-                            levels.add(i.getLevel());
-                        }
+                    for (var x : authViewEntities) {
+                        levels.add(x.getLevel());
                     }
                     return msgContext.notifyContainerAboutLogin(username, levels);
                 }

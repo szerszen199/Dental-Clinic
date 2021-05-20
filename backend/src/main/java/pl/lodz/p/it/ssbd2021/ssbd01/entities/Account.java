@@ -110,7 +110,7 @@ public class Account extends AbstractEntity implements Serializable {
     private String phoneNumber;
 
     @Column(name = "pesel", columnDefinition = "bpchar", length = 11)
-    @Size(min = 9, max = 9)
+    @Size(min = 11, max = 11)
     private String pesel;
 
     @Basic(optional = false)

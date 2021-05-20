@@ -1,18 +1,12 @@
 import React from "react";
 import "./App.css";
-import Patient from "./views/Patient/Patient";
-import Guest from "./views/Guest/Guest";
+import Wszystko from "./views/MainView/MainView";
 
 function App() {
-    if (false === true) {
-        return (
-            <Guest/>
-        );
-    } else {
-        return (
-            <Patient/>
-        );
-    }
+
+    return (
+        <Wszystko/>);
+
 }
 
 export default App;
