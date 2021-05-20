@@ -6,7 +6,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-
 /**
  * Klasa Dto dla nowo tworzonego konta.
  */
@@ -32,7 +31,6 @@ public class NewAccountDto {
     @NotNull
     @Size(min = 1, max = 50)
     private String lastName;
-
 
     @Size(min = 9, max = 15)
     private String phoneNumber;
