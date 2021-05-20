@@ -37,6 +37,11 @@ public class AccountEditDto {
     @Size(min = 11, max = 11)
     private String pesel;
 
+    /**
+     * Tworzy nową instancję klasy Account edit dto.
+     */
+    public AccountEditDto() {
+    }
 
     /**
      * Konstruktor klasy AccountEditDto.

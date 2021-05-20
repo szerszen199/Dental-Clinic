@@ -5,6 +5,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.security.enterprise.identitystore.DatabaseIdentityStoreDefinition;
 
 @DatabaseIdentityStoreDefinition(

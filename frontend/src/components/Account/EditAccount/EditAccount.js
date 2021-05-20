@@ -2,11 +2,12 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./EditAccount.css";
+import axios from "axios";
+import {editAccountRequest} from "./EditAccountRequest";
 
 export default class EditAccount extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             isDisabled: true,
             text: "Edit",
@@ -17,6 +18,24 @@ export default class EditAccount extends React.Component {
             phoneNumber: "",
             pesel: "",
         }
+    }
+
+    componentDidMount() {
+        axios
+            .get(process.env.REACT_APP_BACKEND_URL + "account/info", {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("JWTToken")
+                }
+            })
+            .then(res => res.data)
+            .then(result => this.setState({
+                login: result.login,
+                email: result.email,
+                firstName: result.firstName,
+                lastName: result.lastName,
+                phoneNumber: result.phoneNumber,
+                pesel: result.pesel
+            }))
     }
 
     validateForm(t) {
@@ -35,7 +54,8 @@ export default class EditAccount extends React.Component {
         }
 
         function phoneNumberCorrect() {
-            return t.state.phoneNumber.length > 0 && /^\d+$/.test(t.state.phoneNumber);
+            return true;
+            // return t.state.phoneNumber.length > 0 && /^\d+$/.test(t.state.phoneNumber);
         }
 
         // TODO: przypadek obcokrajowca wymusza że peselu może nie być ale nadal warto by go zwalidowac, tylko jak?
@@ -73,6 +93,7 @@ export default class EditAccount extends React.Component {
             isDisabled: true,
             text: "Edit"
         });
+        editAccountRequest(this.state.login, this.state.email, this.state.firstName, this.state.lastName, this.state.phoneNumber, this.state.pesel)
     }
 
     // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
