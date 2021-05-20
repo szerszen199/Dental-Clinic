@@ -1,20 +1,16 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
-import java.time.LocalDateTime;
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Stream;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
-import javax.security.enterprise.SecurityContext;
 import javax.servlet.ServletContext;
-import javax.ws.rs.core.Context;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.Levels;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AdminData;
@@ -29,8 +25,10 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 
@@ -41,18 +39,16 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
-public class AccountManagerImplementation implements AccountManager {
-
-    private static final String DEFAULT_URL = "http://studapp.it.p.lodz.pl:8001";
+public class AccountManagerImplementation extends AbstractManager implements AccountManager {
 
     @Inject
     private AccountFacade accountFacade;
 
     @Inject
-    private AccessLevelFacade accessLevelFacade;
+    private LoggedInAccountUtil loggedInAccountUtil;
 
-    @Context
-    private SecurityContext securityContext;
+    @Inject
+    private AccessLevelFacade accessLevelFacade;
 
     @Inject
     private HashGenerator hashGenerator;
@@ -60,11 +56,11 @@ public class AccountManagerImplementation implements AccountManager {
     @Inject
     private RandomPasswordGenerator passwordGenerator;
 
-    @Inject
-    private MailProvider mailProvider;
-
     @EJB
     private JwtEmailConfirmationUtils jwtEmailConfirmationUtils;
+
+    @Inject
+    private MailProvider mailProvider;
 
     @Override
     public void createAccount(Account account, ServletContext servletContext) throws AppBaseException {
@@ -97,14 +93,16 @@ public class AccountManagerImplementation implements AccountManager {
         account.setCreatedBy(account);
         accountFacade.create(account);
 
-        this.sendConfirmationLink(
+        mailProvider.sendActivationMail(
                 account.getEmail(),
-                buildConfirmationLink(account.getLogin(), servletContext.getContextPath())
+                servletContext.getContextPath(),
+                jwtEmailConfirmationUtils.generateRegistrationConfirmationJwtTokenForUser(account.getLogin())
         );
     }
 
     @Override
-    public void removeAccount(Account account) {
+    public void removeAccount(Long id) throws AppBaseException {
+        Account account = accountFacade.find(id);
         accountFacade.remove(account);
     }
 
@@ -127,23 +125,16 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
-    public Account getLoggedInAccount() throws AppBaseException {
-        if (securityContext.getCallerPrincipal() == null) {
-            return null;
-        } else {
-            return accountFacade.findByLogin(securityContext.getCallerPrincipal().getName());
-        }
-    }
-
-    @Override
-    public void lockAccount(Long id) throws AppBaseException {
-        Account account = accountFacade.find(id);
+    public void lockAccount(String login) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
         account.setActive(false);
+        // TODO: Zastanowić się i ustawić pole modifiedBy po zablokowaniu konta przez system po nieudanych logowaniach
+        //account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
     }
 
     @Override
-    public void unlockAccount(Long id) throws AppBaseException {
-        Account account = accountFacade.find(id);
+    public void unlockAccount(String login) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
         account.setActive(true);
         accountFacade.edit(account);
     }
@@ -160,7 +151,7 @@ public class AccountManagerImplementation implements AccountManager {
 
     @Override
     public void editOtherAccount(Account account) throws AppBaseException {
-        account.setModifiedBy(getLoggedInAccount());
+        account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
         Account old = accountFacade.findByLogin(account.getLogin());
         if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
             throw DataValidationException.accountEditValidationError();
@@ -174,7 +165,8 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
-    public void changePassword(Account account, String oldPassword, String newPassword) throws AppBaseException {
+    public void changePassword(String login, String oldPassword, String newPassword) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
         this.verifyOldPassword(account.getPassword(), oldPassword);
         this.validateNewPassword(account.getPassword(), newPassword);
         account.setPassword(hashGenerator.generateHash(newPassword));
@@ -194,16 +186,13 @@ public class AccountManagerImplementation implements AccountManager {
     @Override
     public void resetPassword(Long id) throws AppBaseException {
         Account account = accountFacade.find(id);
-        String generatedPassword = passwordGenerator.generate(8);
-        String newPasswordHash = hashGenerator.generateHash(generatedPassword);
-
-        account.setPassword(newPasswordHash);
         account.setPassword(generateNewRandomPassword());
         // TODO: send mail with new password
     }
 
     @Override
-    public void resetPassword(Account account) {
+    public void resetPassword(String login) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
         account.setPassword(generateNewRandomPassword());
         // TODO: send mail with new password
     }
@@ -262,7 +251,8 @@ public class AccountManagerImplementation implements AccountManager {
     }
 
     @Override
-    public void setDarkMode(Account account, boolean isDarkMode) throws AppBaseException {
+    public void setDarkMode(String login, boolean isDarkMode) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
         account.setDarkMode(isDarkMode);
         accountFacade.edit(account);
     }
@@ -279,29 +269,5 @@ public class AccountManagerImplementation implements AccountManager {
         if (currentPasswordHash.contentEquals(hashGenerator.generateHash(newPassword))) {
             throw PasswordsSameException.passwordsNotDifferent();
         }
-    }
-
-    @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public boolean isAdmin(Account account) {
-        Stream<AccessLevel> accessLevels = account.getAccessLevels().stream();
-        return accessLevels.anyMatch(level -> (
-                level.getLevel().equals(Levels.ADMINISTRATOR.getLevel())
-                        && level.getActive()
-        ));
-    }
-
-    private void sendConfirmationLink(String email, String link) throws AppBaseException {
-        mailProvider.sendActivationMail(email, link);
-    }
-
-    private String buildConfirmationLink(String login, String defaultContext) {
-        StringBuilder sb = new StringBuilder(DEFAULT_URL);
-
-        sb.append(defaultContext);
-        sb.append("/api/account/confirm?token=");
-        sb.append(jwtEmailConfirmationUtils.generateRegistrationConfirmationJwtTokenForUser(login));
-
-        return sb.toString();
     }
 }

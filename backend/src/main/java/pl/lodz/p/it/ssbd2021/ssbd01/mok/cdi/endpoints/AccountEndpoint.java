@@ -1,20 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.RolesStringsTmp;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountAccessLevelDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountEditDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,6 +22,24 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountAccessLevelDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountEditDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
+
 /**
  * Typ Account endpoint.
  */
@@ -49,7 +52,13 @@ public class AccountEndpoint {
     private AccountManager accountManager;
 
     @Inject
+    private LoggedInAccountUtil loggedInAccountUtil;
+
+    @Inject
     private AccessLevelManager accessLevelManager;
+
+    @Inject
+    private MailProvider mailProvider;
 
     /**
      * Tworzy nowe konto.
@@ -78,7 +87,7 @@ public class AccountEndpoint {
      * @param jwt jwt
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/confirm/{jwt}
+    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/confirm?token={token}
     @PUT
     @Path("confirm")
     @PermitAll
@@ -96,10 +105,10 @@ public class AccountEndpoint {
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit
     @POST
     @Path("edit")
-    @RolesAllowed({RolesStringsTmp.receptionist, RolesStringsTmp.doctor, RolesStringsTmp.admin, RolesStringsTmp.user})
+    @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
     @Produces({MediaType.APPLICATION_JSON})
     public void editAccount(AccountEditDto accountDto) throws AppBaseException {
-        Account account = accountManager.getLoggedInAccount();
+        Account account = accountManager.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
         accountManager.editAccount(AccountConverter.createAccountEntityFromDto(accountDto, account));
     }
 
@@ -114,7 +123,7 @@ public class AccountEndpoint {
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit/other
     @POST
     @Path("edit/{login}")
-    @RolesAllowed({RolesStringsTmp.admin})
+    @RolesAllowed({I18n.ADMIN})
     @Produces({MediaType.APPLICATION_JSON})
     public void editOtherAccount(@PathParam("login") String login, AccountEditDto accountDto) throws AppBaseException {
         Account account = accountManager.findByLogin(login);
@@ -122,63 +131,48 @@ public class AccountEndpoint {
     }
 
     /**
-     * Revoke access level - enpoint odbierający poziom dostępu {@param level} dla użytkownika o {@param id}.
+     * Revoke access level - enpoint odbierający poziom dostępu.
      *
-     * @param id    id uzytkownika, któremu zostanie odebrany poziom dostępu
-     * @param level level odbierany poziom odstępu
-     * @throws AppBaseException typu AppBaseException
-     */
-    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{id}/{level}
-    @PUT
-    @RolesAllowed({RolesStringsTmp.admin})
-    @Path("/revokeAccessLevelById/{id}/{level}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public void revokeAccessLevel(@PathParam("id") Long id, @PathParam("level") String level) throws AppBaseException {
-        accessLevelManager.revokeAccessLevel(id, level);
-    }
-
-    /**
-     * Revoke access level - enpoint odbierający poziom dostępu {@param level} dla użytkownika o {@param login}.
-     *
-     * @param login login uzytkownika, któremu zostanie odebrany poziom dostępu
-     * @param level level odbierany poziom odstępu
+     * @param accessLevelDto obiekt zawierający poziom oraz login
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{login}/{level}
     @PUT
-    @RolesAllowed({RolesStringsTmp.admin})
-    @Path("/revokeAccessLevelByLogin/{login}/{level}")
+    @RolesAllowed({I18n.ADMIN})
+    @Path("/revokeAccessLevel}")
     @Produces({MediaType.APPLICATION_JSON})
-    public void revokeAccessLevel(@PathParam("login") String login, @PathParam("level") String level) throws AppBaseException {
-        accessLevelManager.revokeAccessLevel(login, level);
+    public void revokeAccessLevel(AccessLevelDto accessLevelDto) throws AppBaseException {
+        accessLevelManager.revokeAccessLevel(accessLevelDto.getLogin(), accessLevelDto.getLevel());
     }
 
     /**
      * Metoda służąca do blokowania konta przez administratora.
      *
-     * @param id id blokowanego konta
+     * @param login login blokowanego konta
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
-    @RolesAllowed({RolesStringsTmp.admin})
-    @Path("lock/{id}")
+    @RolesAllowed({I18n.ADMIN})
+    @Path("lock/{login}")
     @Produces({MediaType.APPLICATION_JSON})
-    public void lockAccount(@PathParam("id") Long id) throws AppBaseException {
-        accountManager.lockAccount(id);
+    public void lockAccount(@PathParam("login") String login) throws AppBaseException {
+        accountManager.lockAccount(login);
+        mailProvider.sendAccountLockByAdminMail(accountManager.findByLogin(login).getEmail());
     }
 
     /**
      * Metoda służąca do odblokowywania konta przez administratora.
      *
-     * @param id id odblokowywanego konta
+     * @param login login odblokowywanego konta
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
-    @RolesAllowed({RolesStringsTmp.admin})
-    @Path("unlock/{id}")
+    @RolesAllowed({I18n.ADMIN})
+    @Path("unlock/{login}")
     @Produces({MediaType.APPLICATION_JSON})
-    public void unlockAccount(@PathParam("id") Long id) throws AppBaseException {
-        accountManager.unlockAccount(id);
+    public void unlockAccount(@PathParam("login") String login) throws AppBaseException {
+        accountManager.unlockAccount(login);
+        mailProvider.sendAccounUnlockByAdminMail(accountManager.findByLogin(login).getEmail());
     }
 
     /**
@@ -188,7 +182,7 @@ public class AccountEndpoint {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
-    @RolesAllowed({RolesStringsTmp.admin})
+    @RolesAllowed({I18n.ADMIN})
     @Path("/addLevelByLogin")
     @Produces({MediaType.APPLICATION_JSON})
     public void addAccessLevel(AccessLevelDto accessLevelDto) throws AppBaseException {
@@ -202,10 +196,10 @@ public class AccountEndpoint {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @GET
-    @RolesAllowed({RolesStringsTmp.receptionist, RolesStringsTmp.doctor, RolesStringsTmp.admin, RolesStringsTmp.user})
+    @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
     @Path("/info")
     public Response getLoggedInAccountInfo() throws AppBaseException {
-        AccountDto account = new AccountDto(accountManager.getLoggedInAccount());
+        AccountDto account = new AccountDto(accountManager.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
         return Response.ok(account).build();
     }
 
@@ -218,7 +212,7 @@ public class AccountEndpoint {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @GET
-    @RolesAllowed({RolesStringsTmp.admin})
+    @RolesAllowed({I18n.ADMIN})
     @Path("/info/{login}")
     public Response getAccountInfoWithLogin(@PathParam("login") String login) throws AppBaseException {
         AccountDto account = new AccountDto(accountManager.findByLogin(login));
@@ -232,7 +226,7 @@ public class AccountEndpoint {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @GET
-    @RolesAllowed({RolesStringsTmp.admin})
+    @RolesAllowed({I18n.ADMIN})
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/accounts")
     public Response getAllAccounts() throws AppBaseException {
@@ -250,7 +244,7 @@ public class AccountEndpoint {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @GET
-    @RolesAllowed({RolesStringsTmp.admin})
+    @RolesAllowed({I18n.ADMIN})
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/accounts-with-levels")
     public Response getAllAccountsWithLevels() throws AppBaseException {
@@ -269,19 +263,18 @@ public class AccountEndpoint {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
-    @RolesAllowed({RolesStringsTmp.receptionist, RolesStringsTmp.doctor, RolesStringsTmp.admin, RolesStringsTmp.user})
+    @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
     @Path("new-password")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changeOwnPassword(NewPasswordDto newPassword) throws AppBaseException {
-        Account account = accountManager.getLoggedInAccount();
-        if (account == null) {
-            return Response.status(Status.UNAUTHORIZED).build();
-        }
-
+    public Response changeOwnPassword(NewPasswordDto newPassword) {
         try {
             this.validatePassword(newPassword);
-            accountManager.changePassword(account, newPassword.getOldPassword(), newPassword.getFirstPassword());
+            accountManager.changePassword(
+                    loggedInAccountUtil.getLoggedInAccountLogin(), 
+                    newPassword.getOldPassword(), 
+                    newPassword.getFirstPassword()
+            );
             return Response.status(Status.OK).build();
         } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -291,25 +284,17 @@ public class AccountEndpoint {
     /**
      * Resetuje hasło innego użytkownika z poziomu konta administratora.
      *
-     * @param id id konta, którego hasło chcemy zresetować
+     * @param login login konta, którego hasło chcemy zresetować
      * @return odpowiedź na żądanie
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
-    @RolesAllowed({RolesStringsTmp.admin})
-    @Path("reset-password/{id}")
+    @RolesAllowed({I18n.ADMIN})
+    @Path("reset-password/{login}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response resetOthersPassword(@PathParam("id") Long id) throws AppBaseException {
-        Account account = accountManager.getLoggedInAccount();
-        if (account == null) {
-            return Response.status(Status.BAD_REQUEST).build();
-        }
-        if (!accountManager.isAdmin(account)) {
-            return Response.status(Status.UNAUTHORIZED).build();
-        }
-
-        accountManager.resetPassword(id);
+    public Response resetOthersPassword(@PathParam("login") String login) throws AppBaseException {
+        accountManager.resetPassword(login);
         return Response.status(Status.OK).build();
     }
 
@@ -321,18 +306,17 @@ public class AccountEndpoint {
      */
     @PUT
     @Path("reset-password")
-    @RolesAllowed({RolesStringsTmp.receptionist, RolesStringsTmp.doctor, RolesStringsTmp.admin, RolesStringsTmp.user})
+    @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response resetOwnPassword() throws AppBaseException {
-        Account account = accountManager.getLoggedInAccount();
-        if (account == null) {
+        String login = loggedInAccountUtil.getLoggedInAccountLogin();
+
+        if (login == null) {
             return Response.status(Status.BAD_REQUEST).build();
         }
-        if (!account.getActive()) {
-            return Response.status(Status.BAD_REQUEST).build();
-        }
-        accountManager.resetPassword(account);
+
+        accountManager.resetPassword(login);
         return Response.status(Status.OK).build();
     }
 
@@ -346,15 +330,15 @@ public class AccountEndpoint {
      */
     @PUT
     @Path("dark-mode")
-    @RolesAllowed({RolesStringsTmp.receptionist, RolesStringsTmp.doctor, RolesStringsTmp.admin, RolesStringsTmp.user})
+    @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
     @Produces(MediaType.APPLICATION_JSON)
     public Response changeDarkMode(@QueryParam("dark-mode") boolean isDarkMode) throws AppBaseException {
-        Account account = accountManager.getLoggedInAccount();
-        if (account == null) {
+        String login = loggedInAccountUtil.getLoggedInAccountLogin();
+        if (login == null) {
             return Response.status(Status.UNAUTHORIZED).build();
         }
         try {
-            accountManager.setDarkMode(account, isDarkMode);
+            accountManager.setDarkMode(login, isDarkMode);
         } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }

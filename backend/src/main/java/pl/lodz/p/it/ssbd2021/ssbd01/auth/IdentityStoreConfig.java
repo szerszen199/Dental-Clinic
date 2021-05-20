@@ -1,8 +1,9 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.auth;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.RolesStringsTmp;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 
 import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.security.enterprise.identitystore.DatabaseIdentityStoreDefinition;
 
@@ -13,7 +14,7 @@ import javax.security.enterprise.identitystore.DatabaseIdentityStoreDefinition;
         hashAlgorithm = AuthHashImpl.class
 )
 
-@DeclareRoles({RolesStringsTmp.user, RolesStringsTmp.admin, RolesStringsTmp.doctor, RolesStringsTmp.receptionist})
+@DeclareRoles({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
 @ApplicationScoped
 public class IdentityStoreConfig {
 }

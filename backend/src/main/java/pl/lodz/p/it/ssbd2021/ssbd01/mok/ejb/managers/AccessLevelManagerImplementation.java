@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 import javax.ejb.Stateful;
@@ -17,7 +18,7 @@ import javax.interceptor.Interceptors;
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
-public class AccessLevelManagerImplementation implements AccessLevelManager {
+public class AccessLevelManagerImplementation extends AbstractManager implements AccessLevelManager {
     @Inject
     private AccessLevelFacade accessLevelFacade;
 

@@ -51,4 +51,13 @@ public class JwtResponseDTO {
     public String getToken() {
         return token;
     }
+
+    /**
+     * Pobiera pole user info response dto.
+     *
+     * @return user info response dto
+     */
+    public UserInfoResponseDTO getUserInfoResponseDTO() {
+        return userInfoResponseDTO;
+    }
 }

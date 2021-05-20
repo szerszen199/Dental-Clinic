@@ -9,6 +9,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.UserInfoResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtLoginUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
@@ -33,6 +34,9 @@ import java.time.LocalDateTime;
 @PermitAll
 @Interceptors({LogInterceptor.class})
 public class LoginEndpoint {
+
+    @Inject
+    private MailProvider mailProvider;
 
     private static final String[] HEADERS_TO_TRY = {
             "X-Forwarded-For",
@@ -63,7 +67,11 @@ public class LoginEndpoint {
      * @param propertiesLoader     properties loader
      */
     @Inject
-    public LoginEndpoint(IdentityStoreHandler identityStoreHandler, JwtLoginUtils jwtUtils, HttpServletRequest httpServletRequest, AccountManager accountManager, PropertiesLoader propertiesLoader) {
+    public LoginEndpoint(IdentityStoreHandler identityStoreHandler,
+                         JwtLoginUtils jwtUtils,
+                         HttpServletRequest httpServletRequest,
+                         AccountManager accountManager,
+                         PropertiesLoader propertiesLoader) {
         this.identityStoreHandler = identityStoreHandler;
         this.jwtUtils = jwtUtils;
         this.request = httpServletRequest;
@@ -83,29 +91,29 @@ public class LoginEndpoint {
     public Response authenticate(LoginRequestDTO loginRequestDTO) {
         String ip = getClientIpAddress(request);
         CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(loginRequestDTO.toCredential());
+        try {
+        Account account = accountManager.findByLogin(loginRequestDTO.getUsername());
         if (credentialValidationResult.getStatus() != CredentialValidationResult.Status.VALID) {
-            // TODO: 11.05.2021 Trzeba jakoś sprawdzić czy konto jest zablokowane i wtedy inny err
-            try {
                 accountManager.updateAfterUnsuccessfulLogin(loginRequestDTO.getUsername(), ip, LocalDateTime.now());
-                Account account = accountManager.findByLogin(loginRequestDTO.getUsername());
-                if (account.getUnsuccessfulLoginCounter() >= propertiesLoader.getInvalidLoginCountBlock()) {
-                    accountManager.lockAccount(account.getId());
+                if (account.getUnsuccessfulLoginCounter() >= propertiesLoader.getInvalidLoginCountBlock() && account.getActive()) {
+                    accountManager.lockAccount(account.getLogin());
                     // TODO: 11.05.2021 informacja na maila? Idk
                 }
-            } catch (AppBaseException e) {
-                // TODO: 11.05.2021 Moze tutaj cos zrobic?
-                e.printStackTrace();
-            }
-
             return Response.status(Response.Status.UNAUTHORIZED).entity(new MessageResponseDto(I18n.AUTHENTICATION_FAILURE)).build();
+        }
+        } catch (AppBaseException e) {
+            // TODO: 11.05.2021 Moze tutaj cos zrobic?
+            e.printStackTrace();
         }
         UserInfoResponseDTO userInfoResponseDTO = new UserInfoResponseDTO();
         try {
             accountManager.updateAfterSuccessfulLogin(credentialValidationResult.getCallerPrincipal().getName(), ip, LocalDateTime.now());
-            userInfoResponseDTO.setFirstName(accountManager.getLoggedInAccount().getFirstName());
-            userInfoResponseDTO.setLastName(accountManager.getLoggedInAccount().getLastName());
-            userInfoResponseDTO.setDarkMode(accountManager.getLoggedInAccount().isDarkMode());
-            userInfoResponseDTO.setLanguage(accountManager.getLoggedInAccount().getLanguage());
+
+            Account loggedInAccount = accountManager.findByLogin(loginRequestDTO.getUsername());
+            userInfoResponseDTO.setFirstName(loggedInAccount.getFirstName());
+            userInfoResponseDTO.setLastName(loggedInAccount.getLastName());
+            userInfoResponseDTO.setDarkMode(loggedInAccount.isDarkMode());
+            userInfoResponseDTO.setLanguage(loggedInAccount.getLanguage());
         } catch (AppBaseException e) {
             // TODO: 11.05.2021 Moze tutaj cos zrobic?
             e.printStackTrace();

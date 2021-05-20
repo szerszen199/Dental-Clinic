@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./Login.css";
+import {makeLoginRequest} from "./LoginRequest";
+import {useHistory} from "react-router-dom";
 
 export default function Login() {
     const [login, setLogin] = useState("");
@@ -13,6 +15,7 @@ export default function Login() {
 
     function handleSubmit(event) {
         event.preventDefault();
+        makeLoginRequest(login, password);
     }
 
     return (

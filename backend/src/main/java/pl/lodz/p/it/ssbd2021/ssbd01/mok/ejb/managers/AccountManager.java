@@ -1,14 +1,11 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.ejb.Local;
 import javax.servlet.ServletContext;
-
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-
-import java.time.LocalDateTime;
 
 /**
  * Interfejs Account manager.
@@ -29,9 +26,10 @@ public interface AccountManager {
     /**
      * usun konto.
      *
-     * @param account konto do usuniecia
+     * @param id id konta do usuniecia
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void removeAccount(Account account);
+    void removeAccount(Long id) throws AppBaseException;
 
     /**
      * Potwierdzenie konta.
@@ -50,30 +48,21 @@ public interface AccountManager {
      */
     void confirmAccountByToken(String jwt) throws AppBaseException;
 
-
-    /**
-     * Pobiera zalogowane konto.
-     *
-     * @return zalogowane konto
-     * @throws AppBaseException wyjątek typu AppBaseException
-     */
-    Account getLoggedInAccount() throws AppBaseException;
-
     /**
      * Metoda służąca do blokowania konta.
      *
-     * @param id identyfikator blokowanego konta
+     * @param login login blokowanego konta
      * @throws AppBaseException bazowy wyjątek aplikacji
      */
-    void lockAccount(Long id) throws AppBaseException;
+    void lockAccount(String login) throws AppBaseException;
 
     /**
      * Metoda służąca do odblokowywania konta.
      *
-     * @param id identyfikator odblokowywanego konta
+     * @param login login odblokowywanego konta
      * @throws AppBaseException bazowy wyjątek aplikacji
      */
-    void unlockAccount(Long id) throws AppBaseException;
+    void unlockAccount(String login) throws AppBaseException;
 
     /**
      * Edytuje wlasne konto.
@@ -103,12 +92,12 @@ public interface AccountManager {
     /**
      * Zmienia hasło {@param newPassword} wskazanego konta {@param account}.
      *
-     * @param account     konto, którego hasło jest edytowane
+     * @param login       login konta, którego hasło jest edytowane
      * @param oldPassword stare hasło podane przez użytkownika
      * @param newPassword nowe hasło
      * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                          nie powiedzie się.
      */
-    void changePassword(Account account, String oldPassword, String newPassword) throws AppBaseException;
+    void changePassword(String login, String oldPassword, String newPassword) throws AppBaseException;
 
 
     /**
@@ -141,26 +130,19 @@ public interface AccountManager {
      * Resetuje hasło podanego konta. Ustawia alfanumeryczne hasło o długości
      * 8 znaków.
      *
-     * @param account konto, któego hasło ma zostać zresetowane
+     * @param login login konta, którego hasło ma zostać zresetowane
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void resetPassword(Account account);
-
-    /**
-     * Sprawdza, czy podane konto ma aktywny poziom dostępu administratora.
-     *
-     * @param account sprawdzane konto
-     * @return czy konto posiada aktywne uprawnienia administratora
-     */
-    boolean isAdmin(Account account);
+    void resetPassword(String login) throws AppBaseException;
 
     /**
      * Ustawia pole dark mode na {@param isDarkMode} w koncie {@param account}.
      *
-     * @param account    zmieniane konto
+     * @param login      login zmienianego konta
      * @param isDarkMode tryb dark mode
      * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych nie powiedzie się.
      */
-    void setDarkMode(Account account, boolean isDarkMode) throws AppBaseException;
+    void setDarkMode(String login, boolean isDarkMode) throws AppBaseException;
 
 
     /**

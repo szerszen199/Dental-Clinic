@@ -6,7 +6,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-
 /**
  * Klasa Dto dla nowo tworzonego konta.
  */
@@ -33,15 +32,16 @@ public class NewAccountDto {
     @Size(min = 1, max = 50)
     private String lastName;
 
-
     @Size(min = 9, max = 15)
     private String phoneNumber;
 
 
-    @Size(min = 9, max = 9)
+    @Size(min = 11, max = 11)
     private String pesel;
 
-
+    @NotNull
+    private String language;
+    
     /**
      * Tworzy nową instancję klasy NewAccountDto.
      *
@@ -52,9 +52,10 @@ public class NewAccountDto {
      * @param lastName    nazwisko użytkownika
      * @param phoneNumber numer telefonu
      * @param pesel       pesel
+     * @param language    preferowany język użytkownika
      */
     public NewAccountDto(String login, String email, String password, String firstName,
-                         String lastName, String phoneNumber, String pesel) {
+                         String lastName, String phoneNumber, String pesel, String language) {
         this.login = login;
         this.email = email;
         this.password = password;
@@ -62,6 +63,13 @@ public class NewAccountDto {
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.pesel = pesel;
+        this.language = language;
+    }
+
+    /**
+     * Tworzy nową instancję klasy New account dto.
+     */
+    public NewAccountDto() {
     }
 
     public String getLogin() {
@@ -118,5 +126,13 @@ public class NewAccountDto {
 
     public void setPesel(String pesel) {
         this.pesel = pesel;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

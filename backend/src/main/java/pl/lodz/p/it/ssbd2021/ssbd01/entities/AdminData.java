@@ -10,7 +10,7 @@ import org.hibernate.annotations.NamedQuery;
  * Typ Admin data reprezentujący poziom dostępu konta aplikacji dla admina.
  */
 @Entity
-@DiscriminatorValue("level.admin")
+@DiscriminatorValue("level.administrator")
 @NamedQueries({
         @NamedQuery(name = "AdminData.findAll", query = "SELECT a FROM AdminData a")})
 public class AdminData extends AccessLevel implements Serializable {
