@@ -61,7 +61,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Inject
     private MailProvider mailProvider;
-    private Account account;
 
     @Override
     public void createAccount(Account account, ServletContext servletContext) throws AppBaseException {
@@ -196,7 +195,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public List<Account> findByEnabled(boolean enabled) {
+    public List<Account> findByEnabled(boolean enabled) throws AppBaseException {
         return accountFacade.findByEnabled(enabled);
     }
 
