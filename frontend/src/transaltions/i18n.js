@@ -1,35 +1,34 @@
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
+import translationEN from "./EN/EN.json";
+import translationPL from "./PL/PL.json";
+import {initReactI18next} from "react-i18next";
 
-i18n.use(LanguageDetector).init({
-    resources: {
-        EN: {
-            translations: {
-                Hello: "Hello",
-            }
+
+i18n
+    .use(LanguageDetector)
+    .use(initReactI18next)
+    .init({
+        debug: true,
+        lng: "en",
+        fallbackLng: "en",
+
+        keySeparator: false,
+
+        interpolation: {
+            escapeValue: false
         },
 
-        PL: {
-            translations: {
-                Hello: "Cześć"
+        resources: {
+            EN: {
+                translations: translationEN
+            },
+            PL: {
+                translations: translationPL
             }
-        }
-    },
-    fallbackLng: "en",
-    debug: true,
+        },
+        ns: ["translations"],
+        defaultNS: "translations"
+    });
 
-    ns: ["translations"],
-    defaultNS: "translations",
-
-    keySeparator: false,
-
-    interpolation: {
-        escapeValue: false,
-        formatSeparator: ","
-    },
-
-    react: {
-        wait: true
-    }
-})
 export default i18n;
