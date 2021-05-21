@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -31,6 +32,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountAccessLevelDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountEditDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.LanguageDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.DarkModeDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
@@ -272,8 +275,8 @@ public class AccountEndpoint {
         try {
             this.validatePassword(newPassword);
             accountManager.changePassword(
-                    loggedInAccountUtil.getLoggedInAccountLogin(), 
-                    newPassword.getOldPassword(), 
+                    loggedInAccountUtil.getLoggedInAccountLogin(),
+                    newPassword.getOldPassword(),
                     newPassword.getFirstPassword()
             );
             return Response.status(Status.OK).build();
@@ -325,21 +328,39 @@ public class AccountEndpoint {
     /**
      * Endpoint dla ustawiania w aktualnym koncie trybu ciemnego.
      *
-     * @param isDarkMode true jeśli chcemy ustawić tryb ciemny, inaczej false.
-     * @return Response 401 jeśli użytkownik jest unauthorised, 200 jeśli udało się ustawić tryb ciemny, inaczej 400
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @param darkModeDto dto zawierające ustawienia trybu ciemnego.
+     * @return 200 jeśli udało się ustawić tryb ciemny, inaczej 400
      */
     @PUT
     @Path("dark-mode")
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changeDarkMode(@QueryParam("dark-mode") boolean isDarkMode) throws AppBaseException {
+    public Response changeDarkMode(DarkModeDto darkModeDto) {
         String login = loggedInAccountUtil.getLoggedInAccountLogin();
-        if (login == null) {
-            return Response.status(Status.UNAUTHORIZED).build();
-        }
         try {
-            accountManager.setDarkMode(login, isDarkMode);
+            accountManager.setDarkMode(login, darkModeDto.isDarkMode());
+        } catch (AppBaseException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.status(Status.OK).build();
+    }
+
+
+    /**
+     * Endpoint dla ustawiania w aktualnym koncie języka interfejsu.
+     *
+     * @param languageDto dto z pożądanym przez użytkownka językiem
+     * @return 200 jeśli udało się zmienić język, inaczej 400
+     */
+    @PUT
+    @Path("language")
+    @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response changeLanguage(LanguageDto languageDto) {
+        String login = loggedInAccountUtil.getLoggedInAccountLogin();
+        try {
+            accountManager.setLanguage(login, languageDto.getLanguage().toLowerCase(Locale.ROOT));
         } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }

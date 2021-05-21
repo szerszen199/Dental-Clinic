@@ -10,17 +10,25 @@ import Receptionist from "../Receptionist/Receptionist";
 import Admin from "../Admin/Admin";
 import ReadinessComponent from "../../components/GetReadinessResource/Readiness"
 import Patient from "../Patient/Patient";
-import {userRolesStorageName} from "../../components/Login/LoginRequest";
 import Doctor from "../Doctor/Doctor";
-import axios from "axios";
+import axios from "axios";import {JWTRefreshTokenStorageName, JWTTokenCookieName, RolesCookieName} from "../../components/Login/LoginRequest";
+import Cookies from "js-cookie";
+import {logout} from "../../components/Login/Logout";
+
+const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
+const roleDoctorName = process.env.REACT_APP_ROLE_DOCTOR
+const roleReceptionistName = process.env.REACT_APP_ROLE_RECEPTIONIST
+const rolePatientName = process.env.REACT_APP_ROLE_PATIENT
+const roleGuestName = process.env.REACT_APP_ROLE_GUEST
 
 const accessLevelDictionary = {
-    "Guest": "rgba(1, 1, 1, 0.1)",
-    "Patient": "rgba(93, 188, 242, 0.2)",
-    "Receptionist": "rgba(192, 255, 0, 0.4)",
-    "Doctor": "rgba(255, 216, 0, 0.2)",
-    "Admin": "rgba(238, 0, 0, 0.1)",
+    roleGuestName: "rgba(1, 1, 1, 0.1)",
+    rolePatientName: "rgba(93, 188, 242, 0.2)",
+    roleReceptionistName: "rgba(192, 255, 0, 0.4)",
+    roleDoctorName: "rgba(255, 216, 0, 0.2)",
+    roleAdminName: "rgba(238, 0, 0, 0.1)",
 };
+export const jwtCookieExpirationTime = process.env.REACT_APP_JWT_EXPIRATION_MS / (24 * 60 * 60 * 100)
 let actualAccessLevel = "Doctor";
 
 export default class MainView extends React.Component {
@@ -37,13 +45,32 @@ export default class MainView extends React.Component {
         }
     }
 
+    makeRefreshRequest() {
+        let variable = localStorage.getItem(JWTRefreshTokenStorageName);
+        if (variable != null && variable !== "null") {
+            axios.post(process.env.REACT_APP_BACKEND_URL + "auth/refresh", {
+                refreshToken: localStorage.getItem(JWTRefreshTokenStorageName)
+            }).then((response) => {
+                // TODO: Czas expieracji.
+                Cookies.set(JWTTokenCookieName, response.data.authJwtToken.token, { expires: jwtCookieExpirationTime});
+                Cookies.set(RolesCookieName, response.data.roles, {expires: jwtCookieExpirationTime});
+                localStorage.setItem(JWTRefreshTokenStorageName, response.data.refreshJwtToken.token);
+            }).catch((response) => {
+                // todo cos z tym response?
+                console.log(response);
+                logout();
+            })
+        }
+    }
+
     componentDidMount() {
-        let jwtToken = localStorage.getItem("JWTToken")
-        if (jwtToken != null) {
-            axios
-                .get(process.env.REACT_APP_BACKEND_URL + "account/info", {
+        this.makeRefreshRequest();
+        setInterval(this.makeRefreshRequest, parseInt(process.env.REACT_APP_JWT_EXPIRATION_MS) / 10);
+        let token = Cookies.get(JWTTokenCookieName);
+        if (typeof token !== 'undefined' && token !== null && token !== "null") {
+            axios.get(process.env.REACT_APP_BACKEND_URL + "account/info", {
                     headers: {
-                        Authorization: "Bearer " + jwtToken
+                        Authorization: "Bearer " + token
                     }
                 })
                 .then(res => res.data)
@@ -53,6 +80,10 @@ export default class MainView extends React.Component {
                     });
                     console.log(this.state.login)
                 })
+                .catch(result => {
+                    // TODO:
+                    console.log(result);
+            })
         }
     }
 
@@ -121,17 +152,22 @@ export default class MainView extends React.Component {
 }
 
 function Wybierz() {
+    function isEmpty(value){
+        return (value == null || value.length === 0);
+    }
     // TODO: Ma być możliwość wyboru jaką z ról które mamy chcemy widzieć tzn mamy się móc przełączać między rolami
     //  Nie ma tego narazie więc jest tak
-    let levels = localStorage.getItem(userRolesStorageName) == null ? [] : localStorage.getItem(userRolesStorageName);
-    if (levels.includes("level.administrator")) {
-        return Admin();
-    } else if (levels.includes("level.patient")) {
-        return Patient();
-    } else if (levels.includes("level.receptionist")) {
-        return Receptionist();
-    } else if (levels.includes("level.doctor")) {
-        return Doctor();
+    let levels = Cookies.get(RolesCookieName);
+    if (!isEmpty(levels)) {
+        if (levels.includes(roleAdminName)) {
+            return Admin();
+        } else if (levels.includes(rolePatientName)) {
+            return Patient();
+        } else if (levels.includes(roleReceptionistName)) {
+            return Receptionist();
+        } else if (levels.includes(roleDoctorName)) {
+            return Doctor();
+        }
     }
     return Guest();
 }

@@ -1,31 +1,17 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.security;
 
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.JWSObject;
-import com.nimbusds.jose.JWSSigner;
-import com.nimbusds.jose.JWSVerifier;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.text.ParseException;
-import java.util.Date;
 
-@Stateless
-public class JwtLoginUtils extends JwtUtilsAbstract {
+public class JwtRefreshUtils extends JwtUtilsAbstract {
 
     @Inject
     private PropertiesLoader propertiesLoader;
 
     /**
-     * Generuje token JWT na potrzeby weryfikacji rejestracji.
+     * Generuje token JWT na potrzeby odświeżenia tokenu Jwt.
      *
      * @param username username
      * @return JWT token
@@ -36,16 +22,16 @@ public class JwtLoginUtils extends JwtUtilsAbstract {
 
     @Override
     protected Long getJwtExpiration() {
-        return propertiesLoader.getJwtExpiration();
+        return propertiesLoader.getRefreshJwtExpiration();
     }
 
     @Override
     protected String getJwtSecret() {
-        return propertiesLoader.getJwtSecret();
+        return propertiesLoader.getRefreshJwtSecret();
     }
 
     /**
-     * Pobiera login użytkownika z tokenu JWT wydanego na potrzebę weryfikacji konta po rejestracji.
+     * Pobiera login użytkownika z tokenu JWT wydanego na potrzebę odświeżenia tokenu Jwt.
      *
      * @param token JWT token
      * @return Login użytkownika o zadanym tokenie
@@ -56,7 +42,7 @@ public class JwtLoginUtils extends JwtUtilsAbstract {
     }
 
     /**
-     * Metoda sprawdzająca token jwt na potrzeby weryfikacji konta poprzez email.
+     * Metoda sprawdzająca token jwt na potrzeby odświeżenia tokenu Jwt.
      *
      * @param tokenToValidate JWT token
      * @return boolean
@@ -65,6 +51,4 @@ public class JwtLoginUtils extends JwtUtilsAbstract {
     public boolean validateJwtToken(String tokenToValidate) {
         return super.validateJwtToken(tokenToValidate);
     }
-
-
 }

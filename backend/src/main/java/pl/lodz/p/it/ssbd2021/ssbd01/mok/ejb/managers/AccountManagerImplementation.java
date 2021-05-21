@@ -118,7 +118,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             throw AccountException.invalidConfirmationToken();
         }
         try {
-            String login = jwtEmailConfirmationUtils.getUserNameFromRegistrationConfirmationJwtToken(jwt);
+            String login = jwtEmailConfirmationUtils.getUserNameFromJwtToken(jwt);
             accountFacade.findByLogin(login).setEnabled(true);
             mailProvider.sendActivationConfirmationMail(accountFacade.findByLogin(login).getEmail());
         } catch (AppBaseException | ParseException e) {
@@ -271,6 +271,13 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     public void setDarkMode(String login, boolean isDarkMode) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
         account.setDarkMode(isDarkMode);
+        accountFacade.edit(account);
+    }
+
+    @Override
+    public void setLanguage(String login, String language) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
+        account.setLanguage(language);
         accountFacade.edit(account);
     }
 
