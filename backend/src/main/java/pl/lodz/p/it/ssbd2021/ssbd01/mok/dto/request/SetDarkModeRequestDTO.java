@@ -1,11 +1,11 @@
-package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto;
+package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request;
 
 import javax.validation.constraints.NotNull;
 
 /**
  * Klasa DarkModeDto dla motywu ciemnego.
  */
-public class DarkModeDto {
+public class SetDarkModeRequestDTO {
 
     @NotNull
     private boolean isDarkMode;
@@ -19,13 +19,13 @@ public class DarkModeDto {
      *
      * @param isDarkMode ustawienie trybu ciemnego
      */
-    public DarkModeDto(boolean isDarkMode) {
+    public SetDarkModeRequestDTO(boolean isDarkMode) {
         this.isDarkMode = isDarkMode;
     }
 
     /**
      * Tworzy nową instancję klasy DarkModeDto.
      */
-    public DarkModeDto() {
+    public SetDarkModeRequestDTO() {
     }
 }
