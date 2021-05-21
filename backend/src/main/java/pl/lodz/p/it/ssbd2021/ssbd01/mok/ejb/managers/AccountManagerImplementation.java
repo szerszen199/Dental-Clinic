@@ -102,6 +102,41 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
+    public void createAccountByAdministrator(Account account,
+                                             ServletContext servletContext) throws AppBaseException {
+        account.setPassword(hashGenerator.generateHash("P@ssword"));
+
+        AccessLevel patientData = new PatientData();
+        patientData.setActive(true);
+        patientData.setCreatedBy(account);
+        patientData.setAccountId(account);
+        account.getAccessLevels().add(patientData);
+
+        AccessLevel receptionistData = new ReceptionistData();
+        receptionistData.setActive(false);
+        receptionistData.setCreatedBy(account);
+        receptionistData.setAccountId(account);
+        account.getAccessLevels().add(receptionistData);
+
+        AccessLevel doctorData = new DoctorData();
+        doctorData.setActive(false);
+        doctorData.setCreatedBy(account);
+        doctorData.setAccountId(account);
+        account.getAccessLevels().add(doctorData);
+
+        AccessLevel adminData = new AdminData();
+        adminData.setActive(false);
+        adminData.setCreatedBy(account);
+        adminData.setAccountId(account);
+        account.getAccessLevels().add(adminData);
+
+        account.setCreatedBy(account);
+
+        accountFacade.create(account);
+
+    }
+
+    @Override
     public void removeAccount(Long id) throws AppBaseException {
         Account account = accountFacade.find(id);
         accountFacade.remove(account);
