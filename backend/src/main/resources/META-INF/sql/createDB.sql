@@ -19,7 +19,7 @@ CREATE TABLE accounts
 (
     id                                        BIGINT PRIMARY KEY,          -- klucz główny tabeli
     login                                     VARCHAR(60)        NOT NULL  -- login użytkownika, niezmienny
-        CONSTRAINT acc_login_unique UNIQUE,
+        CONSTRAINT acc_login_unique UNIQUE constraint account_login_not_anon check (login not in ('anonymous')),
     email                                     VARCHAR(100)       NOT NULL  -- Adres email użytkownika, wykorzystywany do wysłania wiadomości z linkiem weryfikacyjnym
         CONSTRAINT acc_email_unique UNIQUE,
     password                                  CHAR(64)           NOT NULL, -- Skrót hasła uzytkownika - SHA-256.
