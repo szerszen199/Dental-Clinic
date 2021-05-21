@@ -45,6 +45,12 @@ public class AccountEditDto {
 
     /**
      * Konstruktor klasy AccountEditDto.
+     */
+    public AccountEditDto() {
+    }
+
+    /**
+     * Konstruktor klasy AccountEditDto.
      *
      * @param login       login
      * @param email       nowy email

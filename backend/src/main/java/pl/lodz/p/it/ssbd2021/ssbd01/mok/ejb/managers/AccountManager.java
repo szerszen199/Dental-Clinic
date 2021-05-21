@@ -68,18 +68,30 @@ public interface AccountManager {
      * Edytuje wlasne konto.
      *
      * @param account edytowane konto
+     * @param servletContext kontekst serwletów, służy do współdzielenia informacji
+     *                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void editAccount(Account account) throws AppBaseException;
+    void editAccount(Account account, ServletContext servletContext) throws AppBaseException;
 
 
     /**
      * Edytuje konto innego użytkownika.
      *
      * @param account edytowane konto
+     * @param servletContext kontekst serwletów, służy do współdzielenia informacji
+     *                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void editOtherAccount(Account account) throws AppBaseException;
+    void editOtherAccount(Account account, ServletContext servletContext) throws AppBaseException;
+
+    /**
+     * Potwierdzenie zmiany maila.
+     *
+     * @param jwt token jwt
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    void confirmMailChangeByToken(String jwt) throws AppBaseException;
 
     /**
      * Pobranie listy wszystkich kont.
