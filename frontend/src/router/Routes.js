@@ -7,7 +7,7 @@ import Login from "../components/Login/Login";
 import Dashboard from "../components/Dashboard/Dashboard"
 import PrivateRoute from "../PrivateRoute";
 import Account from "../components/Account/Account"
-import Accounts from "../components/AccountsList/Accounts"
+import AccountsList from "../components/AccountsList/AccountsList";
 import Prescription from "../components/Prescription/Prescription"
 import MyAppointment from "../components/Appointment/MyAppointment/MyAppointment";
 import PlanAppointment from "../components/Appointment/PlanAppointment/PlanAppointment";
@@ -33,7 +33,7 @@ export default function Routes() {
             {/*<PrivateRoute authed={true} path='/dashboard' component={Dashboard} />*/}
             <PrivateRoute authed={true} path='/prescriptions' component={Prescription} />
             <PrivateRoute authed={true} path='/account' component={Account} />
-            <PrivateRoute authed={true} path='/accounts' component={Accounts} />
+            <PrivateRoute authed={true} path='/accounts' component={AccountsList} />
             <PrivateRoute authed={true} path='/my-appointments' component={MyAppointment} />
             <PrivateRoute authed={true} path='/plan-appointment' component={PlanAppointment} />
             <PrivateRoute authed={true} path='/list-doctors' component={ListDoctors} />
