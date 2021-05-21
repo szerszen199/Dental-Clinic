@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 @Path("readiness")
 public class Readiness {
 
+    @PermitAll
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response isReady() {
