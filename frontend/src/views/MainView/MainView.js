@@ -57,7 +57,7 @@ export default class MainView extends React.Component {
             axios.post(process.env.REACT_APP_BACKEND_URL + "auth/refresh", {
                 refreshToken: localStorage.getItem(JWTRefreshTokenStorageName)
             }, {
-                Authorization: "Bearer " + JWTAuthToken
+                headers: {Authorization: "Bearer " + JWTAuthToken}
             }).then((response) => {
                 // TODO: Czas expieracji.
                 Cookies.set(JWTTokenCookieName, response.data.authJwtToken.token, {expires: jwtCookieExpirationTime});
