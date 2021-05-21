@@ -136,7 +136,7 @@ public class AccountEndpoint {
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit/other
     @POST
-    @Path("edit/{login}")
+    @Path("edit-other")
     @RolesAllowed({I18n.ADMIN})
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
@@ -175,7 +175,7 @@ public class AccountEndpoint {
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{login}/{level}
     @PUT
     @RolesAllowed({I18n.ADMIN})
-    @Path("/revokeAccessLevel}")
+    @Path("/revokeAccessLevel")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response revokeAccessLevel(RevokeAndGrantAccessLevelDTO revokeAndGrantAccessLevelDTO) throws AppBaseException {
@@ -197,7 +197,7 @@ public class AccountEndpoint {
     @PUT
     @RolesAllowed({I18n.ADMIN})
     @Consumes({MediaType.APPLICATION_JSON})
-    @Path("lock/{login}")
+    @Path("lock")
     @Produces({MediaType.APPLICATION_JSON})
     public Response lockAccount(SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
@@ -216,7 +216,7 @@ public class AccountEndpoint {
     @PUT
     @RolesAllowed({I18n.ADMIN})
     @Consumes({MediaType.APPLICATION_JSON})
-    @Path("unlock/{login}")
+    @Path("unlock")
     @Produces({MediaType.APPLICATION_JSON})
     public Response unlockAccount(SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
@@ -273,7 +273,7 @@ public class AccountEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @RolesAllowed({I18n.ADMIN})
-    @Path("/info/{login}")
+    @Path("/other-account-info")
     public Response getAccountInfoWithLogin(SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
         AccountInfoResponseDTO account = new AccountInfoResponseDTO(accountManager.findByLogin(simpleUsernameRequestDTO.getLogin()));
@@ -354,7 +354,7 @@ public class AccountEndpoint {
      */
     @PUT
     @RolesAllowed({I18n.ADMIN})
-    @Path("reset-password/{login}")
+    @Path("reset-password")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response resetOthersPassword(SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
@@ -370,7 +370,7 @@ public class AccountEndpoint {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
-    @Path("reset-password")
+    @Path("reset-other-password")
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
