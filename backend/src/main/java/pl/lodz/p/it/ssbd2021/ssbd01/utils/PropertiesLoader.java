@@ -19,6 +19,7 @@ public class PropertiesLoader {
     private String confirmationJwtSecret;
     private Long confirmationJwtExpiration;
     private Long deleteInactiveAccount;
+    private String anonymousUserName;
 
 
     private String jwtSecret;
@@ -65,6 +66,10 @@ public class PropertiesLoader {
 
     private Long jwtExpiration;
 
+    public String getAnonymousUserName() {
+        return anonymousUserName;
+    }
+
     @PostConstruct
     private void loadProperties() {
         Properties prop = null;
@@ -85,5 +90,6 @@ public class PropertiesLoader {
         deleteInactiveAccount = Long.valueOf(prop.getProperty("delete.inactive.accountMs"));
         jwtExpiration = Long.valueOf(prop.getProperty("jwt.expirationMs"));
         invalidLoginCountBlock = Long.valueOf(prop.getProperty("invalid.login.count.block"));
+        anonymousUserName = prop.getProperty("anonymous.user.name");
     }
 }
