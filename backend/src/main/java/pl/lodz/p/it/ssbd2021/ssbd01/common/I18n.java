@@ -9,7 +9,7 @@ public class I18n {
     public static final String RECEPTIONIST = "level.receptionist";
     public static final String DOCTOR = "level.doctor";
 
-
+    public static final String INVALID_REFRESH_TOKEN = "invalid_refresh_token";
     public static final String PASSWORDS_NOT_DIFFER = "both_passwords_are_same";
     public static final String AUTHENTICATION_FAILURE = "invalid_login_password_combination";
     public static final String PASSWORD_TOO_SHORT = "password_too_short";
