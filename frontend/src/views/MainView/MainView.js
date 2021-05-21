@@ -12,6 +12,8 @@ import ReadinessComponent from "../../components/GetReadinessResource/Readiness"
 import Patient from "../Patient/Patient";
 import {userRolesStorageName} from "../../components/Login/LoginRequest";
 import Doctor from "../Doctor/Doctor";
+import {MDBContainer, MDBFooter} from "mdbreact";
+import './MainView.css';
 
 const accessLevelDictionary = {
     "Guest": "rgba(1, 1, 1, 0.1)",
@@ -83,6 +85,21 @@ function MainView() {
                     </Container>
                 </div>
             </Navbar>
+
+            <MDBFooter color="blue" className="font-small pt-4 mt-4" id="footer">
+                       {/*// style={{*/}
+                       {/*//     position: "fixed",*/}
+                       {/*//     bottom: 0,*/}
+                       {/*//     minWidth: "100%",*/}
+                       {/*// }}>*/}
+                <div className="footer-copyright text-left py-3" style={{minWidth: "100%"}}>
+                    <MDBContainer fluid>
+                        Klinika Stomatologiczna, &copy; {new Date().getFullYear()} Copyright by 2021SSBD01
+                    </MDBContainer>
+                </div>
+            </MDBFooter>
+
+
             <Routes/>
             <ReadinessComponent/>
         </div>
