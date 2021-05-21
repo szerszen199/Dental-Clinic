@@ -172,6 +172,14 @@ public class LoginEndpoint {
             // TODO: 11.05.2021 Moze tutaj cos zrobic?
             e.printStackTrace();
         }
+        try {
+            if (credentialValidationResult.getStatus() == CredentialValidationResult.Status.VALID && credentialValidationResult.getCallerGroups().contains(I18n.ADMIN)) {
+                mailProvider.sendAdminLoginMail(accountManager.findByLogin(loginRequestDTO.getUsername()).getEmail());
+            }
+        } catch (AppBaseException e) {
+            e.printStackTrace();
+        }
+
 
         return Response.ok().entity(
                 new JwtTokenAndUserDataReponseDTO(credentialValidationResult.getCallerPrincipal().getName(),
