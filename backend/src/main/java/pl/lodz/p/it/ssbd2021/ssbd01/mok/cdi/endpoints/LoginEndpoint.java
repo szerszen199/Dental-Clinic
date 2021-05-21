@@ -4,20 +4,18 @@ import pl.lodz.p.it.ssbd2021.ssbd01.auth.ejb.managers.AuthViewEntityManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.LoginRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.RefreshTokenRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AuthAndRefreshTokenResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.JwtTokenResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.JwtTokenAndUserDataReponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.LoginRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.UserInfoResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtLoginUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtRefreshUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
@@ -33,10 +31,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Typ Login endpoint.
@@ -154,6 +152,7 @@ public class LoginEndpoint {
                     accountManager.lockAccount(account.getLogin());
                     // TODO: 11.05.2021 informacja na maila? Idk
                 }
+                Logger.getGlobal().log(Level.INFO, "Nieudana próba logowania na konto {0} z adresu {1}", new Object[]{account.getLogin(), getClientIpAddress(request)});
                 return Response.status(Response.Status.UNAUTHORIZED).entity(new MessageResponseDto(I18n.AUTHENTICATION_FAILURE)).build();
             }
         } catch (AppBaseException e) {
@@ -180,7 +179,7 @@ public class LoginEndpoint {
             e.printStackTrace();
         }
 
-
+        Logger.getGlobal().log(Level.INFO, "Zalogowano na konto {0} z adresu {1}", new Object[]{credentialValidationResult.getCallerPrincipal().getName(), getClientIpAddress(request)});
         return Response.ok().entity(
                 new JwtTokenAndUserDataReponseDTO(credentialValidationResult.getCallerPrincipal().getName(),
                         credentialValidationResult.getCallerGroups(),
