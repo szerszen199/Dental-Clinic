@@ -6,12 +6,10 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.RefreshTokenRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AuthAndRefreshTokenResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.JwtTokenResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.JwtTokenAndUserDataReponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.LoginRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.AuthenticationRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.UserInfoResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtLoginUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtRefreshUtils;
@@ -20,6 +18,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
@@ -33,9 +32,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -105,7 +102,8 @@ public class LoginEndpoint {
      * @param refreshTokenRequestDTO refresh token request dto
      * @return refresh token
      */
-    @PermitAll
+    // TODO: 21.05.2021
+    @RolesAllowed({I18n.ADMIN, I18n.RECEPTIONIST, I18n.DOCTOR, I18n.PATIENT})
     @POST
     @Path("refresh")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -135,7 +133,7 @@ public class LoginEndpoint {
     /**
      * Endpoint Logowania się na konto, metoda POST.
      *
-     * @param loginRequestDTO DTO zawierające login i hasło konta
+     * @param authenticationRequestDTO DTO zawierające login i hasło konta
      * @return Odpowiedź, 401 jeśli nie udało się zalogować, 200 jeśli udało się zalogować.
      */
     @PermitAll
@@ -143,13 +141,13 @@ public class LoginEndpoint {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response authenticate(LoginRequestDTO loginRequestDTO) {
+    public Response authenticate(AuthenticationRequestDTO authenticationRequestDTO) {
         String ip = getClientIpAddress(request);
-        CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(loginRequestDTO.toCredential());
+        CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(authenticationRequestDTO.toCredential());
         try {
-            Account account = accountManager.findByLogin(loginRequestDTO.getUsername());
+            Account account = accountManager.findByLogin(authenticationRequestDTO.getUsername());
             if (credentialValidationResult.getStatus() != CredentialValidationResult.Status.VALID) {
-                accountManager.updateAfterUnsuccessfulLogin(loginRequestDTO.getUsername(), ip, LocalDateTime.now());
+                accountManager.updateAfterUnsuccessfulLogin(authenticationRequestDTO.getUsername(), ip, LocalDateTime.now());
                 if (account.getUnsuccessfulLoginCounter() >= propertiesLoader.getInvalidLoginCountBlock() && account.getActive()) {
                     accountManager.lockAccount(account.getLogin());
                     // TODO: 11.05.2021 informacja na maila? Idk
@@ -163,7 +161,7 @@ public class LoginEndpoint {
         UserInfoResponseDTO userInfoResponseDTO = new UserInfoResponseDTO();
         try {
             accountManager.updateAfterSuccessfulLogin(credentialValidationResult.getCallerPrincipal().getName(), ip, LocalDateTime.now());
-            Account loggedInAccount = accountManager.findByLogin(loginRequestDTO.getUsername());
+            Account loggedInAccount = accountManager.findByLogin(authenticationRequestDTO.getUsername());
             userInfoResponseDTO.setFirstName(loggedInAccount.getFirstName());
             userInfoResponseDTO.setLastName(loggedInAccount.getLastName());
             userInfoResponseDTO.setDarkMode(loggedInAccount.isDarkMode());
@@ -174,7 +172,7 @@ public class LoginEndpoint {
         }
         try {
             if (credentialValidationResult.getStatus() == CredentialValidationResult.Status.VALID && credentialValidationResult.getCallerGroups().contains(I18n.ADMIN)) {
-                mailProvider.sendAdminLoginMail(accountManager.findByLogin(loginRequestDTO.getUsername()).getEmail());
+                mailProvider.sendAdminLoginMail(accountManager.findByLogin(authenticationRequestDTO.getUsername()).getEmail());
             }
         } catch (AppBaseException e) {
             e.printStackTrace();

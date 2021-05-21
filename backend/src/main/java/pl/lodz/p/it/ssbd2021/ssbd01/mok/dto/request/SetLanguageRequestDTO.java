@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto;
+package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 /**
  * Klasa LanguageDto dla języka.
  */
-public class LanguageDto {
+public class SetLanguageRequestDTO {
 
     @NotNull
     @Pattern(regexp = "pl|en")
@@ -24,7 +24,7 @@ public class LanguageDto {
     /**
      * Tworzy nową instancję klasy LanguageDto.
      */
-    public LanguageDto() {
+    public SetLanguageRequestDTO() {
     }
 
     /**
@@ -32,7 +32,7 @@ public class LanguageDto {
      *
      * @param language język
      */
-    public LanguageDto(String language) {
+    public SetLanguageRequestDTO(String language) {
         this.language = language;
     }
 }
