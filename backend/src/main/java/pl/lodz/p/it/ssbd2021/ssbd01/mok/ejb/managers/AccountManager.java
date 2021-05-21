@@ -126,8 +126,9 @@ public interface AccountManager {
      *
      * @param enabled konta o danej wartosci do znalezienia
      * @return znalezione konto
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    List<Account> findByEnabled(boolean enabled);
+    List<Account> findByEnabled(boolean enabled) throws AppBaseException;
 
     /**
      * Resetuje hasło do konta o podanym id. Ustawia alfanumeryczne hasło

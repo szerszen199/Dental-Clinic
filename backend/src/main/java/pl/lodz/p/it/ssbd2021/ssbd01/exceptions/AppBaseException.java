@@ -65,4 +65,13 @@ public class AppBaseException extends Exception {
         return new AppBaseException(LOAD_PROPERTIES_ERROR, e);
     }
 
+    /**
+     * Tworzy wyjątek reprezentujący wystąpienie problemu z bazą danych.
+     *
+     * @param e wyjątek PersistenceException powodujący problem
+     * @return wyjątek typu AppBaseException
+     */
+    public static AppBaseException mismatchedPersistenceArguments(IllegalArgumentException e) {
+        return new AppBaseException(DATABASE_ERROR, e);
+    }
 }
