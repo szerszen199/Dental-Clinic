@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import {LinkContainer} from "react-router-bootstrap";
 import {Col, Container, Row} from "react-bootstrap";
@@ -20,74 +20,80 @@ const accessLevelDictionary = {
     "Doctor": "rgba(255, 216, 0, 0.2)",
     "Admin": "rgba(238, 0, 0, 0.1)",
 };
-var actualAccessLevel = "Doctor";
+let actualAccessLevel = "Doctor";
 
-function MainView() {
-    const [isDarkMode, setIsDarkMode] = useState(() => false);
-    const urlPL = "https://img.icons8.com/color/96/000000/poland-circular.png"
-    const urlEN = "https://img.icons8.com/color/48/000000/great-britain-circular.png"
-    const [language, setLanguage] = useState(() => "PL");
-    const [flag, setFlag] = useState(() => urlEN);
+export default class MainView extends React.Component {
+    urlPL = "https://img.icons8.com/color/96/000000/poland-circular.png";
+    urlEN = "https://img.icons8.com/color/48/000000/great-britain-circular.png";
 
-    function handleOnClick() {
-        if (language === "EN") {
-            setPL()
-        } else {
-            setEN()
+    constructor(props) {
+        super(props);
+        this.state = {
+            isDarkMode: false,
+            language: "PL",
+            flag: this.urlEN
         }
     }
 
-    function setEN() {
-        setLanguage("EN");
-        setFlag(urlPL);
+    handleOnClick() {
+        if (this.state.language === "EN") {
+            this.setPL()
+        } else {
+            this.setEN()
+        }
     }
 
-    function setPL() {
-        setLanguage("PL");
-        setFlag(urlEN);
+    setEN() {
+        this.setState({language: "EN", flag: this.urlPL})
     }
 
-    return (
-        <div className="App container py-3 ">
-            <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"
-                    style={{backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
-                <div style={{width: "100%"}}>
-                    <Container fluid>
-                        <Row>
-                            <Col>
-                                <LinkContainer to="/">
-                                    <Navbar.Brand className="font-weight-bold text-muted">
-                                        Home
-                                    </Navbar.Brand>
-                                </LinkContainer>
-                            </Col>
-                            <Col>
-                                <Navbar.Toggle/>
-                                <Navbar.Collapse className="justify-content-end">
-                                    <Wybierz/>
-                                    <DarkModeSwitch
-                                        style={{marginLeft: '1rem'}}
-                                        checked={isDarkMode}
-                                        onChange={setIsDarkMode}
-                                        size={30}
-                                        sunColor={"#FFDF37"}
-                                        moonColor={"#bfbfbb"}
-                                    />
-                                    <img onClick={handleOnClick} style={{marginLeft: "10px", maxWidth: "30px"}}
-                                         src={flag} alt="Logo"/>
+    setPL() {
+        this.setState({language: "PL", flag: this.urlEN})
+    }
 
-                                </Navbar.Collapse>
-                            </Col>
-                        </Row>
-                        <Row> <Col> <BreadCrumbs/> </Col></Row>
-                    </Container>
-                </div>
-            </Navbar>
-            <Routes/>
-            <ReadinessComponent/>
-        </div>
-    );
+    render() {
+        return (
+            <div className="App container py-3 ">
+                <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"
+                        style={{backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
+                    <div style={{width: "100%"}}>
+                        <Container fluid>
+                            <Row>
+                                <Col>
+                                    <LinkContainer to="/">
+                                        <Navbar.Brand className="font-weight-bold text-muted">
+                                            Home
+                                        </Navbar.Brand>
+                                    </LinkContainer>
+                                </Col>
+                                <Col>
+                                    <Navbar.Toggle/>
+                                    <Navbar.Collapse className="justify-content-end">
+                                        <Wybierz/>
+                                        <DarkModeSwitch
+                                            style={{marginLeft: '1rem'}}
+                                            checked={this.state.isDarkMode}
+                                            onChange={(e) => this.setState({isDarkMode: e})}
+                                            size={30}
+                                            sunColor={"#FFDF37"}
+                                            moonColor={"#bfbfbb"}
+                                        />
+                                        <img onClick={(e) => this.handleOnClick()}
+                                             style={{marginLeft: "10px", maxWidth: "30px"}}
+                                             src={this.state.flag} alt="Logo"/>
 
+                                    </Navbar.Collapse>
+                                </Col>
+                            </Row>
+                            <Row> <Col> <BreadCrumbs/> </Col></Row>
+                        </Container>
+                    </div>
+                </Navbar>
+                <Routes/>
+                <ReadinessComponent/>
+            </div>
+        );
+    }
 }
 
 function Wybierz() {
@@ -105,5 +111,3 @@ function Wybierz() {
     }
     return Guest();
 }
-
-export default MainView;
