@@ -31,6 +31,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountAccessLevelDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountEditDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.LanguageDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
@@ -272,8 +273,8 @@ public class AccountEndpoint {
         try {
             this.validatePassword(newPassword);
             accountManager.changePassword(
-                    loggedInAccountUtil.getLoggedInAccountLogin(), 
-                    newPassword.getOldPassword(), 
+                    loggedInAccountUtil.getLoggedInAccountLogin(),
+                    newPassword.getOldPassword(),
                     newPassword.getFirstPassword()
             );
             return Response.status(Status.OK).build();
@@ -340,6 +341,21 @@ public class AccountEndpoint {
         }
         try {
             accountManager.setDarkMode(login, isDarkMode);
+        } catch (AppBaseException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.status(Status.OK).build();
+    }
+
+    @PUT
+    @Path("language")
+    @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response changeLanguage(LanguageDto languageDto) {
+        String login = loggedInAccountUtil.getLoggedInAccountLogin();
+        try {
+            accountManager.setLanguage(login, languageDto.getLanguage());
         } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
