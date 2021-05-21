@@ -12,6 +12,7 @@ import ReadinessComponent from "../../components/GetReadinessResource/Readiness"
 import Patient from "../Patient/Patient";
 import {userRolesStorageName} from "../../components/Login/LoginRequest";
 import Doctor from "../Doctor/Doctor";
+import axios from "axios";
 
 const accessLevelDictionary = {
     "Guest": "rgba(1, 1, 1, 0.1)",
@@ -31,7 +32,27 @@ export default class MainView extends React.Component {
         this.state = {
             isDarkMode: false,
             language: "PL",
-            flag: this.urlEN
+            flag: this.urlEN,
+            login: "",
+        }
+    }
+
+    componentDidMount() {
+        let jwtToken = localStorage.getItem("JWTToken")
+        if (jwtToken != null) {
+            axios
+                .get(process.env.REACT_APP_BACKEND_URL + "account/info", {
+                    headers: {
+                        Authorization: "Bearer " + jwtToken
+                    }
+                })
+                .then(res => res.data)
+                .then(result => {
+                    this.setState({
+                        login: result.login,
+                    });
+                    console.log(this.state.login)
+                })
         }
     }
 
@@ -85,7 +106,10 @@ export default class MainView extends React.Component {
                                     </Navbar.Collapse>
                                 </Col>
                             </Row>
-                            <Row> <Col> <BreadCrumbs/> </Col></Row>
+                            <Row> <Col> <BreadCrumbs/> </Col> <Col style={{
+                                textAlign: "right",
+                                color: "gray"
+                            }}> login: {this.state.login}</Col> </Row>
                         </Container>
                     </div>
                 </Navbar>
