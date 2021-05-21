@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -31,6 +32,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountAccessLevelDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountEditDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.LanguageDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.DarkModeDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDto;
@@ -337,6 +339,28 @@ public class AccountEndpoint {
         String login = loggedInAccountUtil.getLoggedInAccountLogin();
         try {
             accountManager.setDarkMode(login, darkModeDto.isDarkMode());
+        } catch (AppBaseException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.status(Status.OK).build();
+    }
+
+
+    /**
+     * Endpoint dla ustawiania w aktualnym koncie języka interfejsu.
+     *
+     * @param languageDto dto z pożądanym przez użytkownka językiem
+     * @return 200 jeśli udało się zmienić język, inaczej 400
+     */
+    @PUT
+    @Path("language")
+    @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response changeLanguage(LanguageDto languageDto) {
+        String login = loggedInAccountUtil.getLoggedInAccountLogin();
+        try {
+            accountManager.setLanguage(login, languageDto.getLanguage().toLowerCase(Locale.ROOT));
         } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
