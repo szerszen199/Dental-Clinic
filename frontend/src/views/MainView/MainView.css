@@ -1,4 +1,17 @@
-#footer{
+#footer {
     position: fixed;
     bottom: 0;
+}
+
+#darkModeSwitch {
+    margin-left: 1rem
+}
+
+#flag {
+    margin-left: 10px;
+    max-width: 30px;
+}
+
+#navbarDiv {
+    width: 100%;
 }

@@ -22,7 +22,7 @@ const accessLevelDictionary = {
     "Doctor": "rgba(255, 216, 0, 0.2)",
     "Admin": "rgba(238, 0, 0, 0.1)",
 };
-var actualAccessLevel = "Doctor";
+const actualAccessLevel = "Doctor";
 
 function MainView() {
     const [isDarkMode, setIsDarkMode] = useState(() => false);
@@ -53,7 +53,7 @@ function MainView() {
         <div className="App container py-3 ">
             <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"
                     style={{backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
-                <div style={{width: "100%"}}>
+                <div id="navbarDiv">
                     <Container fluid>
                         <Row>
                             <Col>
@@ -67,17 +67,14 @@ function MainView() {
                                 <Navbar.Toggle/>
                                 <Navbar.Collapse className="justify-content-end">
                                     <Wybierz/>
-                                    <DarkModeSwitch
-                                        style={{marginLeft: '1rem'}}
-                                        checked={isDarkMode}
-                                        onChange={setIsDarkMode}
-                                        size={30}
-                                        sunColor={"#FFDF37"}
-                                        moonColor={"#bfbfbb"}
+                                    <DarkModeSwitch id="darkModeSwitch"
+                                                    checked={isDarkMode}
+                                                    onChange={setIsDarkMode}
+                                                    size={30}
+                                                    sunColor={"#FFDF37"}
+                                                    moonColor={"#bfbfbb"}
                                     />
-                                    <img onClick={handleOnClick} style={{marginLeft: "10px", maxWidth: "30px"}}
-                                         src={flag} alt="Logo"/>
-
+                                    <img id="flag" onClick={handleOnClick} src={flag} alt="Logo"/>
                                 </Navbar.Collapse>
                             </Col>
                         </Row>
@@ -87,12 +84,7 @@ function MainView() {
             </Navbar>
 
             <MDBFooter color="blue" className="font-small pt-4 mt-4" id="footer">
-                       {/*// style={{*/}
-                       {/*//     position: "fixed",*/}
-                       {/*//     bottom: 0,*/}
-                       {/*//     minWidth: "100%",*/}
-                       {/*// }}>*/}
-                <div className="footer-copyright text-left py-3" style={{minWidth: "100%"}}>
+                <div className="footer-copyright text-left py-3">
                     <MDBContainer fluid>
                         Klinika Stomatologiczna, &copy; {new Date().getFullYear()} Copyright by 2021SSBD01
                     </MDBContainer>
