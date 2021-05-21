@@ -6,8 +6,6 @@ import java.util.Set;
  * Dto dla odpowiedzi z tokenem Jwt przy logowaniu.
  */
 public class JwtTokenAndUserDataReponseDTO extends AuthAndRefreshTokenResponseDTO {
-    private final String username;
-    private final Set<String> roles;
     private final UserInfoResponseDTO userInfoResponseDTO;
 
     /**
@@ -20,29 +18,10 @@ public class JwtTokenAndUserDataReponseDTO extends AuthAndRefreshTokenResponseDT
      * @param userInfoResponseDTO informacje o użytkowniku
      */
     public JwtTokenAndUserDataReponseDTO(String username, Set<String> roles, String authJwtToken, String refreshJwtToken, UserInfoResponseDTO userInfoResponseDTO) {
-        super(authJwtToken, refreshJwtToken);
-        this.username = username;
-        this.roles = roles;
+        super(authJwtToken, refreshJwtToken, username, roles);
         this.userInfoResponseDTO = userInfoResponseDTO;
     }
 
-    /**
-     * Pobiera pole username.
-     *
-     * @return username
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * Pobiera pole roles.
-     *
-     * @return roles
-     */
-    public Set<String> getRoles() {
-        return roles;
-    }
 
     /**
      * Pobiera pole user info response dto.
