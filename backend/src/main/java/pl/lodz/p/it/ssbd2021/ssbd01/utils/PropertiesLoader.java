@@ -17,6 +17,8 @@ import java.util.Properties;
 public class PropertiesLoader {
 
     private String confirmationJwtSecret;
+    private String refreshJwtSecret;
+    private Long refreshJwtExpiration;
     private Long confirmationJwtExpiration;
     private Long deleteInactiveAccount;
     private String anonymousUserName;
@@ -24,9 +26,18 @@ public class PropertiesLoader {
 
     private String jwtSecret;
     private Long invalidLoginCountBlock;
+    private Long jwtExpiration;
 
     public Long getInvalidLoginCountBlock() {
         return invalidLoginCountBlock;
+    }
+
+    public String getRefreshJwtSecret() {
+        return refreshJwtSecret;
+    }
+
+    public Long getRefreshJwtExpiration() {
+        return refreshJwtExpiration;
     }
 
     /**
@@ -64,8 +75,6 @@ public class PropertiesLoader {
         return jwtExpiration;
     }
 
-    private Long jwtExpiration;
-
     public String getAnonymousUserName() {
         return anonymousUserName;
     }
@@ -91,5 +100,7 @@ public class PropertiesLoader {
         jwtExpiration = Long.valueOf(prop.getProperty("jwt.expirationMs"));
         invalidLoginCountBlock = Long.valueOf(prop.getProperty("invalid.login.count.block"));
         anonymousUserName = prop.getProperty("anonymous.user.name");
+        refreshJwtExpiration = Long.valueOf(prop.getProperty("refresh.jwt.expirationMs"));
+        refreshJwtSecret = prop.getProperty("refresh.jwt.secret");
     }
 }
