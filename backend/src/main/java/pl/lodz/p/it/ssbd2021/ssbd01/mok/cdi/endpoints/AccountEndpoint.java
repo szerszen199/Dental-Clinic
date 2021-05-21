@@ -103,6 +103,8 @@ public class AccountEndpoint {
      * Edit account data.
      *
      * @param accountDto Account with edited data.
+     * @param servletContext kontekst serwletów, służy do współdzielenia informacji
+     *                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit
@@ -111,9 +113,12 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
     @Produces({MediaType.APPLICATION_JSON})
-    public void editAccount(AccountEditDto accountDto) throws AppBaseException {
+    public void editAccount(AccountEditDto accountDto, @Context ServletContext servletContext) throws AppBaseException {
         Account account = accountManager.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
-        accountManager.editAccount(AccountConverter.createAccountEntityFromDto(accountDto, account));
+        accountManager.editAccount(
+                AccountConverter.createAccountEntityFromDto(accountDto, account),
+                servletContext
+        );
     }
 
 
@@ -122,6 +127,8 @@ public class AccountEndpoint {
      *
      * @param accountDto the edited account
      * @param login      login edytowanego konta
+     * @param servletContext kontekst serwletów, służy do współdzielenia informacji
+     *                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit/other
@@ -129,9 +136,25 @@ public class AccountEndpoint {
     @Path("edit/{login}")
     @RolesAllowed({I18n.ADMIN})
     @Produces({MediaType.APPLICATION_JSON})
-    public void editOtherAccount(@PathParam("login") String login, AccountEditDto accountDto) throws AppBaseException {
+    public void editOtherAccount(@PathParam("login") String login, AccountEditDto accountDto, @Context ServletContext servletContext) throws AppBaseException {
         Account account = accountManager.findByLogin(login);
-        accountManager.editOtherAccount(AccountConverter.createAccountEntityFromDto(accountDto, account));
+        accountManager.editOtherAccount(
+                AccountConverter.createAccountEntityFromDto(accountDto, account),
+                servletContext
+        );
+    }
+
+    /**
+     * Endpoint potwierdzający zmianę maila.
+     *
+     * @param jwt jwt
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    @PUT
+    @Path("mailconfirm")
+    @Produces({MediaType.APPLICATION_JSON})
+    public void confirmMailChange(@QueryParam("token") String jwt) throws AppBaseException {
+        accountManager.confirmMailChangeByToken(jwt);
     }
 
     /**
