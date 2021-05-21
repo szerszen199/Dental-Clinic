@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -347,6 +348,13 @@ public class AccountEndpoint {
         return Response.status(Status.OK).build();
     }
 
+
+    /**
+     * Endpoint dla ustawiania w aktualnym koncie języka interfejsu.
+     *
+     * @param languageDto dto z pożądanym przez użytkownka językiem
+     * @return 200 jeśli udało się zmienić język, inaczej 400
+     */
     @PUT
     @Path("language")
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
@@ -355,7 +363,7 @@ public class AccountEndpoint {
     public Response changeLanguage(LanguageDto languageDto) {
         String login = loggedInAccountUtil.getLoggedInAccountLogin();
         try {
-            accountManager.setLanguage(login, languageDto.getLanguage());
+            accountManager.setLanguage(login, languageDto.getLanguage().toLowerCase(Locale.ROOT));
         } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
