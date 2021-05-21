@@ -22,7 +22,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
  * Typ Jwt utils.
  */
 @Stateless
-public class JwtEmailConfirmationUtils {
+public class JwtEmailConfirmationUtils extends JwtUtilsAbstract {
 
     @Inject
     private PropertiesLoader propertiesLoader;
@@ -43,20 +43,17 @@ public class JwtEmailConfirmationUtils {
      * @return JWT token
      */
     public String generateRegistrationConfirmationJwtTokenForUser(String username) {
-        try {
-            final JWSSigner signer = new MACSigner(registrationConfirmationJwtSecret);
-            final JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                    .subject(username)
-                    .expirationTime(new Date(new Date().getTime() + registrationConfirmationJwtExpirationMs))
-                    .build();
-            final SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS384), claimsSet);
-            signedJWT.sign(signer);
-            return signedJWT.serialize();
-        } catch (JOSEException e) {
-            e.printStackTrace();
-            // TODO: 18.04.2021
-            return "JWT error";
-        }
+        return super.generateJwtTokenForUsername(username);
+    }
+
+    @Override
+    protected Long getJwtExpiration() {
+        return propertiesLoader.getConfirmationJwtExpiration();
+    }
+
+    @Override
+    protected String getJwtSecret() {
+        return propertiesLoader.getConfirmationJwtSecret();
     }
 
     /**
@@ -65,8 +62,8 @@ public class JwtEmailConfirmationUtils {
      * @return Login użytkownika o zadanym tokenie
      * @throws ParseException ParseException
      */
-    public String getUserNameFromRegistrationConfirmationJwtToken(String token) throws ParseException {
-        return SignedJWT.parse(token).getJWTClaimsSet().getSubject();
+    public String getUserNameFromJwtToken(String token) throws ParseException {
+        return super.getUserNameFromJwtToken(token);
     }
 
     /**
@@ -76,14 +73,7 @@ public class JwtEmailConfirmationUtils {
      */
 
     public boolean validateRegistrationConfirmationJwtToken(String tokenToValidate) {
-        try {
-            JWSObject jwsObject = JWSObject.parse(tokenToValidate);
-            JWSVerifier jwsVerifier = new MACVerifier(registrationConfirmationJwtSecret);
-            return jwsObject.verify(jwsVerifier);
-        } catch (ParseException | JOSEException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return super.validateJwtToken(tokenToValidate);
     }
 
 
