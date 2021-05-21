@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.auth.ejb.managers.AuthViewEntityManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
@@ -10,6 +11,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.JwtTokenAndUserDataReponseD
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.LoginRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.UserInfoResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtLoginUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtRefreshUtils;
@@ -32,7 +34,9 @@ import javax.ws.rs.core.Response;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Typ Login endpoint.
@@ -56,6 +60,7 @@ public class LoginEndpoint {
             "REMOTE_ADDR"};
     private final IdentityStoreHandler identityStoreHandler;
     private final AccountManager accountManager;
+    private final AuthViewEntityManager authViewEntityManager;
     private final HttpServletRequest request;
     private final JwtLoginUtils jwtLoginUtils;
     private final PropertiesLoader propertiesLoader;
@@ -66,13 +71,14 @@ public class LoginEndpoint {
     /**
      * Tworzy nową instancję klasy Login endpoint.
      *
-     * @param identityStoreHandler identity store handler
-     * @param jwtLoginUtils        jwt utils
-     * @param httpServletRequest   http servlet request
-     * @param accountManager       account manager
-     * @param propertiesLoader     properties loader
-     * @param jwtRefreshUtils      jwt refresh utils
-     * @param mailProvider         mail provider
+     * @param identityStoreHandler  identity store handler
+     * @param jwtLoginUtils         jwt utils
+     * @param httpServletRequest    http servlet request
+     * @param accountManager        account manager
+     * @param propertiesLoader      properties loader
+     * @param jwtRefreshUtils       jwt refresh utils
+     * @param mailProvider          mail provider
+     * @param authViewEntityManager auth view entity manager
      */
     @Inject
     public LoginEndpoint(IdentityStoreHandler identityStoreHandler,
@@ -81,7 +87,8 @@ public class LoginEndpoint {
                          AccountManager accountManager,
                          PropertiesLoader propertiesLoader,
                          JwtRefreshUtils jwtRefreshUtils,
-                         MailProvider mailProvider) {
+                         MailProvider mailProvider,
+                         AuthViewEntityManager authViewEntityManager) {
         this.identityStoreHandler = identityStoreHandler;
         this.jwtLoginUtils = jwtLoginUtils;
         this.request = httpServletRequest;
@@ -89,6 +96,7 @@ public class LoginEndpoint {
         this.propertiesLoader = propertiesLoader;
         this.jwtRefreshUtils = jwtRefreshUtils;
         this.mailProvider = mailProvider;
+        this.authViewEntityManager = authViewEntityManager;
     }
 
     /**
@@ -107,12 +115,16 @@ public class LoginEndpoint {
         if (jwtRefreshUtils.validateJwtToken(jwt)) {
             try {
                 String username = jwtRefreshUtils.getUserNameFromJwtToken(jwt);
+                Set<String> roleNames = new HashSet<>();
+                for (var i : authViewEntityManager.findByLogin(username)) {
+                    roleNames.add(i.getLevel());
+                }
                 return Response.ok()
                         .entity(new AuthAndRefreshTokenResponseDTO(
                                 jwtLoginUtils.generateJwtTokenForUser(username),
-                                jwtRefreshUtils.generateJwtTokenForUser(username)))
+                                jwtRefreshUtils.generateJwtTokenForUser(username), username, roleNames))
                         .build();
-            } catch (ParseException e) {
+            } catch (ParseException | AppBaseException e) {
                 e.printStackTrace();
             }
         }
