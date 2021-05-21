@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
+import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 import java.util.Arrays;
@@ -11,8 +12,8 @@ public class LogInterceptor {
 
     //TODO: Zmuszenie sessionContextu do poprawnego injectowania
 
-    //    @Resource
-    //    private SessionContext sessionContext;
+    @Inject
+    private LoggedInAccountUtil loggedInAccountUtil;
 
     /**
      * Dodaje logi do metod.
@@ -24,9 +25,6 @@ public class LogInterceptor {
     @AroundInvoke
     public Object intercept(InvocationContext context) throws Exception {
 
-        //        Handler handler = new FileHandler("pliczek.txt");
-        //        LOGGER.addHandler(handler);
-        //        LOGGER.addHandler(new ConsoleHandler());
         String returnedValue = null;
         Level logLevel = Level.INFO;
         try {
@@ -49,8 +47,7 @@ public class LogInterceptor {
                 } else {
                     parameters = " ";
                 }
-                //TODO: Wypisywanie użytkownika
-                LOGGER.log(logLevel, "Użytkownik: " + "Metoda: " + context.getMethod().toGenericString() + "Parametry: " + parameters + "Zwrócona wartość: " + returnedValue);
+                LOGGER.log(logLevel, "Użytkownik: " + loggedInAccountUtil.getLoggedInAccountLogin() + " Metoda: " + context.getMethod().toGenericString() + " Parametry: " + parameters + " Zwrócona wartość: " + returnedValue);
             }
         }
     }
