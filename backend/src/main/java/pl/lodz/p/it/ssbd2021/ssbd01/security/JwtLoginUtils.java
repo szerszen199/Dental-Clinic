@@ -19,18 +19,10 @@ import java.text.ParseException;
 import java.util.Date;
 
 @Stateless
-public class JwtLoginUtils {
+public class JwtLoginUtils extends JwtUtilsAbstract {
 
     @Inject
     private PropertiesLoader propertiesLoader;
-    private String jwtSecret;
-    private Long jwtExpirationMs;
-
-    @PostConstruct
-    private void init() {
-        jwtSecret = propertiesLoader.getJwtSecret();
-        jwtExpirationMs = propertiesLoader.getJwtExpiration();
-    }
 
     /**
      * Generuje token JWT na potrzeby weryfikacji rejestracji.
@@ -39,20 +31,17 @@ public class JwtLoginUtils {
      * @return JWT token
      */
     public String generateJwtTokenForUser(String username) {
-        try {
-            final JWSSigner signer = new MACSigner(jwtSecret);
-            final JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                    .subject(username)
-                    .expirationTime(new Date(new Date().getTime() + jwtExpirationMs))
-                    .build();
-            final SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS384), claimsSet);
-            signedJWT.sign(signer);
-            return signedJWT.serialize();
-        } catch (JOSEException e) {
-            e.printStackTrace();
-            // TODO: 18.04.2021
-            return "JWT error";
-        }
+        return super.generateJwtTokenForUsername(username);
+    }
+
+    @Override
+    protected Long getJwtExpiration() {
+        return propertiesLoader.getJwtExpiration();
+    }
+
+    @Override
+    protected String getJwtSecret() {
+        return propertiesLoader.getJwtSecret();
     }
 
     /**
@@ -63,7 +52,7 @@ public class JwtLoginUtils {
      * @throws ParseException ParseException
      */
     public String getUserNameFromJwtToken(String token) throws ParseException {
-        return SignedJWT.parse(token).getJWTClaimsSet().getSubject();
+        return super.getUserNameFromJwtToken(token);
     }
 
     /**
@@ -74,14 +63,7 @@ public class JwtLoginUtils {
      */
 
     public boolean validateJwtToken(String tokenToValidate) {
-        try {
-            JWSObject jwsObject = JWSObject.parse(tokenToValidate);
-            JWSVerifier jwsVerifier = new MACVerifier(jwtSecret);
-            return jwsObject.verify(jwsVerifier);
-        } catch (ParseException | JOSEException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return super.validateJwtToken(tokenToValidate);
     }
 
 
