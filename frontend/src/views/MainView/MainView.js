@@ -11,7 +11,8 @@ import Admin from "../Admin/Admin";
 import ReadinessComponent from "../../components/GetReadinessResource/Readiness"
 import Patient from "../Patient/Patient";
 import Doctor from "../Doctor/Doctor";
-import axios from "axios";import {JWTRefreshTokenStorageName, JWTTokenCookieName, RolesCookieName} from "../../components/Login/LoginRequest";
+import axios from "axios";
+import {JWTRefreshTokenStorageName, JWTTokenCookieName, RolesCookieName} from "../../components/Login/LoginRequest";
 import Cookies from "js-cookie";
 import {logout} from "../../components/Login/Logout";
 import {MDBContainer, MDBFooter} from "mdbreact";
@@ -55,7 +56,7 @@ export default class MainView extends React.Component {
                 refreshToken: localStorage.getItem(JWTRefreshTokenStorageName)
             }).then((response) => {
                 // TODO: Czas expieracji.
-                Cookies.set(JWTTokenCookieName, response.data.authJwtToken.token, { expires: jwtCookieExpirationTime});
+                Cookies.set(JWTTokenCookieName, response.data.authJwtToken.token, {expires: jwtCookieExpirationTime});
                 Cookies.set(RolesCookieName, response.data.roles, {expires: jwtCookieExpirationTime});
                 localStorage.setItem(JWTRefreshTokenStorageName, response.data.refreshJwtToken.token);
             }).catch((response) => {
@@ -72,10 +73,10 @@ export default class MainView extends React.Component {
         let token = Cookies.get(JWTTokenCookieName);
         if (typeof token !== 'undefined' && token !== null && token !== "null") {
             axios.get(process.env.REACT_APP_BACKEND_URL + "account/info", {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                })
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            })
                 .then(res => res.data)
                 .then(result => {
                     this.setState({
@@ -86,7 +87,7 @@ export default class MainView extends React.Component {
                 .catch(result => {
                     // TODO:
                     console.log(result);
-            })
+                })
         }
     }
 
@@ -125,12 +126,13 @@ export default class MainView extends React.Component {
                                     <Navbar.Toggle/>
                                     <Navbar.Collapse className="justify-content-end">
                                         <Wybierz/>
-                                        <DarkModeSwitch id="darkModeSwitch"
-                                                        checked={isDarkMode}
-                                                        onChange={setIsDarkMode}
-                                                        size={30}
-                                                        sunColor={"#FFDF37"}
-                                                        moonColor={"#bfbfbb"}
+                                        <DarkModeSwitch
+                                            style={{marginLeft: '1rem'}}
+                                            checked={this.state.isDarkMode}
+                                            onChange={(e) => this.setState({isDarkMode: e})}
+                                            size={30}
+                                            sunColor={"#FFDF37"}
+                                            moonColor={"#bfbfbb"}
                                         />
                                         <img id="flag" onClick={(e) => this.handleOnClick()}
                                              src={this.state.flag} alt="Logo"/>
@@ -161,9 +163,10 @@ export default class MainView extends React.Component {
 }
 
 function Wybierz() {
-    function isEmpty(value){
+    function isEmpty(value) {
         return (value == null || value.length === 0);
     }
+
     // TODO: Ma być możliwość wyboru jaką z ról które mamy chcemy widzieć tzn mamy się móc przełączać między rolami
     //  Nie ma tego narazie więc jest tak
     let levels = Cookies.get(RolesCookieName);
