@@ -1,11 +1,12 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import javax.ejb.Local;
-import javax.servlet.ServletContext;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+
+import javax.ejb.Local;
+import javax.servlet.ServletContext;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Interfejs Account manager.
@@ -22,6 +23,8 @@ public interface AccountManager {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     void createAccount(Account account, ServletContext servletContext) throws AppBaseException;
+
+    void createAccountByAdministrator(Account account, ServletContext servletContext) throws AppBaseException;
 
     /**
      * usun konto.

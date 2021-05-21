@@ -1,8 +1,8 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils.converters;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountEditDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountByAdminDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountDto;
 
 public class AccountConverter {
@@ -31,4 +31,11 @@ public class AccountConverter {
                 newAccountDto.getFirstName(), newAccountDto.getLastName(), newAccountDto.getPhoneNumber(),
                 newAccountDto.getPesel());
     }
+
+    public static Account createAccountByAdminEntityFromDto(NewAccountByAdminDto newAccountByAdminDto) {
+        return new Account(newAccountByAdminDto.getLogin(), newAccountByAdminDto.getEmail(),
+                newAccountByAdminDto.getFirstName(), newAccountByAdminDto.getLastName(),
+                newAccountByAdminDto.getPhoneNumber(), newAccountByAdminDto.getPesel());
+    }
+
 }

@@ -91,7 +91,7 @@ public class Account extends AbstractEntity implements Serializable {
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
     @JoinColumn(name = "account_id")
-    private Set<AccessLevel> accessLevels = new HashSet<>();
+    private final Set<AccessLevel> accessLevels = new HashSet<>();
 
     @Basic(optional = false)
     @Column(name = "first_name", nullable = false, length = 50)
@@ -166,6 +166,15 @@ public class Account extends AbstractEntity implements Serializable {
         this.login = login;
         this.email = email;
         this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.pesel = pesel;
+    }
+
+    public Account(String login, String email, String firstName, String lastName, String phoneNumber, String pesel) {
+        this.login = login;
+        this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;

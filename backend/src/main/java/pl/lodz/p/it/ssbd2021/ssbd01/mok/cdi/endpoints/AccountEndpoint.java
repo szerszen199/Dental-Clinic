@@ -1,8 +1,25 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 
-import java.util.List;
-import java.util.stream.Collectors;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountAccessLevelDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountEditDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountByAdminDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
+
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -21,24 +38,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountAccessLevelDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountEditDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Typ Account endpoint.
@@ -77,6 +78,19 @@ public class AccountEndpoint {
 
         accountManager.createAccount(
                 AccountConverter.createAccountEntityFromDto(accountDto),
+                servletContext
+        );
+    }
+
+    @POST
+    @RolesAllowed({I18n.ADMIN})
+    @Path("admin/create")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void createAccountByAdmin(NewAccountByAdminDto newAccountByAdminDto, @Context ServletContext servletContext)
+            throws AppBaseException {
+
+        accountManager.createAccountByAdministrator(
+                AccountConverter.createAccountByAdminEntityFromDto(newAccountByAdminDto),
                 servletContext
         );
     }
