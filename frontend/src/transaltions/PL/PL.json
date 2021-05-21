@@ -1,3 +1,6 @@
 {
-  "Hello": "Cześć"
+  "Hello": "Cześć",
+  "Home": "Strona główna",
+  "Register": "Zarejestruj się",
+  "Login": "Zaloguj się"
 }

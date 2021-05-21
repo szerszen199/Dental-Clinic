@@ -1,3 +1,7 @@
 {
-  "Hello": "Hello"
+  "Hello": "Hello",
+  "Home": "Home",
+  "Register": "Register",
+  "Login": "Login"
+
 }
