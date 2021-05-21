@@ -13,6 +13,7 @@
     "bootstrap-switch-button-react": "^1.2.0",
     "js-cookie": "^2.2.1",
     "material-ui-rating": "^4.0.0-beta.2",
+    "mdbreact": "^5.0.2",
     "react": "^17.0.2",
     "react-bootstrap": "^1.5.2",
     "react-confirm-alert": "^2.7.0",

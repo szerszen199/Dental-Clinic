@@ -14,12 +14,15 @@ import Doctor from "../Doctor/Doctor";
 import axios from "axios";import {JWTRefreshTokenStorageName, JWTTokenCookieName, RolesCookieName} from "../../components/Login/LoginRequest";
 import Cookies from "js-cookie";
 import {logout} from "../../components/Login/Logout";
+import {MDBContainer, MDBFooter} from "mdbreact";
+import './MainView.css';
 
 const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
 const roleDoctorName = process.env.REACT_APP_ROLE_DOCTOR
 const roleReceptionistName = process.env.REACT_APP_ROLE_RECEPTIONIST
 const rolePatientName = process.env.REACT_APP_ROLE_PATIENT
 const roleGuestName = process.env.REACT_APP_ROLE_GUEST
+
 
 const accessLevelDictionary = {
     roleGuestName: "rgba(1, 1, 1, 0.1)",
@@ -29,7 +32,7 @@ const accessLevelDictionary = {
     roleAdminName: "rgba(238, 0, 0, 0.1)",
 };
 export const jwtCookieExpirationTime = process.env.REACT_APP_JWT_EXPIRATION_MS / (24 * 60 * 60 * 100)
-let actualAccessLevel = "Doctor";
+const actualAccessLevel = "Doctor";
 
 export default class MainView extends React.Component {
     urlPL = "https://img.icons8.com/color/96/000000/poland-circular.png";
@@ -105,10 +108,10 @@ export default class MainView extends React.Component {
 
     render() {
         return (
-            <div className="App container py-3 ">
+            <div className="App container py-3 " id="body1">
                 <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"
                         style={{backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
-                    <div style={{width: "100%"}}>
+                    <div id="navbarDiv">
                         <Container fluid>
                             <Row>
                                 <Col>
@@ -122,16 +125,14 @@ export default class MainView extends React.Component {
                                     <Navbar.Toggle/>
                                     <Navbar.Collapse className="justify-content-end">
                                         <Wybierz/>
-                                        <DarkModeSwitch
-                                            style={{marginLeft: '1rem'}}
-                                            checked={this.state.isDarkMode}
-                                            onChange={(e) => this.setState({isDarkMode: e})}
-                                            size={30}
-                                            sunColor={"#FFDF37"}
-                                            moonColor={"#bfbfbb"}
+                                        <DarkModeSwitch id="darkModeSwitch"
+                                                        checked={isDarkMode}
+                                                        onChange={setIsDarkMode}
+                                                        size={30}
+                                                        sunColor={"#FFDF37"}
+                                                        moonColor={"#bfbfbb"}
                                         />
-                                        <img onClick={(e) => this.handleOnClick()}
-                                             style={{marginLeft: "10px", maxWidth: "30px"}}
+                                        <img id="flag" onClick={(e) => this.handleOnClick()}
                                              src={this.state.flag} alt="Logo"/>
 
                                     </Navbar.Collapse>
@@ -146,6 +147,14 @@ export default class MainView extends React.Component {
                 </Navbar>
                 <Routes/>
                 <ReadinessComponent/>
+
+                <MDBFooter color="blue" className="font-small pt-4 mt-4" id="footer">
+                    <div className="footer-copyright text-right py-3">
+                        <MDBContainer fluid>
+                            Klinika Stomatologiczna, &copy; {new Date().getFullYear()} Copyright by 2021SSBD01
+                        </MDBContainer>
+                    </div>
+                </MDBFooter>
             </div>
         );
     }
