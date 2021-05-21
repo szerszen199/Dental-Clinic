@@ -5,13 +5,17 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter as Router} from 'react-router-dom';
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
+import {I18nextProvider} from "react-i18next";
+import i18n from "./transaltions/i18n";
 
 ReactDOM.render(
     <React.StrictMode>
         <Router>
-            <ErrorBoundary>
-                <App/>
-            </ErrorBoundary>
+            <I18nextProvider i18n={i18n}>
+                <ErrorBoundary>
+                    <App/>
+                </ErrorBoundary>
+            </I18nextProvider>
         </Router>
     </React.StrictMode>,
     document.getElementById('root')
