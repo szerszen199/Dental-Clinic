@@ -1,8 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.auth;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.auth.ejb.managers.AuthViewEntityManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AuthViewEntity;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtLoginUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
@@ -17,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 
 @RequestScoped
@@ -36,7 +33,7 @@ public class JWTHttpAuthMechanism implements HttpAuthenticationMechanism {
     @Override
     public AuthenticationStatus validateRequest(HttpServletRequest req, HttpServletResponse res, HttpMessageContext msgContext) {
         try {
-            String jwt = parseJwt(req);
+            String jwt = jwtLoginUtils.parseAuthJwtFromHttpServletRequest(req);
             if (jwt != null && jwtLoginUtils.validateJwtToken(jwt)) {
                 String username = jwtLoginUtils.getUserNameFromJwtToken(jwt);
                 List<AuthViewEntity> authViewEntities = authViewEntityManager.findByLogin(username);
@@ -58,13 +55,4 @@ public class JWTHttpAuthMechanism implements HttpAuthenticationMechanism {
         return msgContext.notifyContainerAboutLogin(propertiesLoader.getAnonymousUserName(), new HashSet<>());
     }
 
-    private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
-
-        if (headerAuth != null && headerAuth.length() > 0 && !headerAuth.isBlank() && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7);
-        }
-
-        return null;
-    }
 }

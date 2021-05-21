@@ -11,14 +11,45 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.Date;
 
+/**
+ * Typ Jwt utils abstract.
+ */
 public abstract class JwtUtilsAbstract {
 
+    /**
+     * Pobiera pole jwt expiration.
+     *
+     * @return jwt expiration
+     */
     protected abstract Long getJwtExpiration();
 
+    /**
+     * Pobiera pole jwt secret.
+     *
+     * @return jwt secret
+     */
     protected abstract String getJwtSecret();
+
+
+    /**
+     * Parsowanie HttpServletRequest na token JWT do autoryzacji.
+     *
+     * @param request request
+     * @return string
+     */
+    public String parseAuthJwtFromHttpServletRequest(HttpServletRequest request) {
+        String headerAuth = request.getHeader("Authorization");
+
+        if (headerAuth != null && headerAuth.length() > 0 && !headerAuth.isBlank() && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(7);
+        }
+
+        return null;
+    }
 
     /**
      * Generuje token JWT na potrzeby weryfikacji rejestracji.
