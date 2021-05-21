@@ -139,6 +139,7 @@ public class AccountEndpoint {
      *
      * @param accessLevelDto obiekt zawierający poziom oraz login
      * @throws AppBaseException wyjątek typu AppBaseException
+     * @return odpowiedź 400 gdy administrator próbuje sam sobie odebrać poziom dostępu, 200 gdy dodanie poprawne
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{login}/{level}
     @PUT
@@ -189,6 +190,7 @@ public class AccountEndpoint {
      *
      * @param accessLevelDto obiekt zawierający poziom oraz login
      * @throws AppBaseException wyjątek typu AppBaseException
+     * @return @return odpowiedź 400 gdy administrator próbuje sam sobie dodać poziom dostępu, 200 gdy dodanie poprawne
      */
     @PUT
     @RolesAllowed({I18n.ADMIN})
