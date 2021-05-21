@@ -13,8 +13,8 @@ import Patient from "../Patient/Patient";
 import {userRolesStorageName} from "../../components/Login/LoginRequest";
 import Doctor from "../Doctor/Doctor";
 
-import { useTranslation } from "react-i18next";
-import i18n from"../../transaltions/i18n";
+import {useTranslation} from "react-i18next";
+import i18n from "../../transaltions/i18n";
 
 const accessLevelDictionary = {
     "Guest": "rgba(1, 1, 1, 0.1)",
@@ -31,7 +31,7 @@ function MainView() {
     const urlEN = "https://img.icons8.com/color/48/000000/great-britain-circular.png"
     const [language, setLanguage] = useState(() => "PL");
     const [flag, setFlag] = useState(() => urlEN);
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     function handleOnClick() {
         if (language === "EN") {
@@ -63,7 +63,7 @@ function MainView() {
                             <Col>
                                 <LinkContainer to="/">
                                     <Navbar.Brand className="font-weight-bold text-muted">
-                                        Home
+                                        {t("Home")}
                                     </Navbar.Brand>
                                 </LinkContainer>
                             </Col>
@@ -81,7 +81,6 @@ function MainView() {
                                     />
                                     <img onClick={handleOnClick} style={{marginLeft: "10px", maxWidth: "30px"}}
                                          src={flag} alt="Logo"/>
-<p>{t("Hello")}</p>
                                 </Navbar.Collapse>
                             </Col>
                         </Row>
