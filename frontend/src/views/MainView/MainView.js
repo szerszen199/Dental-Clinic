@@ -50,7 +50,7 @@ function MainView() {
     }
 
     return (
-        <div className="App container py-3 ">
+        <div className="App container py-3 " id="body1">
             <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"
                     style={{backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
                 <div id="navbarDiv">
@@ -83,17 +83,16 @@ function MainView() {
                 </div>
             </Navbar>
 
+            <Routes/>
+            <ReadinessComponent/>
+
             <MDBFooter color="blue" className="font-small pt-4 mt-4" id="footer">
-                <div className="footer-copyright text-left py-3">
+                <div className="footer-copyright text-right py-3">
                     <MDBContainer fluid>
                         Klinika Stomatologiczna, &copy; {new Date().getFullYear()} Copyright by 2021SSBD01
                     </MDBContainer>
                 </div>
             </MDBFooter>
-
-
-            <Routes/>
-            <ReadinessComponent/>
         </div>
     );
 

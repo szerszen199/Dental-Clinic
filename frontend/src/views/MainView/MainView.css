@@ -1,6 +1,12 @@
+#body1{
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
 #footer {
-    position: fixed;
-    bottom: 0;
+    max-height: 80px;
+    flex: 1;
 }
 
 #darkModeSwitch {
