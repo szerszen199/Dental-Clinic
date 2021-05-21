@@ -26,14 +26,15 @@ const roleGuestName = process.env.REACT_APP_ROLE_GUEST
 
 
 const accessLevelDictionary = {
-    roleGuestName: "rgba(1, 1, 1, 0.1)",
-    rolePatientName: "rgba(93, 188, 242, 0.2)",
-    roleReceptionistName: "rgba(192, 255, 0, 0.4)",
-    roleDoctorName: "rgba(255, 216, 0, 0.2)",
-    roleAdminName: "rgba(238, 0, 0, 0.1)",
+    [roleGuestName]: "rgba(1, 1, 1, 0.1)",
+    [rolePatientName]: "rgba(93, 188, 242, 0.2)",
+    [roleReceptionistName]: "rgba(192, 255, 0, 0.4)",
+    [roleDoctorName]: "rgba(255, 216, 0, 0.2)",
+    [roleAdminName]: "rgba(238, 0, 0, 0.1)",
 };
 export const jwtCookieExpirationTime = process.env.REACT_APP_JWT_EXPIRATION_MS / (24 * 60 * 60 * 100)
-const actualAccessLevel = "Doctor";
+// TODO: zastąpić użycia tego aktualnie wybraną rolą po zaimplementowaniu
+const actualAccessLevel = roleDoctorName;
 
 export default class MainView extends React.Component {
     urlPL = "https://img.icons8.com/color/96/000000/poland-circular.png";
@@ -110,8 +111,8 @@ export default class MainView extends React.Component {
     render() {
         return (
             <div className="App container py-3 " id="body1">
-                <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"
-                        style={{backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
+                {/*TODO: tutaj ma być aktualnie wybrana rola nie zhardkodowana*/}
+                <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3" style={{backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
                     <div id="navbarDiv">
                         <Container fluid>
                             <Row>
