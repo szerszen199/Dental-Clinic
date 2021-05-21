@@ -141,9 +141,14 @@ public class AccountEndpoint {
     @PUT
     @RolesAllowed({I18n.ADMIN})
     @Path("/revokeAccessLevel}")
+    @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public void revokeAccessLevel(AccessLevelDto accessLevelDto) throws AppBaseException {
+    public Response revokeAccessLevel(AccessLevelDto accessLevelDto) throws AppBaseException {
+        if (accessLevelDto.getLogin().equals(loggedInAccountUtil.getLoggedInAccountLogin())) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
         accessLevelManager.revokeAccessLevel(accessLevelDto.getLogin(), accessLevelDto.getLevel());
+        return Response.ok().build();
     }
 
     /**
@@ -185,9 +190,14 @@ public class AccountEndpoint {
     @PUT
     @RolesAllowed({I18n.ADMIN})
     @Path("/addLevelByLogin")
+    @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public void addAccessLevel(AccessLevelDto accessLevelDto) throws AppBaseException {
+    public Response addAccessLevel(AccessLevelDto accessLevelDto) throws AppBaseException {
+        if (accessLevelDto.getLogin().equals(loggedInAccountUtil.getLoggedInAccountLogin())) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
         accessLevelManager.addAccessLevel(accessLevelDto.getLogin(), accessLevelDto.getLevel());
+        return Response.ok().build();
     }
 
     /**
