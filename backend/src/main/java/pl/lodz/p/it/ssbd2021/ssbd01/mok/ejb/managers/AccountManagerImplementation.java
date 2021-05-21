@@ -274,6 +274,13 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         accountFacade.edit(account);
     }
 
+    @Override
+    public void setLanguage(String login, String language) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
+        account.setLanguage(language);
+        accountFacade.edit(account);
+    }
+
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void verifyOldPassword(String currentPasswordHash, String oldPassword) throws AppBaseException {
         if (!currentPasswordHash.contentEquals(hashGenerator.generateHash(oldPassword))) {

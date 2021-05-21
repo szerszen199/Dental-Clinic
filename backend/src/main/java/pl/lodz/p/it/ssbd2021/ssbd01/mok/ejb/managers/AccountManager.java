@@ -164,4 +164,14 @@ public interface AccountManager {
      * @throws AppBaseException app base exception
      */
     void updateAfterUnsuccessfulLogin(String login, String ip, LocalDateTime time) throws AppBaseException;
+
+
+    /**
+     * Ustawia pole language na {@param language} w koncie o logine {@param login}.
+     *
+     * @param login      login modyfikowanego konta
+     * @param language   ustawiany język
+     * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych nie powiedzie się.
+     */
+    void setLanguage(String login, String language) throws AppBaseException;
 }
