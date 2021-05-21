@@ -120,6 +120,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         try {
             String login = jwtEmailConfirmationUtils.getUserNameFromRegistrationConfirmationJwtToken(jwt);
             accountFacade.findByLogin(login).setEnabled(true);
+            mailProvider.sendActivationConfirmationMail(accountFacade.findByLogin(login).getEmail());
         } catch (AppBaseException | ParseException e) {
             throw AccountException.noSuchAccount(e);
         }

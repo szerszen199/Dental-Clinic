@@ -5,6 +5,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AuthViewEntity;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtLoginUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Default;
@@ -16,11 +17,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 @RequestScoped
 @Default
 public class JWTHttpAuthMechanism implements HttpAuthenticationMechanism {
+
+    @Inject
+    private PropertiesLoader propertiesLoader;
 
     @Inject
     private JwtLoginUtils jwtLoginUtils;
@@ -49,7 +54,8 @@ public class JWTHttpAuthMechanism implements HttpAuthenticationMechanism {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return msgContext.responseUnauthorized();
+        // Unauthenticated shows as anon
+        return msgContext.notifyContainerAboutLogin(propertiesLoader.getAnonymousUserName(), new HashSet<>());
     }
 
     private String parseJwt(HttpServletRequest request) {

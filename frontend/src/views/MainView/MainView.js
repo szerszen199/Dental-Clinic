@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import {LinkContainer} from "react-router-bootstrap";
 import {Col, Container, Row} from "react-bootstrap";
@@ -12,6 +12,7 @@ import ReadinessComponent from "../../components/GetReadinessResource/Readiness"
 import Patient from "../Patient/Patient";
 import {userRolesStorageName} from "../../components/Login/LoginRequest";
 import Doctor from "../Doctor/Doctor";
+import axios from "axios";
 
 const accessLevelDictionary = {
     "Guest": "rgba(1, 1, 1, 0.1)",
@@ -20,74 +21,103 @@ const accessLevelDictionary = {
     "Doctor": "rgba(255, 216, 0, 0.2)",
     "Admin": "rgba(238, 0, 0, 0.1)",
 };
-var actualAccessLevel = "Doctor";
+let actualAccessLevel = "Doctor";
 
-function MainView() {
-    const [isDarkMode, setIsDarkMode] = useState(() => false);
-    const urlPL = "https://img.icons8.com/color/96/000000/poland-circular.png"
-    const urlEN = "https://img.icons8.com/color/48/000000/great-britain-circular.png"
-    const [language, setLanguage] = useState(() => "PL");
-    const [flag, setFlag] = useState(() => urlEN);
+export default class MainView extends React.Component {
+    urlPL = "https://img.icons8.com/color/96/000000/poland-circular.png";
+    urlEN = "https://img.icons8.com/color/48/000000/great-britain-circular.png";
 
-    function handleOnClick() {
-        if (language === "EN") {
-            setPL()
-        } else {
-            setEN()
+    constructor(props) {
+        super(props);
+        this.state = {
+            isDarkMode: false,
+            language: "PL",
+            flag: this.urlEN,
+            login: "",
         }
     }
 
-    function setEN() {
-        setLanguage("EN");
-        setFlag(urlPL);
+    componentDidMount() {
+        let jwtToken = localStorage.getItem("JWTToken")
+        if (jwtToken != null) {
+            axios
+                .get(process.env.REACT_APP_BACKEND_URL + "account/info", {
+                    headers: {
+                        Authorization: "Bearer " + jwtToken
+                    }
+                })
+                .then(res => res.data)
+                .then(result => {
+                    this.setState({
+                        login: result.login,
+                    });
+                    console.log(this.state.login)
+                })
+        }
     }
 
-    function setPL() {
-        setLanguage("PL");
-        setFlag(urlEN);
+    handleOnClick() {
+        if (this.state.language === "EN") {
+            this.setPL()
+        } else {
+            this.setEN()
+        }
     }
 
-    return (
-        <div className="App container py-3 ">
-            <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"
-                    style={{backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
-                <div style={{width: "100%"}}>
-                    <Container fluid>
-                        <Row>
-                            <Col>
-                                <LinkContainer to="/">
-                                    <Navbar.Brand className="font-weight-bold text-muted">
-                                        Home
-                                    </Navbar.Brand>
-                                </LinkContainer>
-                            </Col>
-                            <Col>
-                                <Navbar.Toggle/>
-                                <Navbar.Collapse className="justify-content-end">
-                                    <Wybierz/>
-                                    <DarkModeSwitch
-                                        style={{marginLeft: '1rem'}}
-                                        checked={isDarkMode}
-                                        onChange={setIsDarkMode}
-                                        size={30}
-                                        sunColor={"#FFDF37"}
-                                        moonColor={"#bfbfbb"}
-                                    />
-                                    <img onClick={handleOnClick} style={{marginLeft: "10px", maxWidth: "30px"}}
-                                         src={flag} alt="Logo"/>
+    setEN() {
+        this.setState({language: "EN", flag: this.urlPL})
+    }
 
-                                </Navbar.Collapse>
-                            </Col>
-                        </Row>
-                        <Row> <Col> <BreadCrumbs/> </Col></Row>
-                    </Container>
-                </div>
-            </Navbar>
-            <Routes/>
-            <ReadinessComponent/>
-        </div>
-    );
+    setPL() {
+        this.setState({language: "PL", flag: this.urlEN})
+    }
 
+    render() {
+        return (
+            <div className="App container py-3 ">
+                <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"
+                        style={{backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
+                    <div style={{width: "100%"}}>
+                        <Container fluid>
+                            <Row>
+                                <Col>
+                                    <LinkContainer to="/">
+                                        <Navbar.Brand className="font-weight-bold text-muted">
+                                            Home
+                                        </Navbar.Brand>
+                                    </LinkContainer>
+                                </Col>
+                                <Col>
+                                    <Navbar.Toggle/>
+                                    <Navbar.Collapse className="justify-content-end">
+                                        <Wybierz/>
+                                        <DarkModeSwitch
+                                            style={{marginLeft: '1rem'}}
+                                            checked={this.state.isDarkMode}
+                                            onChange={(e) => this.setState({isDarkMode: e})}
+                                            size={30}
+                                            sunColor={"#FFDF37"}
+                                            moonColor={"#bfbfbb"}
+                                        />
+                                        <img onClick={(e) => this.handleOnClick()}
+                                             style={{marginLeft: "10px", maxWidth: "30px"}}
+                                             src={this.state.flag} alt="Logo"/>
+
+                                    </Navbar.Collapse>
+                                </Col>
+                            </Row>
+                            <Row> <Col> <BreadCrumbs/> </Col> <Col style={{
+                                textAlign: "right",
+                                color: "gray"
+                            }}> login: {this.state.login}</Col> </Row>
+                        </Container>
+                    </div>
+                </Navbar>
+                <Routes/>
+                <ReadinessComponent/>
+            </div>
+        );
+    }
 }
 
 function Wybierz() {
@@ -105,5 +135,3 @@ function Wybierz() {
     }
     return Guest();
 }
-
-export default MainView;
