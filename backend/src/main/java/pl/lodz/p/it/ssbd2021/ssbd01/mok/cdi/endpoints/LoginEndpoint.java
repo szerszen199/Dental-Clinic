@@ -3,12 +3,16 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.JwtResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.RefreshTokenRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AuthAndRefreshTokenResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.JwtTokenResponseDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.JwtTokenAndUserDataReponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.LoginRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.UserInfoResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtLoginUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtRefreshUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
@@ -25,18 +29,18 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Typ Login endpoint.
  */
-@Path("login")
+@Path("auth")
 @PermitAll
 @Interceptors({LogInterceptor.class})
 public class LoginEndpoint {
-
-    @Inject
-    private MailProvider mailProvider;
 
     private static final String[] HEADERS_TO_TRY = {
             "X-Forwarded-For",
@@ -53,31 +57,68 @@ public class LoginEndpoint {
     private final IdentityStoreHandler identityStoreHandler;
     private final AccountManager accountManager;
     private final HttpServletRequest request;
-    private final JwtLoginUtils jwtUtils;
+    private final JwtLoginUtils jwtLoginUtils;
     private final PropertiesLoader propertiesLoader;
+    private final JwtRefreshUtils jwtRefreshUtils;
+    private final MailProvider mailProvider;
 
 
     /**
      * Tworzy nową instancję klasy Login endpoint.
      *
      * @param identityStoreHandler identity store handler
-     * @param jwtUtils             jwt utils
+     * @param jwtLoginUtils        jwt utils
      * @param httpServletRequest   http servlet request
      * @param accountManager       account manager
      * @param propertiesLoader     properties loader
+     * @param jwtRefreshUtils      jwt refresh utils
+     * @param mailProvider         mail provider
      */
     @Inject
     public LoginEndpoint(IdentityStoreHandler identityStoreHandler,
-                         JwtLoginUtils jwtUtils,
+                         JwtLoginUtils jwtLoginUtils,
                          HttpServletRequest httpServletRequest,
                          AccountManager accountManager,
-                         PropertiesLoader propertiesLoader) {
+                         PropertiesLoader propertiesLoader,
+                         JwtRefreshUtils jwtRefreshUtils,
+                         MailProvider mailProvider) {
         this.identityStoreHandler = identityStoreHandler;
-        this.jwtUtils = jwtUtils;
+        this.jwtLoginUtils = jwtLoginUtils;
         this.request = httpServletRequest;
         this.accountManager = accountManager;
         this.propertiesLoader = propertiesLoader;
+        this.jwtRefreshUtils = jwtRefreshUtils;
+        this.mailProvider = mailProvider;
     }
+
+    /**
+     * Pobiera pole refresh token.
+     *
+     * @param refreshTokenRequestDTO refresh token request dto
+     * @return refresh token
+     */
+    @PermitAll
+    @POST
+    @Path("refresh")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getNewTokenForRefreshToken(RefreshTokenRequestDTO refreshTokenRequestDTO) {
+        String jwt = refreshTokenRequestDTO.getRefreshToken();
+        if (jwtRefreshUtils.validateJwtToken(jwt)) {
+            try {
+                String username = jwtRefreshUtils.getUserNameFromJwtToken(jwt);
+                return Response.ok()
+                        .entity(new AuthAndRefreshTokenResponseDTO(
+                                jwtLoginUtils.generateJwtTokenForUser(username),
+                                jwtRefreshUtils.generateJwtTokenForUser(username)))
+                        .build();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.INVALID_REFRESH_TOKEN)).build();
+    }
+
 
     /**
      * Endpoint Logowania się na konto, metoda POST.
@@ -85,6 +126,8 @@ public class LoginEndpoint {
      * @param loginRequestDTO DTO zawierające login i hasło konta
      * @return Odpowiedź, 401 jeśli nie udało się zalogować, 200 jeśli udało się zalogować.
      */
+    @PermitAll
+    @Path("login")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -92,15 +135,15 @@ public class LoginEndpoint {
         String ip = getClientIpAddress(request);
         CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(loginRequestDTO.toCredential());
         try {
-        Account account = accountManager.findByLogin(loginRequestDTO.getUsername());
-        if (credentialValidationResult.getStatus() != CredentialValidationResult.Status.VALID) {
+            Account account = accountManager.findByLogin(loginRequestDTO.getUsername());
+            if (credentialValidationResult.getStatus() != CredentialValidationResult.Status.VALID) {
                 accountManager.updateAfterUnsuccessfulLogin(loginRequestDTO.getUsername(), ip, LocalDateTime.now());
                 if (account.getUnsuccessfulLoginCounter() >= propertiesLoader.getInvalidLoginCountBlock() && account.getActive()) {
                     accountManager.lockAccount(account.getLogin());
                     // TODO: 11.05.2021 informacja na maila? Idk
                 }
-            return Response.status(Response.Status.UNAUTHORIZED).entity(new MessageResponseDto(I18n.AUTHENTICATION_FAILURE)).build();
-        }
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new MessageResponseDto(I18n.AUTHENTICATION_FAILURE)).build();
+            }
         } catch (AppBaseException e) {
             // TODO: 11.05.2021 Moze tutaj cos zrobic?
             e.printStackTrace();
@@ -108,7 +151,6 @@ public class LoginEndpoint {
         UserInfoResponseDTO userInfoResponseDTO = new UserInfoResponseDTO();
         try {
             accountManager.updateAfterSuccessfulLogin(credentialValidationResult.getCallerPrincipal().getName(), ip, LocalDateTime.now());
-
             Account loggedInAccount = accountManager.findByLogin(loginRequestDTO.getUsername());
             userInfoResponseDTO.setFirstName(loggedInAccount.getFirstName());
             userInfoResponseDTO.setLastName(loggedInAccount.getLastName());
@@ -120,9 +162,10 @@ public class LoginEndpoint {
         }
 
         return Response.ok().entity(
-                new JwtResponseDTO(credentialValidationResult.getCallerPrincipal().getName(),
+                new JwtTokenAndUserDataReponseDTO(credentialValidationResult.getCallerPrincipal().getName(),
                         credentialValidationResult.getCallerGroups(),
-                        jwtUtils.generateJwtTokenForUser(credentialValidationResult.getCallerPrincipal().getName()),
+                        jwtLoginUtils.generateJwtTokenForUser(credentialValidationResult.getCallerPrincipal().getName()),
+                        jwtRefreshUtils.generateJwtTokenForUser(credentialValidationResult.getCallerPrincipal().getName()),
                         userInfoResponseDTO)).build();
     }
 

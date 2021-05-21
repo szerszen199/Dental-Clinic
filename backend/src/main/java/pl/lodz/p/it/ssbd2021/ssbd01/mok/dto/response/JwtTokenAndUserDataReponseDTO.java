@@ -5,23 +5,24 @@ import java.util.Set;
 /**
  * Dto dla odpowiedzi z tokenem Jwt przy logowaniu.
  */
-public class JwtResponseDTO {
+public class JwtTokenAndUserDataReponseDTO extends AuthAndRefreshTokenResponseDTO {
     private final String username;
     private final Set<String> roles;
-    private final String token;
     private final UserInfoResponseDTO userInfoResponseDTO;
 
     /**
      * Tworzy nową instancję klasy.
-     *  @param username username
-     * @param roles    roles
-     * @param token    token
+     *
+     * @param username            username
+     * @param roles               roles
+     * @param authJwtToken        auth jwt token
+     * @param refreshJwtToken     refresh jwt token
      * @param userInfoResponseDTO informacje o użytkowniku
      */
-    public JwtResponseDTO(String username, Set<String> roles, String token, UserInfoResponseDTO userInfoResponseDTO) {
+    public JwtTokenAndUserDataReponseDTO(String username, Set<String> roles, String authJwtToken, String refreshJwtToken, UserInfoResponseDTO userInfoResponseDTO) {
+        super(authJwtToken, refreshJwtToken);
         this.username = username;
         this.roles = roles;
-        this.token = token;
         this.userInfoResponseDTO = userInfoResponseDTO;
     }
 
@@ -41,15 +42,6 @@ public class JwtResponseDTO {
      */
     public Set<String> getRoles() {
         return roles;
-    }
-
-    /**
-     * Pobiera pole token.
-     *
-     * @return token
-     */
-    public String getToken() {
-        return token;
     }
 
     /**
