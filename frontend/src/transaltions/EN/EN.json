@@ -2,6 +2,12 @@
   "Hello": "Hello",
   "Home": "Home",
   "Register": "Register",
-  "Login": "Login"
+  "Login": "Login",
+  "My appointments": "My appointments",
+  "Plan an appointment": "Plan an appointment",
+  "List of doctors": "List of doctors",
+  "My prescriptions": "My prescriptions",
+  "Edit My Account": "Edit My Account",
+  "Logout": "Logout"
 
 }

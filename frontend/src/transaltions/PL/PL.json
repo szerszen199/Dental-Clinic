@@ -1,6 +1,12 @@
 {
   "Hello": "Cześć",
   "Home": "Strona główna",
-  "Register": "Zarejestruj się",
-  "Login": "Zaloguj się"
+  "Register": "Zarejestruj",
+  "Login": "Zaloguj",
+  "My appointments": "Moje wizyty",
+  "Plan an appointment": "Zaplanuj wizytę",
+  "List of doctors": "Lekarze",
+  "My prescriptions": "Moje recepty",
+  "Edit My Account": "Edytuj moje konto",
+  "Logout": "Wyloguj"
 }
