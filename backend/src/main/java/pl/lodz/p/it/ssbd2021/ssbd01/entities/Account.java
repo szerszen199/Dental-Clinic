@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
+import org.hibernate.validator.constraints.pl.PESEL;
 import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 
 import javax.persistence.Basic;
@@ -113,6 +114,7 @@ public class Account extends AbstractEntity implements Serializable {
 
     @Column(name = "pesel", columnDefinition = "bpchar", length = 11)
     @Size(min = 11, max = 11)
+    @PESEL
     private String pesel;
 
     @Basic(optional = false)
