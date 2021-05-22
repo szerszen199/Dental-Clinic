@@ -8,7 +8,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.DataValidationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
@@ -104,7 +103,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @Override
     public void setEmailRecallTrue(String login) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
-        account.setEmailrecall(true);
+        account.setEmailRecall(true);
         accountFacade.edit(account);
     }
 

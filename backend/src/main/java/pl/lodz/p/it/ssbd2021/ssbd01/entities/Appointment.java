@@ -12,16 +12,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Future;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "appointments")
@@ -48,9 +45,58 @@ public class Appointment extends AbstractEntity implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "appointment_date", nullable = false)
-    @NotNull
     @Future
+    @NotNull
     private LocalDateTime appointmentDate;
+
+    @Basic(optional = true)
+    @Column(name = "confirmation_date_time", nullable = true)
+    private LocalDateTime confirmationDateTime;
+
+    @Basic(optional = false)
+    @Column(name = "cancellation_date_time", nullable = false)
+    @NotNull
+    private LocalDateTime cancellationDateTime;
+
+    @JoinColumn(name = "confirmed_by", referencedColumnName = "id", nullable = true)
+    @ManyToOne(optional = true)
+    private Account confirmedBy;
+
+    @JoinColumn(name = "canceled_by", referencedColumnName = "id", nullable = true)
+    @ManyToOne(optional = true)
+    private Account canceledBy;
+
+    public LocalDateTime getConfirmationDateTime() {
+        return confirmationDateTime;
+    }
+
+    public void setConfirmationDateTime(LocalDateTime confirmationDateTime) {
+        this.confirmationDateTime = confirmationDateTime;
+    }
+
+    public LocalDateTime getCancellationDateTime() {
+        return cancellationDateTime;
+    }
+
+    public void setCancellationDateTime(LocalDateTime cancellationDateTime) {
+        this.cancellationDateTime = cancellationDateTime;
+    }
+
+    public Account getConfirmedBy() {
+        return confirmedBy;
+    }
+
+    public void setConfirmedBy(Account confirmedBy) {
+        this.confirmedBy = confirmedBy;
+    }
+
+    public Account getCanceledBy() {
+        return canceledBy;
+    }
+
+    public void setCanceledBy(Account canceledBy) {
+        this.canceledBy = canceledBy;
+    }
 
     @Basic(optional = false)
     @Column(name = "confirmed", nullable = false)
