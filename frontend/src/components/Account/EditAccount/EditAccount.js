@@ -1,19 +1,16 @@
-import React, { Component, Suspense } from 'react';
-import { withTranslation } from 'react-i18next';
+import React, {Suspense} from 'react';
+import {withTranslation} from 'react-i18next';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./EditAccount.css";
 import axios from "axios";
 import {editAccountRequest} from "./EditAccountRequest";
-import {useTranslation} from "react-i18next";
 
 class EditAccountWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            // translation: useTranslation(),
             isDisabled: true,
-            text: "Edit",
             login: "",
             email: "",
             firstName: "",
@@ -86,7 +83,6 @@ class EditAccountWithoutTranslation extends React.Component {
     setEditable() {
         this.setState({
             isDisabled: false,
-            text: useTranslation("Save")
         });
     }
 
@@ -94,14 +90,13 @@ class EditAccountWithoutTranslation extends React.Component {
         this.validateForm(t)
         this.setState({
             isDisabled: true,
-            text: useTranslation("Edit")
         });
         editAccountRequest(this.state.login, this.state.email, this.state.firstName, this.state.lastName, this.state.phoneNumber, this.state.pesel)
     }
 
     // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
     render() {
-        const { t } = this.props;
+        const {t} = this.props;
 
         return (
             <div className="EditAccount">
@@ -165,7 +160,7 @@ class EditAccountWithoutTranslation extends React.Component {
                     </Form.Group>
                     <Button block size="lg" type="submit"
                             onClick={() => this.handleOnClick(this)}>
-                        {this.state.text}
+                        {this.state.isDisabled ? t("Edit") : t("Save")}
                     </Button>
                 </Form>
             </div>
@@ -179,7 +174,7 @@ const EditAccountTr = withTranslation()(EditAccountWithoutTranslation)
 export default function EditAccount() {
     return (
         <Suspense fallback="loading">
-            <EditAccountTr />
+            <EditAccountTr/>
         </Suspense>
     );
 }
