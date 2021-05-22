@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./Registration.css";
+import {useTranslation} from "react-i18next";
 
 export default function Registration() {
     const [login, setLogin] = useState("");
@@ -12,6 +13,7 @@ export default function Registration() {
     const [lastName, setLastName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [pesel, setPesel] = useState("");
+    const {t} = useTranslation()
 
     function validateForm() {
         // Todo: zrobić walidację taką jaką wymaga projekt
@@ -62,7 +64,7 @@ export default function Registration() {
         <div className="Registration">
             <Form onSubmit={handleSubmit}>
                 <Form.Group size="lg" controlId="login">
-                    <Form.Label>Login</Form.Label>
+                    <Form.Label>{t("UserLogin")}</Form.Label>
                     <Form.Control
                         autoFocus
                         type="login"
@@ -71,7 +73,7 @@ export default function Registration() {
                     />
                 </Form.Group>
                 <Form.Group size="lg" controlId="email">
-                    <Form.Label>Email</Form.Label>
+                    <Form.Label>{t("Email")}</Form.Label>
                     <Form.Control
                         autoFocus
                         type="email"
@@ -80,7 +82,7 @@ export default function Registration() {
                     />
                 </Form.Group>
                 <Form.Group size="lg" controlId="password">
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label>{t("Password")}</Form.Label>
                     <Form.Control
                         type="password"
                         value={password}
@@ -88,7 +90,7 @@ export default function Registration() {
                     />
                 </Form.Group>
                 <Form.Group size="lg" controlId="repeatedPassword">
-                    <Form.Label>Repeat new password</Form.Label>
+                    <Form.Label>{t("Repeat new password")}</Form.Label>
                     <Form.Control
                         type="password"
                         value={repeatedPassword}
@@ -96,7 +98,7 @@ export default function Registration() {
                     />
                 </Form.Group>
                 <Form.Group size="lg" controlId="firstName">
-                    <Form.Label>First Name</Form.Label>
+                    <Form.Label>{t("First Name")}</Form.Label>
                     <Form.Control
                         type="text"
                         value={firstName}
@@ -104,7 +106,7 @@ export default function Registration() {
                     />
                 </Form.Group>
                 <Form.Group size="lg" controlId="lastName">
-                    <Form.Label>Last Name</Form.Label>
+                    <Form.Label>{t("Last Name")}</Form.Label>
                     <Form.Control
                         type="text"
                         value={lastName}
@@ -112,7 +114,7 @@ export default function Registration() {
                     />
                 </Form.Group>
                 <Form.Group size="lg" controlId="phoneNumber">
-                    <Form.Label>Phone Number</Form.Label>
+                    <Form.Label>{t("Phone Number")}</Form.Label>
                     <Form.Control
                         type="text"
                         value={phoneNumber}
@@ -121,7 +123,7 @@ export default function Registration() {
                 </Form.Group>
                 {/*Todo: co z peselem dla obcokrajowca? Nic czy coś innnego? Narazie zrobiłem że może być pusty*/}
                 <Form.Group size="lg" controlId="pesel">
-                    <Form.Label>Pesel</Form.Label>
+                    <Form.Label>{t("Pesel")}</Form.Label>
                     <Form.Control
                         type="text"
                         value={pesel}
@@ -129,7 +131,7 @@ export default function Registration() {
                     />
                 </Form.Group>
                 <Button block size="lg" type="submit" disabled={!validateForm()}>
-                    Register
+                    {t("Register")}
                 </Button>
             </Form>
         </div>

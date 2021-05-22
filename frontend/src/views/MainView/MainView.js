@@ -1,16 +1,19 @@
 import React from "react";
 import Navbar from "react-bootstrap/Navbar";
-import {LinkContainer} from "react-router-bootstrap";
 import {Col, Container, Row} from "react-bootstrap";
 import {DarkModeSwitch} from "react-toggle-dark-mode";
 import Routes from "../../router/Routes";
 import BreadCrumbs from "../../components/Breadcrumbs/Breadcrumbs";
-import Guest from "../Guest/Guest";
-import Receptionist from "../Receptionist/Receptionist";
-import Admin from "../Admin/Admin";
 import ReadinessComponent from "../../components/GetReadinessResource/Readiness"
-import Patient from "../Patient/Patient";
-import Doctor from "../Doctor/Doctor";
+import Doctor from "../Users/Doctor/Doctor";
+
+import {useTranslation} from "react-i18next";
+import i18n from "../../transaltions/i18n";
+import Admin from "../Users/Admin/Admin";
+import Patient from "../Users/Patient/Patient";
+import Receptionist from "../Users/Receptionist/Receptionist";
+import Guest from "../Guest/Guest";
+import {userRolesStorageName} from "../../components/Login/LoginRequest";
 import axios from "axios";
 import Cookies from "js-cookie";
 import {logout} from "../../components/Login/Logout";
@@ -22,7 +25,6 @@ const roleDoctorName = process.env.REACT_APP_ROLE_DOCTOR
 const roleReceptionistName = process.env.REACT_APP_ROLE_RECEPTIONIST
 const rolePatientName = process.env.REACT_APP_ROLE_PATIENT
 const roleGuestName = process.env.REACT_APP_ROLE_GUEST
-
 
 const accessLevelDictionary = {
     [roleGuestName]: "rgba(1, 1, 1, 0.1)",
@@ -39,6 +41,7 @@ export default class MainView extends React.Component {
     urlPL = "https://img.icons8.com/color/96/000000/poland-circular.png";
     urlEN = "https://img.icons8.com/color/48/000000/great-britain-circular.png";
 
+
     constructor(props) {
         super(props);
         this.state = {
@@ -46,7 +49,27 @@ export default class MainView extends React.Component {
             language: "PL",
             flag: this.urlEN,
             login: "",
+
         }
+    //    const {t} = useTranslation();
+    }
+
+    handleOnClick() {
+        if (this.state.language === "EN") {
+            this.setPL()
+            i18n.changeLanguage("PL");
+        } else {
+            this.setEN()
+            i18n.changeLanguage("EN");
+        }
+    }
+
+   setEN() {
+        this.setState({language: "EN", flag: this.urlPL})
+    }
+
+    setPL() {
+        this.setState({language: "PL", flag: this.urlEN})
     }
 
     makeRefreshRequest() {
@@ -69,6 +92,7 @@ export default class MainView extends React.Component {
             })
         }
     }
+
 
     componentDidMount() {
         this.makeRefreshRequest();
@@ -99,65 +123,50 @@ export default class MainView extends React.Component {
         }
     }
 
-    handleOnClick() {
-        if (this.state.language === "EN") {
-            this.setPL()
-        } else {
-            this.setEN()
-        }
-    }
-
-    setEN() {
-        this.setState({language: "EN", flag: this.urlPL})
-    }
-
-    setPL() {
-        this.setState({language: "PL", flag: this.urlEN})
-    }
 
     render() {
         return (
-            <div className="App container py-3 " id="body1">
-                {/*TODO: tutaj ma być aktualnie wybrana rola nie zhardkodowana*/}
-                <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3" style={{backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
+            <div className="App container py-3 ">
+                <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"
+                        style={{backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
                     <div id="navbarDiv">
                         <Container fluid>
                             <Row>
                                 <Col>
-                                    <LinkContainer to="/">
-                                        <Navbar.Brand className="font-weight-bold text-muted">
-                                            Home
-                                        </Navbar.Brand>
-                                    </LinkContainer>
+                                    <Navbar.Brand to="/" className="font-weight-bold text-muted justify-content-end">
+                                        {t("Home")}
+                                    </Navbar.Brand>
                                 </Col>
-                                <Col>
+                                <Col className="d-flex  justify-content-end">
                                     <Navbar.Toggle/>
                                     <Navbar.Collapse className="justify-content-end">
                                         <Wybierz/>
-                                        <DarkModeSwitch
-                                            style={{marginLeft: '1rem'}}
-                                            checked={this.state.isDarkMode}
-                                            onChange={(e) => this.setState({isDarkMode: e})}
-                                            size={30}
-                                            sunColor={"#FFDF37"}
-                                            moonColor={"#bfbfbb"}
-                                        />
-                                        <img id="flag" onClick={(e) => this.handleOnClick()}
-                                             src={this.state.flag} alt="Logo"/>
-
                                     </Navbar.Collapse>
                                 </Col>
                             </Row>
                             <Row> <Col> <BreadCrumbs/> </Col> <Col style={{
                                 textAlign: "right",
                                 color: "gray"
-                            }}> {this.state.login === "" ? '' : 'login: ' + this.state.login}</Col> </Row>
+                            }}> {this.state.login === "" ? '' : 'login: ' + this.state.login}</Col>
+                                <Col className="d-flex justify-content-end"
+                                     style={{maxHeight: "30px", marginRight: "10px"}}>
+                                    <DarkModeSwitch
+                                        style={{marginLeft: '1rem'}}
+                                        checked={this.state.isDarkMode}
+                                        onChange={(e) => this.setState({isDarkMode: e})}
+                                        size={30}
+                                        sunColor={"#FFDF37"}
+                                        moonColor={"#bfbfbb"}
+                                    />
+                                    <img id="flag" onClick={(e) => this.handleOnClick()}
+                                         src={this.state.flag} alt="Logo"/>
+                                </Col>
+                            </Row>
                         </Container>
                     </div>
                 </Navbar>
                 <Routes/>
                 <ReadinessComponent/>
-
                 <MDBFooter color="blue" className="font-small pt-4 mt-4" id="footer">
                     <div className="footer-copyright text-right py-3">
                         <MDBContainer fluid>
