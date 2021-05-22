@@ -13,7 +13,7 @@ function Receptionist() {
     return (
         <Nav activeKey={window.location.pathname}>
             <NavDropdown title={t("Appointments")} id="navbarScrollingDropdown">
-                <Nav.Link to="/plan-appointment">{t("Plan an appointment")}</Nav.Link>
+                <Nav.Link style={{color: "rgb(127, 127, 127)"}} className="navMenu" to="/plan-appointment">{t("Plan an appointment")}</Nav.Link>
             </NavDropdown>
             <Nav.Link to="/accounts">{t("Users Accounts")}</Nav.Link>
             <MyAccount/>

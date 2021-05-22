@@ -9,6 +9,9 @@ import Doctor from "../Users/Doctor/Doctor";
 
 import {useTranslation} from "react-i18next";
 import i18n from "../../transaltions/i18n";
+import Admin from "../Users/Admin/Admin";
+import Patient from "../Users/Patient/Patient";
+import Receptionist from "../Users/Receptionist/Receptionist";
 
 const accessLevelDictionary = {
     "Guest": "rgba(1, 1, 1, 0.1)",
@@ -110,7 +113,7 @@ function Wybierz() {
     //     return Doctor();
     // }
     // return Guest();
-    return Doctor();
+    return Receptionist();
 
 }
 
