@@ -1,10 +1,5 @@
-package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto;
+package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request;
 
-import java.time.LocalDateTime;
-import java.util.Set;
-
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 
 import javax.validation.constraints.Email;
@@ -12,9 +7,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Klasa dla AccountDto.
+ * Klasa Dto dla nowo tworzonego konta.
  */
-public class AccountDto {
+public class CreateAccountRequestDTO {
 
     @NotNull
     @Login
@@ -22,45 +17,59 @@ public class AccountDto {
 
     @NotNull
     @Email
+    @Size(min = 4, max = 100)
     private String email;
+
+    @NotNull
+    @Size(min = 8)
+    private String password;
 
     @NotNull
     @Size(min = 1, max = 50)
     private String firstName;
+
     @NotNull
-    @Size(min = 1, max = 80)
+    @Size(min = 1, max = 50)
     private String lastName;
 
     @Size(min = 9, max = 15)
     private String phoneNumber;
 
+
     @Size(min = 11, max = 11)
     private String pesel;
 
     @NotNull
-    private Boolean active;
-
-    @NotNull
     private String language;
-
-    @NotNull
-    private Long version;
+    
+    /**
+     * Tworzy nową instancję klasy NewAccountDto.
+     *
+     * @param login       login konta
+     * @param email       adres e-mail przypisany do konta
+     * @param password    hasło konta
+     * @param firstName   imię użytkownika
+     * @param lastName    nazwisko użytkownika
+     * @param phoneNumber numer telefonu
+     * @param pesel       pesel
+     * @param language    preferowany język użytkownika
+     */
+    public CreateAccountRequestDTO(String login, String email, String password, String firstName,
+                                   String lastName, String phoneNumber, String pesel, String language) {
+        this.login = login;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.pesel = pesel;
+        this.language = language;
+    }
 
     /**
-     * Tworzy nową instancję klasy AccountDto.
-     *
-     * @param account klasa reprezentujacea konto użytkownika aplikacji
+     * Tworzy nową instancję klasy New account dto.
      */
-    public AccountDto(Account account) {
-        this.login = account.getLogin();
-        this.email = account.getEmail();
-        this.firstName = account.getFirstName();
-        this.lastName = account.getLastName();
-        this.phoneNumber = account.getPhoneNumber();
-        this.pesel = account.getPesel();
-        this.active = account.getActive();
-        this.language = account.getLanguage();
-        this.version = account.getVersion();
+    public CreateAccountRequestDTO() {
     }
 
     public String getLogin() {
@@ -79,8 +88,20 @@ public class AccountDto {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getFirstName() {
         return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
@@ -103,20 +124,8 @@ public class AccountDto {
         return pesel;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public void setPesel(String pesel) {
         this.pesel = pesel;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
     }
 
     public String getLanguage() {
@@ -125,13 +134,5 @@ public class AccountDto {
 
     public void setLanguage(String language) {
         this.language = language;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 }

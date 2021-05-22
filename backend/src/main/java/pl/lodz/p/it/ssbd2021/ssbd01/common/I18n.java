@@ -9,6 +9,18 @@ public class I18n {
     public static final String RECEPTIONIST = "level.receptionist";
     public static final String DOCTOR = "level.doctor";
 
+    public static final String ACCOUNT_CREATED_SUCCESSFULLY = "account_created_successfully";
+    public static final String ACCOUNT_CONFIRMED_SUCCESSFULLY = "account_confirmed_successfully";
+    public static final String ACCOUNT_EDITED_SUCCESSFULLY = "account_edited_successfully";
+    public static final String EMAIL_CONFIRMED_SUCCESSFULLY = "email_confirmed_successfully";
+    public static final String ACCOUNT_LOCKED_SUCCESSFULLY = "account_locked_successfully";
+    public static final String ACCOUNT_UNLOCKED_SUCCESSFULLY = "account_unlocked_successfully";
+    public static final String ACCESS_LEVEL_ADDED_SUCCESSFULLY = "access_level_added_successfully";
+    public static final String PASSWORD_CHANGED_SUCCESSFULLY = "password_changed_successfully";
+    public static final String PASSWORD_RESET_SUCCESSFULLY = "password_reset_successfully";
+    public static final String DARK_MODE_SET_SUCCESSFULLY = "dark_mode_set_successfully";
+    public static final String LANGUAGE_SET_SUCCESSFULLY = "language_set_successfully";
+
     public static final String INVALID_REFRESH_TOKEN = "invalid_refresh_token";
     public static final String PASSWORDS_NOT_DIFFER = "both_passwords_are_same";
     public static final String AUTHENTICATION_FAILURE = "invalid_login_password_combination";
