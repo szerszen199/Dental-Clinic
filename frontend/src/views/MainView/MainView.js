@@ -36,10 +36,10 @@ function MainView() {
     function handleOnClick() {
         if (language === "EN") {
             setPL()
-            i18n.changeLanguage("EN");
+            i18n.changeLanguage("PL");
         } else {
             setEN()
-            i18n.changeLanguage("PL");
+            i18n.changeLanguage("EN");
         }
     }
 
@@ -98,17 +98,19 @@ function MainView() {
 function Wybierz() {
     // TODO: Ma być możliwość wyboru jaką z ról które mamy chcemy widzieć tzn mamy się móc przełączać między rolami
     //  Nie ma tego narazie więc jest tak
-    let levels = localStorage.getItem(userRolesStorageName) == null ? [] : localStorage.getItem(userRolesStorageName);
-    if (levels.includes("level.administrator")) {
-        return Admin();
-    } else if (levels.includes("level.patient")) {
-        return Patient();
-    } else if (levels.includes("level.receptionist")) {
-        return Receptionist();
-    } else if (levels.includes("level.doctor")) {
-        return Doctor();
-    }
-    return Guest();
+    // let levels = localStorage.getItem(userRolesStorageName) == null ? [] : localStorage.getItem(userRolesStorageName);
+    // if (levels.includes("level.administrator")) {
+    //     return Admin();
+    // } else if (levels.includes("level.patient")) {
+    //     return Patient();
+    // } else if (levels.includes("level.receptionist")) {
+    //     return Receptionist();
+    // } else if (levels.includes("level.doctor")) {
+    //     return Doctor();
+    // }
+    // return Guest();
+    return Patient();
+
 }
 
 export default MainView;
