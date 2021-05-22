@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto;
+package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request;
 
 
 import javax.validation.constraints.Size;
@@ -6,8 +6,9 @@ import javax.validation.constraints.Size;
 /**
  * Klasa NewPasswordDTO dla zmiany hasła.
  */
-public class NewPasswordDto {
-    
+public class ChangePasswordRequestDTO {
+    // TODO: 21.05.2021 Czy wersja ma być skoro porównujemy i tak czy hasło się zgadza poprzedniego? Narazie nei daję
+
     @Size(min = 8)
     private String oldPassword;
     
@@ -24,7 +25,7 @@ public class NewPasswordDto {
      * @param firstPassword  pierwsze powtórzenie nowego hasła
      * @param secondPassword drugie powtórzenie nowego hasła
      */
-    public NewPasswordDto(String oldPassword, String firstPassword, String secondPassword) {
+    public ChangePasswordRequestDTO(String oldPassword, String firstPassword, String secondPassword) {
         this.oldPassword = oldPassword;
         this.firstPassword = firstPassword;
         this.secondPassword = secondPassword;

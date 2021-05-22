@@ -6,6 +6,8 @@ import javax.ejb.Local;
 import javax.servlet.ServletContext;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 
 /**
  * Interfejs Account manager.
@@ -17,8 +19,7 @@ public interface AccountManager {
      * Utworzenie konta przy rejestracji.
      *
      * @param account        nowe konto
-     * @param servletContext kontekst serwletów, służy do współdzielenia informacji
-     *                       w ramach aplikacji
+     * @param servletContext kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     void createAccount(Account account, ServletContext servletContext) throws AppBaseException;
@@ -67,23 +68,21 @@ public interface AccountManager {
     /**
      * Edytuje wlasne konto.
      *
-     * @param account edytowane konto
-     * @param servletContext kontekst serwletów, służy do współdzielenia informacji
-     *                       w ramach aplikacji
+     * @param editOwnAccountRequestDTO edit own account request dto
+     * @param servletContext           kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void editAccount(Account account, ServletContext servletContext) throws AppBaseException;
+    void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO, ServletContext servletContext) throws AppBaseException;
 
 
     /**
      * Edytuje konto innego użytkownika.
      *
-     * @param account edytowane konto
-     * @param servletContext kontekst serwletów, służy do współdzielenia informacji
-     *                       w ramach aplikacji
+     * @param editAnotherAccountRequestDTO edit another account request dto
+     * @param servletContext               kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void editOtherAccount(Account account, ServletContext servletContext) throws AppBaseException;
+    void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO, ServletContext servletContext) throws AppBaseException;
 
     /**
      * Potwierdzenie zmiany maila.
@@ -182,8 +181,8 @@ public interface AccountManager {
     /**
      * Ustawia pole language na {@param language} w koncie o logine {@param login}.
      *
-     * @param login      login modyfikowanego konta
-     * @param language   ustawiany język
+     * @param login    login modyfikowanego konta
+     * @param language ustawiany język
      * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych nie powiedzie się.
      */
     void setLanguage(String login, String language) throws AppBaseException;
