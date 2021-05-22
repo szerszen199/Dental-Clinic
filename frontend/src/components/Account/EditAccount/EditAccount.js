@@ -4,7 +4,6 @@ import Button from "react-bootstrap/Button";
 import "./EditAccount.css";
 import axios from "axios";
 import {editAccountRequest} from "./EditAccountRequest";
-import {JWTTokenCookieName} from "../../Login/LoginRequest";
 import Cookies from "js-cookie";
 
 export default class EditAccount extends React.Component {
@@ -25,7 +24,7 @@ export default class EditAccount extends React.Component {
         axios
             .get(process.env.REACT_APP_BACKEND_URL + "account/info", {
                 headers: {
-                    Authorization: "Bearer " + Cookies.get(JWTTokenCookieName)
+                    Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
                 }
             })
             .then(res => res.data)
