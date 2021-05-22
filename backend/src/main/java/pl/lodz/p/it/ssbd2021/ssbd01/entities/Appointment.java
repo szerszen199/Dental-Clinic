@@ -48,9 +48,58 @@ public class Appointment extends AbstractEntity implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "appointment_date", nullable = false)
-    @NotNull
     @Future
+    @NotNull
     private LocalDateTime appointmentDate;
+
+    @Basic(optional = true)
+    @Column(name = "confirmation_date_time", nullable = true)
+    private LocalDateTime confirmationDateTime;
+
+    @Basic(optional = false)
+    @Column(name = "cancellation_date_time", nullable = false)
+    @NotNull
+    private LocalDateTime cancellation_date_time;
+
+    @JoinColumn(name = "confirmed_by", referencedColumnName = "id", nullable = true)
+    @ManyToOne(optional = true)
+    private Account confirmedBy;
+
+    @JoinColumn(name = "canceled_by", referencedColumnName = "id", nullable = true)
+    @ManyToOne(optional = true)
+    private Account canceledBy;
+
+    public LocalDateTime getConfirmationDateTime() {
+        return confirmationDateTime;
+    }
+
+    public void setConfirmationDateTime(LocalDateTime confirmationDateTime) {
+        this.confirmationDateTime = confirmationDateTime;
+    }
+
+    public LocalDateTime getCancellation_date_time() {
+        return cancellation_date_time;
+    }
+
+    public void setCancellation_date_time(LocalDateTime cancellation_date_time) {
+        this.cancellation_date_time = cancellation_date_time;
+    }
+
+    public Account getConfirmedBy() {
+        return confirmedBy;
+    }
+
+    public void setConfirmedBy(Account confirmedBy) {
+        this.confirmedBy = confirmedBy;
+    }
+
+    public Account getCanceledBy() {
+        return canceledBy;
+    }
+
+    public void setCanceledBy(Account canceledBy) {
+        this.canceledBy = canceledBy;
+    }
 
     @Basic(optional = false)
     @Column(name = "confirmed", nullable = false)

@@ -11,37 +11,33 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Version;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
 
-    /**
-     * Pobiera wartośc pola ID.
-     *
-     * @return ID
-     */
-    public abstract Long getId();
-
     @Column(name = "version")
     @Version
     private Long version;
-
     @Basic(optional = false)
     @Column(name = "creation_date_time", nullable = false, updatable = false)
     @NotNull
     private LocalDateTime creationDateTime;
-
     @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
     @NotNull
     private Account createdBy;
-
     @Column(name = "modification_date_time")
     private LocalDateTime modificationDateTime;
-
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     @ManyToOne
     private Account modifiedBy;
+    @Column(name = "created_by_ip", length = 256)
+    @Size(min = 0, max = 256)
+    private String createdByIp;
+    @Column(name = "modified_by_ip", length = 256)
+    @Size(min = 0, max = 256)
+    private String modifiedByIp;
 
     /**
      * Tworzy nową instancję klasy AbstractEntity.
@@ -57,6 +53,29 @@ public abstract class AbstractEntity {
     public AbstractEntity(Account createdBy) {
         this.createdBy = createdBy;
     }
+
+    public String getCreatedByIp() {
+        return createdByIp;
+    }
+
+    public void setCreatedByIp(String createdByIp) {
+        this.createdByIp = createdByIp;
+    }
+
+    public String getModifiedByIp() {
+        return modifiedByIp;
+    }
+
+    public void setModifiedByIp(String modifiedByIp) {
+        this.modifiedByIp = modifiedByIp;
+    }
+
+    /**
+     * Pobiera wartośc pola ID.
+     *
+     * @return ID
+     */
+    public abstract Long getId();
 
     @PrePersist
     private void init() {
@@ -92,16 +111,16 @@ public abstract class AbstractEntity {
         return createdBy;
     }
 
+    public void setCreatedBy(Account createdBy) {
+        this.createdBy = createdBy;
+    }
+
     public Account getModifiedBy() {
         return modifiedBy;
     }
 
     public void setModifiedBy(Account modifiedBy) {
         this.modifiedBy = modifiedBy;
-    }
-
-    public void setCreatedBy(Account createdBy) {
-        this.createdBy = createdBy;
     }
 
     @Override
