@@ -13,5 +13,13 @@
   "Logout": "Logout",
   "Users Accounts": "User's Accounts",
   "Documentation": "Documentation",
-  "Prescriptions": "Prescriptions"
+  "Prescriptions": "Prescriptions",
+  "Email": "Email",
+  "First Name": "First Name",
+  "Last Name": "Last Name",
+  "Phone Number": "Phone Number",
+  "Pesel": "Pesel",
+  "Edit": "Edit",
+  "Save": "Save",
+  "UserLogin": "Login"
 }
