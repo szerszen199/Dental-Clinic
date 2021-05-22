@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 
 import javax.validation.constraints.NotNull;
@@ -9,8 +10,8 @@ import javax.validation.constraints.NotNull;
  */
 public class EditAnotherAccountRequestDTO extends EditOwnAccountRequestDTO {
 
+    @NotNull(message = I18n.LOGIN_NULL)
     @Login
-    @NotNull
     private String login;
 
     /**
@@ -45,11 +46,11 @@ public class EditAnotherAccountRequestDTO extends EditOwnAccountRequestDTO {
      * @param firstName   first name
      * @param lastName    last name
      * @param phoneNumber phone number
-     * @param pesel       pesel
      * @param version     version
+     * @param pesel       pesel
      */
-    public EditAnotherAccountRequestDTO(String login, String email, String firstName, String lastName, String phoneNumber, String pesel, Long version) {
-        super(email, firstName, lastName, phoneNumber, pesel, version);
+    public EditAnotherAccountRequestDTO(String login, String email, String firstName, String lastName, String phoneNumber, Long version, String pesel) {
+        super(email, firstName, lastName, phoneNumber, version, pesel);
         this.login = login;
     }
 }
