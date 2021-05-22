@@ -1,16 +1,11 @@
 import React, {useState} from "react";
 import Navbar from "react-bootstrap/Navbar";
-import {LinkContainer} from "react-router-bootstrap";
 import {Col, Container, Row} from "react-bootstrap";
 import {DarkModeSwitch} from "react-toggle-dark-mode";
 import Routes from "../../router/Routes";
 import BreadCrumbs from "../../components/Breadcrumbs/Breadcrumbs";
-import Guest from "../Guest/Guest";
-import Receptionist from "../Receptionist/Receptionist";
-import Admin from "../Admin/Admin";
 import ReadinessComponent from "../../components/GetReadinessResource/Readiness"
 import Patient from "../Patient/Patient";
-import {userRolesStorageName} from "../../components/Login/LoginRequest";
 import Doctor from "../Doctor/Doctor";
 
 import {useTranslation} from "react-i18next";
@@ -61,11 +56,9 @@ function MainView() {
                     <Container fluid>
                         <Row>
                             <Col>
-                                <LinkContainer to="/">
-                                    <Navbar.Brand className="font-weight-bold text-muted">
-                                        {t("Home")}
-                                    </Navbar.Brand>
-                                </LinkContainer>
+                                <Navbar.Brand to="/" className="font-weight-bold text-muted">
+                                    {t("Home")}
+                                </Navbar.Brand>
                             </Col>
                             <Col>
                                 <Navbar.Toggle/>
