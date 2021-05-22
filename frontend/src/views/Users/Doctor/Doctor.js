@@ -12,10 +12,12 @@ function Doctor() {
 
     return (
         <Nav activeKey={window.location.pathname}>
-            <NavDropdown title="Appointments" id="navbarScrollingDropdown">
-                <Nav.Link to="/my-appointments">{t("My appointments")}</Nav.Link>
+            <NavDropdown title={t("Appointments")} id="navbarScrollingDropdown">
+                <Nav.Link style={{color: "rgb(127, 127, 127)"}} className="navMenu"
+                          to="/my-appointments">{t("My appointments")}</Nav.Link>
                 <NavDropdown.Divider/>
-                <Nav.Link to="/list-doctors">{t("List of doctors")}</Nav.Link>
+                <Nav.Link style={{color: "rgb(127, 127, 127)"}} className="navMenu"
+                          to="/list-doctors">{t("List of doctors")}</Nav.Link>
             </NavDropdown>
             <Nav.Link to="/prescriptions">{t("Prescriptions")}</Nav.Link>
             <Nav.Link to="/dashboard">{t("Documentation")}</Nav.Link>
