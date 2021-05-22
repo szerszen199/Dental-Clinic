@@ -18,6 +18,8 @@ import Cookies from "js-cookie";
 import {logout} from "../../components/Login/Logout";
 import {MDBContainer, MDBFooter} from "mdbreact";
 import './MainView.css';
+import {Link} from "react-router-dom";
+import Nav from "react-bootstrap/Nav";
 
 const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
 const roleDoctorName = process.env.REACT_APP_ROLE_DOCTOR
@@ -132,7 +134,7 @@ class MainViewWithoutTranslation extends React.Component {
                         <Container fluid>
                             <Row>
                                 <Col>
-                                    <Navbar.Brand to="/" className="font-weight-bold text-muted justify-content-end">
+                                    <Navbar.Brand as={Link} to="/" className="font-weight-bold text-muted justify-content-end">
                                         {t("Home")}
                                     </Navbar.Brand>
                                 </Col>
