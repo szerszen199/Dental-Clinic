@@ -13,5 +13,13 @@
   "Logout": "Wyloguj",
   "Users Accounts": "Konta użytkowników",
   "Documentation": "Dokumentacja",
-  "Prescriptions": "Recepty"
+  "Prescriptions": "Recepty",
+  "Email": "Email",
+  "First Name": "Imie",
+  "Last Name": "Nazwisko",
+  "Phone Number": "Numer telefonu",
+  "Pesel": "Pesel",
+  "Edit": "Edytuj",
+  "Save": "Zapisz",
+  "UserLogin": "Login"
 }
