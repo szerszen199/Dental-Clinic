@@ -13,15 +13,6 @@ import java.util.Set;
 public interface AccessLevelManager {
 
     /**
-     * Revoke access level - odebranie poziomu dostępu {@param level} kontowi o zadanym {@param id}.
-     *
-     * @param id    id uzytkownika, któremu zostanie odebrany poziom dostępu
-     * @param level level odbierany poziom odstępu
-     * @throws AppBaseException wyjątek typu AppBaseException
-     */
-    void revokeAccessLevel(Long id, String level) throws AppBaseException;
-
-    /**
      * Revoke access level - odebranie poziomu dostępu {@param level} kontowi o zadanym {@param login}.
      *
      * @param login login uzytkownika, któremu zostanie odebrany poziom dostępu

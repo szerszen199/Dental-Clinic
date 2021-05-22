@@ -109,7 +109,9 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Override
     public void confirmAccount(Long id) throws AppBaseException {
-        accountFacade.find(id).setEnabled(true);
+        Account account = accountFacade.find(id);
+        account.setEnabled(true);
+        accountFacade.edit(account);
     }
 
     @Override
@@ -119,7 +121,9 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         }
         try {
             String login = jwtEmailConfirmationUtils.getUserNameFromJwtToken(jwt);
-            accountFacade.findByLogin(login).setEnabled(true);
+            Account account = accountFacade.findByLogin(login);
+            account.setEnabled(true);
+            accountFacade.edit(account);
             mailProvider.sendActivationConfirmationMail(accountFacade.findByLogin(login).getEmail());
         } catch (AppBaseException | ParseException e) {
             throw AccountException.noSuchAccount(e);
@@ -130,6 +134,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     public void lockAccount(String login) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
         account.setActive(false);
+        accountFacade.edit(account);
         // TODO: Zastanowić się i ustawić pole modifiedBy po zablokowaniu konta przez system po nieudanych logowaniach
         //account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
     }
@@ -214,7 +219,9 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             //   pomijajac dwukrotne wykonanie tej samej metody w identyczny sposób
             String login = jwtEmailConfirmationUtils.getUserNameAndEmailFromEmailChangeConfirmationJwtToken(jwt).split("/")[0];
             String newEmail = jwtEmailConfirmationUtils.getUserNameAndEmailFromEmailChangeConfirmationJwtToken(jwt).split("/")[1];
-            accountFacade.findByLogin(login).setEmail(newEmail);
+            Account account = accountFacade.findByLogin(login);
+            account.setEmail(newEmail);
+            accountFacade.edit(account);
         } catch (AppBaseException | ParseException e) {
             throw AccountException.noSuchAccount(e);
         } catch (NullPointerException e) {
@@ -255,6 +262,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         Account account = accountFacade.find(id);
         // TODO: 21.05.2021 Dlugosc do zmiennej w pliku konfiguracyjnym
         account.setPassword(hashGenerator.generateHash(passwordGenerator.generate(32)));
+        accountFacade.edit(account);
         // TODO: send mail with new password
     }
 
@@ -263,6 +271,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         Account account = accountFacade.findByLogin(login);
         // TODO: 21.05.2021 Dlugosc do zmiennej w pliku konfiguracyjnym
         account.setPassword(hashGenerator.generateHash(passwordGenerator.generate(32)));
+        accountFacade.edit(account);
         // TODO: send mail with new password
     }
 
@@ -270,26 +279,31 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void setLastSuccessfulLoginIp(Account account, String ip) throws AppBaseException {
         account.setLastSuccessfulLoginIp(ip);
+        accountFacade.edit(account);
     }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void setLastSuccessfulLoginTime(Account account, LocalDateTime time) throws AppBaseException {
         account.setLastSuccessfulLogin(time);
+        accountFacade.edit(account);
     }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void increaseInvalidLoginCount(Account account) throws AppBaseException {
         account.setUnsuccessfulLoginCounter(account.getUnsuccessfulLoginCounter() + 1);
+        accountFacade.edit(account);
     }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void zeroInvalidLoginCount(Account account) throws AppBaseException {
         account.setUnsuccessfulLoginCounter(0);
+        accountFacade.edit(account);
     }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void setLastUnsuccessfulLoginTime(Account account, LocalDateTime time) throws AppBaseException {
         account.setLastUnsuccessfulLogin(time);
+        accountFacade.edit(account);
     }
 
     @Override
@@ -313,6 +327,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void setLastUnsuccessfulLoginIp(Account account, String ip) throws AppBaseException {
         account.setLastUnsuccessfulLoginIp(ip);
+        accountFacade.edit(account);
     }
 
     @Override
