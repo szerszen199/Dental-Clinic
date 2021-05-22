@@ -1,17 +1,12 @@
 import axios from "axios";
 import {Account} from "./Account";
 import Cookies from "js-cookie";
-import {JWTTokenCookieName} from "../Login/LoginRequest";
 
 // TODO usuwanie tego gdy minie określony czas czytaj przedawni się
 
-
-export const JWTTokenStorageName = 'JWTToken'
-export const userRolesStorageName = 'userRoles'
-
 export async function makeAccountsListRequest() {
 
-    let token = Cookies.get(JWTTokenCookieName);
+    let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
     let recivedData = await axios.get(process.env.REACT_APP_BACKEND_URL + "account/accounts", {
         headers: {"Authorization": "Bearer " + token}
     })
