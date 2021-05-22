@@ -39,11 +39,11 @@ CREATE TABLE accounts
         CONSTRAINT acc_unsuccessful_login_count_since_last_login_gr0 CHECK
             ( unsuccessful_login_count_since_last_login >= 0 ),            -- bigger than 0
     modified_by                               BIGINT,                      -- ID konta które ostatnio modyfikowało dane tabeli
-
     modification_date_time                    TIMESTAMPTZ,                 -- Data ostatniej modyfikacji tabeli
     created_by                                BIGINT             NOT NULL, -- ID konta które utworzyło tabelę,
     creation_date_time                        TIMESTAMPTZ        NOT NULL DEFAULT
         CURRENT_TIMESTAMP,                                                 -- Data utworzenia konta
+    email_recall                              BOOL DEFAULT FALSE NOT NULL,
     language                                  CHAR(2)
         CONSTRAINT acc_language CHECK
             (language in ('pl', 'PL', 'en', 'EN')),

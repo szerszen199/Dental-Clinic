@@ -51,6 +51,7 @@ import java.util.Set;
         @NamedQuery(name = "Account.findByUnsuccessfulLoginCountSinceLastLogin", query = "SELECT a FROM Account a WHERE a.unsuccessfulLoginCounter = :unsuccessfulLoginCountSinceLastLogin"),
         @NamedQuery(name = "Account.findByModificationDate", query = "SELECT a FROM Account a WHERE a.modificationDateTime = :modificationDate"),
         @NamedQuery(name = "Account.findByCreationDate", query = "SELECT a FROM Account a WHERE a.creationDateTime = :creationDate"),
+        @NamedQuery(name = "Account.findByEmailRecall", query = "SELECT a FROM Account a WHERE a.emailrecall = :emailrecall"),
         @NamedQuery(name = "Account.findByLanguage", query = "SELECT a FROM Account a WHERE a.language = :language"),
         @NamedQuery(name = "Account.findByVersion", query = "SELECT a FROM Account a WHERE a.version = :version"),
         @NamedQuery(name = "Account.findByLogin", query = "SELECT a FROM Account a WHERE a.login = :login")})
@@ -91,7 +92,7 @@ public class Account extends AbstractEntity implements Serializable {
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
     @JoinColumn(name = "account_id")
-    private Set<AccessLevel> accessLevels = new HashSet<>();
+    private final Set<AccessLevel> accessLevels = new HashSet<>();
 
     @Basic(optional = false)
     @Column(name = "first_name", nullable = false, length = 50)
@@ -144,6 +145,11 @@ public class Account extends AbstractEntity implements Serializable {
     @Column(name = "language", columnDefinition = "bpchar", length = 2)
     @Size(min = 2, max = 2)
     private String language;
+
+    @Basic(optional = false)
+    @Column(name = "email_recall", nullable = false)
+    @NotNull
+    private Boolean emailrecall = false;
 
     /**
      * Tworzy nową instancję klasy Account.
@@ -320,6 +326,13 @@ public class Account extends AbstractEntity implements Serializable {
         this.unsuccessfulLoginCounter = unsuccessfulLoginCounter;
     }
 
+    public Boolean getEmailrecall() {
+        return emailrecall;
+    }
+
+    public void setEmailrecall(Boolean emailrecall) {
+        this.emailrecall = emailrecall;
+    }
 
     public String getLanguage() {
         return language;
