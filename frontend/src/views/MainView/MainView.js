@@ -71,7 +71,8 @@ export default class MainView extends React.Component {
         this.makeRefreshRequest();
         setInterval(this.makeRefreshRequest, parseInt(process.env.REACT_APP_JWT_EXPIRATION_MS) / 10);
         let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
-        if (typeof token !== 'undefined' && token !== null && token !== "null") {
+        console.log(token)
+        if (typeof token !== 'undefined' && token !== null && token !== "null" && token !== undefined) {
             axios.get(process.env.REACT_APP_BACKEND_URL + "account/info", {
                 headers: {
                     Authorization: "Bearer " + token
@@ -88,6 +89,10 @@ export default class MainView extends React.Component {
                     // TODO:
                     console.log(result);
                 })
+        } else{
+            this.setState({
+                login: "",
+            });
         }
     }
 
@@ -143,7 +148,7 @@ export default class MainView extends React.Component {
                             <Row> <Col> <BreadCrumbs/> </Col> <Col style={{
                                 textAlign: "right",
                                 color: "gray"
-                            }}> login: {this.state.login}</Col> </Row>
+                            }}> {this.state.login === "" ? '' : 'login: ' + this.state.login}</Col> </Row>
                         </Container>
                     </div>
                 </Navbar>
