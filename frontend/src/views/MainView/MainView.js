@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Suspense} from "react";
 import Navbar from "react-bootstrap/Navbar";
 import {Col, Container, Row} from "react-bootstrap";
 import {DarkModeSwitch} from "react-toggle-dark-mode";
@@ -7,13 +7,12 @@ import BreadCrumbs from "../../components/Breadcrumbs/Breadcrumbs";
 import ReadinessComponent from "../../components/GetReadinessResource/Readiness"
 import Doctor from "../Users/Doctor/Doctor";
 
-import {useTranslation} from "react-i18next";
+import {withTranslation} from "react-i18next";
 import i18n from "../../transaltions/i18n";
 import Admin from "../Users/Admin/Admin";
 import Patient from "../Users/Patient/Patient";
 import Receptionist from "../Users/Receptionist/Receptionist";
 import Guest from "../Guest/Guest";
-import {userRolesStorageName} from "../../components/Login/LoginRequest";
 import axios from "axios";
 import Cookies from "js-cookie";
 import {logout} from "../../components/Login/Logout";
@@ -37,10 +36,9 @@ export const jwtCookieExpirationTime = process.env.REACT_APP_JWT_EXPIRATION_MS /
 // TODO: zastąpić użycia tego aktualnie wybraną rolą po zaimplementowaniu
 const actualAccessLevel = roleDoctorName;
 
-export default class MainView extends React.Component {
+class MainViewWithoutTranslation extends React.Component {
     urlPL = "https://img.icons8.com/color/96/000000/poland-circular.png";
     urlEN = "https://img.icons8.com/color/48/000000/great-britain-circular.png";
-
 
     constructor(props) {
         super(props);
@@ -51,7 +49,6 @@ export default class MainView extends React.Component {
             login: "",
 
         }
-    //    const {t} = useTranslation();
     }
 
     handleOnClick() {
@@ -125,6 +122,8 @@ export default class MainView extends React.Component {
 
 
     render() {
+        const {t} = this.props;
+
         return (
             <div className="App container py-3 ">
                 <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"
@@ -144,12 +143,13 @@ export default class MainView extends React.Component {
                                     </Navbar.Collapse>
                                 </Col>
                             </Row>
-                            <Row> <Col> <BreadCrumbs/> </Col> <Col style={{
-                                textAlign: "right",
-                                color: "gray"
-                            }}> {this.state.login === "" ? '' : 'login: ' + this.state.login}</Col>
+                            <Row> <Col> <BreadCrumbs/> </Col>
                                 <Col className="d-flex justify-content-end"
                                      style={{maxHeight: "30px", marginRight: "10px"}}>
+                                    <p style={{
+                                        color: "gray",
+                                        marginTop: "5px",
+                                    }}>{this.state.login === "" ? '' : 'login: ' + this.state.login}</p>
                                     <DarkModeSwitch
                                         style={{marginLeft: '1rem'}}
                                         checked={this.state.isDarkMode}
@@ -170,7 +170,7 @@ export default class MainView extends React.Component {
                 <MDBFooter color="blue" className="font-small pt-4 mt-4" id="footer">
                     <div className="footer-copyright text-right py-3">
                         <MDBContainer fluid>
-                            Klinika Stomatologiczna, &copy; {new Date().getFullYear()} Copyright by 2021SSBD01
+                            {t("Dental Clinic")}, &copy; {new Date().getFullYear()} Copyright by 2021SSBD01
                         </MDBContainer>
                     </div>
                 </MDBFooter>
@@ -199,4 +199,14 @@ function Wybierz() {
         }
     }
     return Guest();
+}
+
+const MainViewTr = withTranslation()(MainViewWithoutTranslation)
+
+export default function MainView() {
+    return (
+        <Suspense fallback="loading">
+            <MainViewTr/>
+        </Suspense>
+    );
 }
