@@ -21,5 +21,8 @@
   "Pesel": "Pesel",
   "Edit": "Edytuj",
   "Save": "Zapisz",
-  "UserLogin": "Login"
+  "UserLogin": "Login",
+  "Current password": "Aktualne hasło",
+  "New password": "Nowe hasło",
+  "Repeat new password": "Powtórz nowe hasło"
 }
