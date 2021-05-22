@@ -21,6 +21,39 @@ public class I18n {
     public static final String DARK_MODE_SET_SUCCESSFULLY = "dark_mode_set_successfully";
     public static final String LANGUAGE_SET_SUCCESSFULLY = "language_set_successfully";
 
+    public static final String ACCESS_LEVEL_NULL = "access_level_null";
+    public static final String ACCESS_LEVEL_INVALID_SIZE = "access_level_invalid_size";
+    public static final String ACCESS_LEVEL_INVALID_LEVEL = "access_level_invalid_level";
+
+    public static final String LOGIN_NULL = "login_null";
+
+    public static final String PASSWORD_NULL = "password_null";
+    public static final String PASSWORD_INVALID_SIZE = "password_invalid_size";
+
+    public static final String TOKEN_NULL = "TOKEN_NULL";
+
+    public static final String EMAIL_NULL = "email_null";
+    public static final String EMAIL_INVALID_SIZE = "email_invalid_size";
+    public static final String NOT_AN_EMAIL = "not_an_email";
+
+    public static final String FIRST_NAME_NULL = "first_name_null";
+    public static final String FIRST_NAME_INVALID_SIZE = "first_name_invalid_size";
+
+    public static final String LAST_NAME_NULL = "last_name_null";
+    public static final String LAST_NAME_INVALID_SIZE = "last_name_invalid_size";
+
+    public static final String PHONE_NUMBER_INVALID_SIZE = "phone_number_invalid_size";
+
+    public static final String PESEL_INVALID_SIZE = "pesel_invalid_size";
+
+    public static final String LANGUAGE_NULL = "language_null";
+    public static final String LANGUAGE_NOT_IN_PATTERN = "language_not_in_pattern";
+
+    public static final String VERSION_NULL = "version_null";
+
+    public static final String DARK_MODE_NULL = "dark_mode_null";
+
+
     public static final String INVALID_REFRESH_TOKEN = "invalid_refresh_token";
     public static final String PASSWORDS_NOT_DIFFER = "both_passwords_are_same";
     public static final String AUTHENTICATION_FAILURE = "invalid_login_password_combination";

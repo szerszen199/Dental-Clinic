@@ -1,9 +1,12 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request;
 
+import com.sun.istack.Nullable;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
@@ -11,35 +14,35 @@ import javax.validation.constraints.Size;
  */
 public class CreateAccountRequestDTO {
 
-    @NotNull
+    @NotNull(message = I18n.LOGIN_NULL)
     @Login
     private String login;
 
-    @NotNull
-    @Email
-    @Size(min = 4, max = 100)
+    @NotNull(message = I18n.EMAIL_NULL)
+    @Email(message = I18n.NOT_AN_EMAIL)
+    @Size(min = 5, max = 100, message = I18n.EMAIL_INVALID_SIZE)
     private String email;
 
-    @NotNull
-    @Size(min = 8)
+    @Size(min = 8, message = I18n.PASSWORD_INVALID_SIZE)
+    @NotNull(message = I18n.PASSWORD_NULL)
     private String password;
 
-    @NotNull
-    @Size(min = 1, max = 50)
+    @NotNull(message = I18n.FIRST_NAME_NULL)
+    @Size(min = 1, max = 50, message = I18n.FIRST_NAME_INVALID_SIZE)
     private String firstName;
 
-    @NotNull
-    @Size(min = 1, max = 50)
+    @NotNull(message = I18n.LAST_NAME_NULL)
+    @Size(min = 1, max = 50, message = I18n.LAST_NAME_INVALID_SIZE)
     private String lastName;
 
-    @Size(min = 9, max = 15)
+    @Size(min = 9, max = 15, message = I18n.PHONE_NUMBER_INVALID_SIZE)
     private String phoneNumber;
 
-
-    @Size(min = 11, max = 11)
+    @Size(min = 11, max = 11, message = I18n.PESEL_INVALID_SIZE)
     private String pesel;
 
-    @NotNull
+    @NotNull(message = I18n.LANGUAGE_NULL)
+    @Pattern(regexp = "pl|en", message = I18n.LANGUAGE_NOT_IN_PATTERN)
     private String language;
     
     /**

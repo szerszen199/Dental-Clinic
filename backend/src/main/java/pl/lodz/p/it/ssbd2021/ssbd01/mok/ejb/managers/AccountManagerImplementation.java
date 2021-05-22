@@ -259,7 +259,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         account.setPassword(hashGenerator.generateHash(passwordGenerator.generate(32)));
         // TODO: send mail with new password
     }
-    
+
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void setLastSuccessfulLoginIp(Account account, String ip) throws AppBaseException {
