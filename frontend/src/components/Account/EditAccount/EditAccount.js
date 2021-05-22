@@ -1,4 +1,5 @@
-import React from "react";
+import React, {Suspense} from 'react';
+import {withTranslation} from 'react-i18next';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./EditAccount.css";
@@ -6,12 +7,11 @@ import axios from "axios";
 import {editAccountRequest} from "./EditAccountRequest";
 import Cookies from "js-cookie";
 
-export default class EditAccount extends React.Component {
+class EditAccountWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             isDisabled: true,
-            text: "Edit",
             email: "",
             firstName: "",
             lastName: "",
@@ -82,7 +82,6 @@ export default class EditAccount extends React.Component {
     setEditable() {
         this.setState({
             isDisabled: false,
-            text: "Save"
         });
     }
 
@@ -90,18 +89,19 @@ export default class EditAccount extends React.Component {
         this.validateForm(t)
         this.setState({
             isDisabled: true,
-            text: "Edit"
         });
         editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, this.state.phoneNumber, this.state.pesel)
     }
 
     // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
     render() {
+        const {t} = this.props;
+
         return (
             <div className="EditAccount">
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group size="lg" controlId="email">
-                        <Form.Label>Email</Form.Label>
+                        <Form.Label>{t("Email")}</Form.Label>
                         <Form.Control
                             autoFocus
                             type="email"
@@ -111,7 +111,7 @@ export default class EditAccount extends React.Component {
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="firstName">
-                        <Form.Label>First Name</Form.Label>
+                        <Form.Label>{t("First Name")}</Form.Label>
                         <Form.Control
                             type="text"
                             value={this.state.firstName}
@@ -120,7 +120,7 @@ export default class EditAccount extends React.Component {
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="lastName">
-                        <Form.Label>Last Name</Form.Label>
+                        <Form.Label>{t("Last Name")}</Form.Label>
                         <Form.Control
                             type="text"
                             value={this.state.lastName}
@@ -129,7 +129,7 @@ export default class EditAccount extends React.Component {
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="phoneNumber">
-                        <Form.Label>Phone Number</Form.Label>
+                        <Form.Label>{t("Phone Number")}</Form.Label>
                         <Form.Control
                             type="text"
                             value={this.state.phoneNumber}
@@ -139,7 +139,7 @@ export default class EditAccount extends React.Component {
                     </Form.Group>
                     {/*Todo: co z peselem dla obcokrajowca? Nic czy coś innnego? Narazie zrobiłem że może być pusty*/}
                     <Form.Group size="lg" controlId="pesel">
-                        <Form.Label>Pesel</Form.Label>
+                        <Form.Label>{t("Pesel")}</Form.Label>
                         <Form.Control
                             type="text"
                             value={this.state.pesel}
@@ -149,10 +149,21 @@ export default class EditAccount extends React.Component {
                     </Form.Group>
                     <Button block size="lg" type="submit"
                             onClick={() => this.handleOnClick(this)}>
-                        {this.state.text}
+                        {this.state.isDisabled ? t("Edit") : t("Save")}
                     </Button>
                 </Form>
             </div>
         );
     }
+}
+
+
+const EditAccountTr = withTranslation()(EditAccountWithoutTranslation)
+
+export default function EditAccount() {
+    return (
+        <Suspense fallback="loading">
+            <EditAccountTr/>
+        </Suspense>
+    );
 }

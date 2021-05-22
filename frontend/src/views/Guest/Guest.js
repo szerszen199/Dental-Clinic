@@ -1,20 +1,17 @@
 import React from "react";
 import "./Guest.css";
 import Nav from "react-bootstrap/Nav";
-import {LinkContainer} from "react-router-bootstrap";
+import {useTranslation} from "react-i18next";
 
-function Guest() {
+const Guest = () => {
+    const {t} = useTranslation();
+
     return (
         <Nav activeKey={window.location.pathname}>
-            <LinkContainer to="/register">
-                <Nav.Link>Register</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to="/login">
-                <Nav.Link>Login</Nav.Link>
-            </LinkContainer>
+            <Nav.Link to="/register">{t("Register")}</Nav.Link>
+            <Nav.Link to="/login">{t("Login")}</Nav.Link>
         </Nav>
-
     );
-}
+};
 
 export default Guest;
