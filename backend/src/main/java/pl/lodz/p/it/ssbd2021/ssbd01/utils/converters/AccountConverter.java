@@ -16,7 +16,7 @@ public class AccountConverter {
      */
     public static Account createAccountEntityFromDto(EditOwnAccountRequestDTO accountDto, Account account) {
         return new Account(account.getLogin(), accountDto.getEmail(), account.getPassword(),
-                accountDto.getFirstName(), accountDto.getLastName(), accountDto.getPhoneNumber());
+                accountDto.getFirstName(), accountDto.getLastName(), accountDto.getPhoneNumber(), accountDto.getPesel());
     }
 
     /**
