@@ -49,7 +49,7 @@ CREATE TABLE accounts
     created_by                                BIGINT             NOT NULL, -- ID konta które utworzyło tabelę,
     creation_date_time                        TIMESTAMPTZ        NOT NULL DEFAULT
         CURRENT_TIMESTAMP,                                                 -- Data utworzenia konta
-    creation_ip                               VARCHAR(256),
+    created_by_ip                             VARCHAR(256),
     language                                  CHAR(2)
         CONSTRAINT acc_language CHECK
             (language in ('pl', 'PL', 'en', 'EN')),                        -- Język konta
@@ -95,8 +95,10 @@ CREATE TABLE access_levels
         CONSTRAINT acc_lvl_version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,                    -- Data utworzenia tabeli
     created_by             BIGINT      NOT NULL,                                              -- ID konta które utworzyło tabelę
+    created_by_ip          VARCHAR(256),
     modification_date_time TIMESTAMPTZ,                                                       -- Data ostatniej modyfikacji tabeli
-    modified_by            BIGINT                                                             -- Użytkownik który ostatni modyfikował tabelę
+    modified_by            BIGINT,                                                            -- Użytkownik który ostatni modyfikował tabelę
+    modified_by_ip         VARCHAR(256)
 );
 
 -- Klucze obce dla tabeli access_levels
@@ -150,12 +152,16 @@ CREATE TABLE appointments
         CONSTRAINT appoint_version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ        NOT NULL DEFAULT CURRENT_TIMESTAMP,-- Data utworzenia wizyty
     created_by             BIGINT             NOT NULL,                          -- Konto które stworzyło wizytę
+    created_by_ip          VARCHAR(256),
     modification_date_time TIMESTAMPTZ,                                          -- Data modyfikacji,
     modified_by            BIGINT,                                               -- Konto które modyfikowało ostatnio tabelę
+    modified_by_ip         VARCHAR(256),
     confirmation_date_time timestamptz,
     confirmed_by           BIGINT,
+    confirmed_by_ip        VARCHAR(256),
     cancellation_date_time timestamptz,
-    canceled_by            BIGINT
+    canceled_by            BIGINT,
+    canceled_by_ip         VARCHAR(256)
 );
 
 -- Klucze obce dla tabeli appointments
@@ -204,8 +210,10 @@ CREATE TABLE medical_documentations
         CONSTRAINT version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Data stworzenia wiersza w tabeli
     created_by             BIGINT      NOT NULL,                           -- Id użytkownika
+    created_by_ip          VARCHAR(256),
     modification_date_time TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji
-    modified_by            BIGINT                                          -- Konto które ostatnio modyfikowało dane tabeli
+    modified_by            BIGINT,                                         -- Konto które ostatnio modyfikowało dane tabeli
+    modified_by_ip         VARCHAR(256)
 );
 
 -- Klucze obce dla tabeli medical_documentations
@@ -245,8 +253,10 @@ CREATE TABLE documentation_entries
         CONSTRAINT version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Data utworzenia wiersza tabeli
     created_by             BIGINT      NOT NULL,                           -- Konto, które tworzyło wiersz tabeli
+    created_by_ip          VARCHAR(256),
     modification_date_time TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji wiersza w tabelik
-    modified_by            BIGINT                                          -- Konto które ostatnio modyfikowało wiersz w tabeli.
+    modified_by            BIGINT,                                         -- Konto które ostatnio modyfikowało wiersz w tabeli.
+    modified_by_ip         VARCHAR(256)
 );
 
 -- Klucze obce dla tabeli documentation_entries
@@ -289,8 +299,10 @@ CREATE TABLE prescriptions
         CONSTRAINT version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Czas utworzenia wiersza w tabeli
     created_by             BIGINT      NOT NULL,                           -- Konto które utworzyło wiersz w tabeli
+    created_by_ip          VARCHAR(256),
     modification_date_time TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji wiersza w tabeli
-    modified_by            BIGINT                                          -- Konto ostatnio modyfikujące wiersza w tabeli
+    modified_by            BIGINT,                                         -- Konto ostatnio modyfikujące wiersza w tabeli
+    modified_by_ip         VARCHAR(256)
 );
 
 -- Klucze obce dla tabeli documentation_entries
