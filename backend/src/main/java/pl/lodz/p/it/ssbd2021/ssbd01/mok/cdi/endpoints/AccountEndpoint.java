@@ -259,6 +259,7 @@ public class AccountEndpoint {
      */
     @GET
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
+    @Produces({MediaType.APPLICATION_JSON})
     @Path("/info")
     public Response getLoggedInAccountInfo() throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
