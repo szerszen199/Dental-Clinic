@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request;
 
 
+import org.hibernate.validator.constraints.pl.PESEL;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 
@@ -30,6 +31,7 @@ public class EditOwnAccountRequestDTO {
     private String phoneNumber;
 
     @Size(min = 11, max = 11, message = I18n.PESEL_INVALID_SIZE)
+    @PESEL
     private String pesel;
 
     @NotNull(message = I18n.VERSION_NULL)
