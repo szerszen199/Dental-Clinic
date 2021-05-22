@@ -39,7 +39,7 @@ public class InactivatedAccountScheduler {
             Long time = Duration.between(notEnabledAccount.getCreationDateTime(), LocalDateTime.now()).toMillis();
             if (time >= propertiesLoader.getDeleteInactiveAccount()) {
                 accountManager.removeAccount(notEnabledAccount.getId());
-            } else if (time >= (propertiesLoader.getDeleteInactiveAccount() / 2) && !notEnabledAccount.getEmailrecall()) {
+            } else if (time >= (propertiesLoader.getDeleteInactiveAccount() / 2) && !notEnabledAccount.getEmailRecall()) {
                 accountManager.setEmailRecallTrue(notEnabledAccount.getLogin());
                 mailProvider.sendActivationMail(
                         notEnabledAccount.getEmail(),

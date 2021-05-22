@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -52,14 +53,16 @@ import java.util.Set;
         @NamedQuery(name = "Account.findByUnsuccessfulLoginCountSinceLastLogin", query = "SELECT a FROM Account a WHERE a.unsuccessfulLoginCounter = :unsuccessfulLoginCountSinceLastLogin"),
         @NamedQuery(name = "Account.findByModificationDate", query = "SELECT a FROM Account a WHERE a.modificationDateTime = :modificationDate"),
         @NamedQuery(name = "Account.findByCreationDate", query = "SELECT a FROM Account a WHERE a.creationDateTime = :creationDate"),
-        @NamedQuery(name = "Account.findByEmailRecall", query = "SELECT a FROM Account a WHERE a.emailrecall = :emailrecall"),
+        @NamedQuery(name = "Account.findByEmailRecall", query = "SELECT a FROM Account a WHERE a.emailRecall = :emailrecall"),
         @NamedQuery(name = "Account.findByLanguage", query = "SELECT a FROM Account a WHERE a.language = :language"),
         @NamedQuery(name = "Account.findByVersion", query = "SELECT a FROM Account a WHERE a.version = :version"),
         @NamedQuery(name = "Account.findByLogin", query = "SELECT a FROM Account a WHERE a.login = :login")})
 public class Account extends AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @JoinColumn(name = "account_id")
+    private final Set<AccessLevel> accessLevels = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accounts_generator")
     @SequenceGenerator(name = "accounts_generator", sequenceName = "accounts_seq", allocationSize = 1)
@@ -67,34 +70,25 @@ public class Account extends AbstractEntity implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     @NotNull
     private Long id;
-
     @Basic(optional = false)
     @Column(name = "login", updatable = false, nullable = false, length = 60)
     @NotNull
     @Login
     private String login;
-
     @Basic(optional = false)
     @Column(name = "email", nullable = false, length = 100)
     @NotNull
     @Email
     @Size(min = 4, max = 100)
     private String email;
-
     @Basic(optional = true)
     @Column(name = "is_dark_mode", nullable = true)
     private boolean isDarkMode = false;
-
     @Basic(optional = false)
     @Column(name = "password", columnDefinition = "bpchar", nullable = false, length = 64)
     @NotNull
     @Size(min = 64, max = 64)
     private String password;
-
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-    @JoinColumn(name = "account_id")
-    private final Set<AccessLevel> accessLevels = new HashSet<>();
-
     @Basic(optional = false)
     @Column(name = "first_name", nullable = false, length = 50)
     @NotNull
@@ -132,32 +126,39 @@ public class Account extends AbstractEntity implements Serializable {
     @Size(min = 0, max = 256)
     private String lastSuccessfulLoginIp;
 
+    @Column(name = "modified_by_ip", length = 256)
+    @Size(min = 0, max = 256)
+    private String modifiedByIp;
+
+    @Column(name = "last_block_unlock_ip", length = 256)
+    @Size(min = 0, max = 256)
+    private String lastBlockUnlockIp;
+
     @Column(name = "last_unsuccessful_login")
     private LocalDateTime lastUnsuccessfulLogin;
-
+    @Column(name = "last_block_unlock_date_time")
+    private LocalDateTime lastBlockUnlockDateTime;
     @Column(name = "last_unsuccessful_login_ip", length = 256)
     @Size(min = 7, max = 256)
     private String lastUnsuccessfulLoginIp;
-
     @Column(name = "unsuccessful_login_count_since_last_login")
     @Min(0)
     private Integer unsuccessfulLoginCounter = 0;
-
     @Column(name = "language", columnDefinition = "bpchar", length = 2)
     @Size(min = 2, max = 2)
     private String language;
-
     @Basic(optional = false)
     @Column(name = "email_recall", nullable = false)
     @NotNull
-    private Boolean emailrecall = false;
-
+    private Boolean emailRecall = false;
+    @JoinColumn(name = "last_block_unlock_modified_by", referencedColumnName = "id")
+    @ManyToOne
+    private Account lastBlockUnlockModifiedBy;
     /**
      * Tworzy nową instancję klasy Account.
      */
     public Account() {
     }
-
     /**
      * Tworzy nową instancję klasy Account reprezentujacej konto użytkownika aplikacji.
      *
@@ -178,7 +179,6 @@ public class Account extends AbstractEntity implements Serializable {
         this.phoneNumber = phoneNumber;
         this.pesel = pesel;
     }
-
     /**
      * Tworzy nową instancję klasy Account reprezentujacej konto użytkownika aplikacji.
      *
@@ -197,7 +197,6 @@ public class Account extends AbstractEntity implements Serializable {
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
     }
-
     /**
      * Tworzy nową instancję klasy Account reprezentujacej konto użytkownika aplikacji.
      *
@@ -219,6 +218,38 @@ public class Account extends AbstractEntity implements Serializable {
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.pesel = pesel;
+    }
+
+    public LocalDateTime getLastBlockUnlockDateTime() {
+        return lastBlockUnlockDateTime;
+    }
+
+    public void setLastBlockUnlockDateTime(LocalDateTime lastBlockUnlockDateTime) {
+        this.lastBlockUnlockDateTime = lastBlockUnlockDateTime;
+    }
+
+    public Account getLastBlockUnlockModifiedBy() {
+        return lastBlockUnlockModifiedBy;
+    }
+
+    public void setLastBlockUnlockModifiedBy(Account lastBlockUnlockModifiedBy) {
+        this.lastBlockUnlockModifiedBy = lastBlockUnlockModifiedBy;
+    }
+
+    public String getLastBlockUnlockIp() {
+        return lastBlockUnlockIp;
+    }
+
+    public void setLastBlockUnlockIp(String lastBlockUnlockIp) {
+        this.lastBlockUnlockIp = lastBlockUnlockIp;
+    }
+
+    public String getModifiedByIp() {
+        return modifiedByIp;
+    }
+
+    public void setModifiedByIp(String modifiedByIp) {
+        this.modifiedByIp = modifiedByIp;
     }
 
     @Override
@@ -346,12 +377,12 @@ public class Account extends AbstractEntity implements Serializable {
         this.unsuccessfulLoginCounter = unsuccessfulLoginCounter;
     }
 
-    public Boolean getEmailrecall() {
-        return emailrecall;
+    public Boolean getEmailRecall() {
+        return emailRecall;
     }
 
-    public void setEmailrecall(Boolean emailrecall) {
-        this.emailrecall = emailrecall;
+    public void setEmailRecall(Boolean emailrecall) {
+        this.emailRecall = emailrecall;
     }
 
     public String getLanguage() {
