@@ -24,6 +24,8 @@ import javax.interceptor.Interceptors;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStoreHandler;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -110,7 +112,7 @@ public class LoginEndpoint {
     @Path("refresh")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getNewTokenForRefreshToken(RefreshTokenRequestDTO refreshTokenRequestDTO) {
+    public Response getNewTokenForRefreshToken(@NotNull @Valid RefreshTokenRequestDTO refreshTokenRequestDTO) {
         String jwt = refreshTokenRequestDTO.getRefreshToken();
         if (jwtRefreshUtils.validateJwtToken(jwt)) {
             try {
@@ -143,7 +145,7 @@ public class LoginEndpoint {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response authenticate(AuthenticationRequestDTO authenticationRequestDTO) {
+    public Response authenticate(@NotNull @Valid AuthenticationRequestDTO authenticationRequestDTO) {
         String ip = getClientIpAddress(request);
         CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(authenticationRequestDTO.toCredential());
         try {

@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+
 import javax.validation.constraints.NotNull;
 
 /**
@@ -7,7 +9,7 @@ import javax.validation.constraints.NotNull;
  */
 public class ConfirmAccountRequestDTO {
 
-    @NotNull
+    @NotNull(message = I18n.TOKEN_NULL)
     private String confirmToken;
 
     /**
