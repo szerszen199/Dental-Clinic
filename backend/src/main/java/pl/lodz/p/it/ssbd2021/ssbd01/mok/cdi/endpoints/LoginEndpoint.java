@@ -4,7 +4,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.auth.ejb.managers.AuthViewEntityManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.LoginRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.RefreshTokenRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AuthAndRefreshTokenResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.JwtTokenAndUserDataReponseDTO;
