@@ -15,6 +15,22 @@ import org.hibernate.annotations.NamedQuery;
         @NamedQuery(name = "DoctorData.findAll", query = "SELECT d FROM DoctorData d")})
 public class DoctorData extends AccessLevel implements Serializable {
 
+    /**
+     * Tworzy nową instancję klasy Doctor data.
+     *
+     * @param account account
+     * @param active  active
+     */
+    public DoctorData(Account account, Boolean active) {
+        super(account, active);
+    }
+
+    /**
+     * Tworzy nową instancję klasy Doctor data.
+     */
+    public DoctorData() {
+    }
+
     @Override
     public String toString() {
         return "pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorData[ id=" + this.getId() + " ]";

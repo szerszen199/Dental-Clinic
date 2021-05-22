@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 /**
  * Typ Login request dto.
  */
-public class LoginRequestDTO {
+public class AuthenticationRequestDTO {
     @NotNull
     @Login
     private String username;
@@ -21,7 +21,7 @@ public class LoginRequestDTO {
     /**
      * Tworzy nową instancję klasy Login request dto.
      */
-    public LoginRequestDTO() {
+    public AuthenticationRequestDTO() {
     }
 
     /**
@@ -66,7 +66,7 @@ public class LoginRequestDTO {
      * @param username username
      * @param password password
      */
-    public LoginRequestDTO(String username, String password) {
+    public AuthenticationRequestDTO(String username, String password) {
         this.username = username;
         this.password = password;
     }

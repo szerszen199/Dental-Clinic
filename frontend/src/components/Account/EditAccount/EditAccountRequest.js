@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import {JWTTokenCookieName} from "../../Login/LoginRequest";
 
-export function editAccountRequest(login, email, firstName, lastName, phoneNumber, pesel){
+export function editAccountRequest(email, firstName, lastName, phoneNumber, pesel){
     let token = Cookies.get(JWTTokenCookieName);
     let config = {
         method: 'post',
@@ -12,7 +12,6 @@ export function editAccountRequest(login, email, firstName, lastName, phoneNumbe
             'Content-Type': 'application/json'
         },
         data: {
-            login: login,
             email: email,
             firstName: firstName,
             lastName: lastName,
