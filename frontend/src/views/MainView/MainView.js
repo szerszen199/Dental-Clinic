@@ -13,6 +13,7 @@ import Admin from "../Users/Admin/Admin";
 import Patient from "../Users/Patient/Patient";
 import Receptionist from "../Users/Receptionist/Receptionist";
 import Guest from "../Guest/Guest";
+import {userRolesStorageName} from "../../components/Login/LoginRequest";
 
 const accessLevelDictionary = {
     "Guest": "rgba(1, 1, 1, 0.1)",
@@ -103,18 +104,17 @@ function MainView() {
 function Wybierz() {
     // TODO: Ma być możliwość wyboru jaką z ról które mamy chcemy widzieć tzn mamy się móc przełączać między rolami
     //  Nie ma tego narazie więc jest tak
-    // let levels = localStorage.getItem(userRolesStorageName) == null ? [] : localStorage.getItem(userRolesStorageName);
-    // if (levels.includes("level.administrator")) {
-    //     return Admin();
-    // } else if (levels.includes("level.patient")) {
-    //     return Patient();
-    // } else if (levels.includes("level.receptionist")) {
-    //     return Receptionist();
-    // } else if (levels.includes("level.doctor")) {
-    //     return Doctor();
-    // }
+    let levels = localStorage.getItem(userRolesStorageName) == null ? [] : localStorage.getItem(userRolesStorageName);
+    if (levels.includes("level.administrator")) {
+        return Admin();
+    } else if (levels.includes("level.patient")) {
+        return Patient();
+    } else if (levels.includes("level.receptionist")) {
+        return Receptionist();
+    } else if (levels.includes("level.doctor")) {
+        return Doctor();
+    }
     return Guest();
-    // return Receptionist();
 
 }
 
