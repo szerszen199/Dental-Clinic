@@ -6,10 +6,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+@NotNull
 public abstract class AccessLevelDto {
-    @NotNull
-    @Size(min = 7, max = 32)
-    @Pattern(regexp = I18n.PATIENT + "|" + I18n.ADMIN + "|" + I18n.RECEPTIONIST + "|" + I18n.DOCTOR)
+    @NotNull(message = I18n.ACCESS_LEVEL_NULL)
+    @Size(min = 7, max = 32, message = I18n.ACCESS_LEVEL_INVALID_SIZE)
+    @Pattern(regexp = I18n.PATIENT + "|" + I18n.ADMIN + "|" + I18n.RECEPTIONIST + "|" + I18n.DOCTOR, message = I18n.ACCESS_LEVEL_INVALID_LEVEL)
     private String level;
 
     /**
