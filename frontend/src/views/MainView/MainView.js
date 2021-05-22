@@ -5,8 +5,7 @@ import {DarkModeSwitch} from "react-toggle-dark-mode";
 import Routes from "../../router/Routes";
 import BreadCrumbs from "../../components/Breadcrumbs/Breadcrumbs";
 import ReadinessComponent from "../../components/GetReadinessResource/Readiness"
-import Patient from "../Patient/Patient";
-import Doctor from "../Doctor/Doctor";
+import Doctor from "../Users/Doctor/Doctor";
 
 import {useTranslation} from "react-i18next";
 import i18n from "../../transaltions/i18n";
@@ -55,29 +54,38 @@ function MainView() {
                 <div style={{width: "100%"}}>
                     <Container fluid>
                         <Row>
-                            <Col>
-                                <Navbar.Brand to="/" className="font-weight-bold text-muted">
+                            <Col  >
+                                <Navbar.Brand to="/" className="font-weight-bold text-muted justify-content-end">
                                     {t("Home")}
                                 </Navbar.Brand>
                             </Col>
-                            <Col>
+                            <Col className="d-flex  justify-content-end">
                                 <Navbar.Toggle/>
                                 <Navbar.Collapse className="justify-content-end">
                                     <Wybierz/>
-                                    <DarkModeSwitch
-                                        style={{marginLeft: '1rem'}}
-                                        checked={isDarkMode}
-                                        onChange={setIsDarkMode}
-                                        size={30}
-                                        sunColor={"#FFDF37"}
-                                        moonColor={"#bfbfbb"}
-                                    />
-                                    <img onClick={handleOnClick} style={{marginLeft: "10px", maxWidth: "30px"}}
-                                         src={flag} alt="Logo"/>
                                 </Navbar.Collapse>
                             </Col>
+
                         </Row>
-                        <Row> <Col> <BreadCrumbs/> </Col></Row>
+                        <Row>
+                            <Col> <BreadCrumbs/> </Col>
+                            <Col className="d-flex justify-content-end" style={{maxHeight: "30px", marginRight: "10px"}}>
+                                <DarkModeSwitch
+                                    style={{marginLeft: '1rem'}}
+                                    checked={isDarkMode}
+                                    onChange={setIsDarkMode}
+                                    size={30}
+                                    sunColor={"#FFDF37"}
+                                    moonColor={"#bfbfbb"}
+                                />
+                                <img onClick={handleOnClick}
+                                     style={{
+                                         marginLeft: "10px",
+                                         maxWidth: "30px",
+                                     }}
+                                     src={flag} alt="Logo"/>
+                            </Col>
+                        </Row>
                     </Container>
                 </div>
             </Navbar>
@@ -102,7 +110,7 @@ function Wybierz() {
     //     return Doctor();
     // }
     // return Guest();
-    return Patient();
+    return Doctor();
 
 }
 
