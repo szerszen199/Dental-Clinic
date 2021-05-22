@@ -12,7 +12,6 @@ import ReadinessComponent from "../../components/GetReadinessResource/Readiness"
 import Patient from "../Patient/Patient";
 import Doctor from "../Doctor/Doctor";
 import axios from "axios";
-import {JWTRefreshTokenStorageName, JWTTokenCookieName, RolesCookieName} from "../../components/Login/LoginRequest";
 import Cookies from "js-cookie";
 import {logout} from "../../components/Login/Logout";
 import {MDBContainer, MDBFooter} from "mdbreact";
@@ -51,15 +50,15 @@ export default class MainView extends React.Component {
     }
 
     makeRefreshRequest() {
-        let variable = localStorage.getItem(JWTRefreshTokenStorageName);
+        let variable = localStorage.getItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME);
         if (variable != null && variable !== "null") {
             axios.post(process.env.REACT_APP_BACKEND_URL + "auth/refresh", {
-                refreshToken: localStorage.getItem(JWTRefreshTokenStorageName)
+                refreshToken: localStorage.getItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME)
             }).then((response) => {
                 // TODO: Czas expieracji.
-                Cookies.set(JWTTokenCookieName, response.data.authJwtToken.token, {expires: jwtCookieExpirationTime});
-                Cookies.set(RolesCookieName, response.data.roles, {expires: jwtCookieExpirationTime});
-                localStorage.setItem(JWTRefreshTokenStorageName, response.data.refreshJwtToken.token);
+                Cookies.set(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME, response.data.authJwtToken.token, {expires: jwtCookieExpirationTime});
+                Cookies.set(process.env.REACT_APP_ROLES_COOKIE_NAME, response.data.roles, {expires: jwtCookieExpirationTime});
+                localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, response.data.refreshJwtToken.token);
             }).catch((response) => {
                 // todo cos z tym response?
                 console.log(response);
@@ -71,7 +70,7 @@ export default class MainView extends React.Component {
     componentDidMount() {
         this.makeRefreshRequest();
         setInterval(this.makeRefreshRequest, parseInt(process.env.REACT_APP_JWT_EXPIRATION_MS) / 10);
-        let token = Cookies.get(JWTTokenCookieName);
+        let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
         if (typeof token !== 'undefined' && token !== null && token !== "null") {
             axios.get(process.env.REACT_APP_BACKEND_URL + "account/info", {
                 headers: {
@@ -170,7 +169,7 @@ function Wybierz() {
 
     // TODO: Ma być możliwość wyboru jaką z ról które mamy chcemy widzieć tzn mamy się móc przełączać między rolami
     //  Nie ma tego narazie więc jest tak
-    let levels = Cookies.get(RolesCookieName);
+    let levels = Cookies.get(process.env.REACT_APP_ROLES_COOKIE_NAME);
     if (!isEmpty(levels)) {
         if (levels.includes(roleAdminName)) {
             return Admin();
