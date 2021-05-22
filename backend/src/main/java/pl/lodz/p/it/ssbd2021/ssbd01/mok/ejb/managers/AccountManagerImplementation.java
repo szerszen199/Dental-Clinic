@@ -102,6 +102,13 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
+    public void setEmailRecallTrue(String login) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
+        account.setEmailrecall(true);
+        accountFacade.edit(account);
+    }
+
+    @Override
     public void confirmAccount(Long id) throws AppBaseException {
         accountFacade.find(id).setEnabled(true);
     }
