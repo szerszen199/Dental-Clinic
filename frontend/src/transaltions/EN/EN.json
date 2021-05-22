@@ -3,10 +3,15 @@
   "Home": "Home",
   "Register": "Register",
   "Login": "Login",
+  "Appointments": "Appointments",
   "My appointments": "My appointments",
   "Plan an appointment": "Plan an appointment",
   "List of doctors": "List of doctors",
   "My prescriptions": "My prescriptions",
-  "Edit My Account": "Edit My Account",
-  "Logout": "Logout"
+  "My Account": "My account",
+  "Edit My Account": "Edit my account",
+  "Logout": "Logout",
+  "Users Accounts": "User's Accounts",
+  "Documentation": "Documentation",
+  "Prescriptions": "Prescriptions"
 }

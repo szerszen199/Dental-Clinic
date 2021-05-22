@@ -3,10 +3,15 @@
   "Home": "Strona główna",
   "Register": "Zarejestruj",
   "Login": "Zaloguj",
+  "Appointments": "Wizyty",
   "My appointments": "Moje wizyty",
   "Plan an appointment": "Zaplanuj wizytę",
   "List of doctors": "Lekarze",
   "My prescriptions": "Moje recepty",
+  "My Account": "Moje konto",
   "Edit My Account": "Edytuj moje konto",
-  "Logout": "Wyloguj"
+  "Logout": "Wyloguj",
+  "Users Accounts": "Konta użytkowników",
+  "Documentation": "Dokumentacja",
+  "Prescriptions": "Recepty"
 }
