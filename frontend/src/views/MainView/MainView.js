@@ -12,6 +12,7 @@ import i18n from "../../transaltions/i18n";
 import Admin from "../Users/Admin/Admin";
 import Patient from "../Users/Patient/Patient";
 import Receptionist from "../Users/Receptionist/Receptionist";
+import Guest from "../Guest/Guest";
 
 const accessLevelDictionary = {
     "Guest": "rgba(1, 1, 1, 0.1)",
@@ -112,8 +113,8 @@ function Wybierz() {
     // } else if (levels.includes("level.doctor")) {
     //     return Doctor();
     // }
-    // return Guest();
-    return Receptionist();
+    return Guest();
+    // return Receptionist();
 
 }
 

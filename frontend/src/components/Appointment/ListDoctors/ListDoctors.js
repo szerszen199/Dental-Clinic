@@ -14,7 +14,6 @@ function ListDoctors() {
                                 <Row style={{width: "100%"}}>
                                     <Col><a className="Buttons">dr.Doktor</a></Col>
                                     <Col style={{maxWidth: "100px"}}>
-                                        {/*<a>⭐ 4.7/5</a>*/}
                                         <Rating name="half-rating-read" defaultValue={4.7} precision={0.1} readOnly/>
                                     </Col>
                                 </Row>

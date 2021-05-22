@@ -24,5 +24,9 @@
   "UserLogin": "Login",
   "Current password": "Current password",
   "New password": "New password",
-  "Repeat new password": "Repeat new password"
+  "Repeat new password": "Repeat new password",
+  "Name and surname": "Name and surname",
+  "page not found" : "Sorry, page not found!",
+  "Dental Clinic": "Dental Clinic",
+  "Password": "Password"
 }
