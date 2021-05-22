@@ -12,16 +12,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Future;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "appointments")
@@ -59,7 +56,7 @@ public class Appointment extends AbstractEntity implements Serializable {
     @Basic(optional = false)
     @Column(name = "cancellation_date_time", nullable = false)
     @NotNull
-    private LocalDateTime cancellation_date_time;
+    private LocalDateTime cancellationDateTime;
 
     @JoinColumn(name = "confirmed_by", referencedColumnName = "id", nullable = true)
     @ManyToOne(optional = true)
@@ -77,12 +74,12 @@ public class Appointment extends AbstractEntity implements Serializable {
         this.confirmationDateTime = confirmationDateTime;
     }
 
-    public LocalDateTime getCancellation_date_time() {
-        return cancellation_date_time;
+    public LocalDateTime getCancellationDateTime() {
+        return cancellationDateTime;
     }
 
-    public void setCancellation_date_time(LocalDateTime cancellation_date_time) {
-        this.cancellation_date_time = cancellation_date_time;
+    public void setCancellationDateTime(LocalDateTime cancellationDateTime) {
+        this.cancellationDateTime = cancellationDateTime;
     }
 
     public Account getConfirmedBy() {

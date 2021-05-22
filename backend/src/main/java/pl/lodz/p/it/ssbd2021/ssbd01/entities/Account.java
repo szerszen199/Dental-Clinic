@@ -154,11 +154,13 @@ public class Account extends AbstractEntity implements Serializable {
     @JoinColumn(name = "last_block_unlock_modified_by", referencedColumnName = "id")
     @ManyToOne
     private Account lastBlockUnlockModifiedBy;
+
     /**
      * Tworzy nową instancję klasy Account.
      */
     public Account() {
     }
+
     /**
      * Tworzy nową instancję klasy Account reprezentujacej konto użytkownika aplikacji.
      *
@@ -179,6 +181,7 @@ public class Account extends AbstractEntity implements Serializable {
         this.phoneNumber = phoneNumber;
         this.pesel = pesel;
     }
+
     /**
      * Tworzy nową instancję klasy Account reprezentujacej konto użytkownika aplikacji.
      *
@@ -197,6 +200,7 @@ public class Account extends AbstractEntity implements Serializable {
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
     }
+
     /**
      * Tworzy nową instancję klasy Account reprezentujacej konto użytkownika aplikacji.
      *
