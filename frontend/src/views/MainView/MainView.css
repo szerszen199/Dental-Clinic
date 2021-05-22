@@ -1,0 +1,23 @@
+#body1{
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+#footer {
+    max-height: 80px;
+    flex: 1;
+}
+
+#darkModeSwitch {
+    margin-left: 1rem
+}
+
+#flag {
+    margin-left: 10px;
+    max-width: 30px;
+}
+
+#navbarDiv {
+    width: 100%;
+}

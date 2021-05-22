@@ -38,7 +38,7 @@ public class AccountEditDto {
     private String pesel;
 
     /**
-     * Tworzy nową instancję klasy Account edit dto.
+     * Konstruktor klasy AccountEditDto.
      */
     public AccountEditDto() {
     }

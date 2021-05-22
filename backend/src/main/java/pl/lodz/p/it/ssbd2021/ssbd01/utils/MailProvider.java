@@ -21,12 +21,17 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATE_SUB
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATE_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATION_CONFIRMATION_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATION_CONFIRMATION_TEXT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_CHANGE_CONFIRM_BUTTON;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_CHANGE_CONFIRM_SUBJECT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_CHANGE_CONFIRM_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_ADMIN_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_ADMIN_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_UNLOCK_BY_ADMIN_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_UNLOCK_BY_ADMIN_TEXT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOGIN_SUBJECT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOGIN_TEXT;
 
 @ApplicationScoped
 public class MailProvider {
@@ -115,6 +120,22 @@ public class MailProvider {
     }
 
     /**
+     * Wysyła wiadomość informującą o logowaniu administratora.
+     *
+     * @param email          Adres, na który zostanie wysłana wiadomość.
+     * @throws MailSendingException Błąd wysyłania wiadomości.
+     */
+    public void sendAdminLoginMail(String email) throws MailSendingException {
+        String subject = ACCOUNT_MAIL_LOGIN_SUBJECT;
+        String messageText = paragraph(ACCOUNT_MAIL_LOGIN_TEXT);
+        try {
+            sendMail(email, subject, messageText);
+        } catch (MessagingException e) {
+            throw MailSendingException.accountLock();
+        }
+    }
+
+    /**
      * Wysyła wiadomość informującą o odblokowanym koncie przez administratora.
      *
      * @param email          Adres, na który zostanie wysłana wiadomość.
@@ -164,6 +185,28 @@ public class MailProvider {
         Transport.send(message);
     }
 
+    /**
+     * Wysyła wiadomość z linkiem potwierdzającym zmianę konta mailowego.
+     *
+     * @param email          Adres, na który zostanie wysłana wiadomość.
+     * @param token          Login konta, którego link aktywacyjny wysyłamy.
+     * @param defaultContext link aktywacyjny do wysłania na konto.
+     * @throws MailSendingException Błąd wysyłania wiadomości.
+     */
+    public void sendEmailChangeConfirmationMail(String email, String defaultContext, String token) throws MailSendingException {
+        String subject = ACCOUNT_MAIL_CHANGE_CONFIRM_SUBJECT;
+        String activationLink = buildMailConfirmationLink(defaultContext, token);
+        String messageText =
+                paragraph(ACCOUNT_MAIL_CHANGE_CONFIRM_TEXT)
+                        + hyperlink(activationLink, ACCOUNT_MAIL_CHANGE_CONFIRM_BUTTON);
+
+        try {
+            sendMail(email, subject, messageText);
+        } catch (MessagingException e) {
+            throw MailSendingException.activationLink();
+        }
+    }
+
     private String paragraph(String text) {
         return "<p>" + text + "</p>";
     }
@@ -177,6 +220,16 @@ public class MailProvider {
 
         sb.append(defaultContext);
         sb.append("/api/account/confirm?token=");
+        sb.append(token);
+
+        return sb.toString();
+    }
+
+    private String buildMailConfirmationLink(String defaultContext, String token) {
+        StringBuilder sb = new StringBuilder(DEFAULT_URL);
+
+        sb.append(defaultContext);
+        sb.append("/api/account/mailconfirm?token=");
         sb.append(token);
 
         return sb.toString();

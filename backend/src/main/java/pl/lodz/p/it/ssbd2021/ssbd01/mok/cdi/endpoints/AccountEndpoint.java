@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -31,6 +32,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountAccessLevelDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountEditDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.LanguageDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.DarkModeDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
@@ -100,6 +103,8 @@ public class AccountEndpoint {
      * Edit account data.
      *
      * @param accountDto Account with edited data.
+     * @param servletContext kontekst serwletów, służy do współdzielenia informacji
+     *                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit
@@ -108,9 +113,12 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
     @Produces({MediaType.APPLICATION_JSON})
-    public void editAccount(AccountEditDto accountDto) throws AppBaseException {
+    public void editAccount(AccountEditDto accountDto, @Context ServletContext servletContext) throws AppBaseException {
         Account account = accountManager.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
-        accountManager.editAccount(AccountConverter.createAccountEntityFromDto(accountDto, account));
+        accountManager.editAccount(
+                AccountConverter.createAccountEntityFromDto(accountDto, account),
+                servletContext
+        );
     }
 
 
@@ -119,6 +127,8 @@ public class AccountEndpoint {
      *
      * @param accountDto the edited account
      * @param login      login edytowanego konta
+     * @param servletContext kontekst serwletów, służy do współdzielenia informacji
+     *                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit/other
@@ -126,9 +136,25 @@ public class AccountEndpoint {
     @Path("edit/{login}")
     @RolesAllowed({I18n.ADMIN})
     @Produces({MediaType.APPLICATION_JSON})
-    public void editOtherAccount(@PathParam("login") String login, AccountEditDto accountDto) throws AppBaseException {
+    public void editOtherAccount(@PathParam("login") String login, AccountEditDto accountDto, @Context ServletContext servletContext) throws AppBaseException {
         Account account = accountManager.findByLogin(login);
-        accountManager.editOtherAccount(AccountConverter.createAccountEntityFromDto(accountDto, account));
+        accountManager.editOtherAccount(
+                AccountConverter.createAccountEntityFromDto(accountDto, account),
+                servletContext
+        );
+    }
+
+    /**
+     * Endpoint potwierdzający zmianę maila.
+     *
+     * @param jwt jwt
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    @PUT
+    @Path("mailconfirm")
+    @Produces({MediaType.APPLICATION_JSON})
+    public void confirmMailChange(@QueryParam("token") String jwt) throws AppBaseException {
+        accountManager.confirmMailChangeByToken(jwt);
     }
 
     /**
@@ -136,14 +162,20 @@ public class AccountEndpoint {
      *
      * @param accessLevelDto obiekt zawierający poziom oraz login
      * @throws AppBaseException wyjątek typu AppBaseException
+     * @return odpowiedź 400 gdy administrator próbuje sam sobie odebrać poziom dostępu, 200 gdy dodanie poprawne
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{login}/{level}
     @PUT
     @RolesAllowed({I18n.ADMIN})
     @Path("/revokeAccessLevel}")
+    @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public void revokeAccessLevel(AccessLevelDto accessLevelDto) throws AppBaseException {
+    public Response revokeAccessLevel(AccessLevelDto accessLevelDto) throws AppBaseException {
+        if (accessLevelDto.getLogin().equals(loggedInAccountUtil.getLoggedInAccountLogin())) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
         accessLevelManager.revokeAccessLevel(accessLevelDto.getLogin(), accessLevelDto.getLevel());
+        return Response.ok().build();
     }
 
     /**
@@ -181,13 +213,19 @@ public class AccountEndpoint {
      *
      * @param accessLevelDto obiekt zawierający poziom oraz login
      * @throws AppBaseException wyjątek typu AppBaseException
+     * @return @return odpowiedź 400 gdy administrator próbuje sam sobie dodać poziom dostępu, 200 gdy dodanie poprawne
      */
     @PUT
     @RolesAllowed({I18n.ADMIN})
     @Path("/addLevelByLogin")
+    @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public void addAccessLevel(AccessLevelDto accessLevelDto) throws AppBaseException {
+    public Response addAccessLevel(AccessLevelDto accessLevelDto) throws AppBaseException {
+        if (accessLevelDto.getLogin().equals(loggedInAccountUtil.getLoggedInAccountLogin())) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
         accessLevelManager.addAccessLevel(accessLevelDto.getLogin(), accessLevelDto.getLevel());
+        return Response.ok().build();
     }
 
     /**
@@ -272,8 +310,8 @@ public class AccountEndpoint {
         try {
             this.validatePassword(newPassword);
             accountManager.changePassword(
-                    loggedInAccountUtil.getLoggedInAccountLogin(), 
-                    newPassword.getOldPassword(), 
+                    loggedInAccountUtil.getLoggedInAccountLogin(),
+                    newPassword.getOldPassword(),
                     newPassword.getFirstPassword()
             );
             return Response.status(Status.OK).build();
@@ -325,21 +363,39 @@ public class AccountEndpoint {
     /**
      * Endpoint dla ustawiania w aktualnym koncie trybu ciemnego.
      *
-     * @param isDarkMode true jeśli chcemy ustawić tryb ciemny, inaczej false.
-     * @return Response 401 jeśli użytkownik jest unauthorised, 200 jeśli udało się ustawić tryb ciemny, inaczej 400
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @param darkModeDto dto zawierające ustawienia trybu ciemnego.
+     * @return 200 jeśli udało się ustawić tryb ciemny, inaczej 400
      */
     @PUT
     @Path("dark-mode")
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changeDarkMode(@QueryParam("dark-mode") boolean isDarkMode) throws AppBaseException {
+    public Response changeDarkMode(DarkModeDto darkModeDto) {
         String login = loggedInAccountUtil.getLoggedInAccountLogin();
-        if (login == null) {
-            return Response.status(Status.UNAUTHORIZED).build();
-        }
         try {
-            accountManager.setDarkMode(login, isDarkMode);
+            accountManager.setDarkMode(login, darkModeDto.isDarkMode());
+        } catch (AppBaseException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.status(Status.OK).build();
+    }
+
+
+    /**
+     * Endpoint dla ustawiania w aktualnym koncie języka interfejsu.
+     *
+     * @param languageDto dto z pożądanym przez użytkownka językiem
+     * @return 200 jeśli udało się zmienić język, inaczej 400
+     */
+    @PUT
+    @Path("language")
+    @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response changeLanguage(LanguageDto languageDto) {
+        String login = loggedInAccountUtil.getLoggedInAccountLogin();
+        try {
+            accountManager.setLanguage(login, languageDto.getLanguage().toLowerCase(Locale.ROOT));
         } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
