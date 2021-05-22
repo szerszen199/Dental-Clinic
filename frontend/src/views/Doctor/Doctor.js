@@ -1,7 +1,6 @@
 import React from "react";
 import "./Doctor.css";
 import Nav from "react-bootstrap/Nav";
-import {LinkContainer} from "react-router-bootstrap";
 import {NavDropdown} from "react-bootstrap";
 import "react-custom-flag-select/lib/react-custom-flag-select.min.css";
 import {logout} from "../../components/Login/Logout";
@@ -11,38 +10,19 @@ function Doctor() {
     return (
         <Nav activeKey={window.location.pathname}>
             <NavDropdown title="Appointments" id="navbarScrollingDropdown">
-                <NavDropdown.Item>
-                    <LinkContainer to="/my-appointments">
-                        <Nav.Link>My appointments</Nav.Link>
-                    </LinkContainer>
-                </NavDropdown.Item>
+                <Nav.Link to="/my-appointments">My appointments</Nav.Link>
                 <NavDropdown.Divider/>
-                <NavDropdown.Item>
-                    <LinkContainer to="/list-doctors">
-                        <Nav.Link>List of doctors</Nav.Link>
-                    </LinkContainer>
-                </NavDropdown.Item>
+                <Nav.Link to="/list-doctors">List of doctors</Nav.Link>
             </NavDropdown>
-            <LinkContainer to="/prescriptions">
-                <Nav.Link>Prescriptions</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to="/dashboard">
-                <Nav.Link>Documentation</Nav.Link>
-            </LinkContainer>
+            <Nav.Link to="/prescriptions">Prescriptions</Nav.Link>
+            <Nav.Link to="/dashboard">Documentation</Nav.Link>
             <NavDropdown title="My Account" id="navbarScrollingDropdown">
-                <NavDropdown.Item>
-                    <LinkContainer to="/account">
-                        <Nav.Link>Edit My Account</Nav.Link>
-                    </LinkContainer>
-                </NavDropdown.Item>
-                <NavDropdown.Item>
-                    <span onClick={logout} style={{paddingLeft: "8px", color:"rgb(127, 127, 127)"}}>Log out</span>
-                </NavDropdown.Item>
+                <Nav.Link to="/account">Edit My Account</Nav.Link>
+                <span onClick={logout} style={{paddingLeft: "8px", color: "rgb(127, 127, 127)"}}>Log out</span>
             </NavDropdown>
         </Nav>
     );
 }
-
 
 
 export default Doctor;

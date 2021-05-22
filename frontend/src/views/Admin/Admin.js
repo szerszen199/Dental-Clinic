@@ -14,19 +14,12 @@ function Admin() {
                 <Nav.Link>User's Accounts</Nav.Link>
             </LinkContainer>
             <NavDropdown title="My Account" id="navbarScrollingDropdown">
-                <NavDropdown.Item>
-                    <LinkContainer to="/account">
-                        <Nav.Link>Edit My Account</Nav.Link>
-                    </LinkContainer>
-                </NavDropdown.Item>
-                <NavDropdown.Item>
-                    <span onClick={logout} style={{paddingLeft: "8px", color:"rgb(127, 127, 127)"}}>Log out</span>
-                </NavDropdown.Item>
+                <Nav.Link to="/account">Edit My Account</Nav.Link>
+                <span onClick={logout} style={{paddingLeft: "8px", color: "rgb(127, 127, 127)"}}>Log out</span>
             </NavDropdown>
         </Nav>
     );
 }
-
 
 
 export default Admin;

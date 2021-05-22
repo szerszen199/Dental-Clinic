@@ -21,8 +21,8 @@ const Patient = () => {
             <Nav.Link as={Link} to="/prescriptions">{t("My prescriptions")}</Nav.Link>
             <NavDropdown title="My Account" id="navbarScrollingDropdown">
                 <Nav.Link as={Link} to="/account">{t("Edit My Account")}</Nav.Link>
-                    <span onClick={logout}
-                          style={{paddingLeft: "8px", color: "rgb(127, 127, 127)"}}>{t("Logout")}</span>
+                <span onClick={logout}
+                      style={{paddingLeft: "8px", color: "rgb(127, 127, 127)"}}>{t("Logout")}</span>
             </NavDropdown>
         </Nav>
     );
