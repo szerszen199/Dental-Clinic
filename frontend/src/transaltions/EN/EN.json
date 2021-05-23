@@ -3,6 +3,7 @@
   "Home": "Home",
   "Register": "Register",
   "Login": "Login",
+  "Login-Noun": "Login",
   "Appointments": "Appointments",
   "My appointments": "My appointments",
   "Plan an appointment": "Plan an appointment",
@@ -34,5 +35,6 @@
   "Administrator": "Administrator",
   "Doctor": "Doctor",
   "Receptionist": "Receptionist",
-  "Access Level": "Access Level"
+  "Access Level": "Access Level",
+  "Name and Surname": "Name and surname"
 }

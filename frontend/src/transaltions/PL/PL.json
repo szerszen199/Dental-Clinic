@@ -3,6 +3,7 @@
   "Home": "Strona główna",
   "Register": "Zarejestruj",
   "Login": "Zaloguj",
+  "Login-Noun": "Login",
   "Appointments": "Wizyty",
   "My appointments": "Moje wizyty",
   "Plan an appointment": "Zaplanuj wizytę",
@@ -15,7 +16,7 @@
   "Documentation": "Dokumentacja",
   "Prescriptions": "Recepty",
   "Email": "Email",
-  "First Name": "Imie",
+  "First Name": "Imię",
   "Last Name": "Nazwisko",
   "Phone Number": "Numer telefonu",
   "Pesel": "Pesel",
@@ -34,5 +35,6 @@
   "Administrator": "Administrator",
   "Doctor": "Lekarz",
   "Receptionist": "Recepcjonista",
-  "Access Level": "Poziom Dostępu"
+  "Access Level": "Poziom Dostępu",
+  "Name and Surname": "Imię i nazwisko"
 }
