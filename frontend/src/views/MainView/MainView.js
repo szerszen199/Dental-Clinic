@@ -19,7 +19,8 @@ import {logout} from "../../components/Login/Logout";
 import {MDBContainer, MDBFooter} from "mdbreact";
 import './MainView.css';
 import {Link} from "react-router-dom";
-import Nav from "react-bootstrap/Nav";
+import findDefaultRole from "../../findDefaultRole";
+import parseAccessLevel from "../../parseAccessLevel";
 
 const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
 const roleDoctorName = process.env.REACT_APP_ROLE_DOCTOR
@@ -63,7 +64,7 @@ class MainViewWithoutTranslation extends React.Component {
         }
     }
 
-   setEN() {
+    setEN() {
         this.setState({language: "EN", flag: this.urlPL})
     }
 
@@ -83,6 +84,9 @@ class MainViewWithoutTranslation extends React.Component {
                 // TODO: Czas expieracji.
                 Cookies.set(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME, response.data.authJwtToken.token, {expires: jwtCookieExpirationTime});
                 Cookies.set(process.env.REACT_APP_ROLES_COOKIE_NAME, response.data.roles, {expires: jwtCookieExpirationTime});
+                if (Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) == null) {
+                    Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, findDefaultRole(response.data.roles), {expires: process.env.jwtCookieExpirationTime});
+                }
                 localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, response.data.refreshJwtToken.token);
             }).catch((response) => {
                 // todo cos z tym response?
@@ -115,7 +119,7 @@ class MainViewWithoutTranslation extends React.Component {
                     // TODO:
                     console.log(result);
                 })
-        } else{
+        } else {
             this.setState({
                 login: "",
             });
@@ -134,14 +138,15 @@ class MainViewWithoutTranslation extends React.Component {
                         <Container fluid>
                             <Row>
                                 <Col>
-                                    <Navbar.Brand as={Link} to="/" className="font-weight-bold text-muted justify-content-end">
+                                    <Navbar.Brand as={Link} to="/"
+                                                  className="font-weight-bold text-muted justify-content-end">
                                         {t("Home")}
                                     </Navbar.Brand>
                                 </Col>
                                 <Col className="d-flex  justify-content-end">
                                     <Navbar.Toggle/>
                                     <Navbar.Collapse className="justify-content-end">
-                                        <Wybierz/>
+                                        <CurrentUserViewComponent/>
                                     </Navbar.Collapse>
                                 </Col>
                             </Row>
@@ -152,6 +157,12 @@ class MainViewWithoutTranslation extends React.Component {
                                         color: "gray",
                                         marginTop: "5px",
                                     }}>{this.state.login === "" ? '' : 'login: ' + this.state.login}</p>
+                                    <p style={{
+                                        color: "gray",
+                                        marginTop: "5px",
+                                        marginLeft: "5px"
+                                    }}>{Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) == null ? '' : t("Access Level") + ": " + t(parseAccessLevel(Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME)))}</p>
+
                                     <DarkModeSwitch
                                         style={{marginLeft: '1rem'}}
                                         checked={this.state.isDarkMode}
@@ -181,24 +192,16 @@ class MainViewWithoutTranslation extends React.Component {
     }
 }
 
-function Wybierz() {
-    function isEmpty(value) {
-        return (value == null || value.length === 0);
-    }
-
-    // TODO: Ma być możliwość wyboru jaką z ról które mamy chcemy widzieć tzn mamy się móc przełączać między rolami
-    //  Nie ma tego narazie więc jest tak
-    let levels = Cookies.get(process.env.REACT_APP_ROLES_COOKIE_NAME);
-    if (!isEmpty(levels)) {
-        if (levels.includes(roleAdminName)) {
-            return Admin();
-        } else if (levels.includes(rolePatientName)) {
-            return Patient();
-        } else if (levels.includes(roleReceptionistName)) {
-            return Receptionist();
-        } else if (levels.includes(roleDoctorName)) {
-            return Doctor();
-        }
+function CurrentUserViewComponent() {
+    let currentRole = Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME)
+    if (currentRole === roleAdminName) {
+        return Admin();
+    } else if (currentRole === rolePatientName) {
+        return Patient();
+    } else if (currentRole === roleReceptionistName) {
+        return Receptionist();
+    } else if (currentRole === roleDoctorName) {
+        return Doctor();
     }
     return Guest();
 }

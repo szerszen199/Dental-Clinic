@@ -28,5 +28,11 @@
   "Name and surname": "Name and surname",
   "page not found" : "Sorry, page not found!",
   "Dental Clinic": "Dental Clinic",
-  "Password": "Password"
+  "Password": "Password",
+  "Change Access Level": "Change access level",
+  "Patient": "Patient",
+  "Administrator": "Administrator",
+  "Doctor": "Doctor",
+  "Receptionist": "Receptionist",
+  "Access Level": "Access Level"
 }
