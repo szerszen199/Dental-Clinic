@@ -2,10 +2,12 @@ package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CONSTRAINT_VIOLATION;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EMAIL_ALREADY_EXISTS;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_IS_BLOCKED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOGIN_ALREADY_EXISTS;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_NOT_FOUND;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_PESEL_ALREADY_EXISTS;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.INVALID_CONFIRMATION_TOKEN;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_CONFIRMATION_PARSING_ERROR;
 
@@ -33,7 +35,7 @@ public class AccountException extends AppBaseException {
     /**
      * Tworzy wyjątek reprezentujący próbę utworzenia konta o loginie który już istnieje.
      *
-     * @param cause   przyczyna wystąpienia wyjątku
+     * @param cause przyczyna wystąpienia wyjątku
      * @return wyjątek typu AccountException
      */
     public static AccountException accountLoginExists(Throwable cause) {
@@ -43,11 +45,31 @@ public class AccountException extends AppBaseException {
     /**
      * Tworzy wyjątek reprezentujący próbę utworzenia konta o emailu który już istnieje.
      *
-     * @param cause   przyczyna wystąpienia wyjątku
+     * @param cause przyczyna wystąpienia wyjątku
      * @return wyjątek typu AccountException
      */
     public static AccountException accountEmailExists(Throwable cause) {
         return new AccountException(ACCOUNT_EMAIL_ALREADY_EXISTS, cause);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę utworzenia konta o peselu który już istnieje.
+     *
+     * @param cause przyczyna wystąpienia wyjątku
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException accountPeselExists(Throwable cause) {
+        return new AccountException(ACCOUNT_PESEL_ALREADY_EXISTS, cause);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę utworzenia konta o wartościach naruszających ograniczenia.
+     *
+     * @param cause przyczyna wystąpienia wyjątku
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException constraintViolation(Throwable cause) {
+        return new AccountException(ACCOUNT_CONSTRAINT_VIOLATION, cause);
     }
 
     /**

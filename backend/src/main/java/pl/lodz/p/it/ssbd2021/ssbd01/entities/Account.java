@@ -142,7 +142,7 @@ public class Account extends AbstractEntity implements Serializable {
     @Min(0)
     private Integer unsuccessfulLoginCounter = 0;
 
-    @Column(name = "language", columnDefinition = "bpchar", length = 2)
+    @Column(name = "language", columnDefinition = "bpchar", length = 2, nullable = false)
     @Size(min = 2, max = 2)
     private String language;
 
@@ -171,6 +171,29 @@ public class Account extends AbstractEntity implements Serializable {
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.pesel = pesel;
+    }
+
+    /**
+     * Tworzy nową instancję klasy Account reprezentujacej konto użytkownika aplikacji.
+     *
+     * @param login       login konta
+     * @param email       adres e-mail przypisany do konta
+     * @param password    hasło konta
+     * @param firstName   imię użytkownika
+     * @param lastName    nazwisko użytkownika
+     * @param phoneNumber numer telefonu
+     * @param pesel       pesel
+     * @param language    język
+     */
+    public Account(String login, String email, String password, String firstName, String lastName, String phoneNumber, String pesel, String language) {
+        this.login = login;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.pesel = pesel;
+        this.language = language;
     }
 
     /**
@@ -334,5 +357,4 @@ public class Account extends AbstractEntity implements Serializable {
     public String toString() {
         return "pl.lodz.p.it.ssbd2021.ssbd01.entities.Account[ id=" + id + " ]";
     }
-
 }

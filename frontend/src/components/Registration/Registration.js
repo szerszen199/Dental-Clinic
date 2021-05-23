@@ -4,6 +4,9 @@ import Button from "react-bootstrap/Button";
 import "./Registration.css";
 import {registrationRequest} from "./RegistrationRequest";
 import {Col} from "react-bootstrap";
+import Dropdown from 'react-bootstrap/Dropdown';
+import FlagIcon from './FlagIcon.js';
+
 
 export default function Registration() {
     const [login, setLogin] = useState("");
@@ -14,6 +17,13 @@ export default function Registration() {
     const [lastName, setLastName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState(null);
     const [pesel, setPesel] = useState(null);
+    const [selectedLanguage, setSelectedLanguage] = useState("");
+
+    const [languages] = useState([
+        {language: "pl", code: 'pl', title: 'Polish'},
+        {language: "en", code: 'gb', title: 'English'}
+    ]);
+    const [toggleContents, setToggleContents] = useState("Select language");
 
     const [errors, setErrors] = useState({})
 
@@ -131,10 +141,11 @@ export default function Registration() {
 
         function findPhoneNumberErrors() {
             if (phoneNumber === null || phoneNumber === '') {
+                setPhoneNumber(null);
                 return;
             }
 
-            if (!phoneNumberRegex.test(email)) {
+            if (!phoneNumberRegex.test(String(phoneNumber))) {
                 newErrors.phoneNumber = "Phone number can contain only numbers!";
                 return;
             }
@@ -179,6 +190,12 @@ export default function Registration() {
             }
         }
 
+        function findLanguageErrors() {
+            if (selectedLanguage == null || selectedLanguage === '') {
+                newErrors.language = "Language must be selected!";
+            }
+        }
+
         findLoginErrors();
         findEmailErrors();
         findPasswordErrors();
@@ -187,6 +204,7 @@ export default function Registration() {
         findLastNameErrors();
         findPhoneNumberErrors();
         findPeselErrors();
+        findLanguageErrors();
 
         return newErrors;
     }
@@ -194,13 +212,13 @@ export default function Registration() {
     function handleSubmit(event) {
         event.preventDefault();
 
-        const newErrors = findFormErrors()
+        const newErrors = findFormErrors();
 
         if (Object.keys(newErrors).length > 0) {
             // We got errors!
-            setErrors(newErrors)
+            setErrors(newErrors);
         } else {
-            registrationRequest(login, email, password, firstName, lastName, phoneNumber, pesel, 'en');
+            registrationRequest(login, email, password, firstName, lastName, phoneNumber, pesel, selectedLanguage);
         }
     }
 
@@ -375,9 +393,34 @@ export default function Registration() {
                         </Form.Control.Feedback>
                     </Form.Group>
                 </Form.Row>
-                <Button block size="lg" type="submit">
-                    Register
-                </Button>
+                <Form.Label>Language*</Form.Label>
+                <Form.Row>
+                    <Form.Group as={Col} size="lg" controlId="language">
+                        <Dropdown
+                            onSelect={eventKey => {
+                                const {language, code, title} = languages.find(({language}) => eventKey === language);
+                                setSelectedLanguage(language);
+                                setToggleContents(<><FlagIcon code={code}/> {title}</>);
+                                setValid('language');
+                            }}>
+                            <Dropdown.Toggle variant="outline-primary" id="dropdown-flags" className="text-left"
+                                             style={{width: 200}}>
+                                {toggleContents}
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                {languages.map(({language, code, title}) => (
+                                    <Dropdown.Item key={language} eventKey={language}>
+                                        <FlagIcon code={code}/>{title}
+                                    </Dropdown.Item>
+                                ))}
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </Form.Group>
+                    <Button size={"lg"} type="submit">
+                        Register
+                    </Button>
+                </Form.Row>
             </Form>
         </div>
     );

@@ -28,6 +28,6 @@ public class AccountConverter {
     public static Account createAccountEntityFromDto(CreateAccountRequestDTO createAccountRequestDTO) {
         return new Account(createAccountRequestDTO.getLogin(), createAccountRequestDTO.getEmail(), createAccountRequestDTO.getPassword(),
                 createAccountRequestDTO.getFirstName(), createAccountRequestDTO.getLastName(), createAccountRequestDTO.getPhoneNumber(),
-                createAccountRequestDTO.getPesel());
+                createAccountRequestDTO.getPesel(), createAccountRequestDTO.getLanguage());
     }
 }

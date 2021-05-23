@@ -68,22 +68,30 @@ public class AccountEndpoint {
      * @param accountDto     obiekt zawierający login, email, hasło i inne wymagane dane
      * @param servletContext kontekst serwletów, służy do współdzielenia informacji w ramach aplikacji
      * @return response
-     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @POST
     @PermitAll
     @Path("create")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response createAccount(CreateAccountRequestDTO accountDto, @Context ServletContext servletContext)
-            throws AppBaseException {
-        // TODO: 21.05.2021 Obsługa wyjątków
-        this.accountManager.createAccount(
-                AccountConverter.createAccountEntityFromDto(accountDto),
-                servletContext
-        );
-
-        return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CREATED_SUCCESSFULLY)).build();
+    public Response createAccount(CreateAccountRequestDTO accountDto, @Context ServletContext servletContext) {
+        try {
+            this.accountManager.createAccount(
+                    AccountConverter.createAccountEntityFromDto(accountDto),
+                    servletContext
+            );
+            return Response
+                    .ok()
+                    .entity(new MessageResponseDto(I18n.ACCOUNT_CREATED_SUCCESSFULLY))
+                    .build();
+        } catch (AppBaseException e) {
+            return Response
+                    .status(Status.BAD_REQUEST)
+                    .entity(new MessageResponseDto(e.getMessage()))
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
+        }
     }
 
     /**

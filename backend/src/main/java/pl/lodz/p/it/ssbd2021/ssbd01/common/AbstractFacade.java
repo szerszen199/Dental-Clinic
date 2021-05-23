@@ -7,7 +7,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
+import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
 /**
@@ -41,10 +41,13 @@ public abstract class AbstractFacade<T> {
     public void create(T entity) throws AppBaseException {
         try {
             getEntityManager().persist(entity);
-        } catch (OptimisticLockException e) {
-            throw AppBaseException.optimisticLockError(e);
+            getEntityManager().flush();
+        } catch (PersistenceException e) {
+            if (!(e.getCause() instanceof ConstraintViolationException)) {
+                throw AppBaseException.databaseError(e);
+            }
+            throw (ConstraintViolationException) e.getCause();
         }
-
     }
 
     /**

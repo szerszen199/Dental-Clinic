@@ -31,6 +31,8 @@ public class I18n {
     public static final String ACCESS_LEVEL_ALREADY_ASSIGNED = "access_level_already_assigned";
     public static final String ACCOUNT_LOGIN_ALREADY_EXISTS = "account_login_already_exists";
     public static final String ACCOUNT_EMAIL_ALREADY_EXISTS = "account_email_already_exists";
+    public static final String ACCOUNT_PESEL_ALREADY_EXISTS = "account_pesel_already_exists";
+    public static final String ACCOUNT_CONSTRAINT_VIOLATION = "account_constraint_violation";
     public static final String ACCOUNT_IS_BLOCKED = "account_is_blocked";
     public static final String ACCOUNT_NOT_FOUND = "account_not_found";
     public static final String MAIL_CONFIRMATION_PARSING_ERROR = "mail_confirmation_parsing_error";

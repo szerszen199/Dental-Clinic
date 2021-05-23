@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades;
 
 import java.util.List;
+import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -10,6 +11,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
+import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
@@ -87,4 +89,19 @@ public class AccountFacade extends AbstractFacade<Account> {
         }
     }
 
+    @Override
+    public void create(Account account) throws AppBaseException {
+        try {
+            super.create(account);
+        } catch (ConstraintViolationException cve) {
+            if (cve.getConstraintName().contains("acc_login_unique")) {
+                throw AccountException.accountLoginExists(cve);
+            } else if (cve.getConstraintName().contains("acc_email_unique")) {
+                throw AccountException.accountEmailExists(cve);
+            } else if (cve.getConstraintName().contains("acc_pesel_unique")) {
+                throw AccountException.accountPeselExists(cve);
+            }
+            throw AppBaseException.databaseError(cve);
+        }
+    }
 }
