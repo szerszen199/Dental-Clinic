@@ -13,6 +13,12 @@ public class ConfirmAccountRequestDTO {
     private String confirmToken;
 
     /**
+     * Instantiates a new Confirm account request dto.
+     */
+    public ConfirmAccountRequestDTO() {
+    }
+
+    /**
      * Pobiera pole confirm token.
      *
      * @return confirm token

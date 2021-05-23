@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
-import java.util.Properties;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.mail.Authenticator;
@@ -14,7 +15,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+import java.util.Properties;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATE_BUTTON;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATE_SUBJECT;
@@ -24,14 +25,18 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATION_C
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_CHANGE_CONFIRM_BUTTON;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_CHANGE_CONFIRM_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_CHANGE_CONFIRM_TEXT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_GENERATED_PASSWORD_SUBJECT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_GENERATED_PASSWORD_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_ADMIN_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_ADMIN_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_TEXT;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_UNLOCK_BY_ADMIN_SUBJECT;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_UNLOCK_BY_ADMIN_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOGIN_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOGIN_TEXT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_PASSWORD_CONFIRMATION_SUBJECT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_PASSWORD_CONFIRMATION_TEXT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_UNLOCK_BY_ADMIN_SUBJECT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_UNLOCK_BY_ADMIN_TEXT;
 
 @ApplicationScoped
 public class MailProvider {
@@ -207,6 +212,47 @@ public class MailProvider {
         }
     }
 
+    /**
+     * Send reset pass confirmation mail.
+     *
+     * @param email          the email
+     * @param defaultContext the default context
+     * @param token          the token
+     * @throws MailSendingException the mail sending exception
+     */
+    public void sendResetPassConfirmationMail(String email, String defaultContext, String token) throws MailSendingException {
+        String subject = ACCOUNT_MAIL_PASSWORD_CONFIRMATION_SUBJECT;
+        String activationLink = buildResetPassLink(defaultContext, token);
+        String messageText =
+                paragraph(ACCOUNT_MAIL_PASSWORD_CONFIRMATION_TEXT)
+                        + hyperlink(activationLink, ACCOUNT_MAIL_CHANGE_CONFIRM_BUTTON);
+
+        try {
+            sendMail(email, subject, messageText);
+        } catch (MessagingException e) {
+            throw MailSendingException.activationLink();
+        }
+    }
+
+    /**
+     * Send generaterd password mail.
+     *
+     * @param email the email
+     * @param pass  the pass
+     * @throws MailSendingException the mail sending exception
+     */
+    public void sendGeneratedPasswordMail(String email, String pass) throws MailSendingException {
+        String subject = ACCOUNT_MAIL_GENERATED_PASSWORD_SUBJECT;
+        String messageText =
+                paragraph(ACCOUNT_MAIL_GENERATED_PASSWORD_TEXT)
+                        + pass;
+        try {
+            sendMail(email, subject, messageText);
+        } catch (MessagingException e) {
+            throw MailSendingException.activationLink();
+        }
+    }
+
     private String paragraph(String text) {
         return "<p>" + text + "</p>";
     }
@@ -230,6 +276,16 @@ public class MailProvider {
 
         sb.append(defaultContext);
         sb.append("/api/account/mailconfirm?token=");
+        sb.append(token);
+
+        return sb.toString();
+    }
+
+    private String buildResetPassLink(String defaultContext, String token) {
+        StringBuilder sb = new StringBuilder(DEFAULT_URL);
+
+        sb.append(defaultContext);
+        sb.append("/api/account/reset?token=");
         sb.append(token);
 
         return sb.toString();
