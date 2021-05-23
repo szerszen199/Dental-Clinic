@@ -95,38 +95,28 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void createAccountByAdministrator(Account account,
-                                             ServletContext servletContext) throws AppBaseException {
-        account.setPassword(hashGenerator.generateHash("P@ssword"));
-
-        AccessLevel patientData = new PatientData();
-        patientData.setActive(true);
+    public void createAccountByAdministrator(Account account, ServletContext servletContext) throws AppBaseException {
+        account.setPassword(hashGenerator.generateHash(passwordGenerator.generate(32)));
+        AccessLevel patientData = new PatientData(account, true);
         patientData.setCreatedBy(account);
-        patientData.setAccountId(account);
         account.getAccessLevels().add(patientData);
 
-        AccessLevel receptionistData = new ReceptionistData();
-        receptionistData.setActive(false);
+        AccessLevel receptionistData = new ReceptionistData(account, false);
         receptionistData.setCreatedBy(account);
-        receptionistData.setAccountId(account);
         account.getAccessLevels().add(receptionistData);
 
-        AccessLevel doctorData = new DoctorData();
-        doctorData.setActive(false);
+        AccessLevel doctorData = new DoctorData(account, false);
         doctorData.setCreatedBy(account);
-        doctorData.setAccountId(account);
         account.getAccessLevels().add(doctorData);
 
-        AccessLevel adminData = new AdminData();
-        adminData.setActive(false);
+        AccessLevel adminData = new AdminData(account, false);
         adminData.setCreatedBy(account);
-        adminData.setAccountId(account);
         account.getAccessLevels().add(adminData);
 
         account.setCreatedBy(account);
-
         accountFacade.create(account);
 
+        this.resetPassword(account);
     }
 
     @Override
@@ -308,6 +298,13 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         account.setPassword(hashGenerator.generateHash(pass));
         mailProvider.sendGeneratedPasswordMail(account.getEmail(), pass);
         // TODO: send mail with new password
+    }
+
+    @Override
+    public void resetPassword(Account account) throws AppBaseException {
+        String pass = passwordGenerator.generate(32);
+        account.setPassword(hashGenerator.generateHash(pass));
+        mailProvider.sendGeneratedPasswordMail(account.getEmail(), pass);
     }
 
     @Override

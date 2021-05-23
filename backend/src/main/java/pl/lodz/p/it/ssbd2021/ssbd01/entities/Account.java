@@ -173,6 +173,16 @@ public class Account extends AbstractEntity implements Serializable {
         this.pesel = pesel;
     }
 
+    /**
+     * Tworzy nową instancję klasy Account reprezentujacej konto użytkownika aplikacji.
+     *
+     * @param login       login konta
+     * @param email       adres e-mail przypisany do konta
+     * @param firstName   imię użytkownika
+     * @param lastName    nazwisko użytkownika
+     * @param phoneNumber numer telefonu
+     * @param pesel       the pesel
+     */
     public Account(String login, String email, String firstName, String lastName, String phoneNumber, String pesel) {
         this.login = login;
         this.email = email;
@@ -180,25 +190,6 @@ public class Account extends AbstractEntity implements Serializable {
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.pesel = pesel;
-    }
-
-    /**
-     * Tworzy nową instancję klasy Account reprezentujacej konto użytkownika aplikacji.
-     *
-     * @param login       login konta
-     * @param email       adres e-mail przypisany do konta
-     * @param password    hasło konta
-     * @param firstName   imię użytkownika
-     * @param lastName    nazwisko użytkownika
-     * @param phoneNumber numer telefonu
-     */
-    public Account(String login, String email, String password, String firstName, String lastName, String phoneNumber) {
-        this.login = login;
-        this.email = email;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
     }
 
     /**
