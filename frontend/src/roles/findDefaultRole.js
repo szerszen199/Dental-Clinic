@@ -8,5 +8,4 @@ export default function findDefaultRole(roles) {
     } else if (roles.includes(process.env.REACT_APP_ROLE_PATIENT)) {
         return process.env.REACT_APP_ROLE_PATIENT;
     } else return process.env.REACT_APP_ROLE_GUEST
-
 }
