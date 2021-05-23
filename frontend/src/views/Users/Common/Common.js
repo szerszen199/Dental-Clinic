@@ -6,7 +6,6 @@ import React, {Fragment} from "react";
 import {useTranslation} from "react-i18next";
 import "./Common.css"
 import Cookies from "js-cookie";
-import parseAccessLevel from "../../../parseAccessLevel";
 
 export default function MyAccount() {
     const {t} = useTranslation();
@@ -16,9 +15,10 @@ export default function MyAccount() {
     for (let i in accessLevels) {
         accessLevelLinks.push(<Dropdown.Item
             style={{color: "rgb(127, 127, 127)"}}
+            key={i}
             onClick={() => {
                 updateAccessLevel(accessLevels[i])
-            }}> {t(parseAccessLevel(accessLevels[i]))}</Dropdown.Item>);
+            }}> {t(accessLevels[i])}</Dropdown.Item>);
     }
     return (
         <Fragment>
@@ -29,8 +29,8 @@ export default function MyAccount() {
                 <Nav.Link onClick={logout} style={{color: "rgb(127, 127, 127)"}}
                           className="navStyle">{t("Logout")}</Nav.Link>
             </NavDropdown>
-            <DropdownButton variant={"warning"} style={{color: "rgb(127, 127, 127)"}}
-                            title={t("Change Access Level")}>
+            <DropdownButton variant="secondary btn-sm" style={{marginTop: "5px"}}
+                            title={t(Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME))}>
                 {accessLevelLinks}
             </DropdownButton>
         </Fragment>

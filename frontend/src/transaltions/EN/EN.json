@@ -36,5 +36,9 @@
   "Receptionist": "Receptionist",
   "Access Level": "Access Level",
   "Name and Surname": "Name and surname",
-  "Filter": "Filter"
+  "Filter": "Filter",
+  "level.patient": "Patient",
+  "level.administrator": "Administrator",
+  "level.doctor": "Doctor",
+  "level.receptionist": "Receptionist"
 }

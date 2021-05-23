@@ -19,8 +19,7 @@ import {logout} from "../../components/Login/Logout";
 import {MDBContainer, MDBFooter} from "mdbreact";
 import './MainView.css';
 import {Link} from "react-router-dom";
-import findDefaultRole from "../../findDefaultRole";
-import parseAccessLevel from "../../parseAccessLevel";
+import findDefaultRole from "../../roles/findDefaultRole";
 
 const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
 const roleDoctorName = process.env.REACT_APP_ROLE_DOCTOR
@@ -36,8 +35,7 @@ const accessLevelDictionary = {
     [roleAdminName]: "rgba(238, 0, 0, 0.1)",
 };
 export const jwtCookieExpirationTime = process.env.REACT_APP_JWT_EXPIRATION_MS / (24 * 60 * 60 * 100)
-// TODO: zastąpić użycia tego aktualnie wybraną rolą po zaimplementowaniu
-const actualAccessLevel = roleDoctorName;
+const actualAccessLevel = Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) !== undefined ? Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) : roleGuestName;
 
 class MainViewWithoutTranslation extends React.Component {
     urlPL = "https://img.icons8.com/color/96/000000/poland-circular.png";
@@ -157,12 +155,6 @@ class MainViewWithoutTranslation extends React.Component {
                                         color: "gray",
                                         marginTop: "5px",
                                     }}>{this.state.login === "" ? '' : 'login: ' + this.state.login}</p>
-                                    <p style={{
-                                        color: "gray",
-                                        marginTop: "5px",
-                                        marginLeft: "5px"
-                                    }}>{Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) == null ? '' : t("Access Level") + ": " + t(parseAccessLevel(Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME)))}</p>
-
                                     <DarkModeSwitch
                                         style={{marginLeft: '1rem'}}
                                         checked={this.state.isDarkMode}
@@ -193,17 +185,13 @@ class MainViewWithoutTranslation extends React.Component {
 }
 
 function CurrentUserViewComponent() {
+    const myMap = new Map();
+    myMap.set(roleAdminName, Admin())
+    myMap.set(rolePatientName, Patient())
+    myMap.set(roleReceptionistName, Receptionist())
+    myMap.set(roleDoctorName, Doctor())
     let currentRole = Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME)
-    if (currentRole === roleAdminName) {
-        return Admin();
-    } else if (currentRole === rolePatientName) {
-        return Patient();
-    } else if (currentRole === roleReceptionistName) {
-        return Receptionist();
-    } else if (currentRole === roleDoctorName) {
-        return Doctor();
-    }
-    return Guest();
+    return myMap.has(currentRole) ? myMap.get(currentRole) : Guest()
 }
 
 const MainViewTr = withTranslation()(MainViewWithoutTranslation)
