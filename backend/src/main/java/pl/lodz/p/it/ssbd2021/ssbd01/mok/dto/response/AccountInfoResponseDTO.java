@@ -10,6 +10,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.AccessLevelDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
 import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -255,6 +256,7 @@ public class AccountInfoResponseDTO implements SignableEntity {
 
 
     @Override
+    @JsonbTransient
     public Map<String, String> getPayload() {
         Map<String, String> map = new HashMap<>();
         map.put("version", getVersion().toString());
