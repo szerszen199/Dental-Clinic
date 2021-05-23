@@ -14,6 +14,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JWTRegistrationConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
@@ -22,7 +23,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -57,8 +57,11 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @Inject
     private RandomPasswordGenerator passwordGenerator;
 
-    @EJB
+    @Inject
     private JwtEmailConfirmationUtils jwtEmailConfirmationUtils;
+
+    @Inject
+    private JWTRegistrationConfirmationUtils jwtRegistrationConfirmationUtils;
 
     @Inject
     private MailProvider mailProvider;
@@ -90,7 +93,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         mailProvider.sendActivationMail(
                 account.getEmail(),
                 servletContext.getContextPath(),
-                jwtEmailConfirmationUtils.generateRegistrationConfirmationJwtTokenForUser(account.getLogin())
+                jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(account.getLogin())
         );
     }
 
@@ -116,7 +119,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Override
     public void confirmAccountByToken(String jwt) throws AppBaseException {
-        if (!jwtEmailConfirmationUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+        if (!jwtEmailConfirmationUtils.validateJwtToken(jwt)) {
             throw AccountException.invalidConfirmationToken();
         }
         try {
@@ -176,8 +179,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
                     editOwnAccountRequestDTO.getEmail(),
                     servletContext.getContextPath(),
                     jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(
-                            loggedInAccountUtil.getLoggedInAccountLogin(),
-                            editOwnAccountRequestDTO.getEmail())
+                            loggedInAccountUtil.getLoggedInAccountLogin(), editOwnAccountRequestDTO.getEmail())
             );
         }
         if (editOwnAccountRequestDTO.getPhoneNumber() != null) {
@@ -224,15 +226,12 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Override
     public void confirmMailChangeByToken(String jwt) throws AppBaseException {
-        if (!jwtEmailConfirmationUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+        if (!jwtEmailConfirmationUtils.validateJwtToken(jwt)) {
             throw AccountException.invalidConfirmationToken();
         }
         try {
-            // TODO: 21.05.2021 Jest zbyt późno żebym to poprawiał ale proszę niech tutaj się pojawi jakaś para, obiekt cokolwiek
-            //   Co sprawi że będzie wiadomo co tutaj jest zwracane, to co tutaj jest ten array i split regexem jest straszny,
-            //   pomijajac dwukrotne wykonanie tej samej metody w identyczny sposób
-            String login = jwtEmailConfirmationUtils.getUserNameAndEmailFromEmailChangeConfirmationJwtToken(jwt).split("/")[0];
-            String newEmail = jwtEmailConfirmationUtils.getUserNameAndEmailFromEmailChangeConfirmationJwtToken(jwt).split("/")[1];
+            String login = jwtEmailConfirmationUtils.getUsernameFromToken(jwt);
+            String newEmail = jwtEmailConfirmationUtils.getEmailFromToken(jwt);
             Account account = accountFacade.findByLogin(login);
             account.setEmail(newEmail);
             accountFacade.edit(account);
