@@ -17,6 +17,7 @@ class EditAccountWithoutTranslation extends React.Component {
             lastName: "",
             phoneNumber: "",
             pesel: "",
+            version: "",
         }
     }
 
@@ -33,7 +34,8 @@ class EditAccountWithoutTranslation extends React.Component {
                 firstName: result.firstName,
                 lastName: result.lastName,
                 phoneNumber: result.phoneNumber,
-                pesel: result.pesel
+                pesel: result.pesel,
+                version: result.version,
             }))
     }
 
@@ -41,24 +43,43 @@ class EditAccountWithoutTranslation extends React.Component {
         // Todo: zrobić walidację taką jaką wymaga projekt
 
         function emailCorrect() {
-            return t.state.email.length > 0;
+            if (t.state.email !== undefined) {
+                return t.state.email.length >= 4 && t.state.email.length <= 100;
+            }
+            return false;
         }
 
         function firstNameCorrect() {
-            return t.state.firstName.length > 0;
+            if (t.state.firstName !== undefined) {
+                return t.state.firstName.length >= 1 && t.state.firstName.length <= 50;
+            }
+            return false;
         }
 
         function lastNameCorrect() {
-            return t.state.lastName.length > 0;
+            if (t.state.lastName !== undefined) {
+                return t.state.lastName.length >= 1 && t.state.lastName.length <= 80;
+            }
+            return false;
         }
 
         function phoneNumberCorrect() {
+            if (t.state.phoneNumber !== undefined && t.state.phoneNumber !== "") {
+                return t.state.phoneNumber.length >= 9 && t.state.phoneNumber.length <= 15;
+            }
+            t.setState({
+                phoneNumber: "",
+            });
             return true;
-            // return t.state.phoneNumber.length > 0 && /^\d+$/.test(t.state.phoneNumber);
         }
 
-        // TODO: przypadek obcokrajowca wymusza że peselu może nie być ale nadal warto by go zwalidowac, tylko jak?
         function peselCorrect() {
+            if (t.state.pesel !== undefined && t.state.pesel !== "") {
+                return t.state.pesel.length === 11;
+            }
+            t.setState({
+                pesel: "",
+            });
             return true;
         }
 
@@ -86,14 +107,22 @@ class EditAccountWithoutTranslation extends React.Component {
     }
 
     setNotEditable(t) {
-        this.validateForm(t)
-        this.setState({
-            isDisabled: true,
-        });
-        editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, this.state.phoneNumber, this.state.pesel)
+        if (t.validateForm(t)) {
+            t.setState({
+                isDisabled: true,
+            });
+            let phoneNumber = t.state.phoneNumber;
+            if (t.state.phoneNumber === "") {
+                phoneNumber = null;
+            }
+            let pesel = t.state.pesel
+            if (t.state.pesel === "") {
+                pesel = null;
+            }
+            editAccountRequest(t.state.email, t.state.firstName, t.state.lastName, phoneNumber, pesel, t.state.version)
+        }
     }
 
-    // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
     render() {
         const {t} = this.props;
 
@@ -137,7 +166,6 @@ class EditAccountWithoutTranslation extends React.Component {
                             onChange={(e) => this.setState({phoneNumber: e.target.value})}
                         />
                     </Form.Group>
-                    {/*Todo: co z peselem dla obcokrajowca? Nic czy coś innnego? Narazie zrobiłem że może być pusty*/}
                     <Form.Group size="lg" controlId="pesel">
                         <Form.Label>{t("Pesel")}</Form.Label>
                         <Form.Control

@@ -177,6 +177,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             toBeModified.setLastName(editOwnAccountRequestDTO.getLastName());
         }
         if (editOwnAccountRequestDTO.getEmail() != null && !toBeModified.getEmail().equals(editOwnAccountRequestDTO.getEmail())) {
+            toBeModified.setEmail(editOwnAccountRequestDTO.getEmail());
             // TODO: 21.05.2021 Wysylac maila dopieo kiedy edit się powiódł?
             mailProvider.sendEmailChangeConfirmationMail(
                     editOwnAccountRequestDTO.getEmail(),
@@ -185,12 +186,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
                             loggedInAccountUtil.getLoggedInAccountLogin(), editOwnAccountRequestDTO.getEmail())
             );
         }
-        if (editOwnAccountRequestDTO.getPhoneNumber() != null) {
-            toBeModified.setPhoneNumber(editOwnAccountRequestDTO.getPhoneNumber());
-        }
-        if (editOwnAccountRequestDTO.getPesel() != null) {
-            toBeModified.setPesel(editOwnAccountRequestDTO.getPesel());
-        }
+        toBeModified.setPhoneNumber(editOwnAccountRequestDTO.getPhoneNumber());
+        toBeModified.setPesel(editOwnAccountRequestDTO.getPesel());
         toBeModified.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
         accountFacade.edit(toBeModified);
     }
