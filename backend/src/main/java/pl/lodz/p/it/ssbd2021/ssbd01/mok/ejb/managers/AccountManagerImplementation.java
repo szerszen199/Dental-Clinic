@@ -7,6 +7,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
@@ -91,14 +92,28 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         adminData.setCreatedBy(account);
         account.getAccessLevels().add(adminData);
 
-        account.setCreatedBy(account);
-        accountFacade.create(account);
+        try {
+            accountFacade.findByLoginOrEmail(account.getLogin(), account.getEmail());
+        } catch (AccountException accountException) {
+            account.setCreatedBy(account);
+            try {
+                accountFacade.create(account);
+            } catch (Exception e) {
+                throw AccountException.accountCreationFailed();
+            }
 
-        mailProvider.sendActivationMail(
-                account.getEmail(),
-                servletContext.getContextPath(),
-                jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(account.getLogin())
-        );
+            try {
+                mailProvider.sendActivationMail(
+                        account.getEmail(),
+                        servletContext.getContextPath(),
+                        jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(account.getLogin())
+                );
+            } catch (Exception e) {
+                throw MailSendingException.activationLink();
+            }
+            return;
+        }
+        throw AccountException.accountLoginEmailExists();
     }
 
     @Override
