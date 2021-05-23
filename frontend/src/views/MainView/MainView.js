@@ -35,8 +35,7 @@ const accessLevelDictionary = {
     [roleAdminName]: "rgba(238, 0, 0, 0.1)",
 };
 export const jwtCookieExpirationTime = process.env.REACT_APP_JWT_EXPIRATION_MS / (24 * 60 * 60 * 100)
-// TODO: zastąpić użycia tego aktualnie wybraną rolą po zaimplementowaniu
-const actualAccessLevel = roleDoctorName;
+const actualAccessLevel = Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) !== undefined ? Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) : roleGuestName;
 
 class MainViewWithoutTranslation extends React.Component {
     urlPL = "https://img.icons8.com/color/96/000000/poland-circular.png";

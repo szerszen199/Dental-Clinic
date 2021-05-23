@@ -29,7 +29,7 @@ export default function MyAccount() {
                 <Nav.Link onClick={logout} style={{color: "rgb(127, 127, 127)"}}
                           className="navStyle">{t("Logout")}</Nav.Link>
             </NavDropdown>
-            <DropdownButton variant="warning btn-sm" style={{marginTop: "5px"}}
+            <DropdownButton variant="secondary btn-sm" style={{marginTop: "5px"}}
                             title={t(Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME))}>
                 {accessLevelLinks}
             </DropdownButton>
