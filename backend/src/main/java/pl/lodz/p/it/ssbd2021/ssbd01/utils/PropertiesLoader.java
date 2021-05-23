@@ -22,6 +22,7 @@ public class PropertiesLoader {
     private Long confirmationJwtExpiration;
     private Long deleteInactiveAccount;
     private String anonymousUserName;
+    private String etagSecret;
 
 
     private String jwtSecret;
@@ -38,6 +39,10 @@ public class PropertiesLoader {
 
     public Long getRefreshJwtExpiration() {
         return refreshJwtExpiration;
+    }
+
+    public String getEtagSecret() {
+        return etagSecret;
     }
 
     /**
@@ -102,5 +107,6 @@ public class PropertiesLoader {
         anonymousUserName = prop.getProperty("anonymous.user.name");
         refreshJwtExpiration = Long.valueOf(prop.getProperty("refresh.jwt.expirationMs"));
         refreshJwtSecret = prop.getProperty("refresh.jwt.secret");
+        etagSecret = prop.getProperty("etag.secret");
     }
 }
