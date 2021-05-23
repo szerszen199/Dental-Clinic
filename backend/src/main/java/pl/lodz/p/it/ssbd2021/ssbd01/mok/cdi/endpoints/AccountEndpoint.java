@@ -119,6 +119,7 @@ public class AccountEndpoint {
      */
     @PUT
     @Path("reset")
+    @PermitAll
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response resetPassword(@NotNull @Valid ConfirmAccountRequestDTO confirmAccountRequestDTO) throws AppBaseException {
