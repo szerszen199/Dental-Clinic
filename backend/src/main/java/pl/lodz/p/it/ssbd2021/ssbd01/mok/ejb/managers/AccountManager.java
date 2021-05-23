@@ -59,6 +59,23 @@ public interface AccountManager {
     void confirmAccountByToken(String jwt) throws AppBaseException;
 
     /**
+     * reset hasla konta.
+     *
+     * @param login login
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    void resetPasswordByToken(String login) throws AppBaseException;
+
+    /**
+     * Potwierdzenie hasla konta.
+     *
+     * @param login          login
+     * @param servletContext the servlet context
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    void resetPasswordConfirmation(String login, ServletContext servletContext) throws AppBaseException;
+
+    /**
      * Metoda służąca do blokowania konta.
      *
      * @param login login blokowanego konta
