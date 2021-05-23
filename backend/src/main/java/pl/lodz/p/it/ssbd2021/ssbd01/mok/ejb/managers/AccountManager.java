@@ -10,11 +10,6 @@ import javax.servlet.ServletContext;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.ejb.Local;
-import javax.servlet.ServletContext;
-import java.time.LocalDateTime;
-import java.util.List;
-
 /**
  * Interfejs Account manager.
  */
@@ -30,6 +25,13 @@ public interface AccountManager {
      */
     void createAccount(Account account, ServletContext servletContext) throws AppBaseException;
 
+    /**
+     * Utworzenie konta przez administratora.
+     *
+     * @param account        nowe konto
+     * @param servletContext kontekst serwletów, służy do współdzielenia informacji
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
     void createAccountByAdministrator(Account account, ServletContext servletContext) throws AppBaseException;
 
     /**
@@ -171,6 +173,15 @@ public interface AccountManager {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     void resetPassword(String login) throws AppBaseException;
+
+
+    /**
+     * Resetuje hasło podanego konta.
+     *
+     * @param account the account
+     * @throws AppBaseException the app base exception
+     */
+    void resetPassword(Account account) throws AppBaseException;
 
     /**
      * Ustawia pole dark mode na {@param isDarkMode} w koncie {@param account}.

@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountByAdminDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmMailChangeRequestDTO;
@@ -15,25 +16,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetLanguageRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SimpleUsernameRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
-
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountAccessLevelDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountEditDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountByAdminDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
@@ -110,13 +92,20 @@ public class AccountEndpoint {
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CREATED_SUCCESSFULLY)).build();
     }
 
+    /**
+     *  Tworzy nowe konto przez admina.
+     *
+     * @param newAccountByAdminDto obiekt zawierający login, email i inne wymagane dane
+     * @param servletContext       the servlet context
+     * @throws AppBaseException the app base exception
+     */
     @POST
     @RolesAllowed({I18n.ADMIN})
     @Path("admin/create")
     @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public void createAccountByAdmin(NewAccountByAdminDto newAccountByAdminDto, @Context ServletContext servletContext)
             throws AppBaseException {
-
         accountManager.createAccountByAdministrator(
                 AccountConverter.createAccountByAdminEntityFromDto(newAccountByAdminDto),
                 servletContext
@@ -146,8 +135,8 @@ public class AccountEndpoint {
      * Reset password.
      *
      * @param confirmAccountRequestDTO the confirm account request dto
-     * @return the response
-     * @throws AppBaseException the app base exception
+     * @return response
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
     @Path("reset")

@@ -1,11 +1,9 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils.converters;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.CreateAccountRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountEditDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountByAdminDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.CreateAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 
 public class AccountConverter {
     //FIXME account dto cant contain password
@@ -34,6 +32,12 @@ public class AccountConverter {
                 createAccountRequestDTO.getPesel());
     }
 
+    /**
+     * Tworzy nową instancję obiektu AccountEntity korzystając z danych z obiektu NewAccountByAdminDto (konwertuje obiekt).
+     *
+     * @param newAccountByAdminDto obiekt typu NewAccountByAdminDto
+     * @return the account
+     */
     public static Account createAccountByAdminEntityFromDto(NewAccountByAdminDto newAccountByAdminDto) {
         return new Account(newAccountByAdminDto.getLogin(), newAccountByAdminDto.getEmail(),
                 newAccountByAdminDto.getFirstName(), newAccountByAdminDto.getLastName(),
