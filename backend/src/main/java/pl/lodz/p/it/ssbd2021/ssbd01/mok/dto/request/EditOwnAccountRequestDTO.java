@@ -18,13 +18,13 @@ public class EditOwnAccountRequestDTO {
     // Uważam, że przy edycji onta wszystkie pola powinny być nullable i zmieniane tylko odpowiednie pola
 
     @Email(message = I18n.NOT_AN_EMAIL)
-    @Size(min = 5, max = 100, message = I18n.EMAIL_INVALID_SIZE)
+    @Size(min = 4, max = 100, message = I18n.EMAIL_INVALID_SIZE)
     private String email;
 
     @Size(min = 1, max = 50, message = I18n.FIRST_NAME_INVALID_SIZE)
     private String firstName;
 
-    @Size(min = 1, max = 50, message = I18n.LAST_NAME_INVALID_SIZE)
+    @Size(min = 1, max = 80, message = I18n.LAST_NAME_INVALID_SIZE)
     private String lastName;
 
     @Size(min = 9, max = 15, message = I18n.PHONE_NUMBER_INVALID_SIZE)
