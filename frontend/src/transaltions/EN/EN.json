@@ -34,5 +34,7 @@
   "Administrator": "Administrator",
   "Doctor": "Doctor",
   "Receptionist": "Receptionist",
-  "Access Level": "Access Level"
+  "Access Level": "Access Level",
+  "Name and Surname": "Name and surname",
+  "Filter": "Filter"
 }
