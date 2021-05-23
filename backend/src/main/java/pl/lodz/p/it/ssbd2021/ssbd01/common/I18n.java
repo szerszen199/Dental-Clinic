@@ -54,7 +54,6 @@ public class I18n {
 
     public static final String DARK_MODE_NULL = "dark_mode_null";
 
-
     public static final String INVALID_REFRESH_TOKEN = "invalid_refresh_token";
     public static final String PASSWORDS_NOT_DIFFER = "both_passwords_are_same";
     public static final String AUTHENTICATION_FAILURE = "invalid_login_password_combination";
@@ -65,8 +64,10 @@ public class I18n {
     public static final String ACCESS_LEVEL_ALREADY_ASSIGNED = "access_level_already_assigned";
     public static final String ACCOUNT_LOGIN_ALREADY_EXISTS = "account_login_already_exists";
     public static final String ACCOUNT_EMAIL_ALREADY_EXISTS = "account_email_already_exists";
+    public static final String ACCOUNT_LOGIN_EMAIL_ALREADY_EXISTS = "account_login_email_already_exists";
     public static final String ACCOUNT_IS_BLOCKED = "account_is_blocked";
     public static final String ACCOUNT_NOT_FOUND = "account_not_found";
+    public static final String ACCOUNT_CREATION_FAILED = "account_creation_failed";
     public static final String MAIL_CONFIRMATION_PARSING_ERROR = "mail_confirmation_parsing_error";
     public static final String DATABASE_ERROR = "database_error";
     public static final String DATABASE_OPTIMISTIC_LOCK_ERROR = "database_optimistic_lock_error";

@@ -5,10 +5,15 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EMAIL_ALREADY_EXISTS;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_IS_BLOCKED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOGIN_ALREADY_EXISTS;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOGIN_EMAIL_ALREADY_EXISTS;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_NOT_FOUND;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.INVALID_CONFIRMATION_TOKEN;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_CONFIRMATION_PARSING_ERROR;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CREATION_FAILED;
 
+/**
+ * Typ Account exception.
+ */
 public class AccountException extends AppBaseException {
 
     /**
@@ -33,7 +38,7 @@ public class AccountException extends AppBaseException {
     /**
      * Tworzy wyjątek reprezentujący próbę utworzenia konta o loginie który już istnieje.
      *
-     * @param cause   przyczyna wystąpienia wyjątku
+     * @param cause przyczyna wystąpienia wyjątku
      * @return wyjątek typu AccountException
      */
     public static AccountException accountLoginExists(Throwable cause) {
@@ -43,11 +48,29 @@ public class AccountException extends AppBaseException {
     /**
      * Tworzy wyjątek reprezentujący próbę utworzenia konta o emailu który już istnieje.
      *
-     * @param cause   przyczyna wystąpienia wyjątku
+     * @param cause przyczyna wystąpienia wyjątku
      * @return wyjątek typu AccountException
      */
     public static AccountException accountEmailExists(Throwable cause) {
         return new AccountException(ACCOUNT_EMAIL_ALREADY_EXISTS, cause);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę utworzenia konta o loginie lub emailu który już istnieje.
+     *
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException accountLoginEmailExists() {
+        return new AccountException(ACCOUNT_LOGIN_EMAIL_ALREADY_EXISTS);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę utworzenia konta, która się nie powiodła.
+     *
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException accountCreationFailed() {
+        return new AccountException(ACCOUNT_CREATION_FAILED);
     }
 
     /**
