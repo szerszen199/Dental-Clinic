@@ -8,7 +8,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.DataValidationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
@@ -115,6 +114,20 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             String login = jwtEmailConfirmationUtils.getUserNameFromJwtToken(jwt);
             accountFacade.findByLogin(login).setEnabled(true);
             mailProvider.sendActivationConfirmationMail(accountFacade.findByLogin(login).getEmail());
+        } catch (AppBaseException | ParseException e) {
+            throw AccountException.noSuchAccount(e);
+        }
+    }
+
+    @Override
+    public void resetPasswordByToken(String jwt) throws AppBaseException {
+        if (!jwtEmailConfirmationUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+            throw AccountException.invalidConfirmationToken();
+        }
+        try {
+            String input = jwtEmailConfirmationUtils.getUserNameFromJwtToken(jwt);
+            String login = input.substring(0, input.indexOf('/'));
+            this.resetPassword(login);
         } catch (AppBaseException | ParseException e) {
             throw AccountException.noSuchAccount(e);
         }
@@ -256,10 +269,24 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     public void resetPassword(String login) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
         // TODO: 21.05.2021 Dlugosc do zmiennej w pliku konfiguracyjnym
-        account.setPassword(hashGenerator.generateHash(passwordGenerator.generate(32)));
+        String pass = passwordGenerator.generate(32);
+        account.setPassword(hashGenerator.generateHash(pass));
+        mailProvider.sendGeneratedPasswordMail(account.getEmail(), pass);
         // TODO: send mail with new password
     }
 
+    @Override
+    public void resetPasswordConfirmation(String login, ServletContext servletContext) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
+        mailProvider.sendResetPassConfirmationMail(
+                account.getEmail(),
+                servletContext.getContextPath(),
+                jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(
+                        login,
+                        account.getEmail())
+        );
+        // TODO: send mail with new password
+    }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void setLastSuccessfulLoginIp(Account account, String ip) throws AppBaseException {
