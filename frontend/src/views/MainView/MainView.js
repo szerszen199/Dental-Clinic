@@ -146,7 +146,7 @@ class MainViewWithoutTranslation extends React.Component {
                                 <Col className="d-flex  justify-content-end">
                                     <Navbar.Toggle/>
                                     <Navbar.Collapse className="justify-content-end">
-                                        <Wybierz/>
+                                        <returnCurrentUserViewComponent/>
                                     </Navbar.Collapse>
                                 </Col>
                             </Row>
@@ -192,7 +192,7 @@ class MainViewWithoutTranslation extends React.Component {
     }
 }
 
-function Wybierz() {
+function returnCurrentUserViewComponent() {
     let currentRole = Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME)
     if (currentRole === roleAdminName) {
         return Admin();
