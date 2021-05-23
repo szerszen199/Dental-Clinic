@@ -3,7 +3,6 @@
   "Home": "Strona główna",
   "Register": "Zarejestruj",
   "Login": "Zaloguj",
-  "Login-Noun": "Login",
   "Appointments": "Wizyty",
   "My appointments": "Moje wizyty",
   "Plan an appointment": "Zaplanuj wizytę",
@@ -36,5 +35,6 @@
   "Doctor": "Lekarz",
   "Receptionist": "Recepcjonista",
   "Access Level": "Poziom Dostępu",
-  "Name and Surname": "Imię i nazwisko"
+  "Name and Surname": "Imię i nazwisko",
+  "Filter": "Filtruj"
 }

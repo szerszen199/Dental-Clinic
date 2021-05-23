@@ -40,7 +40,7 @@ class AccountsListWithoutTranslation extends React.Component {
 
             {
                 dataField: 'login',
-                text: t('Login-Noun'),
+                text: t('UserLogin'),
                 filter: textFilter({
                     placeholder: t("Filter"),
                     style: {marginLeft: "20px"}
@@ -64,28 +64,6 @@ class AccountsListWithoutTranslation extends React.Component {
             }
         ]
         return <BootstrapTable striped keyField='id' columns={columns} data={this.state.accountsList} filter={filterFactory()}/>;
-        return <Table striped bordered hover>
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>
-                    <div className="LoginInfo">{t("Login-Noun")}</div>
-
-                </th>
-                <th>
-
-                    <div className="NameInfo">{t("Name and Surname")}</div>
-
-                </th>
-                <th>
-                    <div className="EmailInfo">{t("Email")}</div>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            {this.state.accountsList.map(this.renderAccount)}
-            </tbody>
-        </Table>
     }
 
     renderNull() {
