@@ -1,6 +1,6 @@
 import axios from "axios";
 import Cookies from 'js-cookie'
-import findDefaultRole from "../../findDefaultRole";
+import findDefaultRole from "../../roles/findDefaultRole";
 
 // TODO usuwanie tego gdy minie określony czas czytaj przedawni się
 

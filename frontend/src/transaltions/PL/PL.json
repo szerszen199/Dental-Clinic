@@ -36,5 +36,9 @@
   "Receptionist": "Recepcjonista",
   "Access Level": "Poziom Dostępu",
   "Name and Surname": "Imię i nazwisko",
-  "Filter": "Filtruj"
+  "Filter": "Filtruj",
+  "level.patient": "Pacjent",
+  "level.administrator": "Administrator",
+  "level.doctor": "Lekarz",
+  "level.receptionist": "Recepcjonista"
 }
