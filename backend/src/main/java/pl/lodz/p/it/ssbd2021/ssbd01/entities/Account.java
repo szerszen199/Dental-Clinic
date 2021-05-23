@@ -6,6 +6,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -89,7 +90,7 @@ public class Account extends AbstractEntity implements Serializable {
     @Size(min = 64, max = 64)
     private String password;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")
     private final Set<AccessLevel> accessLevels = new HashSet<>();
 
@@ -179,6 +180,25 @@ public class Account extends AbstractEntity implements Serializable {
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.pesel = pesel;
+    }
+
+    /**
+     * Tworzy nową instancję klasy Account reprezentujacej konto użytkownika aplikacji.
+     *
+     * @param login       login konta
+     * @param email       adres e-mail przypisany do konta
+     * @param password    hasło konta
+     * @param firstName   imię użytkownika
+     * @param lastName    nazwisko użytkownika
+     * @param phoneNumber numer telefonu
+     */
+    public Account(String login, String email, String password, String firstName, String lastName, String phoneNumber) {
+        this.login = login;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
     }
 
     /**

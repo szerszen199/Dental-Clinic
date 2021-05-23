@@ -1,52 +1,68 @@
 import React from "react";
 import "./AccountsList.css";
 import {Table} from "react-bootstrap";
+import {makeAccountsListRequest} from "./AccountsListRequest";
 
-export default class AccountsList extends Comment {
+class AccountsList extends React.Component {
 
 
     constructor(props) {
         super(props);
-        this.accountsList = [new Account("Jan Kowalski", "jkowalski@yahoo.com"), new Account("Adam Nowak", "adamnowak@gmail.com"), new Account("Anna Kowalska", "aka@gmail.com"), new Account("Janek Kowal", "janektoja@gmail.com")]
+        this.state = {
+            accountsList: []
+        };
+    }
+
+    componentDidMount() {
+        makeAccountsListRequest().then((response) => {
+            this.setState({accountsList: response})
+        })
     }
 
     renderAccount(person, index) {
         return (
             <tr key={index}>
-                <td>1</td>
+                <td>{index+1}</td>
+                <td>{person.login}</td>
                 <td>{person.name}</td>
                 <td>{person.email}</td>
             </tr>
         )
     }
 
+    renderAccounts() {
+        return <Table striped bordered hover>
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>
+                    <div className="LoginInfo">Login</div>
+                </th>
+                <th>
+                    <div className="NameInfo">Name and surname</div>
+                </th>
+                <th>
+                    <div className="EmailInfo">Email</div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {this.state.accountsList.map(this.renderAccount)}
+            </tbody>
+        </Table>
+    }
+
+    renderNull() {
+        return <div>Trwa wczytywanie...</div>
+
+    }
+
     render() {
         return <div className="AccountListGroup">
-            <Table striped bordered hover>
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>
-                        <div className="NameInfo">Name and surname</div>
-                    </th>
-                    <th>
-                        <div className="EmailInfo">Email</div>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                {this.accountsList.map(this.renderAccount)}
-                </tbody>
-            </Table>
+            {!this.state.accountsList.length ? this.renderNull() : this.renderAccounts()}
         </div>
     }
 }
 
-class Account {
-    constructor(name, email) {
-        this.name = name;
-        this.email = email;
-    }
-
-}
+export default AccountsList
 

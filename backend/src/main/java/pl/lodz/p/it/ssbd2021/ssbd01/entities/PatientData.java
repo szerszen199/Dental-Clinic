@@ -15,6 +15,21 @@ import org.hibernate.annotations.NamedQuery;
 @NamedQueries({
         @NamedQuery(name = "PatientData.findAll", query = "SELECT p FROM PatientData p")})
 public class PatientData extends AccessLevel implements Serializable {
+    /**
+     * Tworzy nową instancję klasy Patient data.
+     */
+    public PatientData() {
+    }
+
+    /**
+     * Tworzy nową instancję klasy Patient data.
+     *
+     * @param account account
+     * @param active  active
+     */
+    public PatientData(Account account, Boolean active) {
+        super(account, active);
+    }
 
     @Override
     public String toString() {

@@ -8,9 +8,10 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.DataValidationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
@@ -61,34 +62,26 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Inject
     private MailProvider mailProvider;
-    private Account account;
 
     @Override
     public void createAccount(Account account, ServletContext servletContext) throws AppBaseException {
         account.setPassword(hashGenerator.generateHash(account.getPassword()));
 
-        AccessLevel patientData = new PatientData();
-        patientData.setActive(true);
+        // TODO: 21.05.2021  Przetestować czy dzialaja dobrze constructory przed wstawieniem
+        AccessLevel patientData = new PatientData(account, true);
         patientData.setCreatedBy(account);
-        patientData.setAccountId(account);
         account.getAccessLevels().add(patientData);
 
-        AccessLevel receptionistData = new ReceptionistData();
-        receptionistData.setActive(false);
+        AccessLevel receptionistData = new ReceptionistData(account, false);
         receptionistData.setCreatedBy(account);
-        receptionistData.setAccountId(account);
         account.getAccessLevels().add(receptionistData);
 
-        AccessLevel doctorData = new DoctorData();
-        doctorData.setActive(false);
+        AccessLevel doctorData = new DoctorData(account, false);
         doctorData.setCreatedBy(account);
-        doctorData.setAccountId(account);
         account.getAccessLevels().add(doctorData);
 
-        AccessLevel adminData = new AdminData();
-        adminData.setActive(false);
+        AccessLevel adminData = new AdminData(account, false);
         adminData.setCreatedBy(account);
-        adminData.setAccountId(account);
         account.getAccessLevels().add(adminData);
 
         account.setCreatedBy(account);
@@ -153,9 +146,23 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             throw AccountException.invalidConfirmationToken();
         }
         try {
-            String login = jwtEmailConfirmationUtils.getUserNameFromRegistrationConfirmationJwtToken(jwt);
+            String login = jwtEmailConfirmationUtils.getUserNameFromJwtToken(jwt);
             accountFacade.findByLogin(login).setEnabled(true);
             mailProvider.sendActivationConfirmationMail(accountFacade.findByLogin(login).getEmail());
+        } catch (AppBaseException | ParseException e) {
+            throw AccountException.noSuchAccount(e);
+        }
+    }
+
+    @Override
+    public void resetPasswordByToken(String jwt) throws AppBaseException {
+        if (!jwtEmailConfirmationUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+            throw AccountException.invalidConfirmationToken();
+        }
+        try {
+            String input = jwtEmailConfirmationUtils.getUserNameFromJwtToken(jwt);
+            String login = input.substring(0, input.indexOf('/'));
+            this.resetPassword(login);
         } catch (AppBaseException | ParseException e) {
             throw AccountException.noSuchAccount(e);
         }
@@ -177,38 +184,84 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void editAccount(Account account) throws AppBaseException {
-        account.setModifiedBy(account);
-        Account old = accountFacade.findByLogin(account.getLogin());
-        //        if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
-        //            throw DataValidationException.accountEditValidationError();
-        //        }
-        if (account.getFirstName() != null) {
-            old.setFirstName(account.getFirstName());
+    // Nie widzę logicznego poziomu dlaczego miałoby tutaj być podawane konto zamiast DTO, jak mi dacie powód to to zmienie
+    public void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO, ServletContext servletContext) throws AppBaseException {
+        Account toBeModified = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        if (editOwnAccountRequestDTO.getFirstName() != null) {
+            toBeModified.setFirstName(editOwnAccountRequestDTO.getFirstName());
         }
-        if (account.getLastName() != null) {
-            old.setLastName(account.getLastName());
+        if (editOwnAccountRequestDTO.getLastName() != null) {
+            toBeModified.setLastName(editOwnAccountRequestDTO.getLastName());
         }
-        if (account.getEmail() != null) {
-            old.setEmail(account.getEmail());
+        if (editOwnAccountRequestDTO.getEmail() != null && !toBeModified.getEmail().equals(editOwnAccountRequestDTO.getEmail())) {
+            // TODO: 21.05.2021 Wysylac maila dopieo kiedy edit się powiódł?
+            mailProvider.sendEmailChangeConfirmationMail(
+                    editOwnAccountRequestDTO.getEmail(),
+                    servletContext.getContextPath(),
+                    jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(
+                            loggedInAccountUtil.getLoggedInAccountLogin(),
+                            editOwnAccountRequestDTO.getEmail())
+            );
         }
-        if (account.getPhoneNumber() != null) {
-            old.setPhoneNumber(account.getPhoneNumber());
+        if (editOwnAccountRequestDTO.getPhoneNumber() != null) {
+            toBeModified.setPhoneNumber(editOwnAccountRequestDTO.getPhoneNumber());
         }
-        if (account.getPesel() != null) {
-            old.setPesel(account.getPesel());
+        if (editOwnAccountRequestDTO.getPesel() != null) {
+            toBeModified.setPesel(editOwnAccountRequestDTO.getPesel());
         }
-        accountFacade.edit(old);
+        toBeModified.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+        accountFacade.edit(toBeModified);
+    }
+
+    // TODO: 21.05.2021 Bardzo kusi wyrzucić to i edycje swojego konta do wspólnej metody
+    //  Jak komus sie chce zapraszam
+    @Override
+    public void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO, ServletContext servletContext) throws AppBaseException {
+        Account toBeModified = accountFacade.findByLogin(editAnotherAccountRequestDTO.getLogin());
+        if (editAnotherAccountRequestDTO.getFirstName() != null) {
+            toBeModified.setFirstName(editAnotherAccountRequestDTO.getFirstName());
+        }
+        if (editAnotherAccountRequestDTO.getLastName() != null) {
+            toBeModified.setLastName(editAnotherAccountRequestDTO.getLastName());
+        }
+        if (editAnotherAccountRequestDTO.getEmail() != null && !toBeModified.getEmail().equals(editAnotherAccountRequestDTO.getEmail())) {
+            // TODO: 21.05.2021 Wysylac maila dopieo kiedy edit się powiódł?
+            // TODO: 21.05.2021 Również todo czy jak admin edytuje konto to też mamy wysyłać maila? Chyba niee
+            // mailProvider.sendEmailChangeConfirmationMail(
+            //        editAnotherAccountRequestDTO.getEmail(),
+            //        servletContext.getContextPath(),
+            //        jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(
+            //                loggedInAccountUtil.getLoggedInAccountLogin(),
+            //                editAnotherAccountRequestDTO.getEmail())
+            // );
+        }
+        if (editAnotherAccountRequestDTO.getPhoneNumber() != null) {
+            toBeModified.setPhoneNumber(editAnotherAccountRequestDTO.getPhoneNumber());
+        }
+        if (editAnotherAccountRequestDTO.getPesel() != null) {
+            toBeModified.setPesel(editAnotherAccountRequestDTO.getPesel());
+        }
+        toBeModified.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+        accountFacade.edit(toBeModified);
     }
 
     @Override
-    public void editOtherAccount(Account account) throws AppBaseException {
-        account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
-        Account old = accountFacade.findByLogin(account.getLogin());
-        if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
-            throw DataValidationException.accountEditValidationError();
+    public void confirmMailChangeByToken(String jwt) throws AppBaseException {
+        if (!jwtEmailConfirmationUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+            throw AccountException.invalidConfirmationToken();
         }
-        accountFacade.edit(account);
+        try {
+            // TODO: 21.05.2021 Jest zbyt późno żebym to poprawiał ale proszę niech tutaj się pojawi jakaś para, obiekt cokolwiek
+            //   Co sprawi że będzie wiadomo co tutaj jest zwracane, to co tutaj jest ten array i split regexem jest straszny,
+            //   pomijajac dwukrotne wykonanie tej samej metody w identyczny sposób
+            String login = jwtEmailConfirmationUtils.getUserNameAndEmailFromEmailChangeConfirmationJwtToken(jwt).split("/")[0];
+            String newEmail = jwtEmailConfirmationUtils.getUserNameAndEmailFromEmailChangeConfirmationJwtToken(jwt).split("/")[1];
+            accountFacade.findByLogin(login).setEmail(newEmail);
+        } catch (AppBaseException | ParseException e) {
+            throw AccountException.noSuchAccount(e);
+        } catch (NullPointerException e) {
+            throw AccountException.mailConfirmationParsingError(e);
+        }
     }
 
     @Override
@@ -219,8 +272,12 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @Override
     public void changePassword(String login, String oldPassword, String newPassword) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
-        this.verifyOldPassword(account.getPassword(), oldPassword);
-        this.validateNewPassword(account.getPassword(), newPassword);
+        if (!account.getPassword().contentEquals(hashGenerator.generateHash(oldPassword))) {
+            throw PasswordsNotMatchException.currentPasswordNotMatch();
+        }
+        if (account.getPassword().contentEquals(hashGenerator.generateHash(newPassword))) {
+            throw PasswordsSameException.passwordsNotDifferent();
+        }
         account.setPassword(hashGenerator.generateHash(newPassword));
         accountFacade.edit(account);
     }
@@ -231,27 +288,39 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public List<Account> findByEnabled(boolean enabled) {
+    public List<Account> findByEnabled(boolean enabled) throws AppBaseException {
         return accountFacade.findByEnabled(enabled);
     }
 
     @Override
     public void resetPassword(Long id) throws AppBaseException {
         Account account = accountFacade.find(id);
-        account.setPassword(generateNewRandomPassword());
+        // TODO: 21.05.2021 Dlugosc do zmiennej w pliku konfiguracyjnym
+        account.setPassword(hashGenerator.generateHash(passwordGenerator.generate(32)));
         // TODO: send mail with new password
     }
 
     @Override
     public void resetPassword(String login) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
-        account.setPassword(generateNewRandomPassword());
+        // TODO: 21.05.2021 Dlugosc do zmiennej w pliku konfiguracyjnym
+        String pass = passwordGenerator.generate(32);
+        account.setPassword(hashGenerator.generateHash(pass));
+        mailProvider.sendGeneratedPasswordMail(account.getEmail(), pass);
         // TODO: send mail with new password
     }
 
-    private String generateNewRandomPassword() {
-        String generatedPassword = passwordGenerator.generate(8);
-        return hashGenerator.generateHash(generatedPassword);
+    @Override
+    public void resetPasswordConfirmation(String login, ServletContext servletContext) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
+        mailProvider.sendResetPassConfirmationMail(
+                account.getEmail(),
+                servletContext.getContextPath(),
+                jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(
+                        login,
+                        account.getEmail())
+        );
+        // TODO: send mail with new password
     }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -285,7 +354,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         setLastSuccessfulLoginIp(account, ip);
         setLastSuccessfulLoginTime(account, time);
         zeroInvalidLoginCount(account);
-        //        accountFacade.edit(account);
+        accountFacade.edit(account);
     }
 
     @Override
@@ -294,7 +363,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         setLastUnsuccessfulLoginIp(account, ip);
         setLastUnsuccessfulLoginTime(account, time);
         increaseInvalidLoginCount(account);
-        //        accountFacade.edit(account);
+        accountFacade.edit(account);
     }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -309,17 +378,11 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         accountFacade.edit(account);
     }
 
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    private void verifyOldPassword(String currentPasswordHash, String oldPassword) throws AppBaseException {
-        if (!currentPasswordHash.contentEquals(hashGenerator.generateHash(oldPassword))) {
-            throw PasswordsNotMatchException.currentPasswordNotMatch();
-        }
+    @Override
+    public void setLanguage(String login, String language) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
+        account.setLanguage(language);
+        accountFacade.edit(account);
     }
 
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    private void validateNewPassword(String currentPasswordHash, String newPassword) throws AppBaseException {
-        if (currentPasswordHash.contentEquals(hashGenerator.generateHash(newPassword))) {
-            throw PasswordsSameException.passwordsNotDifferent();
-        }
-    }
 }
