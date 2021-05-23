@@ -73,7 +73,7 @@ public interface AccountManager {
      * @param servletContext the servlet context
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void resetPasswordConfirmation(String login, ServletContext servletContext) throws AppBaseException;
+    void sendResetPasswordConfirmationEmail(String login, ServletContext servletContext) throws AppBaseException;
 
     /**
      * Metoda służąca do blokowania konta.

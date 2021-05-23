@@ -2,9 +2,11 @@ package pl.lodz.p.it.ssbd2021.ssbd01.security;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.text.ParseException;
 
+@Stateless
 public class JwtRefreshUtils extends JwtUtilsAbstract {
 
     @Inject

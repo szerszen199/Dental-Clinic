@@ -1,22 +1,10 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.security;
 
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.JWSObject;
-import com.nimbusds.jose.JWSSigner;
-import com.nimbusds.jose.JWSVerifier;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
-import java.text.ParseException;
-import java.util.Date;
-import javax.annotation.PostConstruct;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
+import java.text.ParseException;
 
 /**
  * Typ Jwt utils.
@@ -26,15 +14,6 @@ public class JwtEmailConfirmationUtils extends JwtUtilsAbstract {
 
     @Inject
     private PropertiesLoader propertiesLoader;
-
-    private String registrationConfirmationJwtSecret;
-    private Long registrationConfirmationJwtExpirationMs;
-
-    @PostConstruct
-    private void init() {
-        registrationConfirmationJwtSecret = propertiesLoader.getConfirmationJwtSecret();
-        registrationConfirmationJwtExpirationMs = propertiesLoader.getConfirmationJwtExpiration();
-    }
 
     /**
      * Generuje token JWT na potrzeby potwierdzenia zmiany adresu email.

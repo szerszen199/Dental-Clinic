@@ -16,6 +16,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JWTRegistrationConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtResetPasswordConfirmation;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
@@ -65,6 +66,9 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Inject
     private MailProvider mailProvider;
+
+    @Inject
+    private JwtResetPasswordConfirmation jwtResetPasswordConfirmation;
 
     @Override
     public void createAccount(Account account, ServletContext servletContext) throws AppBaseException {
@@ -135,13 +139,12 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Override
     public void resetPasswordByToken(String jwt) throws AppBaseException {
-        if (!jwtEmailConfirmationUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+        if (!jwtResetPasswordConfirmation.validateJwtToken(jwt)) {
             throw AccountException.invalidConfirmationToken();
         }
         try {
-            String input = jwtEmailConfirmationUtils.getUserNameFromJwtToken(jwt);
-            String login = input.substring(0, input.indexOf('/'));
-            this.resetPassword(login);
+            String input = jwtResetPasswordConfirmation.getUserNameFromJwtToken(jwt);
+            this.resetPassword(input);
         } catch (AppBaseException | ParseException e) {
             throw AccountException.noSuchAccount(e);
         }
@@ -292,14 +295,13 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void resetPasswordConfirmation(String login, ServletContext servletContext) throws AppBaseException {
+    public void sendResetPasswordConfirmationEmail(String login, ServletContext servletContext) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
         mailProvider.sendResetPassConfirmationMail(
                 account.getEmail(),
                 servletContext.getContextPath(),
-                jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(
-                        login,
-                        account.getEmail())
+                jwtResetPasswordConfirmation.generateJwtTokenForUsername(
+                        login)
         );
         // TODO: send mail with new password
     }
