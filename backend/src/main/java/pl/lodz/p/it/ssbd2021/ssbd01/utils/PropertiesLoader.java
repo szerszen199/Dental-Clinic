@@ -1,7 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -20,13 +18,21 @@ public class PropertiesLoader {
     private String refreshJwtSecret;
     private Long refreshJwtExpiration;
     private Long confirmationJwtExpiration;
-    private Long deleteInactiveAccount;
+    private Long deleteInactiveAccountTimeDelay;
     private String anonymousUserName;
-
-
     private String jwtSecret;
     private Long invalidLoginCountBlock;
     private Long jwtExpiration;
+    private String emailChangeConfirmationJWTSecret;
+    private Long emailChangeConfirmationJWTExpiration;
+
+    public String getEmailChangeConfirmationJWTSecret() {
+        return emailChangeConfirmationJWTSecret;
+    }
+
+    public Long getEmailChangeConfirmationJWTExpiration() {
+        return emailChangeConfirmationJWTExpiration;
+    }
 
     public Long getInvalidLoginCountBlock() {
         return invalidLoginCountBlock;
@@ -63,8 +69,8 @@ public class PropertiesLoader {
      *
      * @return the delete inactive account
      */
-    public Long getDeleteInactiveAccount() {
-        return deleteInactiveAccount;
+    public Long getDeleteInactiveAccountTimeDelay() {
+        return deleteInactiveAccountTimeDelay;
     }
 
     public String getJwtSecret() {
@@ -93,14 +99,16 @@ public class PropertiesLoader {
             //TODO naprawić nie może byc checked exception
             e.printStackTrace();
         }
-        confirmationJwtSecret = prop.getProperty("confirmation.jwt.secret");
+        confirmationJwtSecret = prop.getProperty("account.confirmation.jwt.secret");
         jwtSecret = prop.getProperty("jwt.secret");
-        confirmationJwtExpiration = Long.valueOf(prop.getProperty("confirmation.jwt.expirationMs"));
-        deleteInactiveAccount = Long.valueOf(prop.getProperty("delete.inactive.accountMs"));
+        confirmationJwtExpiration = Long.valueOf(prop.getProperty("account.confirmation.jwt.expirationMs"));
+        deleteInactiveAccountTimeDelay = Long.valueOf(prop.getProperty("delete.inactive.accountMs"));
         jwtExpiration = Long.valueOf(prop.getProperty("jwt.expirationMs"));
         invalidLoginCountBlock = Long.valueOf(prop.getProperty("invalid.login.count.block"));
         anonymousUserName = prop.getProperty("anonymous.user.name");
         refreshJwtExpiration = Long.valueOf(prop.getProperty("refresh.jwt.expirationMs"));
         refreshJwtSecret = prop.getProperty("refresh.jwt.secret");
+        emailChangeConfirmationJWTSecret = prop.getProperty("email.change.confirmation.jwt.secret");
+        emailChangeConfirmationJWTExpiration = Long.valueOf(prop.getProperty("email.change.confirmation.jwt.expirationMs"));
     }
 }
