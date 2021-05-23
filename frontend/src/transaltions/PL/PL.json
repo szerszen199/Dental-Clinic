@@ -15,7 +15,7 @@
   "Documentation": "Dokumentacja",
   "Prescriptions": "Recepty",
   "Email": "Email",
-  "First Name": "Imie",
+  "First Name": "Imię",
   "Last Name": "Nazwisko",
   "Phone Number": "Numer telefonu",
   "Pesel": "Pesel",
@@ -34,5 +34,7 @@
   "Administrator": "Administrator",
   "Doctor": "Lekarz",
   "Receptionist": "Recepcjonista",
-  "Access Level": "Poziom Dostępu"
+  "Access Level": "Poziom Dostępu",
+  "Name and Surname": "Imię i nazwisko",
+  "Filter": "Filtruj"
 }
