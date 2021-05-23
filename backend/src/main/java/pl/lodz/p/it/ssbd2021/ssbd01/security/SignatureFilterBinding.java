@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Adnotacja łącząca EtagFilter z metodami.
+ * Adnotacja łącząca SignatureFilter z metodami.
  */
 @NameBinding
 @Retention(RetentionPolicy.RUNTIME)
