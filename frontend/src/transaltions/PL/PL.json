@@ -28,5 +28,11 @@
   "Name and surname": "Imie i nazwisko",
   "page not found": "Przepraszamy, strony nie znaleziono!",
   "Dental Clinic": "Klinika Stomatologiczna",
-  "Password": "Hasło"
+  "Password": "Hasło",
+  "Change Access Level": "Zmień poziom dostępu",
+  "Patient": "Pacjent",
+  "Administrator": "Administrator",
+  "Doctor": "Lekarz",
+  "Receptionist": "Recepcjonista",
+  "Access Level": "Poziom Dostępu"
 }
