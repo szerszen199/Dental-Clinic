@@ -76,6 +76,7 @@ public class AccountEndpoint {
     private EntityIdentitySignerVerifier signer;
 
 
+
     /**
      * Tworzy nowe konto.
      *
@@ -139,7 +140,7 @@ public class AccountEndpoint {
     @SignatureFilterBinding
     @Produces({MediaType.APPLICATION_JSON})
     public Response editAccount(@NotNull @Valid EditOwnAccountRequestDTO accountDto, @HeaderParam("If-Match") String header, @Context ServletContext servletContext) throws AppBaseException {
-        if (EntityIdentitySignerVerifier.verifyEntityIntegrity(header, accountDto)) {
+        if (signer.verifyEntityIntegrity(header, accountDto)) {
             throw AppBaseException.optimisticLockError();
         }
         // TODO: 21.05.2021 Obsługa wyjątków

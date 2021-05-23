@@ -29,26 +29,24 @@ public class EntityIdentitySignerVerifier implements Serializable {
     @Inject
     private PropertiesLoader propertiesLoader;
 
+    private String tagSecret;
 
-    private static String ETAG_SECRET;
-
-    /**
-     * Metoda inicjalizująca zmienną ETAG_SECRET.
-     */
     @PostConstruct
     private void init() {
-        ETAG_SECRET = propertiesLoader.getEtagSecret();
+        tagSecret = propertiesLoader.getEtagSecret();
     }
+
 
     /**
      * Metoda weryfikaującja poprawność podpisu obiektu.
+     *
      * @param tagValue wartość podpisu
      * @return wartość bool czy podpisz jest poprawny
      */
-    public static boolean validateEntitySignature(String tagValue) {
+    public boolean validateEntitySignature(String tagValue) {
         try {
             JWSObject jwsObject = JWSObject.parse(tagValue);
-            JWSVerifier verifier = new MACVerifier(ETAG_SECRET);
+            JWSVerifier verifier = new MACVerifier(tagSecret);
             return jwsObject.verify(verifier);
         } catch (ParseException | JOSEException e) {
             e.printStackTrace();
@@ -58,13 +56,15 @@ public class EntityIdentitySignerVerifier implements Serializable {
 
     /**
      * Metoda weryfikujkąca poprawność zawartości obiektu na podstawie podpisu.
-     * @param tagValue wartość podpisu
+     *
+     * @param tagValue       wartość podpisu
      * @param signableEntity obiekt weryfikowany
      * @return wartosć bool czy obiekt nie został zmieniony
      */
-    public static boolean verifyEntityIntegrity(String tagValue, SignableEntity signableEntity) {
+    public boolean verifyEntityIntegrity(String tagValue, SignableEntity signableEntity) {
         try {
-            final String ifMatchHeaderValue = JWSObject.parse(tagValue).getPayload().toString();
+            final String ifMatchHeaderValue = JWSObject.parse(tagValue).getPayload().toString()
+                    .replaceAll("\"", "");
             final String signablePayloadValue = signableEntity.getPayload().toString();
             return validateEntitySignature(tagValue) && ifMatchHeaderValue.equals(signablePayloadValue);
         } catch (ParseException e) {
@@ -75,12 +75,13 @@ public class EntityIdentitySignerVerifier implements Serializable {
 
     /**
      * Metoda tworząca podpis dla obiektu.
-     * @param signableEntity  obiekt dla którego podpis ma być utworzony
+     *
+     * @param signableEntity obiekt dla którego podpis ma być utworzony
      * @return podpis obiektu
      */
     public String sign(SignableEntity signableEntity) {
         try {
-            JWSSigner signer = new MACSigner(ETAG_SECRET);
+            JWSSigner signer = new MACSigner(tagSecret);
             String jsonObject = new JSONObject(signableEntity.getPayload()).toString();
             JWSObject jwsObject = new JWSObject(new JWSHeader(JWSAlgorithm.HS256), new Payload(jsonObject));
             jwsObject.sign(signer);

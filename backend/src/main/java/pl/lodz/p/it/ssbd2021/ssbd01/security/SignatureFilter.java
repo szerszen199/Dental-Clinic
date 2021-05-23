@@ -15,6 +15,8 @@ import javax.ws.rs.ext.Provider;
 @SignatureFilterBinding
 public class SignatureFilter implements ContainerRequestFilter {
 
+    @Inject
+    EntityIdentitySignerVerifier signerVerifier;
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
@@ -23,8 +25,7 @@ public class SignatureFilter implements ContainerRequestFilter {
             requestContext.abortWith(Response.status(Response.Status.BAD_REQUEST)
                     .entity(I18n.BAD_ETAG_VALUE)
                     .build());
-
-        } else if (!EntityIdentitySignerVerifier.validateEntitySignature(header)) {
+        } else if (!signerVerifier.validateEntitySignature(header)) {
             requestContext.abortWith(Response.status(Response.Status.PRECONDITION_FAILED).build());
         }
     }
