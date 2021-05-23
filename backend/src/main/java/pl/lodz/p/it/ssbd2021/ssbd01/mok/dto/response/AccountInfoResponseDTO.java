@@ -1,10 +1,13 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.AccessLevelDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
 import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 
 import javax.validation.constraints.Email;
@@ -14,7 +17,8 @@ import javax.validation.constraints.Size;
 /**
  * Klasa dla AccountDto.
  */
-public class AccountInfoResponseDTO {
+
+public class AccountInfoResponseDTO implements SignableEntity {
 
     @NotNull
     @Login
@@ -247,6 +251,14 @@ public class AccountInfoResponseDTO {
      */
     public void setVersion(Long version) {
         this.version = version;
+    }
+
+
+    @Override
+    public Map<String, String> getPayload() {
+        Map<String, String> map = new HashMap<>();
+        map.put("version", getVersion().toString());
+        return map;
     }
 
     /**

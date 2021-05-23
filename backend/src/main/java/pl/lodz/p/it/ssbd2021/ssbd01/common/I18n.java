@@ -94,4 +94,5 @@ public class I18n {
 
     public static final String ACCOUNT_MAIL_UNLOCK_BY_ADMIN_SUBJECT = "account_mail_unlock_by_admin_subject";
     public static final String ACCOUNT_MAIL_UNLOCK_BY_ADMIN_TEXT = "account_mail_unlock_by_admin_text";
+    public static final Object BAD_ETAG_VALUE = "bad_etag_value";
 }

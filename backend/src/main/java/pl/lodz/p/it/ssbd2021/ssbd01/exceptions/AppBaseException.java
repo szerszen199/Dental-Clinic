@@ -46,6 +46,15 @@ public class AppBaseException extends Exception {
     }
 
     /**
+     * Tworzy wyjątek reprezentujący wystąpienie konfliktu związanego z mechanizmem blokady optymistycznej.
+     *
+     * @return wyjątek typu AppBaseException
+     */
+    public static AppBaseException optimisticLockError() {
+        return new AppBaseException(DATABASE_OPTIMISTIC_LOCK_ERROR);
+    }
+
+    /**
      * Tworzy wyjątek reprezentujący wystąpienie problemu z bazą danych.
      *
      * @param e wyjątek PersistenceException powodujący problem
