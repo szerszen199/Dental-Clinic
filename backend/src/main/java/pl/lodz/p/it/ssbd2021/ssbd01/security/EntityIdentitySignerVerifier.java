@@ -24,17 +24,10 @@ import java.text.ParseException;
  * Klasa tworząca i weryfikująca podpisy dla obiektów.
  */
 @ApplicationScoped
-public class EntityIdentitySignerVerifier implements Serializable {
+public class EntityIdentitySignerVerifier extends JwtUtilsAbstract implements Serializable {
 
     @Inject
     private PropertiesLoader propertiesLoader;
-
-    private String tagSecret;
-
-    @PostConstruct
-    private void init() {
-        tagSecret = propertiesLoader.getEtagSecret();
-    }
 
 
     /**
@@ -45,8 +38,8 @@ public class EntityIdentitySignerVerifier implements Serializable {
      */
     public boolean validateEntitySignature(String tagValue) {
         try {
-            JWSObject jwsObject = JWSObject.parse(tagValue);
-            JWSVerifier verifier = new MACVerifier(tagSecret);
+            final JWSObject jwsObject = JWSObject.parse(tagValue);
+            final JWSVerifier verifier = new MACVerifier(getJwtSecret());
             return jwsObject.verify(verifier);
         } catch (ParseException | JOSEException e) {
             e.printStackTrace();
@@ -64,9 +57,11 @@ public class EntityIdentitySignerVerifier implements Serializable {
     public boolean verifyEntityIntegrity(String tagValue, SignableEntity signableEntity) {
         try {
             final String ifMatchHeaderValue = JWSObject.parse(tagValue).getPayload().toString()
-                    .replaceAll("\"", "");
+                    .replaceAll("\"", "")
+                    .replaceAll(",", ", ")
+                    .replaceAll(":", "=");
             final String signablePayloadValue = signableEntity.getPayload().toString();
-            return validateEntitySignature(tagValue) && ifMatchHeaderValue.equals(signablePayloadValue);
+            return signablePayloadValue.equals(ifMatchHeaderValue);
         } catch (ParseException e) {
             e.printStackTrace();
             return false;
@@ -81,14 +76,25 @@ public class EntityIdentitySignerVerifier implements Serializable {
      */
     public String sign(SignableEntity signableEntity) {
         try {
-            JWSSigner signer = new MACSigner(tagSecret);
+            JWSSigner signer = new MACSigner(getJwtSecret());
             String jsonObject = new JSONObject(signableEntity.getPayload()).toString();
             JWSObject jwsObject = new JWSObject(new JWSHeader(JWSAlgorithm.HS256), new Payload(jsonObject));
             jwsObject.sign(signer);
+
             return jwsObject.serialize();
         } catch (JOSEException e) {
             e.printStackTrace();
         }
         return "Etag error";
+    }
+
+    @Override
+    protected Long getJwtExpiration() {
+        return null;
+    }
+
+    @Override
+    protected String getJwtSecret() {
+        return propertiesLoader.getEtagSecret();
     }
 }

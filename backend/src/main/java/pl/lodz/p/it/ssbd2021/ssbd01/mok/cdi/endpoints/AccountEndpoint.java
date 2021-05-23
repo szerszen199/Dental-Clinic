@@ -76,7 +76,6 @@ public class AccountEndpoint {
     private EntityIdentitySignerVerifier signer;
 
 
-
     /**
      * Tworzy nowe konto.
      *
@@ -127,7 +126,7 @@ public class AccountEndpoint {
      * Edit account data.
      *
      * @param accountDto     DTO edytowanego konta
-     * @param header  nagłówek If-Match
+     * @param header         nagłówek If-Match
      * @param servletContext kontekst serwletów, służy do współdzielenia informacji w ramach aplikacji
      * @return response
      * @throws AppBaseException wyjątek typu AppBaseException
@@ -140,7 +139,7 @@ public class AccountEndpoint {
     @SignatureFilterBinding
     @Produces({MediaType.APPLICATION_JSON})
     public Response editAccount(@NotNull @Valid EditOwnAccountRequestDTO accountDto, @HeaderParam("If-Match") String header, @Context ServletContext servletContext) throws AppBaseException {
-        if (signer.verifyEntityIntegrity(header, accountDto)) {
+        if (!signer.verifyEntityIntegrity(header, accountDto)) {
             throw AppBaseException.optimisticLockError();
         }
         // TODO: 21.05.2021 Obsługa wyjątków
@@ -153,7 +152,8 @@ public class AccountEndpoint {
      * Edycja konta innego użytkownika.
      *
      * @param accountDto     DTO edytowanego konta
-     * @param servletContext kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
+     * @param servletContext kontekst serwletów, służy do współdzielenia informacji w ramach aplikacji
+     * @param header         nagłówek If-Match
      * @return response
      * @throws AppBaseException wyjątek typu AppBaseException
      */
@@ -164,8 +164,10 @@ public class AccountEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @SignatureFilterBinding
-    public Response editOtherAccount(@NotNull @Valid EditAnotherAccountRequestDTO accountDto, @Context ServletContext servletContext) throws AppBaseException {
-        // TODO: 21.05.2021 Obsługa wyjątków
+    public Response editOtherAccount(@NotNull @Valid EditAnotherAccountRequestDTO accountDto, @HeaderParam("If-Match") String header, @Context ServletContext servletContext) throws AppBaseException {
+        if (!signer.verifyEntityIntegrity(header, accountDto)) {
+            throw AppBaseException.optimisticLockError();
+        }
         accountManager.editOtherAccount(accountDto, servletContext);
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
     }
