@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import "./EditAccount.css";
 import axios from "axios";
 import {editAccountRequest} from "./EditAccountRequest";
+import Cookies from "js-cookie";
 
 export default class EditAccount extends React.Component {
     constructor(props) {
@@ -11,7 +12,6 @@ export default class EditAccount extends React.Component {
         this.state = {
             isDisabled: true,
             text: "Edit",
-            login: "",
             email: "",
             firstName: "",
             lastName: "",
@@ -24,12 +24,11 @@ export default class EditAccount extends React.Component {
         axios
             .get(process.env.REACT_APP_BACKEND_URL + "account/info", {
                 headers: {
-                    Authorization: "Bearer " + localStorage.getItem("JWTToken")
+                    Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
                 }
             })
             .then(res => res.data)
             .then(result => this.setState({
-                login: result.login,
                 email: result.email,
                 firstName: result.firstName,
                 lastName: result.lastName,
@@ -93,7 +92,7 @@ export default class EditAccount extends React.Component {
             isDisabled: true,
             text: "Edit"
         });
-        editAccountRequest(this.state.login, this.state.email, this.state.firstName, this.state.lastName, this.state.phoneNumber, this.state.pesel)
+        editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, this.state.phoneNumber, this.state.pesel)
     }
 
     // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
@@ -101,16 +100,6 @@ export default class EditAccount extends React.Component {
         return (
             <div className="EditAccount">
                 <Form onSubmit={this.handleSubmit}>
-                    <Form.Group size="lg" controlId="login">
-                        <Form.Label>Login</Form.Label>
-                        <Form.Control
-                            autoFocus
-                            type="login"
-                            value={this.state.login}
-                            disabled={true}
-                            onChange={(e) => this.setState({login: e.target.value})}
-                        />
-                    </Form.Group>
                     <Form.Group size="lg" controlId="email">
                         <Form.Label>Email</Form.Label>
                         <Form.Control

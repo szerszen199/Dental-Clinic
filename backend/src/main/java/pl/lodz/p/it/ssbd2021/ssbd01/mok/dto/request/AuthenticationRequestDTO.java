@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 
 import javax.security.enterprise.credential.UsernamePasswordCredential;
@@ -9,19 +10,19 @@ import javax.validation.constraints.Size;
 /**
  * Typ Login request dto.
  */
-public class LoginRequestDTO {
-    @NotNull
+public class AuthenticationRequestDTO {
+    @NotNull(message = I18n.LOGIN_NULL)
     @Login
     private String username;
 
-    @Size(min = 8)
-    @NotNull
+    @Size(min = 8, message = I18n.PASSWORD_INVALID_SIZE)
+    @NotNull(message = I18n.PASSWORD_NULL)
     private String password;
 
     /**
      * Tworzy nową instancję klasy Login request dto.
      */
-    public LoginRequestDTO() {
+    public AuthenticationRequestDTO() {
     }
 
     /**
@@ -66,7 +67,7 @@ public class LoginRequestDTO {
      * @param username username
      * @param password password
      */
-    public LoginRequestDTO(String username, String password) {
+    public AuthenticationRequestDTO(String username, String password) {
         this.username = username;
         this.password = password;
     }

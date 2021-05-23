@@ -1,15 +1,16 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 
-export function editAccountRequest(login, email, firstName, lastName, phoneNumber, pesel){
+export function editAccountRequest(email, firstName, lastName, phoneNumber, pesel){
+    let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
     let config = {
         method: 'post',
         url: process.env.REACT_APP_BACKEND_URL + "account/edit",
         headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem("JWTToken"),
+            'Authorization': 'Bearer ' + token,
             'Content-Type': 'application/json'
         },
         data: {
-            login: login,
             email: email,
             firstName: firstName,
             lastName: lastName,

@@ -2,6 +2,13 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
+
+import javax.ejb.Local;
+import javax.servlet.ServletContext;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.ejb.Local;
 import javax.servlet.ServletContext;
@@ -18,8 +25,7 @@ public interface AccountManager {
      * Utworzenie konta przy rejestracji.
      *
      * @param account        nowe konto
-     * @param servletContext kontekst serwletów, służy do współdzielenia informacji
-     *                       w ramach aplikacji
+     * @param servletContext kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     void createAccount(Account account, ServletContext servletContext) throws AppBaseException;
@@ -52,6 +58,23 @@ public interface AccountManager {
     void confirmAccountByToken(String jwt) throws AppBaseException;
 
     /**
+     * reset hasla konta.
+     *
+     * @param login login
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    void resetPasswordByToken(String login) throws AppBaseException;
+
+    /**
+     * Potwierdzenie hasla konta.
+     *
+     * @param login          login
+     * @param servletContext the servlet context
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    void resetPasswordConfirmation(String login, ServletContext servletContext) throws AppBaseException;
+
+    /**
      * Metoda służąca do blokowania konta.
      *
      * @param login login blokowanego konta
@@ -70,19 +93,29 @@ public interface AccountManager {
     /**
      * Edytuje wlasne konto.
      *
-     * @param account edytowane konto
+     * @param editOwnAccountRequestDTO edit own account request dto
+     * @param servletContext           kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void editAccount(Account account) throws AppBaseException;
+    void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO, ServletContext servletContext) throws AppBaseException;
 
 
     /**
      * Edytuje konto innego użytkownika.
      *
-     * @param account edytowane konto
+     * @param editAnotherAccountRequestDTO edit another account request dto
+     * @param servletContext               kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void editOtherAccount(Account account) throws AppBaseException;
+    void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO, ServletContext servletContext) throws AppBaseException;
+
+    /**
+     * Potwierdzenie zmiany maila.
+     *
+     * @param jwt token jwt
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    void confirmMailChangeByToken(String jwt) throws AppBaseException;
 
     /**
      * Pobranie listy wszystkich kont.
@@ -117,8 +150,9 @@ public interface AccountManager {
      *
      * @param enabled konta o danej wartosci do znalezienia
      * @return znalezione konto
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    List<Account> findByEnabled(boolean enabled);
+    List<Account> findByEnabled(boolean enabled) throws AppBaseException;
 
     /**
      * Resetuje hasło do konta o podanym id. Ustawia alfanumeryczne hasło
@@ -167,4 +201,14 @@ public interface AccountManager {
      * @throws AppBaseException app base exception
      */
     void updateAfterUnsuccessfulLogin(String login, String ip, LocalDateTime time) throws AppBaseException;
+
+
+    /**
+     * Ustawia pole language na {@param language} w koncie o logine {@param login}.
+     *
+     * @param login    login modyfikowanego konta
+     * @param language ustawiany język
+     * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych nie powiedzie się.
+     */
+    void setLanguage(String login, String language) throws AppBaseException;
 }

@@ -15,6 +15,9 @@ public class LoggedInAccountUtil {
      * @return login zalogowanego użytkownika
      */
     public String getLoggedInAccountLogin() {
+        if (securityContext == null || securityContext.getCallerPrincipal() == null) {
+            return null;
+        }
         return securityContext.getCallerPrincipal().getName();
     }
 }
