@@ -3,9 +3,8 @@ package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JWTRegistrationConfirmationUtils;
 
-import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -24,8 +23,8 @@ public class InactivatedAccountScheduler {
     private PropertiesLoader propertiesLoader;
     @Inject
     private MailProvider mailProvider;
-    @EJB
-    private JwtEmailConfirmationUtils jwtEmailConfirmationUtils;
+    @Inject
+    private JWTRegistrationConfirmationUtils jwtRegistrationConfirmationUtils;
 
     /**
      * automatycznie kolejkuje usuwanie nieaktywnych kont oraz w połowie czasu usunięcia wysyła maila z przypomnieniem.
@@ -37,14 +36,14 @@ public class InactivatedAccountScheduler {
         List<Account> notEnabledAccounts = accountManager.findByEnabled(false);
         for (Account notEnabledAccount : notEnabledAccounts) {
             Long time = Duration.between(notEnabledAccount.getCreationDateTime(), LocalDateTime.now()).toMillis();
-            if (time >= propertiesLoader.getDeleteInactiveAccount()) {
+            if (time >= propertiesLoader.getDeleteInactiveAccountTimeDelay()) {
                 accountManager.removeAccount(notEnabledAccount.getId());
-            } else if (time >= (propertiesLoader.getDeleteInactiveAccount() / 2) && !notEnabledAccount.getEmailRecall()) {
+            } else if (time >= (propertiesLoader.getDeleteInactiveAccountTimeDelay() / 2) && !notEnabledAccount.getEmailRecall()) {
                 accountManager.setEmailRecallTrue(notEnabledAccount.getLogin());
                 mailProvider.sendActivationMail(
                         notEnabledAccount.getEmail(),
                         "path",
-                        jwtEmailConfirmationUtils.generateRegistrationConfirmationJwtTokenForUser(notEnabledAccount.getLogin())
+                        jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(notEnabledAccount.getLogin())
                 );
             }
         }
