@@ -203,9 +203,6 @@ public class AccountEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     public Response revokeAccessLevel(@NotNull @Valid RevokeAndGrantAccessLevelDTO revokeAndGrantAccessLevelDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
-        if (revokeAndGrantAccessLevelDTO.getLogin().equals(loggedInAccountUtil.getLoggedInAccountLogin())) {
-            return Response.status(Status.BAD_REQUEST).build();
-        }
         accessLevelManager.revokeAccessLevel(revokeAndGrantAccessLevelDTO.getLogin(), revokeAndGrantAccessLevelDTO.getLevel());
         return Response.ok().build();
     }
@@ -262,9 +259,6 @@ public class AccountEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     public Response addAccessLevel(@NotNull @Valid RevokeAndGrantAccessLevelDTO revokeAndGrantAccessLevelDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
-        if (revokeAndGrantAccessLevelDTO.getLogin().equals(loggedInAccountUtil.getLoggedInAccountLogin())) {
-            return Response.status(Status.BAD_REQUEST).build();
-        }
         accessLevelManager.addAccessLevel(revokeAndGrantAccessLevelDTO.getLogin(), revokeAndGrantAccessLevelDTO.getLevel());
         return Response.ok().entity(new MessageResponseDto(I18n.ACCESS_LEVEL_ADDED_SUCCESSFULLY)).build();
     }
