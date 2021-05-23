@@ -6,13 +6,16 @@ import React, {Fragment} from "react";
 import {useTranslation} from "react-i18next";
 import "./Common.css"
 import Cookies from "js-cookie";
-import parseAccessLevel from "../../../parseAccessLevel";
+import parseAccessLevel from "../../../roles/parseAccessLevel";
+
+let buttonTitle = ""
 
 export default function MyAccount() {
     const {t} = useTranslation();
 
     let accessLevels = JSON.parse(Cookies.get(process.env.REACT_APP_ROLES_COOKIE_NAME));
     let accessLevelLinks = [];
+    buttonTitle = t("Change Access Level");
     for (let i in accessLevels) {
         accessLevelLinks.push(<Dropdown.Item
             style={{color: "rgb(127, 127, 127)"}}
@@ -23,14 +26,14 @@ export default function MyAccount() {
     return (
         <Fragment>
             <NavDropdown title={t("My Account")} id="navbarScrollingDropdown">
-                <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}} as={Link}
+                <Nav.Link className="navStyle" style={{backgroundColor: "rgb(127, 127, 127)"}} as={Link}
                           to="/account">{t("Edit My Account")}</Nav.Link>
                 <NavDropdown.Divider/>
                 <Nav.Link onClick={logout} style={{color: "rgb(127, 127, 127)"}}
                           className="navStyle">{t("Logout")}</Nav.Link>
             </NavDropdown>
             <DropdownButton variant={"warning"} style={{color: "rgb(127, 127, 127)"}}
-                            title={t("Change Access Level")}>
+                            title={t(parseAccessLevel(Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME)))}>
                 {accessLevelLinks}
             </DropdownButton>
         </Fragment>
@@ -40,6 +43,7 @@ export default function MyAccount() {
 function updateAccessLevel(access_level) {
     Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, access_level);
     window.location = "/home";
+    buttonTitle = access_level;
 }
 
 
