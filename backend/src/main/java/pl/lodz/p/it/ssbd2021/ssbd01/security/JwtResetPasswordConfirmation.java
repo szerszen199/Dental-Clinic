@@ -7,11 +7,17 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 
+
 @Stateless
-public class JWTRegistrationConfirmationUtils extends JwtUtilsAbstract {
+public class JwtResetPasswordConfirmation extends JwtUtilsAbstract {
 
     @Inject
     private PropertiesLoader propertiesLoader;
+
+    @Override
+    public String parseAuthJwtFromHttpServletRequest(HttpServletRequest request) {
+        return super.parseAuthJwtFromHttpServletRequest(request);
+    }
 
     @Override
     public String generateJwtTokenForUsername(String username) {
@@ -30,11 +36,13 @@ public class JWTRegistrationConfirmationUtils extends JwtUtilsAbstract {
 
     @Override
     protected Long getJwtExpiration() {
-        return propertiesLoader.getConfirmationJwtExpiration();
+        return propertiesLoader.getResetPasswordConfirmationJwtExpiration();
     }
 
     @Override
     protected String getJwtSecret() {
-        return propertiesLoader.getConfirmationJwtSecret();
+        return propertiesLoader.getResetPasswordConfirmationJwtSecret();
     }
+
+
 }

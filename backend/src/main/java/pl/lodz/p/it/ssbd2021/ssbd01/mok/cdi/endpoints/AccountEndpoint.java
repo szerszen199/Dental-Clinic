@@ -401,7 +401,7 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response resetOwnPassword(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO, @Context ServletContext servletContext) throws AppBaseException {
         // TODO: 21.05.2021  Ob słu ga Wy jąt ków
-        accountManager.resetPasswordConfirmation(simpleUsernameRequestDTO.getLogin(), servletContext);
+        accountManager.sendResetPasswordConfirmationEmail(simpleUsernameRequestDTO.getLogin(), servletContext);
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_RESET_MAIL_SENT_SUCCESSFULLY)).build();
     }
 

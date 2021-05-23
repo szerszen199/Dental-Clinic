@@ -25,6 +25,16 @@ public class PropertiesLoader {
     private Long jwtExpiration;
     private String emailChangeConfirmationJWTSecret;
     private Long emailChangeConfirmationJWTExpiration;
+    private String resetPasswordConfirmationJwtSecret;
+    private Long resetPasswordConfirmationJwtExpiration;
+
+    public String getResetPasswordConfirmationJwtSecret() {
+        return resetPasswordConfirmationJwtSecret;
+    }
+
+    public Long getResetPasswordConfirmationJwtExpiration() {
+        return resetPasswordConfirmationJwtExpiration;
+    }
 
     public String getEmailChangeConfirmationJWTSecret() {
         return emailChangeConfirmationJWTSecret;
@@ -110,5 +120,7 @@ public class PropertiesLoader {
         refreshJwtSecret = prop.getProperty("refresh.jwt.secret");
         emailChangeConfirmationJWTSecret = prop.getProperty("email.change.confirmation.jwt.secret");
         emailChangeConfirmationJWTExpiration = Long.valueOf(prop.getProperty("email.change.confirmation.jwt.expirationMs"));
+        resetPasswordConfirmationJwtSecret = prop.getProperty("reset.password.confirmation.jwt.secret");
+        resetPasswordConfirmationJwtExpiration = Long.valueOf(prop.getProperty("reset.password.confirmation.jwt.expirationMs"));
     }
 }
