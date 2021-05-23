@@ -34,5 +34,10 @@
   "Administrator": "Administrator",
   "Doctor": "Lekarz",
   "Receptionist": "Recepcjonista",
-  "Access Level": "Poziom Dostępu"
+  "Access Level": "Poziom Dostępu",
+
+  "level.patient": "Pacjent",
+  "level.administrator": "Administrator",
+  "level.doctor": "Lekarz",
+  "level.receptionist": "Recepcjonista"
 }

@@ -20,7 +20,6 @@ import {MDBContainer, MDBFooter} from "mdbreact";
 import './MainView.css';
 import {Link} from "react-router-dom";
 import findDefaultRole from "../../roles/findDefaultRole";
-import parseAccessLevel from "../../roles/parseAccessLevel";
 
 const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
 const roleDoctorName = process.env.REACT_APP_ROLE_DOCTOR
@@ -157,13 +156,6 @@ class MainViewWithoutTranslation extends React.Component {
                                         color: "gray",
                                         marginTop: "5px",
                                     }}>{this.state.login === "" ? '' : 'login: ' + this.state.login}</p>
-
-                                    {/*<p style={{*/}
-                                    {/*    color: "gray",*/}
-                                    {/*    marginTop: "5px",*/}
-                                    {/*    marginLeft: "5px"*/}
-                                    {/*}}>{Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) == null ? '' : t("Access Level") + ": " + t(parseAccessLevel(Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME)))}</p>*/}
-
                                     <DarkModeSwitch
                                         style={{marginLeft: '1rem'}}
                                         checked={this.state.isDarkMode}
@@ -194,17 +186,13 @@ class MainViewWithoutTranslation extends React.Component {
 }
 
 function CurrentUserViewComponent() {
+    const myMap = new Map();
+    myMap.set(roleAdminName, Admin())
+    myMap.set(rolePatientName, Patient())
+    myMap.set(roleReceptionistName, Receptionist())
+    myMap.set(roleDoctorName, Doctor())
     let currentRole = Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME)
-    if (currentRole === roleAdminName) {
-        return Admin();
-    } else if (currentRole === rolePatientName) {
-        return Patient();
-    } else if (currentRole === roleReceptionistName) {
-        return Receptionist();
-    } else if (currentRole === roleDoctorName) {
-        return Doctor();
-    }
-    return Guest();
+    return myMap.has(currentRole) ? myMap.get(currentRole) : Guest()
 }
 
 const MainViewTr = withTranslation()(MainViewWithoutTranslation)
