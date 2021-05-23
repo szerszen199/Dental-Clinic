@@ -17,6 +17,7 @@ class EditAccountWithoutTranslation extends React.Component {
             lastName: "",
             phoneNumber: "",
             pesel: "",
+            version: "",
         }
     }
 
@@ -33,7 +34,8 @@ class EditAccountWithoutTranslation extends React.Component {
                 firstName: result.firstName,
                 lastName: result.lastName,
                 phoneNumber: result.phoneNumber,
-                pesel: result.pesel
+                pesel: result.pesel,
+                version: result.version,
             }))
     }
 
@@ -71,7 +73,6 @@ class EditAccountWithoutTranslation extends React.Component {
             return true;
         }
 
-        // TODO: przypadek obcokrajowca wymusza że peselu może nie być ale nadal warto by go zwalidowac, tylko jak?
         function peselCorrect() {
             if (t.state.pesel !== undefined && t.state.pesel !== "") {
                 return t.state.pesel.length === 11;
@@ -106,23 +107,22 @@ class EditAccountWithoutTranslation extends React.Component {
     }
 
     setNotEditable(t) {
-        if (this.validateForm(t)) {
-            this.setState({
+        if (t.validateForm(t)) {
+            t.setState({
                 isDisabled: true,
             });
             let phoneNumber = t.state.phoneNumber;
-            if(t.state.phoneNumber === "") {
+            if (t.state.phoneNumber === "") {
                 phoneNumber = null;
             }
             let pesel = t.state.pesel
-            if(t.state.pesel === "") {
+            if (t.state.pesel === "") {
                 pesel = null;
             }
-            editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, phoneNumber, pesel)
+            editAccountRequest(t.state.email, t.state.firstName, t.state.lastName, phoneNumber, pesel, t.state.version)
         }
     }
 
-    // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
     render() {
         const {t} = this.props;
 
@@ -166,7 +166,6 @@ class EditAccountWithoutTranslation extends React.Component {
                             onChange={(e) => this.setState({phoneNumber: e.target.value})}
                         />
                     </Form.Group>
-                    {/*Todo: co z peselem dla obcokrajowca? Nic czy coś innnego? Narazie zrobiłem że może być pusty*/}
                     <Form.Group size="lg" controlId="pesel">
                         <Form.Label>{t("Pesel")}</Form.Label>
                         <Form.Control
