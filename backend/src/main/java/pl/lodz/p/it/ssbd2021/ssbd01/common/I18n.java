@@ -18,6 +18,7 @@ public class I18n {
     public static final String ACCESS_LEVEL_ADDED_SUCCESSFULLY = "access_level_added_successfully";
     public static final String PASSWORD_CHANGED_SUCCESSFULLY = "password_changed_successfully";
     public static final String PASSWORD_RESET_SUCCESSFULLY = "password_reset_successfully";
+    public static final String PASSWORD_RESET_MAIL_SENT_SUCCESSFULLY = "password_reset_mail_sent_successfully";
     public static final String DARK_MODE_SET_SUCCESSFULLY = "dark_mode_set_successfully";
     public static final String LANGUAGE_SET_SUCCESSFULLY = "language_set_successfully";
 
@@ -91,6 +92,10 @@ public class I18n {
     public static final String ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_TEXT = "account_mail_lock_by_unsuccessful_login_text";
     public static final String ACCOUNT_MAIL_LOGIN_SUBJECT = "account_mail_login_subject";
     public static final String ACCOUNT_MAIL_LOGIN_TEXT = "account_mail_login_text";
+    public static final String ACCOUNT_MAIL_GENERATED_PASSWORD_SUBJECT = "account_mail_generated_password_subject";
+    public static final String ACCOUNT_MAIL_GENERATED_PASSWORD_TEXT = "account_mail_generated_password_text";
+    public static final String ACCOUNT_MAIL_PASSWORD_CONFIRMATION_SUBJECT = "account_mail_pass_confirmation_subject";
+    public static final String ACCOUNT_MAIL_PASSWORD_CONFIRMATION_TEXT = "account_mail_pass_confirmation_text";
 
     public static final String ACCOUNT_MAIL_UNLOCK_BY_ADMIN_SUBJECT = "account_mail_unlock_by_admin_subject";
     public static final String ACCOUNT_MAIL_UNLOCK_BY_ADMIN_TEXT = "account_mail_unlock_by_admin_text";

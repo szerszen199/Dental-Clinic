@@ -131,6 +131,20 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
+    public void resetPasswordByToken(String jwt) throws AppBaseException {
+        if (!jwtEmailConfirmationUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+            throw AccountException.invalidConfirmationToken();
+        }
+        try {
+            String input = jwtEmailConfirmationUtils.getUserNameFromJwtToken(jwt);
+            String login = input.substring(0, input.indexOf('/'));
+            this.resetPassword(login);
+        } catch (AppBaseException | ParseException e) {
+            throw AccountException.noSuchAccount(e);
+        }
+    }
+
+    @Override
     public void lockAccount(String login) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
         account.setActive(false);
@@ -272,9 +286,24 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         // TODO: 21.05.2021 Dlugosc do zmiennej w pliku konfiguracyjnym
         account.setPassword(hashGenerator.generateHash(passwordGenerator.generate(32)));
         accountFacade.edit(account);
+        String pass = passwordGenerator.generate(32);
+        account.setPassword(hashGenerator.generateHash(pass));
+        mailProvider.sendGeneratedPasswordMail(account.getEmail(), pass);
         // TODO: send mail with new password
     }
 
+    @Override
+    public void resetPasswordConfirmation(String login, ServletContext servletContext) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
+        mailProvider.sendResetPassConfirmationMail(
+                account.getEmail(),
+                servletContext.getContextPath(),
+                jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(
+                        login,
+                        account.getEmail())
+        );
+        // TODO: send mail with new password
+    }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void setLastSuccessfulLoginIp(Account account, String ip) throws AppBaseException {
