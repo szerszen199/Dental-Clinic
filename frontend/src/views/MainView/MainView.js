@@ -21,6 +21,7 @@ import './MainView.css';
 import {Link} from "react-router-dom";
 import findDefaultRole from "../../roles/findDefaultRole";
 import {darkModeRequest} from "../../components/DarkMode/DarkModeRequest"
+import {map} from "react-bootstrap/ElementChildren";
 
 const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
 const roleDoctorName = process.env.REACT_APP_ROLE_DOCTOR
@@ -46,7 +47,7 @@ class MainViewWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isDarkMode: Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE),
+            isDarkMode: Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE) !== undefined ? Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE) : false,
             language: "PL",
             flag: this.urlEN,
             login: "",
@@ -115,7 +116,7 @@ class MainViewWithoutTranslation extends React.Component {
         const {t} = this.props;
 
         return (
-            <div className="App container py-3 "  >
+            <div className="App container py-3 ">
                 <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"
                         style={{backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
                     <div id="navbarDiv">
@@ -147,7 +148,7 @@ class MainViewWithoutTranslation extends React.Component {
                                         onChange={(e) => {
                                             this.setState({isDarkMode: e})
                                             darkModeRequest(this.state.isDarkMode)
-                                           accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode)
+                                            accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode)
                                         }}
                                         size={30}
                                         sunColor={"#FFDF37"}
@@ -179,6 +180,7 @@ function darkModeStyleChange(isDarkMode) {
 
     if (isDarkMode) {
         document.getElementById("root").style.backgroundColor = "#22272e";
+        // document.getElementById("card").style.backgroundColor = "#22272e";
         return {
             [roleGuestName]: "rgba(1, 1, 1, 0.5)",
             [rolePatientName]: "rgba(34, 55, 147, 0.2)",
@@ -189,6 +191,8 @@ function darkModeStyleChange(isDarkMode) {
 
     } else {
         document.getElementById("root").style.backgroundColor = "#ffffff";
+        // document.getElementById("div.card").style.backgroundColor = "#ffffff";
+        let elements = document.getElementsByClassName("card")
         return {
             [roleGuestName]: "rgba(1, 1, 1, 0.1)",
             [rolePatientName]: "rgba(93, 188, 242, 0.2)",
