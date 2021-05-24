@@ -12,6 +12,8 @@ public class I18n {
     public static final String ACCOUNT_CREATED_SUCCESSFULLY = "account_created_successfully";
     public static final String ACCOUNT_GET_LOGGED_IN_FAILED = "account_get_logged_in_failed";
     public static final String ACCOUNT_GET_WITH_LOGIN_FAILED = "account_get_with_login_failed";
+    public static final String ACCOUNT_GET_ALL_ACCOUNTS_FAILED = "account_get_all_accounts_failed";
+    public static final String PASSWORD_CHANGE_FAILED = "password_change_failed";
     public static final String ACCOUNT_CONFIRMED_SUCCESSFULLY = "account_confirmed_successfully";
     public static final String ACCOUNT_EDITED_SUCCESSFULLY = "account_edited_successfully";
     public static final String ACCOUNT_OTHER_EDITED_SUCCESSFULLY = "account_other_edited_successfully";
