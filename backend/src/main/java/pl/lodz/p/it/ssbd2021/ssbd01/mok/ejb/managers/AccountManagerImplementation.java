@@ -112,6 +112,31 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
+    public void createAccountByAdministrator(Account account, ServletContext servletContext) throws AppBaseException {
+        account.setPassword(hashGenerator.generateHash(passwordGenerator.generate(32)));
+        AccessLevel patientData = new PatientData(account, true);
+        patientData.setCreatedBy(account);
+        account.getAccessLevels().add(patientData);
+
+        AccessLevel receptionistData = new ReceptionistData(account, false);
+        receptionistData.setCreatedBy(account);
+        account.getAccessLevels().add(receptionistData);
+
+        AccessLevel doctorData = new DoctorData(account, false);
+        doctorData.setCreatedBy(account);
+        account.getAccessLevels().add(doctorData);
+
+        AccessLevel adminData = new AdminData(account, false);
+        adminData.setCreatedBy(account);
+        account.getAccessLevels().add(adminData);
+
+        account.setCreatedBy(account);
+        accountFacade.create(account);
+
+        this.resetPassword(account.getLogin(), loggedInAccountUtil.getLoggedInAccountLogin());
+    }
+
+    @Override
     public void removeAccount(Long id) throws AppBaseException {
         Account account = accountFacade.find(id);
         accountFacade.remove(account);
@@ -282,15 +307,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void resetPassword(Long id) throws AppBaseException {
-        Account account = accountFacade.find(id);
-        // TODO: 21.05.2021 Dlugosc do zmiennej w pliku konfiguracyjnym
-        account.setPassword(hashGenerator.generateHash(passwordGenerator.generate(32)));
-        accountFacade.edit(account);
-        // TODO: send mail with new password
-    }
-
-    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void resetPassword(String accountToReset, String whoResets) throws AppBaseException {
         Account account = accountFacade.findByLogin(accountToReset);
         account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
