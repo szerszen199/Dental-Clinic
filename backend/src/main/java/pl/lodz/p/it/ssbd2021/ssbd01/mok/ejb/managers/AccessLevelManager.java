@@ -19,6 +19,7 @@ public interface AccessLevelManager {
      * @param level level odbierany poziom odstępu
      * @throws AccessLevelException wyjątek typu AccessLevelException
      * @throws AccountException     wyjątek typu AccountException
+     * @throws AppBaseException     wyjątek typu AppBaseException
      */
     void revokeAccessLevel(String login, String level) throws AccessLevelException, AccountException, AppBaseException;
 
@@ -29,6 +30,7 @@ public interface AccessLevelManager {
      * @param login login użytkownika, któremu zostanie dodany poziom dostępu
      * @throws AccessLevelException wyjątek typu AccessLevelException
      * @throws AccountException     wyjątek typu AccountException
+     * @throws AppBaseException     wyjątek typu AppBaseException
      */
     void addAccessLevel(String login, String level) throws AccessLevelException, AccountException, AppBaseException;
 
