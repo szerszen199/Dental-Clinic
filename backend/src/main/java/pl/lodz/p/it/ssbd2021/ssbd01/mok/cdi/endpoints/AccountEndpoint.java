@@ -33,7 +33,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
-import javax.servlet.ServletContext;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -86,7 +85,6 @@ public class AccountEndpoint {
      * Tworzy nowe konto.
      *
      * @param accountDto     obiekt zawierający login, email, hasło i inne wymagane dane
-     * @param servletContext kontekst serwletów, służy do współdzielenia informacji w ramach aplikacji
      * @return response
      * @throws AppBaseException wyjątek typu AppBaseException
      */
@@ -97,13 +95,12 @@ public class AccountEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
     // TODO: 22.05.2021 Co do validów na metodach zastanawia mnie wywołanie pustej metody na której będzie valid i łapanie wyjątków i coś robienie
     //  Ale generalnie mamy obsłużyć tylko 403, 404 i 500 a to zwraca 400 więc :p
-    public Response createAccount(@NotNull @Valid CreateAccountRequestDTO accountDto, @Context ServletContext servletContext)
+    public Response createAccount(@NotNull @Valid CreateAccountRequestDTO accountDto)
             throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
         // TODO: 22.05.2021 Walidacja numeru pesel jesli nie jest null (suma kontrolna)
         this.accountManager.createAccount(
-                AccountConverter.createAccountEntityFromDto(accountDto),
-                servletContext
+                AccountConverter.createAccountEntityFromDto(accountDto)
         );
 
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CREATED_SUCCESSFULLY)).build();
@@ -187,7 +184,6 @@ public class AccountEndpoint {
      *
      * @param accountDto     DTO edytowanego konta
      * @param header         nagłówek If-Match
-     * @param servletContext kontekst serwletów, służy do współdzielenia informacji w ramach aplikacji
      * @return response
      * @throws AppBaseException wyjątek typu AppBaseException
      */
@@ -198,12 +194,12 @@ public class AccountEndpoint {
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
     @SignatureFilterBinding
     @Produces({MediaType.APPLICATION_JSON})
-    public Response editAccount(@NotNull @Valid EditOwnAccountRequestDTO accountDto, @HeaderParam("If-Match") String header, @Context ServletContext servletContext) throws AppBaseException {
+    public Response editAccount(@NotNull @Valid EditOwnAccountRequestDTO accountDto, @HeaderParam("If-Match") String header) throws AppBaseException {
         if (!signer.verifyEntityIntegrity(header, accountDto)) {
             throw AppBaseException.optimisticLockError();
         }
         // TODO: 21.05.2021 Obsługa wyjątków
-        this.accountManager.editOwnAccount(accountDto, servletContext);
+        this.accountManager.editOwnAccount(accountDto);
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
     }
 
@@ -212,7 +208,6 @@ public class AccountEndpoint {
      * Edycja konta innego użytkownika.
      *
      * @param accountDto     DTO edytowanego konta
-     * @param servletContext kontekst serwletów, służy do współdzielenia informacji w ramach aplikacji
      * @param header         nagłówek If-Match
      * @return response
      * @throws AppBaseException wyjątek typu AppBaseException
@@ -224,11 +219,11 @@ public class AccountEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @SignatureFilterBinding
-    public Response editOtherAccount(@NotNull @Valid EditAnotherAccountRequestDTO accountDto, @HeaderParam("If-Match") String header, @Context ServletContext servletContext) throws AppBaseException {
+    public Response editOtherAccount(@NotNull @Valid EditAnotherAccountRequestDTO accountDto, @HeaderParam("If-Match") String header) throws AppBaseException {
         if (!signer.verifyEntityIntegrity(header, accountDto)) {
             throw AppBaseException.optimisticLockError();
         }
-        accountManager.editOtherAccount(accountDto, servletContext);
+        accountManager.editOtherAccount(accountDto);
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
     }
 
@@ -304,7 +299,7 @@ public class AccountEndpoint {
     public Response unlockAccount(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
         accountManager.unlockAccount(simpleUsernameRequestDTO.getLogin());
-        mailProvider.sendAccounUnlockByAdminMail(accountManager.findByLogin(simpleUsernameRequestDTO.getLogin()).getEmail());
+        mailProvider.sendAccountUnlockByAdminMail(accountManager.findByLogin(simpleUsernameRequestDTO.getLogin()).getEmail());
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_UNLOCKED_SUCCESSFULLY)).build();
     }
 
@@ -448,7 +443,6 @@ public class AccountEndpoint {
      * Resetuje hasło użytkownikowi.
      *
      * @param simpleUsernameRequestDTO the simple username request dto
-     * @param servletContext           the servlet context
      * @return odpowiedź na żądanie
      * @throws AppBaseException wyjątek typu AppBaseException
      */
@@ -457,9 +451,9 @@ public class AccountEndpoint {
     @PermitAll
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response resetOwnPassword(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO, @Context ServletContext servletContext) throws AppBaseException {
+    public Response resetOwnPassword(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021  Ob słu ga Wy jąt ków
-        accountManager.sendResetPasswordConfirmationEmail(simpleUsernameRequestDTO.getLogin(), servletContext);
+        accountManager.sendResetPasswordConfirmationEmail(simpleUsernameRequestDTO.getLogin());
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_RESET_MAIL_SENT_SUCCESSFULLY)).build();
     }
 

@@ -6,7 +6,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 
 import javax.ejb.Local;
-import javax.servlet.ServletContext;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,10 +19,9 @@ public interface AccountManager {
      * Utworzenie konta przy rejestracji.
      *
      * @param account        nowe konto
-     * @param servletContext kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void createAccount(Account account, ServletContext servletContext) throws AppBaseException;
+    void createAccount(Account account) throws AppBaseException;
 
     /**
      * Utworzenie konta przez administratora.
@@ -63,10 +61,9 @@ public interface AccountManager {
      * Potwierdzenie hasla konta.
      *
      * @param login          login
-     * @param servletContext the servlet context
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void sendResetPasswordConfirmationEmail(String login, ServletContext servletContext) throws AppBaseException;
+    void sendResetPasswordConfirmationEmail(String login) throws AppBaseException;
 
     /**
      * Metoda służąca do blokowania konta.
@@ -88,20 +85,18 @@ public interface AccountManager {
      * Edytuje wlasne konto.
      *
      * @param editOwnAccountRequestDTO edit own account request dto
-     * @param servletContext           kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO, ServletContext servletContext) throws AppBaseException;
+    void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO) throws AppBaseException;
 
 
     /**
      * Edytuje konto innego użytkownika.
      *
      * @param editAnotherAccountRequestDTO edit another account request dto
-     * @param servletContext               kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO, ServletContext servletContext) throws AppBaseException;
+    void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO) throws AppBaseException;
 
     /**
      * Potwierdzenie zmiany maila.
