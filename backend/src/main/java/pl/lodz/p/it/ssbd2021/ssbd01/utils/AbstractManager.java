@@ -53,7 +53,7 @@ public abstract class AbstractManager {
     @AfterCompletion
     public void afterCompletion(boolean commmitted) {
         lastTransactionRollback = !commmitted;
-        LOGGER.log(Level.INFO, "Transakcja TXid={0} zatwierdzona w {1} poprzez {2} dla użytkownika {3}.",
+        LOGGER.log(Level.INFO, "Transakcja TXid={0} zakończona w {1} poprzez {2} dla użytkownika {3}.",
                 new Object[]{transactionID, this.getClass().getName(), commmitted ? "ZATWIERDZENIE" : "ODWOłANIE", loggedInAccountUtil.getLoggedInAccountLogin()});
     }
 }

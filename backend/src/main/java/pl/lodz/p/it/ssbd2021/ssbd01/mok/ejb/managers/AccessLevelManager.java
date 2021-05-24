@@ -1,10 +1,8 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
 import javax.ejb.Local;
-import java.util.Set;
 
 /**
  * Interfejs Access level manager.
@@ -30,4 +28,11 @@ public interface AccessLevelManager {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     void addAccessLevel(String login, String level) throws AppBaseException;
+
+    /**
+     * Sprawdza czy ostatnia transakcja się powiodła.
+     *
+     * @return true jeśli ostatnia transakcja się nie powiodła, false w przeciwnym wypadku.
+     */
+    boolean isLastTransactionRollback();
 }

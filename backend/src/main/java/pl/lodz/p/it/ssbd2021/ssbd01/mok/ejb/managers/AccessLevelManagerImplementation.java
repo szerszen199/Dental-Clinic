@@ -9,6 +9,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 
+import javax.ejb.SessionSynchronization;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -22,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
-public class AccessLevelManagerImplementation extends AbstractManager implements AccessLevelManager {
+public class AccessLevelManagerImplementation extends AbstractManager implements AccessLevelManager, SessionSynchronization {
     @Inject
     private AccessLevelFacade accessLevelFacade;
 

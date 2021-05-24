@@ -26,10 +26,12 @@ import pl.lodz.p.it.ssbd2021.ssbd01.security.SignatureFilterBinding;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
@@ -59,6 +61,9 @@ import java.util.stream.Collectors;
 @RequestScoped
 @Interceptors(LogInterceptor.class)
 public class AccountEndpoint {
+
+    @Inject
+    private PropertiesLoader propertiesLoader;
 
     @Inject
     private AccountManager accountManager;
@@ -99,9 +104,23 @@ public class AccountEndpoint {
             throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
         // TODO: 22.05.2021 Walidacja numeru pesel jesli nie jest null (suma kontrolna)
-        this.accountManager.createAccount(
-                AccountConverter.createAccountEntityFromDto(accountDto)
-        );
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        do {
+            try {
+                this.accountManager.createAccount(
+                        AccountConverter.createAccountEntityFromDto(accountDto),
+                        servletContext
+                );
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
 
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CREATED_SUCCESSFULLY)).build();
     }
@@ -146,7 +165,19 @@ public class AccountEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     public Response confirmAccount(@NotNull @Valid ConfirmAccountRequestDTO confirmAccountRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
-        this.accountManager.confirmAccountByToken(confirmAccountRequestDTO.getConfirmToken());
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        do {
+            try {
+                this.accountManager.confirmAccountByToken(confirmAccountRequestDTO.getConfirmToken());
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CONFIRMED_SUCCESSFULLY)).build();
     }
 
@@ -168,7 +199,19 @@ public class AccountEndpoint {
             if (!jwtResetPasswordConfirmation.validateJwtToken(confirmAccountRequestDTO.getConfirmToken())) {
                 throw AccountException.invalidConfirmationToken();
             }
-            this.accountManager.resetPassword(username, username);
+            int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+            boolean rollbackTX = false;
+            do {
+                try {
+                    this.accountManager.resetPassword(username, username);
+                    rollbackTX = accountManager.isLastTransactionRollback();
+                } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                    rollbackTX = true;
+                }
+            } while (rollbackTX && --retryTXCounter > 0);
+            if (rollbackTX) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            }
         } catch (ParseException e) {
             // TODO: 24.05.2021 Response
             e.printStackTrace();
@@ -196,8 +239,19 @@ public class AccountEndpoint {
         if (!signer.verifyEntityIntegrity(header, accountDto)) {
             throw AppBaseException.optimisticLockError();
         }
-        // TODO: 21.05.2021 Obsługa wyjątków
-        this.accountManager.editOwnAccount(accountDto);
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        do {
+            try {
+                this.accountManager.editOwnAccount(accountDto, servletContext);
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
     }
 
@@ -221,7 +275,19 @@ public class AccountEndpoint {
         if (!signer.verifyEntityIntegrity(header, accountDto)) {
             throw AppBaseException.optimisticLockError();
         }
-        accountManager.editOtherAccount(accountDto);
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        do {
+            try {
+                accountManager.editOtherAccount(accountDto, servletContext);
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
     }
 
@@ -240,7 +306,20 @@ public class AccountEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
     public Response confirmMailChange(@NotNull @Valid ConfirmMailChangeRequestDTO confirmMailChangeRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
-        accountManager.confirmMailChangeByToken(confirmMailChangeRequestDTO.getToken());
+
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        do {
+            try {
+                accountManager.confirmMailChangeByToken(confirmMailChangeRequestDTO.getToken());
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
         return Response.ok().entity(new MessageResponseDto(I18n.EMAIL_CONFIRMED_SUCCESSFULLY)).build();
     }
 
@@ -260,6 +339,19 @@ public class AccountEndpoint {
     public Response revokeAccessLevel(@NotNull @Valid RevokeAndGrantAccessLevelDTO revokeAndGrantAccessLevelDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
         accessLevelManager.revokeAccessLevel(revokeAndGrantAccessLevelDTO.getLogin(), revokeAndGrantAccessLevelDTO.getLevel());
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        do {
+            try {
+                accessLevelManager.revokeAccessLevel(revokeAndGrantAccessLevelDTO.getLogin(), revokeAndGrantAccessLevelDTO.getLevel());
+                rollbackTX = accessLevelManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
         return Response.ok().build();
     }
 
@@ -278,6 +370,19 @@ public class AccountEndpoint {
     public Response lockAccount(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
         accountManager.lockAccount(simpleUsernameRequestDTO.getLogin());
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        do {
+            try {
+                accountManager.lockAccount(simpleUsernameRequestDTO.getLogin());
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
         mailProvider.sendAccountLockByAdminMail(accountManager.findByLogin(simpleUsernameRequestDTO.getLogin()).getEmail());
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_LOCKED_SUCCESSFULLY)).build();
     }
@@ -296,8 +401,20 @@ public class AccountEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     public Response unlockAccount(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
-        accountManager.unlockAccount(simpleUsernameRequestDTO.getLogin());
-        mailProvider.sendAccountUnlockByAdminMail(accountManager.findByLogin(simpleUsernameRequestDTO.getLogin()).getEmail());
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        do {
+            try {
+                accountManager.unlockAccount(simpleUsernameRequestDTO.getLogin());
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        mailProvider.sendAccounUnlockByAdminMail(accountManager.findByLogin(simpleUsernameRequestDTO.getLogin()).getEmail());
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_UNLOCKED_SUCCESSFULLY)).build();
     }
 
@@ -315,7 +432,19 @@ public class AccountEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     public Response addAccessLevel(@NotNull @Valid RevokeAndGrantAccessLevelDTO revokeAndGrantAccessLevelDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
-        accessLevelManager.addAccessLevel(revokeAndGrantAccessLevelDTO.getLogin(), revokeAndGrantAccessLevelDTO.getLevel());
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        do {
+            try {
+                accessLevelManager.addAccessLevel(revokeAndGrantAccessLevelDTO.getLogin(), revokeAndGrantAccessLevelDTO.getLevel());
+                rollbackTX = accessLevelManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCESS_LEVEL_ADDED_SUCCESSFULLY)).build();
     }
 
@@ -407,16 +536,25 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response changeOwnPassword(@NotNull @Valid ChangePasswordRequestDTO newPassword) {
         // TODO: 21.05.2021 Lepsza obsługa wyjątków ;)
-        try {
-            accountManager.changePassword(
-                    loggedInAccountUtil.getLoggedInAccountLogin(),
-                    newPassword.getOldPassword(),
-                    newPassword.getFirstPassword()
-            );
-            return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_CHANGED_SUCCESSFULLY)).build();
-        } catch (AppBaseException e) {
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        do {
+            try {
+                accountManager.changePassword(
+                        loggedInAccountUtil.getLoggedInAccountLogin(),
+                        newPassword.getOldPassword(),
+                        newPassword.getFirstPassword()
+                );
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
+        return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_CHANGED_SUCCESSFULLY)).build();
     }
 
     /**
@@ -433,7 +571,19 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response resetOthersPassword(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków.
-        accountManager.resetPassword(simpleUsernameRequestDTO.getLogin(), loggedInAccountUtil.getLoggedInAccountLogin());
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        do {
+            try {
+                accountManager.resetPassword(simpleUsernameRequestDTO.getLogin(), loggedInAccountUtil.getLoggedInAccountLogin());
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_RESET_SUCCESSFULLY)).build();
     }
 
@@ -451,7 +601,19 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response resetOwnPassword(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021  Ob słu ga Wy jąt ków
-        accountManager.sendResetPasswordConfirmationEmail(simpleUsernameRequestDTO.getLogin());
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        do {
+            try {
+                accountManager.sendResetPasswordConfirmationEmail(simpleUsernameRequestDTO.getLogin(), servletContext);
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_RESET_MAIL_SENT_SUCCESSFULLY)).build();
     }
 
@@ -469,10 +631,18 @@ public class AccountEndpoint {
     public Response changeDarkMode(@NotNull @Valid SetDarkModeRequestDTO setDarkModeRequestDTO) {
         // TODO: 22.05.2021 OB SLU GA WY JAT KOW
         String login = loggedInAccountUtil.getLoggedInAccountLogin();
-        try {
-            accountManager.setDarkMode(login, setDarkModeRequestDTO.isDarkMode());
-        } catch (AppBaseException e) {
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        do {
+            try {
+                accountManager.setDarkMode(login, setDarkModeRequestDTO.isDarkMode());
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
         return Response.status(Status.OK).entity(I18n.DARK_MODE_SET_SUCCESSFULLY).build();
     }
@@ -492,10 +662,18 @@ public class AccountEndpoint {
     public Response changeLanguage(@NotNull @Valid SetLanguageRequestDTO setLanguageRequestDTO) {
         // TODO: 22.05.2021 Ob Słu ga Wiadomo czego
         String login = loggedInAccountUtil.getLoggedInAccountLogin();
-        try {
-            accountManager.setLanguage(login, setLanguageRequestDTO.getLanguage().toLowerCase(Locale.ROOT));
-        } catch (AppBaseException e) {
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        do {
+            try {
+                accountManager.setLanguage(login, setLanguageRequestDTO.getLanguage().toLowerCase(Locale.ROOT));
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.LANGUAGE_SET_SUCCESSFULLY)).build();
     }
