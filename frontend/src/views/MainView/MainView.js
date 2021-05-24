@@ -20,6 +20,7 @@ import {MDBContainer, MDBFooter} from "mdbreact";
 import './MainView.css';
 import {Link} from "react-router-dom";
 import findDefaultRole from "../../roles/findDefaultRole";
+import {darkModeRequest} from "../../components/DarkMode/DarkModeRequest"
 
 const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
 const roleDoctorName = process.env.REACT_APP_ROLE_DOCTOR
@@ -27,7 +28,7 @@ const roleReceptionistName = process.env.REACT_APP_ROLE_RECEPTIONIST
 const rolePatientName = process.env.REACT_APP_ROLE_PATIENT
 const roleGuestName = process.env.REACT_APP_ROLE_GUEST
 
-const accessLevelDictionary = {
+let accessLevelDictionary = {
     [roleGuestName]: "rgba(1, 1, 1, 0.1)",
     [rolePatientName]: "rgba(93, 188, 242, 0.2)",
     [roleReceptionistName]: "rgba(192, 255, 0, 0.4)",
@@ -41,15 +42,17 @@ class MainViewWithoutTranslation extends React.Component {
     urlPL = "https://img.icons8.com/color/96/000000/poland-circular.png";
     urlEN = "https://img.icons8.com/color/48/000000/great-britain-circular.png";
 
+
     constructor(props) {
         super(props);
         this.state = {
-            isDarkMode: false,
+            isDarkMode: Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE),
             language: "PL",
             flag: this.urlEN,
             login: "",
 
         }
+        darkModeStyleChange(this.state.isDarkMode)
     }
 
     handleOnClick() {
@@ -112,7 +115,7 @@ class MainViewWithoutTranslation extends React.Component {
         const {t} = this.props;
 
         return (
-            <div className="App container py-3 ">
+            <div className="App container py-3 "  >
                 <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"
                         style={{backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
                     <div id="navbarDiv">
@@ -141,7 +144,11 @@ class MainViewWithoutTranslation extends React.Component {
                                     <DarkModeSwitch
                                         style={{marginLeft: '1rem'}}
                                         checked={this.state.isDarkMode}
-                                        onChange={(e) => this.setState({isDarkMode: e})}
+                                        onChange={(e) => {
+                                            this.setState({isDarkMode: e})
+                                            darkModeRequest(this.state.isDarkMode)
+                                           accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode)
+                                        }}
                                         size={30}
                                         sunColor={"#FFDF37"}
                                         moonColor={"#bfbfbb"}
@@ -166,6 +173,34 @@ class MainViewWithoutTranslation extends React.Component {
         );
     }
 }
+
+function darkModeStyleChange(isDarkMode) {
+
+
+    if (isDarkMode) {
+        document.getElementById("root").style.backgroundColor = "#22272e";
+        return {
+            [roleGuestName]: "rgba(1, 1, 1, 0.5)",
+            [rolePatientName]: "rgba(34, 55, 147, 0.2)",
+            [roleReceptionistName]: "rgba(46, 95, 0, 0.4)",
+            [roleDoctorName]: "rgba(146, 134, 0, 0.2)",
+            [roleAdminName]: "rgba(106, 0, 0, 0.1)",
+        };
+
+    } else {
+        document.getElementById("root").style.backgroundColor = "#ffffff";
+        return {
+            [roleGuestName]: "rgba(1, 1, 1, 0.1)",
+            [rolePatientName]: "rgba(93, 188, 242, 0.2)",
+            [roleReceptionistName]: "rgba(192, 255, 0, 0.4)",
+            [roleDoctorName]: "rgba(255, 216, 0, 0.2)",
+            [roleAdminName]: "rgba(238, 0, 0, 0.1)",
+        };
+    }
+
+
+}
+
 
 function CurrentUserViewComponent() {
     const myMap = new Map();

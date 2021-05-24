@@ -21,3 +21,7 @@
 #navbarDiv {
     width: 100%;
 }
+
+body > #root > div {
+    height: 100vh;
+}
