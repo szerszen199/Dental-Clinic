@@ -68,6 +68,7 @@ public interface AccountManager {
      * @param login login
      * @throws AccountException wyjątek typu AccountException
      * @throws MailSendingException wyjątek typu MailSendingException
+     * @throws PasswordException wyjątek typu PasswordException
      */
     void resetPasswordByToken(String login) throws AccountException, MailSendingException, PasswordException;
 

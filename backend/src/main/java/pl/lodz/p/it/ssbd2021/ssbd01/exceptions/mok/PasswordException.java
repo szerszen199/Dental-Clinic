@@ -89,6 +89,11 @@ public class PasswordException extends AppBaseException {
         return new PasswordException(PASSWORD_RESET_FAILED);
     }
 
+    /**
+     * Tworzy wyjątek reprezentujący próbę zmiany hasła użytkownika.
+     *
+     * @return wyjątek typu PasswordException
+     */
     public static PasswordException passwordChangeFailed() {
         return new PasswordException(PASSWORD_CHANGE_FAILED);
     }
