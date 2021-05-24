@@ -6,6 +6,7 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CONFIRMATION_BY_T
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CREATION_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EDIT_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EMAIL_ALREADY_EXISTS;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_GET_ALL_ACCOUNTS_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_IS_BLOCKED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOCKED_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOGIN_ALREADY_EXISTS;
@@ -15,6 +16,8 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_UNLOCKED_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.EMAIL_CONFIRMATION_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.INVALID_CONFIRMATION_TOKEN;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_CONFIRMATION_PARSING_ERROR;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_CHANGED_SUCCESSFULLY;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_CHANGE_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_RESET_FAILED;
 
 /**
@@ -78,6 +81,10 @@ public class AccountException extends AppBaseException {
         return new AccountException(EMAIL_CONFIRMATION_FAILED);
     }
 
+    public static AccountException passwordChangeFailed(){
+        return new AccountException(PASSWORD_CHANGE_FAILED);
+    }
+
     /**
      * Tworzy wyjątek reprezentujący próbę utworzenia konta, która się nie powiodła.
      *
@@ -104,6 +111,10 @@ public class AccountException extends AppBaseException {
      */
     public static AccountException noSuchAccount(Throwable cause) {
         return new AccountException(ACCOUNT_NOT_FOUND, cause);
+    }
+
+    public static AccountException getAllAccountsFailed(){
+        return new AccountException(ACCOUNT_GET_ALL_ACCOUNTS_FAILED);
     }
 
     /**

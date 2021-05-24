@@ -314,12 +314,24 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Override
     public List<Account> getAllAccounts() throws AppBaseException {
-        return accountFacade.findAll();
+        try {
+            return accountFacade.findAll();
+        } catch (AppBaseException e) {
+            throw AccountException.getAllAccountsFailed();
+        }
     }
 
     @Override
     public void changePassword(String login, String oldPassword, String newPassword) throws AppBaseException {
-        Account account = accountFacade.findByLogin(login);
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw AccountException.passwordChangeFailed();
+        }
+
         if (!account.getPassword().contentEquals(hashGenerator.generateHash(oldPassword))) {
             throw PasswordsNotMatchException.currentPasswordNotMatch();
         }
@@ -327,7 +339,11 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             throw PasswordsSameException.passwordsNotDifferent();
         }
         account.setPassword(hashGenerator.generateHash(newPassword));
-        accountFacade.edit(account);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.passwordChangeFailed();
+        }
     }
 
     @Override
