@@ -14,9 +14,12 @@ public class I18n {
     public static final String ACCOUNT_EDITED_SUCCESSFULLY = "account_edited_successfully";
     public static final String ACCOUNT_OTHER_EDITED_SUCCESSFULLY = "account_other_edited_successfully";
     public static final String EMAIL_CONFIRMED_SUCCESSFULLY = "email_confirmed_successfully";
+    public static final String EMAIL_CONFIRMATION_FAILED = "email_confirmation_failed";
     public static final String ACCOUNT_LOCKED_SUCCESSFULLY = "account_locked_successfully";
     public static final String ACCOUNT_UNLOCKED_SUCCESSFULLY = "account_unlocked_successfully";
     public static final String ACCESS_LEVEL_ADDED_SUCCESSFULLY = "access_level_added_successfully";
+    public static final String ACCESS_LEVEL_REVOKED_SUCCESSFULLY = "access_level_revoked_successfully";
+    public static final String ACCESS_LEVEL_REVOKE_FAILED = "access_level_revoke_failed";
     public static final String PASSWORD_CHANGED_SUCCESSFULLY = "password_changed_successfully";
     public static final String PASSWORD_RESET_SUCCESSFULLY = "password_reset_successfully";
     public static final String PASSWORD_RESET_MAIL_SENT_SUCCESSFULLY = "password_reset_mail_sent_successfully";

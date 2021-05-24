@@ -255,7 +255,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
         } catch (AccountException e) {
             throw AccountException.noSuchAccount(e.getCause());
-        } catch (AppBaseException e) {
+        } catch (Exception e) {
             throw AccountException.accountEditFailed();
         }
         try {
@@ -266,20 +266,31 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void confirmMailChangeByToken(String jwt) throws AppBaseException {
+    public void confirmMailChangeByToken(String jwt) throws AccountException {
         if (!jwtEmailConfirmationUtils.validateJwtToken(jwt)) {
             throw AccountException.invalidConfirmationToken();
         }
+        String login;
+        String newEmail;
         try {
-            String login = jwtEmailConfirmationUtils.getUsernameFromToken(jwt);
-            String newEmail = jwtEmailConfirmationUtils.getEmailFromToken(jwt);
-            Account account = accountFacade.findByLogin(login);
-            account.setEmail(newEmail);
+            login = jwtEmailConfirmationUtils.getUsernameFromToken(jwt);
+            newEmail = jwtEmailConfirmationUtils.getEmailFromToken(jwt);
+        } catch (ParseException e) {
+            throw AccountException.invalidConfirmationToken();
+        }
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (Exception e) {
+            throw AccountException.emailConfirmationFailed();
+        }
+        account.setEmail(newEmail);
+        try {
             accountFacade.edit(account);
-        } catch (AppBaseException | ParseException e) {
-            throw AccountException.noSuchAccount(e);
-        } catch (NullPointerException e) {
-            throw AccountException.mailConfirmationParsingError(e);
+        } catch (Exception e) {
+            throw AccountException.emailConfirmationFailed();
         }
     }
 
