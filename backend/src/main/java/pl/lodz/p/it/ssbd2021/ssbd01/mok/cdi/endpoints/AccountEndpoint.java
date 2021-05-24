@@ -6,7 +6,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmAccountRequestDTO;
@@ -437,7 +437,7 @@ public class AccountEndpoint {
                     newPassword.getOldPassword(),
                     newPassword.getFirstPassword()
             );
-        } catch (AccountException | PasswordsNotMatchException | PasswordsSameException e) {
+        } catch (AccountException | PasswordException | PasswordsSameException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(PASSWORD_CHANGE_FAILED).build();
