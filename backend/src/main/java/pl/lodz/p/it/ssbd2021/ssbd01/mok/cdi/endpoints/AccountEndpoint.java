@@ -3,6 +3,8 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmMailChangeRequestDTO;
@@ -123,14 +125,19 @@ public class AccountEndpoint {
      *
      * @param confirmAccountRequestDTO the confirm account request dto
      * @return the response
-     * @throws AppBaseException the app base exception
      */
     @PUT
     @Path("reset")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response resetPassword(@NotNull @Valid ConfirmAccountRequestDTO confirmAccountRequestDTO) throws AppBaseException {
-        this.accountManager.resetPasswordByToken(confirmAccountRequestDTO.getConfirmToken());
+    public Response resetPassword(@NotNull @Valid ConfirmAccountRequestDTO confirmAccountRequestDTO) {
+        try {
+            this.accountManager.resetPasswordByToken(confirmAccountRequestDTO.getConfirmToken());
+        } catch (AccountException accountException) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
+        } catch (MailSendingException mailSendingException) {
+            return Response.status(Status.CONFLICT).entity(new MessageResponseDto(mailSendingException.getMessage())).build();
+        }
         return Response.ok().entity(new MessageResponseDto(I18n.PASSWORD_RESET_SUCCESSFULLY)).build();
     }
 

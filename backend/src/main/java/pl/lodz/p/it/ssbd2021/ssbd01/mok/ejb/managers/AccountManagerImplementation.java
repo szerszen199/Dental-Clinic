@@ -168,15 +168,17 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void resetPasswordByToken(String jwt) throws AppBaseException {
+    public void resetPasswordByToken(String jwt) throws AccountException, MailSendingException {
         if (!jwtResetPasswordConfirmation.validateJwtToken(jwt)) {
             throw AccountException.invalidConfirmationToken();
         }
         try {
             String input = jwtResetPasswordConfirmation.getUserNameFromJwtToken(jwt);
             this.resetPassword(input);
-        } catch (AppBaseException | ParseException e) {
+        } catch (ParseException e) {
             throw AccountException.noSuchAccount(e);
+        } catch (MailSendingException e) {
+            throw MailSendingException.passwordResetMail();
         }
     }
 
@@ -304,20 +306,38 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void resetPassword(Long id) throws AppBaseException {
-        Account account = accountFacade.find(id);
+    public void resetPassword(Long id) throws AccountException {
+        Account account;
+        try {
+            account = accountFacade.find(id);
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
         // TODO: 21.05.2021 Dlugosc do zmiennej w pliku konfiguracyjnym
         account.setPassword(hashGenerator.generateHash(passwordGenerator.generate(32)));
-        accountFacade.edit(account);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.passwordResetFailed();
+        }
         // TODO: send mail with new password
     }
 
     @Override
-    public void resetPassword(String login) throws AppBaseException {
-        Account account = accountFacade.findByLogin(login);
+    public void resetPassword(String login) throws AccountException, MailSendingException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
         // TODO: 21.05.2021 Dlugosc do zmiennej w pliku konfiguracyjnym
         account.setPassword(hashGenerator.generateHash(passwordGenerator.generate(32)));
-        accountFacade.edit(account);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.passwordResetFailed();
+        }
         String pass = passwordGenerator.generate(32);
         account.setPassword(hashGenerator.generateHash(pass));
         mailProvider.sendGeneratedPasswordMail(account.getEmail(), pass);

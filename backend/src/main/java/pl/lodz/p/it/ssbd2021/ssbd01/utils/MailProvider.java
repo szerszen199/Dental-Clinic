@@ -249,7 +249,7 @@ public class MailProvider {
         try {
             sendMail(email, subject, messageText);
         } catch (MessagingException e) {
-            throw MailSendingException.activationLink();
+            throw MailSendingException.passwordResetMail();
         }
     }
 

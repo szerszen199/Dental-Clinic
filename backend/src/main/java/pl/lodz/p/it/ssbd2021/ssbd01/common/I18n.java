@@ -69,6 +69,7 @@ public class I18n {
     public static final String ACCOUNT_NOT_FOUND = "account_not_found";
     public static final String ACCOUNT_CREATION_FAILED = "account_creation_failed";
     public static final String ACCOUNT_CONFIRMATION_BY_TOKEN_FAILED = "account_confirmation_by_token_failed";
+    public static final String PASSWORD_RESET_FAILED = "password_reset_failed";
     public static final String MAIL_CONFIRMATION_PARSING_ERROR = "mail_confirmation_parsing_error";
     public static final String DATABASE_ERROR = "database_error";
     public static final String DATABASE_OPTIMISTIC_LOCK_ERROR = "database_optimistic_lock_error";
@@ -96,6 +97,7 @@ public class I18n {
     public static final String ACCOUNT_MAIL_LOGIN_TEXT = "account_mail_login_text";
     public static final String ACCOUNT_MAIL_GENERATED_PASSWORD_SUBJECT = "account_mail_generated_password_subject";
     public static final String ACCOUNT_MAIL_GENERATED_PASSWORD_TEXT = "account_mail_generated_password_text";
+    public static final String PASSWORD_RESET_MAIL_SENT_ERROR = "password_reset_mail_sent_error";
     public static final String ACCOUNT_MAIL_PASSWORD_CONFIRMATION_SUBJECT = "account_mail_pass_confirmation_subject";
     public static final String ACCOUNT_MAIL_PASSWORD_CONFIRMATION_TEXT = "account_mail_pass_confirmation_text";
 
