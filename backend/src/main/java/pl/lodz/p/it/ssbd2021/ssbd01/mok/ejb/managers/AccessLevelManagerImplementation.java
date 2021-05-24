@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
@@ -25,6 +24,26 @@ public class AccessLevelManagerImplementation extends AbstractManager implements
     private AccessLevelFacade accessLevelFacade;
 
     @Override
+    public void addAccessLevel(String login, String level) throws AccessLevelException, AccountException {
+        AccessLevel accessLevel;
+        try {
+            accessLevel = accessLevelFacade.findByAccountLoginAndAccessLevel(login, level);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (Exception e) {
+            throw AccessLevelException.accessLevelAddFailed();
+        }
+        if (!accessLevel.getActive()) {
+            accessLevel.setActive(true);
+            try {
+                accessLevelFacade.edit(accessLevel);
+            } catch (Exception e) {
+                throw AccessLevelException.accessLevelAddFailed();
+            }
+        }
+    }
+
+    @Override
     public void revokeAccessLevel(String login, String level) throws AccessLevelException, AccountException {
         AccessLevel accessLevel;
         try {
@@ -41,15 +60,6 @@ public class AccessLevelManagerImplementation extends AbstractManager implements
             } catch (Exception e) {
                 throw AccessLevelException.accessLevelRevokeFailed();
             }
-        }
-    }
-
-    @Override
-    public void addAccessLevel(String login, String level) throws AppBaseException {
-        AccessLevel accessLevel = accessLevelFacade.findByAccountLoginAndAccessLevel(login, level);
-        if (!accessLevel.getActive()) {
-            accessLevel.setActive(true);
-            accessLevelFacade.edit(accessLevel);
         }
     }
 
