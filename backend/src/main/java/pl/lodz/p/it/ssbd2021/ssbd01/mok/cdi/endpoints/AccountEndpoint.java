@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountByAdminDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
@@ -47,8 +48,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import java.util.List;
 import java.text.ParseException;
+import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -120,12 +121,18 @@ public class AccountEndpoint {
     @Path("admin/create")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public void createAccountByAdmin(NewAccountByAdminDto newAccountByAdminDto, @Context ServletContext servletContext)
-            throws AppBaseException {
-        accountManager.createAccountByAdministrator(
-                AccountConverter.createAccountByAdminEntityFromDto(newAccountByAdminDto),
-                servletContext
-        );
+    public Response createAccountByAdmin(NewAccountByAdminDto newAccountByAdminDto, @Context ServletContext servletContext){
+        try {
+            accountManager.createAccountByAdministrator(
+                    AccountConverter.createAccountByAdminEntityFromDto(newAccountByAdminDto),
+                    servletContext
+            );
+        } catch (AccountException | MailSendingException e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto("ACCOUNT_CREATION_FAILED")).build();
+        }
+        return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CREATED_SUCCESSFULLY)).build();
     }
 
     /**
