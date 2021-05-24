@@ -209,75 +209,60 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (AppBaseException e) {
             throw AccountException.accountEditFailed();
         }
-        if (editOwnAccountRequestDTO.getFirstName() != null) {
-            toBeModified.setFirstName(editOwnAccountRequestDTO.getFirstName());
+        this.commonEditAccount(editOwnAccountRequestDTO, servletContext, toBeModified);
+    }
+
+    @Override
+    public void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO, ServletContext servletContext) throws AccountException, MailSendingException {
+        Account toBeModified;
+        try {
+            toBeModified = accountFacade.findByLogin(editAnotherAccountRequestDTO.getLogin());
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw AccountException.accountEditFailed();
         }
-        if (editOwnAccountRequestDTO.getLastName() != null) {
-            toBeModified.setLastName(editOwnAccountRequestDTO.getLastName());
+        this.commonEditAccount(editAnotherAccountRequestDTO, servletContext, toBeModified);
+    }
+
+    private void commonEditAccount(EditOwnAccountRequestDTO editAccountRequestDTO, ServletContext servletContext, Account account) throws MailSendingException, AccountException {
+        if (editAccountRequestDTO.getFirstName() != null) {
+            account.setFirstName(editAccountRequestDTO.getFirstName());
         }
-        if (editOwnAccountRequestDTO.getEmail() != null && !toBeModified.getEmail().equals(editOwnAccountRequestDTO.getEmail())) {
+        if (editAccountRequestDTO.getLastName() != null) {
+            account.setLastName(editAccountRequestDTO.getLastName());
+        }
+        if (editAccountRequestDTO.getEmail() != null && !account.getEmail().equals(editAccountRequestDTO.getEmail())) {
             // TODO: 21.05.2021 Wysylac maila dopieo kiedy edit się powiódł?
             try {
                 mailProvider.sendEmailChangeConfirmationMail(
-                        editOwnAccountRequestDTO.getEmail(),
+                        editAccountRequestDTO.getEmail(),
                         servletContext.getContextPath(),
                         jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(
-                                loggedInAccountUtil.getLoggedInAccountLogin(), editOwnAccountRequestDTO.getEmail())
+                                loggedInAccountUtil.getLoggedInAccountLogin(), editAccountRequestDTO.getEmail())
                 );
             } catch (MailSendingException mailSendingException) {
                 throw MailSendingException.editAccountMail();
             }
         }
-        if (editOwnAccountRequestDTO.getPhoneNumber() != null) {
-            toBeModified.setPhoneNumber(editOwnAccountRequestDTO.getPhoneNumber());
+        if (editAccountRequestDTO.getPhoneNumber() != null) {
+            account.setPhoneNumber(editAccountRequestDTO.getPhoneNumber());
         }
-        if (editOwnAccountRequestDTO.getPesel() != null) {
-            toBeModified.setPesel(editOwnAccountRequestDTO.getPesel());
+        if (editAccountRequestDTO.getPesel() != null) {
+            account.setPesel(editAccountRequestDTO.getPesel());
         }
         try {
-            toBeModified.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+            account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
         } catch (AccountException e) {
             throw AccountException.noSuchAccount(e.getCause());
         } catch (AppBaseException e) {
             throw AccountException.accountEditFailed();
         }
         try {
-            accountFacade.edit(toBeModified);
+            accountFacade.edit(account);
         } catch (Exception e) {
             throw AccountException.accountEditFailed();
         }
-    }
-
-    // TODO: 21.05.2021 Bardzo kusi wyrzucić to i edycje swojego konta do wspólnej metody
-    //  Jak komus sie chce zapraszam
-    @Override
-    public void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO, ServletContext servletContext) throws AppBaseException {
-        Account toBeModified = accountFacade.findByLogin(editAnotherAccountRequestDTO.getLogin());
-        if (editAnotherAccountRequestDTO.getFirstName() != null) {
-            toBeModified.setFirstName(editAnotherAccountRequestDTO.getFirstName());
-        }
-        if (editAnotherAccountRequestDTO.getLastName() != null) {
-            toBeModified.setLastName(editAnotherAccountRequestDTO.getLastName());
-        }
-        if (editAnotherAccountRequestDTO.getEmail() != null && !toBeModified.getEmail().equals(editAnotherAccountRequestDTO.getEmail())) {
-            // TODO: 21.05.2021 Wysylac maila dopieo kiedy edit się powiódł?
-            // TODO: 21.05.2021 Również todo czy jak admin edytuje konto to też mamy wysyłać maila? Chyba niee
-            // mailProvider.sendEmailChangeConfirmationMail(
-            //        editAnotherAccountRequestDTO.getEmail(),
-            //        servletContext.getContextPath(),
-            //        jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(
-            //                loggedInAccountUtil.getLoggedInAccountLogin(),
-            //                editAnotherAccountRequestDTO.getEmail())
-            // );
-        }
-        if (editAnotherAccountRequestDTO.getPhoneNumber() != null) {
-            toBeModified.setPhoneNumber(editAnotherAccountRequestDTO.getPhoneNumber());
-        }
-        if (editAnotherAccountRequestDTO.getPesel() != null) {
-            toBeModified.setPesel(editAnotherAccountRequestDTO.getPesel());
-        }
-        toBeModified.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
-        accountFacade.edit(toBeModified);
     }
 
     @Override
