@@ -102,7 +102,6 @@ public class AccountEndpoint {
      *
      * @param confirmAccountRequestDTO confirm account request dto
      * @return response
-     * @throws AppBaseException wyjątek typu AppBaseException
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/confirm?token={token}
     @PUT
@@ -110,9 +109,12 @@ public class AccountEndpoint {
     @PermitAll
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response confirmAccount(@NotNull @Valid ConfirmAccountRequestDTO confirmAccountRequestDTO) throws AppBaseException {
-        // TODO: 21.05.2021 Obsługa wyjątków
-        this.accountManager.confirmAccountByToken(confirmAccountRequestDTO.getConfirmToken());
+    public Response confirmAccount(@NotNull @Valid ConfirmAccountRequestDTO confirmAccountRequestDTO) {
+        try {
+            this.accountManager.confirmAccountByToken(confirmAccountRequestDTO.getConfirmToken());
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
+        }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CONFIRMED_SUCCESSFULLY)).build();
     }
 

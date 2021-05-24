@@ -137,19 +137,34 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void confirmAccountByToken(String jwt) throws AppBaseException {
+    public void confirmAccountByToken(String jwt) throws AccountException, MailSendingException {
         if (!jwtEmailConfirmationUtils.validateJwtToken(jwt)) {
             throw AccountException.invalidConfirmationToken();
         }
+        String login;
+        Account account;
         try {
-            String login = jwtEmailConfirmationUtils.getUserNameFromJwtToken(jwt);
-            Account account = accountFacade.findByLogin(login);
-            account.setEnabled(true);
-            accountFacade.edit(account);
-            mailProvider.sendActivationConfirmationMail(accountFacade.findByLogin(login).getEmail());
-        } catch (AppBaseException | ParseException e) {
+            login = jwtEmailConfirmationUtils.getUserNameFromJwtToken(jwt);
+        } catch (Exception e) {
+            throw AccountException.invalidConfirmationToken();
+        }
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (Exception e) {
             throw AccountException.noSuchAccount(e);
         }
+        try {
+            account.setEnabled(true);
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.accountConfirmationByTokenFailed();
+        }
+        try {
+            mailProvider.sendActivationConfirmationMail(accountFacade.findByLogin(login).getEmail());
+        } catch (Exception e) {
+            throw MailSendingException.activationConfirmation();
+        }
+
     }
 
     @Override
