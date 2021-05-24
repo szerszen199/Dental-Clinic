@@ -472,16 +472,39 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Override
     public void setDarkMode(String login, boolean isDarkMode) throws AppBaseException {
-        Account account = accountFacade.findByLogin(login);
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw AccountException.accountEditFailed();
+        }
         account.setDarkMode(isDarkMode);
-        accountFacade.edit(account);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.accountSetDarkMode();
+        }
+
     }
 
     @Override
     public void setLanguage(String login, String language) throws AppBaseException {
-        Account account = accountFacade.findByLogin(login);
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw AccountException.accountEditFailed();
+        }
         account.setLanguage(language);
-        accountFacade.edit(account);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.accountSetLanguage();
+        }
     }
 
 }

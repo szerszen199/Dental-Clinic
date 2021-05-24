@@ -12,11 +12,12 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOCKED_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOGIN_ALREADY_EXISTS;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOGIN_EMAIL_PESEL_ALREADY_EXISTS;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_NOT_FOUND;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_SET_DARK_MODE_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_SET_LANGUAGE_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_UNLOCKED_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.EMAIL_CONFIRMATION_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.INVALID_CONFIRMATION_TOKEN;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_CONFIRMATION_PARSING_ERROR;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_CHANGED_SUCCESSFULLY;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_CHANGE_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_RESET_FAILED;
 
@@ -81,8 +82,16 @@ public class AccountException extends AppBaseException {
         return new AccountException(EMAIL_CONFIRMATION_FAILED);
     }
 
-    public static AccountException passwordChangeFailed(){
+    public static AccountException passwordChangeFailed() {
         return new AccountException(PASSWORD_CHANGE_FAILED);
+    }
+
+    public static AccountException accountSetDarkMode() {
+        return new AccountException(ACCOUNT_SET_DARK_MODE_FAILED);
+    }
+
+    public static AccountException accountSetLanguage() {
+        return new AccountException(ACCOUNT_SET_LANGUAGE_FAILED);
     }
 
     /**
@@ -113,7 +122,7 @@ public class AccountException extends AppBaseException {
         return new AccountException(ACCOUNT_NOT_FOUND, cause);
     }
 
-    public static AccountException getAllAccountsFailed(){
+    public static AccountException getAllAccountsFailed() {
         return new AccountException(ACCOUNT_GET_ALL_ACCOUNTS_FAILED);
     }
 

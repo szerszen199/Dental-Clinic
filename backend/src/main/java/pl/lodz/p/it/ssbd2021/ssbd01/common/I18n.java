@@ -29,7 +29,7 @@ public class I18n {
     public static final String PASSWORD_CHANGED_SUCCESSFULLY = "password_changed_successfully";
     public static final String PASSWORD_RESET_SUCCESSFULLY = "password_reset_successfully";
     public static final String PASSWORD_RESET_MAIL_SENT_SUCCESSFULLY = "password_reset_mail_sent_successfully";
-    public static final String DARK_MODE_SET_SUCCESSFULLY = "dark_mode_set_successfully";
+    public static final String ACCOUNT_DARK_MODE_SET_SUCCESSFULLY = "account_dark_mode_set_successfully";
     public static final String LANGUAGE_SET_SUCCESSFULLY = "language_set_successfully";
 
     public static final String ACCESS_LEVEL_NULL = "access_level_null";
@@ -70,6 +70,8 @@ public class I18n {
     public static final String PASSWORD_TOO_SHORT = "password_too_short";
     public static final String NEW_PASSWORDS_NOT_MATCH = "new_passwords_do_not_match";
     public static final String CURRENT_PASSWORD_NOT_MATCH = "current_password_does_not_match";
+    public static final String ACCOUNT_SET_DARK_MODE_FAILED = "account_set_dark_mode_failed";
+    public static final String ACCOUNT_SET_LANGUAGE_FAILED = "account_set_language_failed";
     public static final String ACCESS_LEVEL_NOT_FOUND = "no_such_level_access";
     public static final String ACCESS_LEVEL_ALREADY_ASSIGNED = "access_level_already_assigned";
     public static final String ACCOUNT_LOGIN_ALREADY_EXISTS = "account_login_already_exists";
