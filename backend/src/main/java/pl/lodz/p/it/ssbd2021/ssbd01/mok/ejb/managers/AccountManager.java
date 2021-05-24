@@ -2,6 +2,9 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 
@@ -19,9 +22,10 @@ public interface AccountManager {
      * Utworzenie konta przy rejestracji.
      *
      * @param account        nowe konto
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @throws AccountException wyjątek typu AccountException
+     * @throws MailSendingException wyjątek typu MailSendingException
      */
-    void createAccount(Account account) throws AppBaseException;
+    void createAccount(Account account) throws AccountException, MailSendingException;
 
     /**
      * Utworzenie konta przez administratora.
@@ -57,6 +61,16 @@ public interface AccountManager {
     void confirmAccountByToken(String jwt) throws AppBaseException;
 
     /**
+     * reset hasla konta.
+     *
+     * @param login login
+     * @throws AccountException wyjątek typu AccountException
+     * @throws MailSendingException wyjątek typu MailSendingException
+     * @throws PasswordException wyjątek typu PasswordException
+     */
+    void resetPasswordByToken(String login) throws AccountException, MailSendingException, PasswordException;
+
+    /**
      * Potwierdzenie hasla konta.
      *
      * @param login          login
@@ -84,9 +98,10 @@ public interface AccountManager {
      * Edytuje wlasne konto.
      *
      * @param editOwnAccountRequestDTO edit own account request dto
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @throws AccountException wyjątek typu AccountException
+     * @throws MailSendingException wyjątek typu MailSendingException
      */
-    void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO) throws AppBaseException;
+    void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO) throws MailSendingException, AccountException;
 
 
     /**
