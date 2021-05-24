@@ -7,6 +7,7 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CREATION_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EDIT_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EMAIL_ALREADY_EXISTS;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_IS_BLOCKED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOCKED_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOGIN_ALREADY_EXISTS;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOGIN_EMAIL_PESEL_ALREADY_EXISTS;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_NOT_FOUND;
@@ -49,6 +50,10 @@ public class AccountException extends AppBaseException {
         return new AccountException(ACCOUNT_LOGIN_ALREADY_EXISTS, cause);
     }
 
+    public static AccountException accountLockFailed() {
+        return new AccountException(ACCOUNT_LOCKED_FAILED);
+    }
+
     /**
      * Tworzy wyjątek reprezentujący próbę utworzenia konta o emailu który już istnieje.
      *
@@ -68,7 +73,7 @@ public class AccountException extends AppBaseException {
         return new AccountException(ACCOUNT_LOGIN_EMAIL_PESEL_ALREADY_EXISTS);
     }
 
-    public static AccountException emailConfirmationFailed(){
+    public static AccountException emailConfirmationFailed() {
         return new AccountException(EMAIL_CONFIRMATION_FAILED);
     }
 
