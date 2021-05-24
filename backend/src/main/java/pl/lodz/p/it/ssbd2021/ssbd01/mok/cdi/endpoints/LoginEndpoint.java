@@ -164,6 +164,7 @@ public class LoginEndpoint {
             // TODO: 11.05.2021 Moze tutaj cos zrobic?
             e.printStackTrace();
         }
+
         try {
             if (credentialValidationResult.getStatus() == CredentialValidationResult.Status.VALID && credentialValidationResult.getCallerGroups().contains(I18n.ADMIN)) {
                 mailProvider.sendAdminLoginMail(accountManager.findByLogin(authenticationRequestDTO.getUsername()).getEmail());
@@ -171,6 +172,7 @@ public class LoginEndpoint {
         } catch (AppBaseException e) {
             e.printStackTrace();
         }
+
 
         Logger.getGlobal().log(Level.INFO, "Zalogowano na konto {0} z adresu {1}", new Object[]{credentialValidationResult.getCallerPrincipal().getName(), ip});
         return Response.ok().entity(
