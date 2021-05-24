@@ -74,6 +74,7 @@ public class I18n {
     public static final String DATABASE_ERROR = "database_error";
     public static final String DATABASE_OPTIMISTIC_LOCK_ERROR = "database_optimistic_lock_error";
     public static final String ACCOUNT_EDIT_VALIDATION_ERROR = "account_edit_validation_error";
+    public static final String ACCOUNT_EDIT_FAILED = "account_edit_failed";
     public static final String LOAD_PROPERTIES_ERROR = "load_properties_error";
     public static final String INVALID_CONFIRMATION_TOKEN = "invalid_registration_confirmation_token";
     public static final String MAIL_ACTIVATION_LINK_SEND_ERROR = "mail_activation_link_send_error";
@@ -87,6 +88,7 @@ public class I18n {
     public static final String ACCOUNT_MAIL_ACTIVATION_CONFIRMATION_SUBJECT = "account_mail_activation_confirmation_subject";
     public static final String ACCOUNT_MAIL_ACTIVATION_CONFIRMATION_TEXT = "account_mail_activation_confirmation_text";
     public static final String ACCOUNT_MAIL_CHANGE_CONFIRM_SUBJECT = "account_mail_change_confirm_subject";
+    public static final String EDIT_ACCOUNT_MAIL = "edit_account_mail";
     public static final String ACCOUNT_MAIL_CHANGE_CONFIRM_TEXT = "account_mail_change_confirm_text";
     public static final String ACCOUNT_MAIL_CHANGE_CONFIRM_BUTTON = "account_mail_change_confirm_button";
     public static final String ACCOUNT_MAIL_LOCK_BY_ADMIN_SUBJECT = "account_mail_lock_by_admin_subject";

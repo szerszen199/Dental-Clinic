@@ -200,9 +200,15 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    // Nie widzę logicznego poziomu dlaczego miałoby tutaj być podawane konto zamiast DTO, jak mi dacie powód to to zmienie
-    public void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO, ServletContext servletContext) throws AppBaseException {
-        Account toBeModified = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+    public void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO, ServletContext servletContext) throws MailSendingException, AccountException {
+        Account toBeModified;
+        try {
+            toBeModified = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw AccountException.accountEditFailed();
+        }
         if (editOwnAccountRequestDTO.getFirstName() != null) {
             toBeModified.setFirstName(editOwnAccountRequestDTO.getFirstName());
         }
@@ -211,12 +217,16 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         }
         if (editOwnAccountRequestDTO.getEmail() != null && !toBeModified.getEmail().equals(editOwnAccountRequestDTO.getEmail())) {
             // TODO: 21.05.2021 Wysylac maila dopieo kiedy edit się powiódł?
-            mailProvider.sendEmailChangeConfirmationMail(
-                    editOwnAccountRequestDTO.getEmail(),
-                    servletContext.getContextPath(),
-                    jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(
-                            loggedInAccountUtil.getLoggedInAccountLogin(), editOwnAccountRequestDTO.getEmail())
-            );
+            try {
+                mailProvider.sendEmailChangeConfirmationMail(
+                        editOwnAccountRequestDTO.getEmail(),
+                        servletContext.getContextPath(),
+                        jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(
+                                loggedInAccountUtil.getLoggedInAccountLogin(), editOwnAccountRequestDTO.getEmail())
+                );
+            } catch (MailSendingException mailSendingException) {
+                throw MailSendingException.editAccountMail();
+            }
         }
         if (editOwnAccountRequestDTO.getPhoneNumber() != null) {
             toBeModified.setPhoneNumber(editOwnAccountRequestDTO.getPhoneNumber());
@@ -224,8 +234,18 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         if (editOwnAccountRequestDTO.getPesel() != null) {
             toBeModified.setPesel(editOwnAccountRequestDTO.getPesel());
         }
-        toBeModified.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
-        accountFacade.edit(toBeModified);
+        try {
+            toBeModified.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw AccountException.accountEditFailed();
+        }
+        try {
+            accountFacade.edit(toBeModified);
+        } catch (Exception e) {
+            throw AccountException.accountEditFailed();
+        }
     }
 
     // TODO: 21.05.2021 Bardzo kusi wyrzucić to i edycje swojego konta do wspólnej metody
