@@ -19,7 +19,7 @@ import java.util.List;
 
 public abstract class AbstractFacade<T> {
 
-    private final Class<T> entityClass;
+    private Class<T> entityClass;
 
     /**
      * Tworzy nową instancję klasy AbstractFacade.
