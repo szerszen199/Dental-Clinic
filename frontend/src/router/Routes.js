@@ -4,6 +4,7 @@ import Home from "../components/Home/Home";
 import Error404 from "../components/Error404/Error404"
 import Registration from "../components/Registration/Registration";
 import Login from "../components/Login/Login";
+import Reset from "../components/ResetPassword/Reset";
 import Dashboard from "../components/Dashboard/Dashboard"
 import PrivateRoute from "./PrivateRoute";
 import Account from "../components/Account/Account"
@@ -29,6 +30,9 @@ export default function Routes() {
             </Route>
             <Route exact path="/login">
                 <Login />
+            </Route>
+            <Route exact path="/reset-password">
+                <Reset />
             </Route>
             {/*<PrivateRoute authed={true} path='/dashboard' component={Dashboard} />*/}
             <PrivateRoute authed={true} path='/prescriptions' component={Prescription} />
