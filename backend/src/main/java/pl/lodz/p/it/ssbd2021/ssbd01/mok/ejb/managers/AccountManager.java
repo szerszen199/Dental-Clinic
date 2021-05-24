@@ -26,6 +26,15 @@ public interface AccountManager {
     void createAccount(Account account, ServletContext servletContext) throws AppBaseException;
 
     /**
+     * Utworzenie konta przez administratora.
+     *
+     * @param account        nowe konto
+     * @param servletContext kontekst serwletów, służy do współdzielenia informacji
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    void createAccountByAdministrator(Account account, ServletContext servletContext) throws AppBaseException;
+
+    /**
      * usun konto.
      *
      * @param id id konta do usuniecia
@@ -138,15 +147,6 @@ public interface AccountManager {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     List<Account> findByEnabled(boolean enabled) throws AppBaseException;
-
-    /**
-     * Resetuje hasło do konta o podanym id. Ustawia alfanumeryczne hasło
-     * o długości 8 znaków.
-     *
-     * @param id identyfikator konta
-     * @throws AppBaseException wyjątek typu AppBaseException
-     */
-    void resetPassword(Long id) throws AppBaseException;
 
     /**
      * Resetuje hasło podanego konta. Ustawia alfanumeryczne hasło o długości
