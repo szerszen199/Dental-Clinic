@@ -118,6 +118,13 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
+    public void setActiveFalse(String login) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
+        account.setActive(false);
+        accountFacade.edit(account);
+    }
+
+    @Override
     public void setEmailRecallTrue(String login) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
         account.setEmailRecall(true);
@@ -279,6 +286,11 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @Override
     public List<Account> findByEnabled(boolean enabled) throws AppBaseException {
         return accountFacade.findByEnabled(enabled);
+    }
+
+    @Override
+    public List<Account> findByActive(boolean enabled) throws AppBaseException {
+        return accountFacade.findByActive(enabled);
     }
 
     @Override

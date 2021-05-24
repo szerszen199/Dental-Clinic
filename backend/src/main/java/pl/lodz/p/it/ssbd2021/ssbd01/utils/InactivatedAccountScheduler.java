@@ -48,4 +48,17 @@ public class InactivatedAccountScheduler {
             }
         }
     }
+
+    @Schedule(hour = "*", minute = "*/3", second = "1", info = "Every day timer")
+    public void automaticallySchedule() throws AppBaseException {
+        List<Account> activeAccounts = accountManager.findByActive(true);
+        for (Account activeAccount : activeAccounts) {
+            if(activeAccount.getLastSuccessfulLogin()!=null){
+                Long time = Duration.between(activeAccount.getLastSuccessfulLogin(), LocalDateTime.now()).toMillis();
+                if (time >= propertiesLoader.getDeactivateInactiveAccountTimeDelay()) {
+                    accountManager.setActiveFalse(activeAccount.getLogin());
+                }
+            }
+        }
+    }
 }

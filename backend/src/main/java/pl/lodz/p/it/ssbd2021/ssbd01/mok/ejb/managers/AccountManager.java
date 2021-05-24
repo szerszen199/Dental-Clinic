@@ -41,6 +41,7 @@ public interface AccountManager {
      */
     void setEmailRecallTrue(String login) throws AppBaseException;
 
+    void setActiveFalse(String login) throws AppBaseException;
 
     /**
      * Potwierdzenie konta.
@@ -138,6 +139,15 @@ public interface AccountManager {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     List<Account> findByEnabled(boolean enabled) throws AppBaseException;
+
+    /**
+     * Wyszukuje Listę kont na podstawie aktywacji.
+     *
+     * @param enabled konta o danej wartosci do znalezienia
+     * @return znalezione konto
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    List<Account> findByActive(boolean enabled) throws AppBaseException;
 
     /**
      * Resetuje hasło do konta o podanym id. Ustawia alfanumeryczne hasło
