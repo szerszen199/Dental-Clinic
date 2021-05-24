@@ -113,7 +113,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (AppBaseException e) {
             throw AccountException.accountCreationFailed();
         }
-        throw AccountException.accountLoginEmailExists();
+        throw AccountException.accountLoginEmailPeselExists();
     }
 
     @Override
@@ -168,7 +168,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void resetPasswordByToken(String jwt) throws AccountException, MailSendingException {
+    public void resetPasswordByToken(String jwt) throws AccountException, MailSendingException, PasswordException {
         if (!jwtResetPasswordConfirmation.validateJwtToken(jwt)) {
             throw AccountException.invalidConfirmationToken();
         }
@@ -328,7 +328,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (AccountException e) {
             throw AccountException.noSuchAccount(e.getCause());
         } catch (AppBaseException e) {
-            throw AccountException.passwordChangeFailed();
+            throw PasswordException.passwordChangeFailed();
         }
 
         if (!account.getPassword().contentEquals(hashGenerator.generateHash(oldPassword))) {
@@ -341,7 +341,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         try {
             accountFacade.edit(account);
         } catch (Exception e) {
-            throw AccountException.passwordChangeFailed();
+            throw PasswordException.passwordChangeFailed();
         }
     }
 
@@ -356,7 +356,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void resetPassword(Long id) throws AccountException {
+    public void resetPassword(Long id) throws AccountException, PasswordException {
         Account account;
         try {
             account = accountFacade.find(id);
@@ -368,13 +368,13 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         try {
             accountFacade.edit(account);
         } catch (Exception e) {
-            throw AccountException.passwordResetFailed();
+            throw PasswordException.passwordResetFailed();
         }
         // TODO: send mail with new password
     }
 
     @Override
-    public void resetPassword(String login) throws AccountException, MailSendingException {
+    public void resetPassword(String login) throws AccountException, MailSendingException, PasswordException {
         Account account;
         try {
             account = accountFacade.findByLogin(login);
@@ -386,7 +386,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         try {
             accountFacade.edit(account);
         } catch (Exception e) {
-            throw AccountException.passwordResetFailed();
+            throw PasswordException.passwordResetFailed();
         }
         String pass = passwordGenerator.generate(32);
         account.setPassword(hashGenerator.generateHash(pass));

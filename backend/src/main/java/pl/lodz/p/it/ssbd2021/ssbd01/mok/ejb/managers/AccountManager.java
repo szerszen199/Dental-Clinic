@@ -4,6 +4,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 
@@ -68,7 +69,7 @@ public interface AccountManager {
      * @throws AccountException wyjątek typu AccountException
      * @throws MailSendingException wyjątek typu MailSendingException
      */
-    void resetPasswordByToken(String login) throws AccountException, MailSendingException;
+    void resetPasswordByToken(String login) throws AccountException, MailSendingException, PasswordException;
 
     /**
      * Potwierdzenie hasla konta.
