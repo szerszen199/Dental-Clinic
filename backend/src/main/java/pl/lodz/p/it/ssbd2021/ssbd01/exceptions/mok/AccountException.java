@@ -17,6 +17,8 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_SET_LANGUAGE_FAIL
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_UNLOCKED_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.EMAIL_CONFIRMATION_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.INVALID_CONFIRMATION_TOKEN;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.UPDATE_ACCOUNT_AFTER_SUCCESSFUL_LOGIN;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.UPDATE_ACCOUNT_AFTER_UNSUCCESSFUL_LOGIN;
 
 /**
  * Typ Account exception.
@@ -186,5 +188,13 @@ public class AccountException extends AppBaseException {
      */
     public static AccountException accountUnlockFailed() {
         return new AccountException(ACCOUNT_UNLOCKED_FAILED);
+    }
+
+    public static AccountException updateAfterUnsuccessfulLogin(){
+        return new AccountException(UPDATE_ACCOUNT_AFTER_UNSUCCESSFUL_LOGIN);
+    }
+
+    public static AccountException updateAfterSuccessfulLogin(){
+        return new AccountException(UPDATE_ACCOUNT_AFTER_SUCCESSFUL_LOGIN);
     }
 }
