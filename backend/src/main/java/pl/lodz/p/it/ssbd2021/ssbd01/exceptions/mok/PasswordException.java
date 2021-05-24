@@ -5,6 +5,9 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.CURRENT_PASSWORD_NOT_MATCH;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.NEW_PASSWORDS_NOT_MATCH;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORDS_NOT_DIFFER;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_CHANGE_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_RESET_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_TOO_SHORT;
 
 public class PasswordException extends AppBaseException {
 
@@ -63,6 +66,31 @@ public class PasswordException extends AppBaseException {
      */
     public static PasswordException passwordsNotDifferent() {
         return new PasswordException(PASSWORDS_NOT_DIFFER);
+    }
+
+    /**
+     * Metoda opakowująca wyjątek PasswordException
+     * z dedykowaną wiadomością dołączoną do niego sygnalizującą
+     * powód wystąpienia wyjątku.
+     *
+     * @return obiekt wyjątku PasswordException z wiadomością sygnalizującą
+     *         niewystarczającą długość hasła podczas jego tworzenia
+     */
+    public static PasswordException passwordTooShort() {
+        return new PasswordException(PASSWORD_TOO_SHORT);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę zresetowania hasła zakończoną niepowodzeniem.
+     *
+     * @return wyjątek typu PasswordException
+     */
+    public static PasswordException passwordResetFailed() {
+        return new PasswordException(PASSWORD_RESET_FAILED);
+    }
+
+    public static PasswordException passwordChangeFailed() {
+        return new PasswordException(PASSWORD_CHANGE_FAILED);
     }
 
 }

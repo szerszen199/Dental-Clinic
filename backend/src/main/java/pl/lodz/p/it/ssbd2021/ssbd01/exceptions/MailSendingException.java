@@ -1,9 +1,12 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.exceptions;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.EDIT_ACCOUNT_MAIL;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_ACCOUNT_LOCK_SEND_ERROR;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_ACTIVATION_CONFIRMATION_SEND_ERROR;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_ACTIVATION_LINK_SEND_ERROR;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_CONFIRMATION_PARSING_ERROR;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_RESET_MAIL_SENT_ERROR;
 
 public class MailSendingException extends AppBaseException {
@@ -80,5 +83,16 @@ public class MailSendingException extends AppBaseException {
      */
     public static MailSendingException activationConfirmation() {
         return new MailSendingException(MAIL_ACTIVATION_CONFIRMATION_SEND_ERROR);
+    }
+
+    /**
+     * Metoda opakowująca wyjątek MailSendingException
+     * z dedykowaną wiadomością dołączoną do niego sygnalizującą
+     * powód wystąpienia wyjątku.
+     *
+     * @return obiekt wyjątku MailSendingException z wiadomością sygnalizującą niepowodzenie wysyłania wiadomości e-mail informacją o aktywacji konta.
+     */
+    public static MailSendingException mailConfirmationParsingError(Throwable cause) {
+        return new MailSendingException(MAIL_CONFIRMATION_PARSING_ERROR, cause);
     }
 }

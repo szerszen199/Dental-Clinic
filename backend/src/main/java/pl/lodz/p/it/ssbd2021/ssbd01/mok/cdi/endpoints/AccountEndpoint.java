@@ -458,7 +458,7 @@ public class AccountEndpoint {
     public Response resetOthersPassword(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) {
         try {
             accountManager.resetPassword(simpleUsernameRequestDTO.getLogin());
-        } catch (AccountException | MailSendingException e) {
+        } catch (AccountException | MailSendingException | PasswordException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(PASSWORD_RESET_FAILED).build();

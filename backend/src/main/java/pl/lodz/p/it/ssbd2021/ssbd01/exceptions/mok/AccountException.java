@@ -17,9 +17,6 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_SET_LANGUAGE_FAIL
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_UNLOCKED_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.EMAIL_CONFIRMATION_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.INVALID_CONFIRMATION_TOKEN;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_CONFIRMATION_PARSING_ERROR;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_CHANGE_FAILED;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_RESET_FAILED;
 
 /**
  * Typ Account exception.
@@ -74,16 +71,12 @@ public class AccountException extends AppBaseException {
      *
      * @return wyjątek typu AccountException
      */
-    public static AccountException accountLoginEmailExists() {
+    public static AccountException accountLoginEmailPeselExists() {
         return new AccountException(ACCOUNT_LOGIN_EMAIL_PESEL_ALREADY_EXISTS);
     }
 
     public static AccountException emailConfirmationFailed() {
         return new AccountException(EMAIL_CONFIRMATION_FAILED);
-    }
-
-    public static AccountException passwordChangeFailed() {
-        return new AccountException(PASSWORD_CHANGE_FAILED);
     }
 
     public static AccountException accountSetDarkMode() {
@@ -146,15 +139,6 @@ public class AccountException extends AppBaseException {
     }
 
     /**
-     * Tworzy wyjątek reprezentujący próbę zresetowania hasła zakończoną niepowodzeniem.
-     *
-     * @return wyjątek typu AccountException
-     */
-    public static AccountException passwordResetFailed() {
-        return new AccountException(PASSWORD_RESET_FAILED);
-    }
-
-    /**
      * Tworzy wyjątek reprezentujący próbę aktywacji konta z użyciem niepoprawnego
      * tokenu aktywacyjnego.
      *
@@ -173,17 +157,6 @@ public class AccountException extends AppBaseException {
      */
     public static AccountException invalidConfirmationToken(Throwable cause) {
         return new AccountException(INVALID_CONFIRMATION_TOKEN, cause);
-    }
-
-    /**
-     * Tworzy wyjątek reprezentujący próbę aktywacji konta z użyciem niepoprawnego
-     * tokenu aktywacyjnego.
-     *
-     * @param cause przyczyna wystąpienia wyjątku
-     * @return wyjątek typu AccountException
-     */
-    public static AccountException mailConfirmationParsingError(Throwable cause) {
-        return new AccountException(MAIL_CONFIRMATION_PARSING_ERROR, cause);
     }
 
     public static AccountException accountUnlockFailed() {
