@@ -397,13 +397,22 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Override
     public void sendResetPasswordConfirmationEmail(String login, ServletContext servletContext) throws AppBaseException {
-        Account account = accountFacade.findByLogin(login);
-        mailProvider.sendResetPassConfirmationMail(
-                account.getEmail(),
-                servletContext.getContextPath(),
-                jwtResetPasswordConfirmation.generateJwtTokenForUsername(
-                        login)
-        );
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
+        try {
+            mailProvider.sendResetPassConfirmationMail(
+                    account.getEmail(),
+                    servletContext.getContextPath(),
+                    jwtResetPasswordConfirmation.generateJwtTokenForUsername(
+                            login)
+            );
+        } catch (MailSendingException mailSendingException) {
+            throw MailSendingException.editAccountMail();
+        }
         // TODO: send mail with new password
     }
 

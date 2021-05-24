@@ -16,7 +16,6 @@ public class I18n {
     public static final String PASSWORD_CHANGE_FAILED = "password_change_failed";
     public static final String ACCOUNT_CONFIRMED_SUCCESSFULLY = "account_confirmed_successfully";
     public static final String ACCOUNT_EDITED_SUCCESSFULLY = "account_edited_successfully";
-    public static final String ACCOUNT_OTHER_EDITED_SUCCESSFULLY = "account_other_edited_successfully";
     public static final String EMAIL_CONFIRMED_SUCCESSFULLY = "email_confirmed_successfully";
     public static final String EMAIL_CONFIRMATION_FAILED = "email_confirmation_failed";
     public static final String ACCOUNT_LOCKED_SUCCESSFULLY = "account_locked_successfully";
@@ -86,7 +85,6 @@ public class I18n {
     public static final String DATABASE_OPTIMISTIC_LOCK_ERROR = "database_optimistic_lock_error";
     public static final String ACCOUNT_EDIT_VALIDATION_ERROR = "account_edit_validation_error";
     public static final String ACCOUNT_EDIT_FAILED = "account_edit_failed";
-    public static final String ACCOUNT_OTHER_EDIT_FAILED = "account_other_edit_failed";
     public static final String LOAD_PROPERTIES_ERROR = "load_properties_error";
     public static final String INVALID_CONFIRMATION_TOKEN = "invalid_registration_confirmation_token";
     public static final String MAIL_ACTIVATION_LINK_SEND_ERROR = "mail_activation_link_send_error";
