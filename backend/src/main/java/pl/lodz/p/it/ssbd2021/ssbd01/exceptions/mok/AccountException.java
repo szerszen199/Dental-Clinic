@@ -52,6 +52,11 @@ public class AccountException extends AppBaseException {
         return new AccountException(ACCOUNT_LOGIN_ALREADY_EXISTS, cause);
     }
 
+    /**
+     * Tworzy wyjątek reprezentujący próbę zablokowania konta.
+     *
+     * @return wyjątek typu AccountException
+     */
     public static AccountException accountLockFailed() {
         return new AccountException(ACCOUNT_LOCKED_FAILED);
     }
@@ -67,7 +72,7 @@ public class AccountException extends AppBaseException {
     }
 
     /**
-     * Tworzy wyjątek reprezentujący próbę utworzenia konta o loginie lub emailu który już istnieje.
+     * Tworzy wyjątek reprezentujący próbę utworzenia konta o loginie lub emailu lub peselu który już istnieje.
      *
      * @return wyjątek typu AccountException
      */
@@ -75,14 +80,29 @@ public class AccountException extends AppBaseException {
         return new AccountException(ACCOUNT_LOGIN_EMAIL_PESEL_ALREADY_EXISTS);
     }
 
+    /**
+     * Tworzy wyjątek reprezentujący próbę potwirdzenia konta emailem.
+     *
+     * @return wyjątek typu AccountException
+     */
     public static AccountException emailConfirmationFailed() {
         return new AccountException(EMAIL_CONFIRMATION_FAILED);
     }
 
+    /**
+     * Tworzy wyjątek reprezentujący próbę ustawienia ciemnego motywu.
+     *
+     * @return wyjątek typu AccountException
+     */
     public static AccountException accountSetDarkMode() {
         return new AccountException(ACCOUNT_SET_DARK_MODE_FAILED);
     }
 
+    /**
+     * Tworzy wyjątek reprezentujący próbę ustawienia języka.
+     *
+     * @return wyjątek typu AccountException
+     */
     public static AccountException accountSetLanguage() {
         return new AccountException(ACCOUNT_SET_LANGUAGE_FAILED);
     }
@@ -159,6 +179,11 @@ public class AccountException extends AppBaseException {
         return new AccountException(INVALID_CONFIRMATION_TOKEN, cause);
     }
 
+    /**
+     * Tworzy wyjątek reprezentujący próbę odblokowania konta.
+     *
+     * @return wyjątek typu AccountException
+     */
     public static AccountException accountUnlockFailed() {
         return new AccountException(ACCOUNT_UNLOCKED_FAILED);
     }

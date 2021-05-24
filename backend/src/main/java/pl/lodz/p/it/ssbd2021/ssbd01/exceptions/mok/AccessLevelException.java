@@ -49,11 +49,21 @@ public class AccessLevelException extends AppBaseException {
         return new AccessLevelException(ACCESS_LEVEL_ALREADY_ASSIGNED);
     }
 
-    public static AccessLevelException accessLevelRevokeFailed(){
+    /**
+     * Tworzy wyjątek reprezentujący probe zdjęcia poziomu dostępu.
+     *
+     * @return wyjatek AccessLevelException
+     */
+    public static AccessLevelException accessLevelRevokeFailed() {
         return new AccessLevelException(ACCESS_LEVEL_REVOKE_FAILED);
     }
 
-    public static AccessLevelException accessLevelAddFailed(){
+    /**
+     * Tworzy wyjątek reprezentujący probe nadawania poziomu dostępu.
+     *
+     * @return wyjatek AccessLevelException
+     */
+    public static AccessLevelException accessLevelAddFailed() {
         return new AccessLevelException(ACCESS_LEVEL_ADD_FAILED);
     }
 
