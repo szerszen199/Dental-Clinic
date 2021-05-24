@@ -51,6 +51,7 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCESS_LEVEL_REVOKE_FAILE
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CONFIRMATION_BY_TOKEN_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CREATION_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EDIT_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOCKED_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_OTHER_EDIT_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.EMAIL_CONFIRMATION_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_RESET_FAILED;
@@ -251,17 +252,21 @@ public class AccountEndpoint {
      *
      * @param simpleUsernameRequestDTO simple username request dto
      * @return response
-     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
     @RolesAllowed({I18n.ADMIN})
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("lock")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response lockAccount(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
-        // TODO: 21.05.2021 Obsługa wyjątków
-        accountManager.lockAccount(simpleUsernameRequestDTO.getLogin());
-        mailProvider.sendAccountLockByAdminMail(accountManager.findByLogin(simpleUsernameRequestDTO.getLogin()).getEmail());
+    public Response lockAccount(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) {
+        try {
+            accountManager.lockAccount(simpleUsernameRequestDTO.getLogin());
+            mailProvider.sendAccountLockByAdminMail(accountManager.findByLogin(simpleUsernameRequestDTO.getLogin()).getEmail());
+        } catch (AccountException | MailSendingException accountException) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_LOCKED_FAILED)).build();
+        }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_LOCKED_SUCCESSFULLY)).build();
     }
 

@@ -154,8 +154,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (Exception e) {
             throw AccountException.noSuchAccount(e);
         }
+        account.setEnabled(true);
         try {
-            account.setEnabled(true);
             accountFacade.edit(account);
         } catch (Exception e) {
             throw AccountException.accountConfirmationByTokenFailed();
@@ -185,9 +185,18 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Override
     public void lockAccount(String login) throws AppBaseException {
-        Account account = accountFacade.findByLogin(login);
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
         account.setActive(false);
-        accountFacade.edit(account);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.accountLockFailed();
+        }
         // TODO: Zastanowić się i ustawić pole modifiedBy po zablokowaniu konta przez system po nieudanych logowaniach
         //account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
     }
