@@ -38,6 +38,7 @@ public class EntityIdentitySignerVerifier extends JwtUtilsAbstract implements Se
      */
     public boolean validateEntitySignature(String tagValue) {
         try {
+            tagValue = tagValue.replaceAll("\"", "");
             final JWSObject jwsObject = JWSObject.parse(tagValue);
             final JWSVerifier verifier = new MACVerifier(getJwtSecret());
             return jwsObject.verify(verifier);
