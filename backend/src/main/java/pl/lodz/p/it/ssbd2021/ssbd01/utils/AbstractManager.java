@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
+
 import javax.ejb.AfterBegin;
 import javax.ejb.AfterCompletion;
 import javax.ejb.BeforeCompletion;
