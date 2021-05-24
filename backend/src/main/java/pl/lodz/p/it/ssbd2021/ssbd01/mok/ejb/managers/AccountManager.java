@@ -198,5 +198,10 @@ public interface AccountManager {
      */
     void setLanguage(String login, String language) throws AppBaseException;
 
+    /**
+     * Sprawdza czy ostatnia transakcja się powiodła.
+     *
+     * @return true jeśli ostatnia transakcja się nie powiodła, false w przeciwnym wypadku.
+     */
     boolean isLastTransactionRollback();
 }
