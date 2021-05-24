@@ -149,15 +149,6 @@ public interface AccountManager {
     List<Account> findByEnabled(boolean enabled) throws AppBaseException;
 
     /**
-     * Resetuje hasło do konta o podanym id. Ustawia alfanumeryczne hasło
-     * o długości 8 znaków.
-     *
-     * @param id identyfikator konta
-     * @throws AppBaseException wyjątek typu AppBaseException
-     */
-    void resetPassword(Long id) throws AppBaseException;
-
-    /**
      * Resetuje hasło podanego konta. Ustawia alfanumeryczne hasło o długości
      * 8 znaków.
      *
@@ -166,15 +157,6 @@ public interface AccountManager {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     void resetPassword(String accountToReset, String whoResets) throws AppBaseException;
-
-
-    /**
-     * Resetuje hasło podanego konta.
-     *
-     * @param account the account
-     * @throws AppBaseException the app base exception
-     */
-    void resetPassword(Account account) throws AppBaseException;
 
     /**
      * Ustawia pole dark mode na {@param isDarkMode} w koncie {@param account}.

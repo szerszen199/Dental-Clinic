@@ -133,7 +133,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         account.setCreatedBy(account);
         accountFacade.create(account);
 
-        this.resetPassword(account);
+        this.resetPassword(account.getLogin(), loggedInAccountUtil.getLoggedInAccountLogin());
     }
 
     @Override
@@ -307,15 +307,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void resetPassword(Long id) throws AppBaseException {
-        Account account = accountFacade.find(id);
-        // TODO: 21.05.2021 Dlugosc do zmiennej w pliku konfiguracyjnym
-        account.setPassword(hashGenerator.generateHash(passwordGenerator.generate(32)));
-        accountFacade.edit(account);
-        // TODO: send mail with new password
-    }
-
-    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void resetPassword(String accountToReset, String whoResets) throws AppBaseException {
         Account account = accountFacade.findByLogin(accountToReset);
         account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
@@ -326,13 +318,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         accountFacade.edit(account);
         mailProvider.sendGeneratedPasswordMail(account.getEmail(), pass);
         // TODO: send mail with new password
-    }
-
-    @Override
-    public void resetPassword(Account account) throws AppBaseException {
-        String pass = passwordGenerator.generate(32);
-        account.setPassword(hashGenerator.generateHash(pass));
-        mailProvider.sendGeneratedPasswordMail(account.getEmail(), pass);
     }
 
     @Override
