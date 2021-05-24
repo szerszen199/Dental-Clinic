@@ -190,11 +190,21 @@ public class AccountException extends AppBaseException {
         return new AccountException(ACCOUNT_UNLOCKED_FAILED);
     }
 
-    public static AccountException updateAfterUnsuccessfulLogin(){
+    /**
+     * Tworzy wyjątek reprezentujący próbę uaktualnienia po nieudanym logowaniu.
+     *
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException updateAfterUnsuccessfulLogin() {
         return new AccountException(UPDATE_ACCOUNT_AFTER_UNSUCCESSFUL_LOGIN);
     }
 
-    public static AccountException updateAfterSuccessfulLogin(){
+    /**
+     * Tworzy wyjątek reprezentujący próbę uaktualnienia po udanym logowaniu.
+     *
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException updateAfterSuccessfulLogin() {
         return new AccountException(UPDATE_ACCOUNT_AFTER_SUCCESSFUL_LOGIN);
     }
 }

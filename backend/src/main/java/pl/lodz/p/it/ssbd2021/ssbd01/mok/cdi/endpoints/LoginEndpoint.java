@@ -172,7 +172,7 @@ public class LoginEndpoint {
             } catch (AccountException accountException) {
                 return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
             } catch (Exception e) {
-                return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.AUTHENTICATION_FAILURE)).build();
+                return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.LOGIN_FAILURE)).build();
             }
             if (account.getUnsuccessfulLoginCounter() >= propertiesLoader.getInvalidLoginCountBlock() && account.getActive()) {
                 try {
@@ -180,12 +180,12 @@ public class LoginEndpoint {
                 } catch (AccountException accountException) {
                     return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
                 } catch (Exception e) {
-                    return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.AUTHENTICATION_FAILURE)).build();
+                    return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.LOGIN_FAILURE)).build();
                 }
                 // TODO: 11.05.2021 informacja na maila? Idk
             }
             Logger.getGlobal().log(Level.INFO, "Nieudana próba logowania na konto {0} z adresu {1}", new Object[]{account.getLogin(), getClientIpAddress(request)});
-            return Response.status(Response.Status.UNAUTHORIZED).entity(new MessageResponseDto(I18n.AUTHENTICATION_FAILURE)).build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(new MessageResponseDto(I18n.LOGIN_FAILURE)).build();
         }
         UserInfoResponseDTO userInfoResponseDTO = new UserInfoResponseDTO();
         try {
@@ -198,7 +198,7 @@ public class LoginEndpoint {
         } catch (AccountException accountException) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.AUTHENTICATION_FAILURE)).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.LOGIN_FAILURE)).build();
         }
         try {
             if (credentialValidationResult.getStatus() == CredentialValidationResult.Status.VALID && credentialValidationResult.getCallerGroups().contains(I18n.ADMIN)) {
@@ -207,7 +207,7 @@ public class LoginEndpoint {
         } catch (MailSendingException | AccountException accountException) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.AUTHENTICATION_FAILURE)).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.LOGIN_FAILURE)).build();
         }
 
         Logger.getGlobal().log(Level.INFO, "Zalogowano na konto {0} z adresu {1}", new Object[]{credentialValidationResult.getCallerPrincipal().getName(), getClientIpAddress(request)});
