@@ -10,8 +10,6 @@ import java.util.logging.Logger;
 public class LogInterceptor {
     private static final Logger LOGGER = Logger.getLogger(LogInterceptor.class.getName());
 
-    //TODO: Zmuszenie sessionContextu do poprawnego injectowania
-
     @Inject
     private LoggedInAccountUtil loggedInAccountUtil;
 

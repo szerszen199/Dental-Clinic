@@ -34,6 +34,8 @@ public class PropertiesLoader {
     private Long emailChangeConfirmationJWTExpiration;
     private String resetPasswordConfirmationJwtSecret;
     private Long resetPasswordConfirmationJwtExpiration;
+    private int transactionRetryCount;
+
 
     public String getResetPasswordConfirmationJwtSecret() {
         return resetPasswordConfirmationJwtSecret;
@@ -65,6 +67,10 @@ public class PropertiesLoader {
 
     public String getEtagSecret() {
         return etagSecret;
+    }
+
+    public int getTransactionRetryCount() {
+        return transactionRetryCount;
     }
 
     /**
@@ -146,6 +152,7 @@ public class PropertiesLoader {
         resetPasswordConfirmationJwtSecret = prop.getProperty("reset.password.confirmation.jwt.secret");
         resetPasswordConfirmationJwtExpiration = Long.valueOf(prop.getProperty("reset.password.confirmation.jwt.expirationMs"));
         etagSecret = prop.getProperty("etag.secret");
+        transactionRetryCount = Integer.parseInt(prop.getProperty("transaction.retry.count"));
         appDefaultUrl = prop.getProperty("application.default.url");
         appMailUrl = prop.getProperty("application.email_url");
         appMailPassword = prop.getProperty("application.email.password");
