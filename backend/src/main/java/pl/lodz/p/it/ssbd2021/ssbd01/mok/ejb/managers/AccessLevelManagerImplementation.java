@@ -2,6 +2,8 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
@@ -37,24 +39,47 @@ public class AccessLevelManagerImplementation extends AbstractManager implements
 
     @Override
     public void revokeAccessLevel(String login, String level) throws AppBaseException {
-        AccessLevel accessLevel = accessLevelFacade.findByAccountLoginAndAccessLevel(login, level);
+        AccessLevel accessLevel;
+        try {
+            accessLevel = accessLevelFacade.findByAccountLoginAndAccessLevel(login, level);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (Exception e) {
+            throw AccessLevelException.accessLevelRevokeFailed();
+        }
         if (accessLevel.getActive()) {
             accessLevel.setActive(false);
             accessLevel.setModifiedBy(accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
             accessLevel.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(httpServletRequest));
-            accessLevelFacade.edit(accessLevel);
+            try {
+                accessLevelFacade.edit(accessLevel);
+            } catch (Exception e) {
+                throw AccessLevelException.accessLevelRevokeFailed();
+            }
         }
     }
 
     @Override
     public void addAccessLevel(String login, String level) throws AppBaseException {
-        AccessLevel accessLevel = accessLevelFacade.findByAccountLoginAndAccessLevel(login, level);
+        AccessLevel accessLevel;
+        try {
+            accessLevel = accessLevelFacade.findByAccountLoginAndAccessLevel(login, level);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (Exception e) {
+            throw AccessLevelException.accessLevelAddFailed();
+        }
         if (!accessLevel.getActive()) {
             accessLevel.setActive(true);
             accessLevel.setModifiedBy(accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
             accessLevel.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(httpServletRequest));
-            accessLevelFacade.edit(accessLevel);
+            try {
+                accessLevelFacade.edit(accessLevel);
+            } catch (Exception e) {
+                throw AccessLevelException.accessLevelAddFailed();
+            }
         }
+
     }
 
 }

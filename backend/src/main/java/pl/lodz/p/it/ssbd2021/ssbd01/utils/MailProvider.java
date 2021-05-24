@@ -252,7 +252,7 @@ public class MailProvider {
         try {
             mailManager.sendMail(email, subject, getFrom(), messageText, session);
         } catch (MessagingException e) {
-            throw MailSendingException.activationLink();
+            throw MailSendingException.passwordResetMail();
         }
     }
 
