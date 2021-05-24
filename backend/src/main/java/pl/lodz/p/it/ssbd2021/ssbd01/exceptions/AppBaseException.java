@@ -9,6 +9,7 @@ import java.io.IOException;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_ERROR;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_OPTIMISTIC_LOCK_ERROR;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.LOAD_PROPERTIES_ERROR;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.VERSION_MISMATCH;
 
 /**
  * The type Base exception.
@@ -82,5 +83,13 @@ public class AppBaseException extends Exception {
      */
     public static AppBaseException mismatchedPersistenceArguments(IllegalArgumentException e) {
         return new AppBaseException(DATABASE_ERROR, e);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący różne wartości wersji dla encji.
+     * @return wyjątek typu AppBaseException
+     */
+    public static AppBaseException versionMismatchException() {
+        return new AppBaseException(VERSION_MISMATCH);
     }
 }

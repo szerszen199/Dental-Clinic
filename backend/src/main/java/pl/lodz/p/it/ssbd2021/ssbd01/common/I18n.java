@@ -51,6 +51,8 @@ public class I18n {
 
     public static final String VERSION_NULL = "version_null";
 
+    public static final String VERSION_MISMATCH = "version_mismatch";
+
     public static final String DARK_MODE_NULL = "dark_mode_null";
 
 
