@@ -10,7 +10,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
@@ -336,7 +335,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             throw PasswordException.currentPasswordNotMatch();
         }
         if (account.getPassword().contentEquals(hashGenerator.generateHash(newPassword))) {
-            throw PasswordsSameException.passwordsNotDifferent();
+            throw PasswordException.passwordsNotDifferent();
         }
         account.setPassword(hashGenerator.generateHash(newPassword));
         try {
