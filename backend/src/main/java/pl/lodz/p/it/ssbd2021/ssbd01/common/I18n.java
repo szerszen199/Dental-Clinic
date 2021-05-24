@@ -37,6 +37,8 @@ public class I18n {
     public static final String ACCESS_LEVEL_INVALID_LEVEL = "access_level_invalid_level";
 
     public static final String LOGIN_NULL = "login_null";
+    public static final String UPDATE_ACCOUNT_AFTER_UNSUCCESSFUL_LOGIN = "update_after_unsuccessful_login";
+    public static final String UPDATE_ACCOUNT_AFTER_SUCCESSFUL_LOGIN = "update_after_successful_login";
 
     public static final String PASSWORD_NULL = "password_null";
     public static final String PASSWORD_INVALID_SIZE = "password_invalid_size";

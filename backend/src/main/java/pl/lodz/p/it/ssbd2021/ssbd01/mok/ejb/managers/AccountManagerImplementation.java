@@ -415,58 +415,44 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         // TODO: send mail with new password
     }
 
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    private void setLastSuccessfulLoginIp(Account account, String ip) throws AppBaseException {
-        account.setLastSuccessfulLoginIp(ip);
-        accountFacade.edit(account);
-    }
-
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    private void setLastSuccessfulLoginTime(Account account, LocalDateTime time) throws AppBaseException {
-        account.setLastSuccessfulLogin(time);
-        accountFacade.edit(account);
-    }
-
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    private void increaseInvalidLoginCount(Account account) throws AppBaseException {
-        account.setUnsuccessfulLoginCounter(account.getUnsuccessfulLoginCounter() + 1);
-        accountFacade.edit(account);
-    }
-
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    private void zeroInvalidLoginCount(Account account) throws AppBaseException {
-        account.setUnsuccessfulLoginCounter(0);
-        accountFacade.edit(account);
-    }
-
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    private void setLastUnsuccessfulLoginTime(Account account, LocalDateTime time) throws AppBaseException {
-        account.setLastUnsuccessfulLogin(time);
-        accountFacade.edit(account);
-    }
-
     @Override
     public void updateAfterSuccessfulLogin(String login, String ip, LocalDateTime time) throws AppBaseException {
-        Account account = findByLogin(login);
-        setLastSuccessfulLoginIp(account, ip);
-        setLastSuccessfulLoginTime(account, time);
-        zeroInvalidLoginCount(account);
-        accountFacade.edit(account);
+        Account account;
+        try {
+            account = findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw AccountException.accountEditFailed();
+        }
+        account.setLastSuccessfulLoginIp(ip);
+        account.setLastSuccessfulLogin(time);
+        account.setUnsuccessfulLoginCounter(0);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.updateAfterSuccessfulLogin();
+        }
     }
 
     @Override
     public void updateAfterUnsuccessfulLogin(String login, String ip, LocalDateTime time) throws AppBaseException {
-        Account account = findByLogin(login);
-        setLastUnsuccessfulLoginIp(account, ip);
-        setLastUnsuccessfulLoginTime(account, time);
-        increaseInvalidLoginCount(account);
-        accountFacade.edit(account);
-    }
-
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    private void setLastUnsuccessfulLoginIp(Account account, String ip) throws AppBaseException {
+        Account account;
+        try {
+            account = findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw AccountException.accountEditFailed();
+        }
         account.setLastUnsuccessfulLoginIp(ip);
-        accountFacade.edit(account);
+        account.setLastUnsuccessfulLogin(time);
+        account.setUnsuccessfulLoginCounter(account.getUnsuccessfulLoginCounter() + 1);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.updateAfterUnsuccessfulLogin();
+        }
     }
 
     @Override
