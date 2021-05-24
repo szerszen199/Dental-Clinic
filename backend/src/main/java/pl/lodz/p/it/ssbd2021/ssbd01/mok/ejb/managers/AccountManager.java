@@ -41,14 +41,6 @@ public interface AccountManager {
      */
     void setEmailRecallTrue(String login) throws AppBaseException;
 
-    /**
-     * Potwierdzenie konta.
-     *
-     * @param id id
-     * @throws AppBaseException wyjątek typu AppBaseException
-     */
-    void confirmAccount(Long id) throws AppBaseException;
-
 
     /**
      * Potwierdzenie konta.
@@ -57,14 +49,6 @@ public interface AccountManager {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     void confirmAccountByToken(String jwt) throws AppBaseException;
-
-    /**
-     * reset hasla konta.
-     *
-     * @param login login
-     * @throws AppBaseException wyjątek typu AppBaseException
-     */
-    void resetPasswordByToken(String login) throws AppBaseException;
 
     /**
      * Potwierdzenie hasla konta.
@@ -168,10 +152,11 @@ public interface AccountManager {
      * Resetuje hasło podanego konta. Ustawia alfanumeryczne hasło o długości
      * 8 znaków.
      *
-     * @param login login konta, którego hasło ma zostać zresetowane
+     * @param accountToReset login konta, którego hasło ma zostać zresetowane
+     * @param whoResets      login konta resetującego
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void resetPassword(String login) throws AppBaseException;
+    void resetPassword(String accountToReset, String whoResets) throws AppBaseException;
 
     /**
      * Ustawia pole dark mode na {@param isDarkMode} w koncie {@param account}.

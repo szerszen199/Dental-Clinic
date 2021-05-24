@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmMailChangeRequestDTO;
@@ -17,6 +18,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtResetPasswordConfirmation;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
@@ -40,6 +42,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -63,6 +66,8 @@ public class AccountEndpoint {
 
     @Inject
     private MailProvider mailProvider;
+    @Inject
+    private JwtResetPasswordConfirmation jwtResetPasswordConfirmation;
 
     /**
      * Tworzy nowe konto.
@@ -123,7 +128,16 @@ public class AccountEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response resetPassword(@NotNull @Valid ConfirmAccountRequestDTO confirmAccountRequestDTO) throws AppBaseException {
-        this.accountManager.resetPasswordByToken(confirmAccountRequestDTO.getConfirmToken());
+        try {
+            String username = jwtResetPasswordConfirmation.getUserNameFromJwtToken(confirmAccountRequestDTO.getConfirmToken());
+            if (!jwtResetPasswordConfirmation.validateJwtToken(confirmAccountRequestDTO.getConfirmToken())) {
+                throw AccountException.invalidConfirmationToken();
+            }
+            this.accountManager.resetPassword(username, username);
+        } catch (ParseException e) {
+            // TODO: 24.05.2021 Response
+            e.printStackTrace();
+        }
         return Response.ok().entity(new MessageResponseDto(I18n.PASSWORD_RESET_SUCCESSFULLY)).build();
     }
 
@@ -377,7 +391,7 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response resetOthersPassword(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków.
-        accountManager.resetPassword(simpleUsernameRequestDTO.getLogin());
+        accountManager.resetPassword(simpleUsernameRequestDTO.getLogin(), loggedInAccountUtil.getLoggedInAccountLogin());
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_RESET_SUCCESSFULLY)).build();
     }
 

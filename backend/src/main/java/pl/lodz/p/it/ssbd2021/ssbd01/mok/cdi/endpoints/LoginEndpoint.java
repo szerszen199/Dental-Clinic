@@ -13,6 +13,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.UserInfoResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtLoginUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtRefreshUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
@@ -47,18 +48,6 @@ import java.util.logging.Logger;
 @Interceptors({LogInterceptor.class})
 public class LoginEndpoint {
 
-    private static final String[] HEADERS_TO_TRY = {
-            "X-Forwarded-For",
-            "Proxy-Client-IP",
-            "WL-Proxy-Client-IP",
-            "HTTP_X_FORWARDED_FOR",
-            "HTTP_X_FORWARDED",
-            "HTTP_X_CLUSTER_CLIENT_IP",
-            "HTTP_CLIENT_IP",
-            "HTTP_FORWARDED_FOR",
-            "HTTP_FORWARDED",
-            "HTTP_VIA",
-            "REMOTE_ADDR"};
     private final IdentityStoreHandler identityStoreHandler;
     private final AccountManager accountManager;
     private final AuthViewEntityManager authViewEntityManager;
@@ -146,7 +135,7 @@ public class LoginEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response authenticate(@NotNull @Valid AuthenticationRequestDTO authenticationRequestDTO) {
-        String ip = getClientIpAddress(request);
+        String ip = IpAddressUtils.getClientIpAddressFromHttpServletRequest(request);
         CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(authenticationRequestDTO.toCredential());
         try {
             Account account = accountManager.findByLogin(authenticationRequestDTO.getUsername());
@@ -156,7 +145,7 @@ public class LoginEndpoint {
                     accountManager.lockAccount(account.getLogin());
                     // TODO: 11.05.2021 informacja na maila? Idk
                 }
-                Logger.getGlobal().log(Level.INFO, "Nieudana próba logowania na konto {0} z adresu {1}", new Object[]{account.getLogin(), getClientIpAddress(request)});
+                Logger.getGlobal().log(Level.INFO, "Nieudana próba logowania na konto {0} z adresu {1}", new Object[]{account.getLogin(), ip});
                 return Response.status(Response.Status.UNAUTHORIZED).entity(new MessageResponseDto(I18n.AUTHENTICATION_FAILURE)).build();
             }
         } catch (AppBaseException e) {
@@ -183,7 +172,7 @@ public class LoginEndpoint {
             e.printStackTrace();
         }
 
-        Logger.getGlobal().log(Level.INFO, "Zalogowano na konto {0} z adresu {1}", new Object[]{credentialValidationResult.getCallerPrincipal().getName(), getClientIpAddress(request)});
+        Logger.getGlobal().log(Level.INFO, "Zalogowano na konto {0} z adresu {1}", new Object[]{credentialValidationResult.getCallerPrincipal().getName(), ip});
         return Response.ok().entity(
                 new JwtTokenAndUserDataReponseDTO(credentialValidationResult.getCallerPrincipal().getName(),
                         credentialValidationResult.getCallerGroups(),
@@ -193,14 +182,4 @@ public class LoginEndpoint {
     }
 
 
-    private String getClientIpAddress(HttpServletRequest request) {
-        for (var header : HEADERS_TO_TRY) {
-            String ip = request.getHeader(header);
-            if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {
-                return ip;
-            }
-        }
-
-        return request.getRemoteAddr();
-    }
 }
