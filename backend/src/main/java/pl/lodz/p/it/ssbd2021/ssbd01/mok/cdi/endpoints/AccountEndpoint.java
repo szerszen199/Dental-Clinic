@@ -24,6 +24,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.security.SignatureFilterBinding;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 
 import javax.annotation.security.PermitAll;
@@ -59,6 +60,9 @@ import java.util.stream.Collectors;
 @RequestScoped
 @Interceptors(LogInterceptor.class)
 public class AccountEndpoint {
+
+    @Inject
+    private PropertiesLoader propertiesLoader;
 
     @Inject
     private AccountManager accountManager;
@@ -100,7 +104,7 @@ public class AccountEndpoint {
             throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
         // TODO: 22.05.2021 Walidacja numeru pesel jesli nie jest null (suma kontrolna)
-        int retryTXCounter = 3;
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         do {
             try {
@@ -136,7 +140,7 @@ public class AccountEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     public Response confirmAccount(@NotNull @Valid ConfirmAccountRequestDTO confirmAccountRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
-        int retryTXCounter = 3;
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         do {
             try {
@@ -170,7 +174,7 @@ public class AccountEndpoint {
             if (!jwtResetPasswordConfirmation.validateJwtToken(confirmAccountRequestDTO.getConfirmToken())) {
                 throw AccountException.invalidConfirmationToken();
             }
-            int retryTXCounter = 3;
+            int retryTXCounter = propertiesLoader.getTransactionRetryCount();
             boolean rollbackTX = false;
             do {
                 try {
@@ -212,7 +216,7 @@ public class AccountEndpoint {
             throw AppBaseException.optimisticLockError();
         }
         // TODO: 21.05.2021 Obsługa wyjątków
-        int retryTXCounter = 3;
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         do {
             try {
@@ -249,7 +253,7 @@ public class AccountEndpoint {
         if (!signer.verifyEntityIntegrity(header, accountDto)) {
             throw AppBaseException.optimisticLockError();
         }
-        int retryTXCounter = 3;
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         do {
             try {
@@ -281,7 +285,7 @@ public class AccountEndpoint {
     public Response confirmMailChange(@NotNull @Valid ConfirmMailChangeRequestDTO confirmMailChangeRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
 
-        int retryTXCounter = 3;
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         do {
             try {
@@ -313,7 +317,7 @@ public class AccountEndpoint {
     public Response revokeAccessLevel(@NotNull @Valid RevokeAndGrantAccessLevelDTO revokeAndGrantAccessLevelDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
         accessLevelManager.revokeAccessLevel(revokeAndGrantAccessLevelDTO.getLogin(), revokeAndGrantAccessLevelDTO.getLevel());
-        int retryTXCounter = 3;
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         do {
             try {
@@ -344,7 +348,7 @@ public class AccountEndpoint {
     public Response lockAccount(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
         accountManager.lockAccount(simpleUsernameRequestDTO.getLogin());
-        int retryTXCounter = 3;
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         do {
             try {
@@ -375,7 +379,7 @@ public class AccountEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     public Response unlockAccount(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
-        int retryTXCounter = 3;
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         do {
             try {
@@ -406,7 +410,7 @@ public class AccountEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     public Response addAccessLevel(@NotNull @Valid RevokeAndGrantAccessLevelDTO revokeAndGrantAccessLevelDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
-        int retryTXCounter = 3;
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         do {
             try {
@@ -511,7 +515,7 @@ public class AccountEndpoint {
     public Response changeOwnPassword(@NotNull @Valid ChangePasswordRequestDTO newPassword) {
         // TODO: 21.05.2021 Lepsza obsługa wyjątków ;)
 
-        int retryTXCounter = 3;
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         do {
             try {
@@ -545,7 +549,7 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response resetOthersPassword(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków.
-        int retryTXCounter = 3;
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         do {
             try {
@@ -576,7 +580,7 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response resetOwnPassword(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO, @Context ServletContext servletContext) throws AppBaseException {
         // TODO: 21.05.2021  Ob słu ga Wy jąt ków
-        int retryTXCounter = 3;
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         do {
             try {
@@ -606,7 +610,7 @@ public class AccountEndpoint {
     public Response changeDarkMode(@NotNull @Valid SetDarkModeRequestDTO setDarkModeRequestDTO) {
         // TODO: 22.05.2021 OB SLU GA WY JAT KOW
         String login = loggedInAccountUtil.getLoggedInAccountLogin();
-        int retryTXCounter = 3;
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         do {
             try {
@@ -637,7 +641,7 @@ public class AccountEndpoint {
     public Response changeLanguage(@NotNull @Valid SetLanguageRequestDTO setLanguageRequestDTO) {
         // TODO: 22.05.2021 Ob Słu ga Wiadomo czego
         String login = loggedInAccountUtil.getLoggedInAccountLogin();
-        int retryTXCounter = 3;
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         do {
             try {
