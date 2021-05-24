@@ -110,7 +110,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void createAccountByAdministrator(Account account, ServletContext servletContext) throws AppBaseException {
+    public void createAccountByAdministrator(Account account) throws AppBaseException {
         account.setPassword(hashGenerator.generateHash(passwordGenerator.generate(32)));
         AccessLevel patientData = new PatientData(account, true);
         patientData.setCreatedBy(account);

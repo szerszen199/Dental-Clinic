@@ -110,7 +110,6 @@ public class AccountEndpoint {
      * Tworzy nowe konto przez admina.
      *
      * @param newAccountByAdminDto obiekt zawierający login, email i inne wymagane dane
-     * @param servletContext       the servlet context
      * @return the response
      * @throws AppBaseException the app base exception
      */
@@ -119,11 +118,10 @@ public class AccountEndpoint {
     @Path("admin/create")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response createAccountByAdmin(NewAccountByAdminDto newAccountByAdminDto, @Context ServletContext servletContext) {
+    public Response createAccountByAdmin(NewAccountByAdminDto newAccountByAdminDto) {
         try {
             accountManager.createAccountByAdministrator(
-                    AccountConverter.createAccountByAdminEntityFromDto(newAccountByAdminDto),
-                    servletContext
+                    AccountConverter.createAccountByAdminEntityFromDto(newAccountByAdminDto)
             );
         } catch (AccountException | MailSendingException e) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
