@@ -170,6 +170,9 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     // Nie widzę logicznego poziomu dlaczego miałoby tutaj być podawane konto zamiast DTO, jak mi dacie powód to to zmienie
     public void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO, ServletContext servletContext) throws AppBaseException {
         Account toBeModified = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        if (!toBeModified.getVersion().equals(editOwnAccountRequestDTO.getVersion())) {
+            throw AppBaseException.versionMismatchException();
+        }
         if (editOwnAccountRequestDTO.getFirstName() != null) {
             toBeModified.setFirstName(editOwnAccountRequestDTO.getFirstName());
         }
@@ -197,6 +200,9 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @Override
     public void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO, ServletContext servletContext) throws AppBaseException {
         Account toBeModified = accountFacade.findByLogin(editAnotherAccountRequestDTO.getLogin());
+        if (!toBeModified.getVersion().equals(editAnotherAccountRequestDTO.getVersion())) {
+            throw AppBaseException.versionMismatchException();
+        }
         if (editAnotherAccountRequestDTO.getFirstName() != null) {
             toBeModified.setFirstName(editAnotherAccountRequestDTO.getFirstName());
         }

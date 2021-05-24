@@ -1,27 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmAccountRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmMailChangeRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.CreateAccountRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.RevokeAndGrantAccessLevelDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetDarkModeRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetLanguageRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SimpleUsernameRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
-
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -32,14 +11,40 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.RevokeAndGrantAccessLevelDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmMailChangeRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetLanguageRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetDarkModeRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.CreateAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SimpleUsernameRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.SignatureFilterBinding;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -63,6 +68,13 @@ public class AccountEndpoint {
 
     @Inject
     private MailProvider mailProvider;
+
+    @Context
+    private HttpHeaders httpHeaders;
+
+    @Inject
+    private EntityIdentitySignerVerifier signer;
+
 
     /**
      * Tworzy nowe konto.
@@ -132,7 +144,8 @@ public class AccountEndpoint {
      * Edit account data.
      *
      * @param accountDto     DTO edytowanego konta
-     * @param servletContext kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
+     * @param header         nagłówek If-Match
+     * @param servletContext kontekst serwletów, służy do współdzielenia informacji w ramach aplikacji
      * @return response
      * @throws AppBaseException wyjątek typu AppBaseException
      */
@@ -141,8 +154,12 @@ public class AccountEndpoint {
     @Path("edit")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
+    @SignatureFilterBinding
     @Produces({MediaType.APPLICATION_JSON})
-    public Response editAccount(@NotNull @Valid EditOwnAccountRequestDTO accountDto, @Context ServletContext servletContext) throws AppBaseException {
+    public Response editAccount(@NotNull @Valid EditOwnAccountRequestDTO accountDto, @HeaderParam("If-Match") String header, @Context ServletContext servletContext) throws AppBaseException {
+        if (!signer.verifyEntityIntegrity(header, accountDto)) {
+            throw AppBaseException.optimisticLockError();
+        }
         // TODO: 21.05.2021 Obsługa wyjątków
         this.accountManager.editOwnAccount(accountDto, servletContext);
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
@@ -153,7 +170,8 @@ public class AccountEndpoint {
      * Edycja konta innego użytkownika.
      *
      * @param accountDto     DTO edytowanego konta
-     * @param servletContext kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
+     * @param servletContext kontekst serwletów, służy do współdzielenia informacji w ramach aplikacji
+     * @param header         nagłówek If-Match
      * @return response
      * @throws AppBaseException wyjątek typu AppBaseException
      */
@@ -163,8 +181,11 @@ public class AccountEndpoint {
     @RolesAllowed({I18n.ADMIN})
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response editOtherAccount(@NotNull @Valid EditAnotherAccountRequestDTO accountDto, @Context ServletContext servletContext) throws AppBaseException {
-        // TODO: 21.05.2021 Obsługa wyjątków
+    @SignatureFilterBinding
+    public Response editOtherAccount(@NotNull @Valid EditAnotherAccountRequestDTO accountDto, @HeaderParam("If-Match") String header, @Context ServletContext servletContext) throws AppBaseException {
+        if (!signer.verifyEntityIntegrity(header, accountDto)) {
+            throw AppBaseException.optimisticLockError();
+        }
         accountManager.editOtherAccount(accountDto, servletContext);
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
     }
@@ -276,7 +297,7 @@ public class AccountEndpoint {
     public Response getLoggedInAccountInfo() throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
         AccountInfoResponseDTO account = new AccountInfoResponseDTO(accountManager.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
-        return Response.ok().entity(account).build();
+        return Response.ok().entity(account).tag(signer.sign(account)).build();
     }
 
 
