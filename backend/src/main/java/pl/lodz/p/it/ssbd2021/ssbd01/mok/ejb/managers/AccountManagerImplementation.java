@@ -19,9 +19,11 @@ import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtResetPasswordConfirmation;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 
 import javax.ejb.Stateful;
@@ -30,6 +32,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -62,6 +65,9 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     private JwtEmailConfirmationUtils jwtEmailConfirmationUtils;
 
     @Inject
+    private HttpServletRequest request;
+
+    @Inject
     private JWTRegistrationConfirmationUtils jwtRegistrationConfirmationUtils;
 
     @Inject
@@ -69,10 +75,14 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Inject
     private JwtResetPasswordConfirmation jwtResetPasswordConfirmation;
+    @Inject
+    private PropertiesLoader propertiesLoader;
 
     @Override
     public void createAccount(Account account, ServletContext servletContext) throws AppBaseException {
+        String requestIp = IpAddressUtils.getClientIpAddressFromHttpServletRequest(request);
         account.setPassword(hashGenerator.generateHash(account.getPassword()));
+        account.setCreatedByIp(requestIp);
 
         // TODO: 21.05.2021  Przetestować czy dzialaja dobrze constructory przed wstawieniem
         AccessLevel patientData = new PatientData(account, true);
@@ -115,13 +125,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void confirmAccount(Long id) throws AppBaseException {
-        Account account = accountFacade.find(id);
-        account.setEnabled(true);
-        accountFacade.edit(account);
-    }
-
-    @Override
     public void confirmAccountByToken(String jwt) throws AppBaseException {
         if (!jwtEmailConfirmationUtils.validateJwtToken(jwt)) {
             throw AccountException.invalidConfirmationToken();
@@ -138,30 +141,24 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void resetPasswordByToken(String jwt) throws AppBaseException {
-        if (!jwtResetPasswordConfirmation.validateJwtToken(jwt)) {
-            throw AccountException.invalidConfirmationToken();
-        }
-        try {
-            String input = jwtResetPasswordConfirmation.getUserNameFromJwtToken(jwt);
-            this.resetPassword(input);
-        } catch (AppBaseException | ParseException e) {
-            throw AccountException.noSuchAccount(e);
-        }
-    }
-
-    @Override
     public void lockAccount(String login) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
         account.setActive(false);
+        account.setLastBlockUnlockDateTime(LocalDateTime.now());
+        account.setLastBlockUnlockIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        if (!loggedInAccountUtil.getLoggedInAccountLogin().equals(propertiesLoader.getAnonymousUserName())) {
+            // TODO: Zastanowić się i ustawić pole modifiedBy po zablokowaniu konta przez system po nieudanych logowaniach
+            account.setLastBlockUnlockModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+        }
         accountFacade.edit(account);
-        // TODO: Zastanowić się i ustawić pole modifiedBy po zablokowaniu konta przez system po nieudanych logowaniach
-        //account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
     }
 
     @Override
     public void unlockAccount(String login) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
+        account.setLastBlockUnlockDateTime(LocalDateTime.now());
+        account.setLastBlockUnlockIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        account.setLastBlockUnlockModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
         account.setActive(true);
         accountFacade.edit(account);
     }
@@ -170,6 +167,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     // Nie widzę logicznego poziomu dlaczego miałoby tutaj być podawane konto zamiast DTO, jak mi dacie powód to to zmienie
     public void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO, ServletContext servletContext) throws AppBaseException {
         Account toBeModified = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        toBeModified.setModifiedBy(toBeModified);
+        toBeModified.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         if (editOwnAccountRequestDTO.getFirstName() != null) {
             toBeModified.setFirstName(editOwnAccountRequestDTO.getFirstName());
         }
@@ -197,6 +196,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @Override
     public void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO, ServletContext servletContext) throws AppBaseException {
         Account toBeModified = accountFacade.findByLogin(editAnotherAccountRequestDTO.getLogin());
+        toBeModified.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        toBeModified.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
         if (editAnotherAccountRequestDTO.getFirstName() != null) {
             toBeModified.setFirstName(editAnotherAccountRequestDTO.getFirstName());
         }
@@ -233,6 +234,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             String login = jwtEmailConfirmationUtils.getUsernameFromToken(jwt);
             String newEmail = jwtEmailConfirmationUtils.getEmailFromToken(jwt);
             Account account = accountFacade.findByLogin(login);
+            account.setModifiedBy(account);
+            account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
             account.setEmail(newEmail);
             accountFacade.edit(account);
         } catch (AppBaseException | ParseException e) {
@@ -250,6 +253,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @Override
     public void changePassword(String login, String oldPassword, String newPassword) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
+        account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+        account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         if (!account.getPassword().contentEquals(hashGenerator.generateHash(oldPassword))) {
             throw PasswordsNotMatchException.currentPasswordNotMatch();
         }
@@ -280,13 +285,14 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void resetPassword(String login) throws AppBaseException {
-        Account account = accountFacade.findByLogin(login);
+    public void resetPassword(String accountToReset, String whoResets) throws AppBaseException {
+        Account account = accountFacade.findByLogin(accountToReset);
+        account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        account.setModifiedBy(accountFacade.findByLogin(whoResets));
         // TODO: 21.05.2021 Dlugosc do zmiennej w pliku konfiguracyjnym
-        account.setPassword(hashGenerator.generateHash(passwordGenerator.generate(32)));
-        accountFacade.edit(account);
         String pass = passwordGenerator.generate(32);
         account.setPassword(hashGenerator.generateHash(pass));
+        accountFacade.edit(account);
         mailProvider.sendGeneratedPasswordMail(account.getEmail(), pass);
         // TODO: send mail with new password
     }
@@ -360,6 +366,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @Override
     public void setDarkMode(String login, boolean isDarkMode) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
+        account.setModifiedBy(account);
+        account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         account.setDarkMode(isDarkMode);
         accountFacade.edit(account);
     }
@@ -367,6 +375,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @Override
     public void setLanguage(String login, String language) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
+        account.setModifiedBy(account);
+        account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         account.setLanguage(language);
         accountFacade.edit(account);
     }
