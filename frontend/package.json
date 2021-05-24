@@ -62,6 +62,7 @@
   },
   "devDependencies": {
     "@fdmg/ts-react-image-button": "^1.0.26",
+    "etag": "^1.8.1",
     "fdmg-ts-react-image-button": "^1.0.23",
     "react-dropdown-select": "^4.7.4",
     "semantic-ui-react": "^2.0.3"

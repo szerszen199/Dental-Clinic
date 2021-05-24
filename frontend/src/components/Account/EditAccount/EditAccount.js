@@ -17,6 +17,8 @@ class EditAccountWithoutTranslation extends React.Component {
             lastName: "",
             phoneNumber: "",
             pesel: "",
+            version: 0,
+            etag: "",
         }
     }
 
@@ -27,13 +29,17 @@ class EditAccountWithoutTranslation extends React.Component {
                     Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
                 }
             })
-            .then(res => res.data)
+            .then(res => {
+                this.state.etag = res.headers['etag']
+                return res.data
+            })
             .then(result => this.setState({
                 email: result.email,
                 firstName: result.firstName,
                 lastName: result.lastName,
                 phoneNumber: result.phoneNumber,
-                pesel: result.pesel
+                pesel: result.pesel,
+                version: result.version
             }))
     }
 
@@ -90,7 +96,7 @@ class EditAccountWithoutTranslation extends React.Component {
         this.setState({
             isDisabled: true,
         });
-        editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, this.state.phoneNumber, this.state.pesel)
+        editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, this.state.phoneNumber, this.state.pesel,this.state.version, this.state.etag)
     }
 
     // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
