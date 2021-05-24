@@ -9,6 +9,7 @@ public class I18n {
     public static final String RECEPTIONIST = "level.receptionist";
     public static final String DOCTOR = "level.doctor";
 
+    public static final String ACCOUNT_CREATION_FAILED = "account_creation_failed";
     public static final String ACCOUNT_CREATED_SUCCESSFULLY = "account_created_successfully";
     public static final String ACCOUNT_CONFIRMED_SUCCESSFULLY = "account_confirmed_successfully";
     public static final String ACCOUNT_EDITED_SUCCESSFULLY = "account_edited_successfully";
