@@ -1,14 +1,14 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.common;
 
-import java.util.List;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import java.util.List;
 
 /**
  * Klasa abstrakcyjna definiująca główne operacje wykonywane na encjach
@@ -19,7 +19,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
 public abstract class AbstractFacade<T> {
 
-    private Class<T> entityClass;
+    private final Class<T> entityClass;
 
     /**
      * Tworzy nową instancję klasy AbstractFacade.
@@ -133,5 +133,4 @@ public abstract class AbstractFacade<T> {
         Query q = getEntityManager().createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
     }
-
 }

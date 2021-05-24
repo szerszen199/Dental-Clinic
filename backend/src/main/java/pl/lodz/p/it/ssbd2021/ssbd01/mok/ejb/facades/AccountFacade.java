@@ -1,6 +1,11 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades;
 
-import java.util.List;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -10,11 +15,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
-import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import java.util.List;
 
 /**
  * Klasa definiująca główne operacje wykonywane na encjach typu Account.
@@ -86,5 +87,25 @@ public class AccountFacade extends AbstractFacade<Account> {
             throw AppBaseException.mismatchedPersistenceArguments(e);
         }
     }
+
+    /**
+     * Wyszukuje kont na podstawie pola 'enabled'.
+     *
+     * @param active wartość pola 'enabled'
+     * @return lista kont o podanej wartości pola 'enabled'
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    public List<Account> findByActive(Boolean active) throws AppBaseException {
+        try {
+            TypedQuery<Account> tq = em.createNamedQuery("Account.findByActive", Account.class);
+            tq.setParameter("active", active);
+            return tq.getResultList();
+        } catch (PersistenceException e) {
+            throw AppBaseException.databaseError(e);
+        } catch (IllegalArgumentException e) {
+            throw AppBaseException.mismatchedPersistenceArguments(e);
+        }
+    }
+
 
 }
