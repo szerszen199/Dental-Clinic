@@ -197,4 +197,6 @@ public interface AccountManager {
      * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych nie powiedzie się.
      */
     void setLanguage(String login, String language) throws AppBaseException;
+
+    boolean isLastTransactionRollback();
 }

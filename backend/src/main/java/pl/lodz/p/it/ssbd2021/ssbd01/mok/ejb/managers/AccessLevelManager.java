@@ -30,4 +30,6 @@ public interface AccessLevelManager {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     void addAccessLevel(String login, String level) throws AppBaseException;
+
+    boolean isLastTransactionRollback();
 }
