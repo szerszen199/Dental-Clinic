@@ -31,7 +31,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.time.LocalDateTime;
@@ -79,7 +78,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     private PropertiesLoader propertiesLoader;
 
     @Override
-    public void createAccount(Account account, ServletContext servletContext) throws AppBaseException {
+    public void createAccount(Account account) throws AppBaseException {
         String requestIp = IpAddressUtils.getClientIpAddressFromHttpServletRequest(request);
         account.setPassword(hashGenerator.generateHash(account.getPassword()));
         account.setCreatedByIp(requestIp);
@@ -106,7 +105,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
         mailProvider.sendActivationMail(
                 account.getEmail(),
-                servletContext.getContextPath(),
                 jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(account.getLogin())
         );
     }
@@ -190,7 +188,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Override
     // Nie widzę logicznego poziomu dlaczego miałoby tutaj być podawane konto zamiast DTO, jak mi dacie powód to to zmienie
-    public void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO, ServletContext servletContext) throws AppBaseException {
+    public void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO) throws AppBaseException {
         Account toBeModified = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
         if (!toBeModified.getVersion().equals(editOwnAccountRequestDTO.getVersion())) {
             throw AppBaseException.versionMismatchException();
@@ -208,7 +206,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             // TODO: 21.05.2021 Wysylac maila dopieo kiedy edit się powiódł?
             mailProvider.sendEmailChangeConfirmationMail(
                     editOwnAccountRequestDTO.getEmail(),
-                    servletContext.getContextPath(),
                     jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(
                             loggedInAccountUtil.getLoggedInAccountLogin(), editOwnAccountRequestDTO.getEmail())
             );
@@ -222,7 +219,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     // TODO: 21.05.2021 Bardzo kusi wyrzucić to i edycje swojego konta do wspólnej metody
     //  Jak komus sie chce zapraszam
     @Override
-    public void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO, ServletContext servletContext) throws AppBaseException {
+    public void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO) throws AppBaseException {
         Account toBeModified = accountFacade.findByLogin(editAnotherAccountRequestDTO.getLogin());
         if (!toBeModified.getVersion().equals(editAnotherAccountRequestDTO.getVersion())) {
             throw AppBaseException.versionMismatchException();
@@ -321,11 +318,10 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void sendResetPasswordConfirmationEmail(String login, ServletContext servletContext) throws AppBaseException {
+    public void sendResetPasswordConfirmationEmail(String login) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
         mailProvider.sendResetPassConfirmationMail(
                 account.getEmail(),
-                servletContext.getContextPath(),
                 jwtResetPasswordConfirmation.generateJwtTokenForUsername(
                         login)
         );
