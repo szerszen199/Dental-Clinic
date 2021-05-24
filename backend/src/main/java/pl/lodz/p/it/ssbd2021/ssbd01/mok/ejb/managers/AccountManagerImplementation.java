@@ -202,10 +202,19 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void unlockAccount(String login) throws AppBaseException {
-        Account account = accountFacade.findByLogin(login);
+    public void unlockAccount(String login) throws AccountException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
         account.setActive(true);
-        accountFacade.edit(account);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.accountUnlockFailed();
+        }
     }
 
     @Override

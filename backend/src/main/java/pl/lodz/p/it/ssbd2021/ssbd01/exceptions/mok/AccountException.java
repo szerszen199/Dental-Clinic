@@ -11,6 +11,7 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOCKED_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOGIN_ALREADY_EXISTS;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOGIN_EMAIL_PESEL_ALREADY_EXISTS;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_NOT_FOUND;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_UNLOCKED_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.EMAIL_CONFIRMATION_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.INVALID_CONFIRMATION_TOKEN;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_CONFIRMATION_PARSING_ERROR;
@@ -165,4 +166,7 @@ public class AccountException extends AppBaseException {
         return new AccountException(MAIL_CONFIRMATION_PARSING_ERROR, cause);
     }
 
+    public static AccountException accountUnlockFailed() {
+        return new AccountException(ACCOUNT_UNLOCKED_FAILED);
+    }
 }
