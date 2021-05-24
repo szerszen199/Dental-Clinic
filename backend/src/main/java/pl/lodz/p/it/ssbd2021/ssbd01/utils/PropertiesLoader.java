@@ -20,6 +20,9 @@ public class PropertiesLoader {
     private Long confirmationJwtExpiration;
     private Long deleteInactiveAccountTimeDelay;
     private String anonymousUserName;
+    private String etagSecret;
+
+
     private String jwtSecret;
     private Long invalidLoginCountBlock;
     private Long jwtExpiration;
@@ -54,6 +57,10 @@ public class PropertiesLoader {
 
     public Long getRefreshJwtExpiration() {
         return refreshJwtExpiration;
+    }
+
+    public String getEtagSecret() {
+        return etagSecret;
     }
 
     /**
@@ -122,5 +129,6 @@ public class PropertiesLoader {
         emailChangeConfirmationJWTExpiration = Long.valueOf(prop.getProperty("email.change.confirmation.jwt.expirationMs"));
         resetPasswordConfirmationJwtSecret = prop.getProperty("reset.password.confirmation.jwt.secret");
         resetPasswordConfirmationJwtExpiration = Long.valueOf(prop.getProperty("reset.password.confirmation.jwt.expirationMs"));
+        etagSecret = prop.getProperty("etag.secret");
     }
 }
