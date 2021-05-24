@@ -4,6 +4,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.CURRENT_PASSWORD_NOT_MATCH;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.NEW_PASSWORDS_NOT_MATCH;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORDS_NOT_DIFFER;
 
 public class PasswordException extends AppBaseException {
 
@@ -27,11 +28,11 @@ public class PasswordException extends AppBaseException {
     }
 
     /**
-     * Metoda opakowująca wyjątek PasswordsNotMatchException
+     * Metoda opakowująca wyjątek PasswordException
      * z dedykowaną wiadomością dołączoną do niego sygnalizującą
      * powód wystąpienia wyjątku.
      *
-     * @return obiekt wyjątku PasswordsNotMatchException z wiadomością
+     * @return obiekt wyjątku PasswordException z wiadomością
      *         sygnalizującą niezgodność powtórzeń haseł podczas ustalania nowego hasła.
      */
     public static PasswordException newPasswordsNotMatch() {
@@ -39,16 +40,29 @@ public class PasswordException extends AppBaseException {
     }
 
     /**
-     * Metoda opakowująca wyjątek PasswordsNotMatchException
+     * Metoda opakowująca wyjątek PasswordException
      * z dedykowaną wiadomością dołączoną do niego sygnalizującą
      * powód wystąpienia wyjątku.
      *
-     * @return obiekt wyjątku PasswordsNotMatchException z wiadomością
+     * @return obiekt wyjątku PasswordException z wiadomością
      *         sygnalizującą niezgodność bieżącego hasła użytkownika z przekazanym
      *         przez niego.
      */
     public static PasswordException currentPasswordNotMatch() {
         return new PasswordException(CURRENT_PASSWORD_NOT_MATCH);
+    }
+
+    /**
+     * Metoda opakowująca wyjątek PasswordException
+     * z dedykowaną wiadomością dołączoną do niego sygnalizującą
+     * powód wystąpienia wyjątku.
+     *
+     * @return obiekt wyjątku PasswordException z wiadomością
+     *         sygnalizującą jednakowość starego hasła z nowym podczas
+     *         jego zmiany.
+     */
+    public static PasswordException passwordsNotDifferent() {
+        return new PasswordException(PASSWORDS_NOT_DIFFER);
     }
 
 }
