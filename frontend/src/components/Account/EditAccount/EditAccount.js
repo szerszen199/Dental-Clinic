@@ -1,23 +1,23 @@
-import React from "react";
+import React, {Suspense} from 'react';
+import {withTranslation} from 'react-i18next';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./EditAccount.css";
 import axios from "axios";
 import {editAccountRequest} from "./EditAccountRequest";
-import {JWTTokenCookieName} from "../../Login/LoginRequest";
 import Cookies from "js-cookie";
 
-export default class EditAccount extends React.Component {
+class EditAccountWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             isDisabled: true,
-            text: "Edit",
             email: "",
             firstName: "",
             lastName: "",
             phoneNumber: "",
             pesel: "",
+            version: "",
         }
     }
 
@@ -25,7 +25,7 @@ export default class EditAccount extends React.Component {
         axios
             .get(process.env.REACT_APP_BACKEND_URL + "account/info", {
                 headers: {
-                    Authorization: "Bearer " + Cookies.get(JWTTokenCookieName)
+                    Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
                 }
             })
             .then(res => res.data)
@@ -34,7 +34,8 @@ export default class EditAccount extends React.Component {
                 firstName: result.firstName,
                 lastName: result.lastName,
                 phoneNumber: result.phoneNumber,
-                pesel: result.pesel
+                pesel: result.pesel,
+                version: result.version,
             }))
     }
 
@@ -42,24 +43,43 @@ export default class EditAccount extends React.Component {
         // Todo: zrobić walidację taką jaką wymaga projekt
 
         function emailCorrect() {
-            return t.state.email.length > 0;
+            if (t.state.email !== undefined) {
+                return t.state.email.length >= 4 && t.state.email.length <= 100;
+            }
+            return false;
         }
 
         function firstNameCorrect() {
-            return t.state.firstName.length > 0;
+            if (t.state.firstName !== undefined) {
+                return t.state.firstName.length >= 1 && t.state.firstName.length <= 50;
+            }
+            return false;
         }
 
         function lastNameCorrect() {
-            return t.state.lastName.length > 0;
+            if (t.state.lastName !== undefined) {
+                return t.state.lastName.length >= 1 && t.state.lastName.length <= 80;
+            }
+            return false;
         }
 
         function phoneNumberCorrect() {
+            if (t.state.phoneNumber !== undefined && t.state.phoneNumber !== "") {
+                return t.state.phoneNumber.length >= 9 && t.state.phoneNumber.length <= 15;
+            }
+            t.setState({
+                phoneNumber: "",
+            });
             return true;
-            // return t.state.phoneNumber.length > 0 && /^\d+$/.test(t.state.phoneNumber);
         }
 
-        // TODO: przypadek obcokrajowca wymusza że peselu może nie być ale nadal warto by go zwalidowac, tylko jak?
         function peselCorrect() {
+            if (t.state.pesel !== undefined && t.state.pesel !== "") {
+                return t.state.pesel.length === 11;
+            }
+            t.setState({
+                pesel: "",
+            });
             return true;
         }
 
@@ -83,26 +103,34 @@ export default class EditAccount extends React.Component {
     setEditable() {
         this.setState({
             isDisabled: false,
-            text: "Save"
         });
     }
 
     setNotEditable(t) {
-        this.validateForm(t)
-        this.setState({
-            isDisabled: true,
-            text: "Edit"
-        });
-        editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, this.state.phoneNumber, this.state.pesel)
+        if (t.validateForm(t)) {
+            t.setState({
+                isDisabled: true,
+            });
+            let phoneNumber = t.state.phoneNumber;
+            if (t.state.phoneNumber === "") {
+                phoneNumber = null;
+            }
+            let pesel = t.state.pesel
+            if (t.state.pesel === "") {
+                pesel = null;
+            }
+            editAccountRequest(t.state.email, t.state.firstName, t.state.lastName, phoneNumber, pesel, t.state.version)
+        }
     }
 
-    // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
     render() {
+        const {t} = this.props;
+
         return (
             <div className="EditAccount">
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group size="lg" controlId="email">
-                        <Form.Label>Email</Form.Label>
+                        <Form.Label>{t("Email")}</Form.Label>
                         <Form.Control
                             autoFocus
                             type="email"
@@ -112,7 +140,7 @@ export default class EditAccount extends React.Component {
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="firstName">
-                        <Form.Label>First Name</Form.Label>
+                        <Form.Label>{t("First Name")}</Form.Label>
                         <Form.Control
                             type="text"
                             value={this.state.firstName}
@@ -121,7 +149,7 @@ export default class EditAccount extends React.Component {
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="lastName">
-                        <Form.Label>Last Name</Form.Label>
+                        <Form.Label>{t("Last Name")}</Form.Label>
                         <Form.Control
                             type="text"
                             value={this.state.lastName}
@@ -130,7 +158,7 @@ export default class EditAccount extends React.Component {
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="phoneNumber">
-                        <Form.Label>Phone Number</Form.Label>
+                        <Form.Label>{t("Phone Number")}</Form.Label>
                         <Form.Control
                             type="text"
                             value={this.state.phoneNumber}
@@ -138,9 +166,8 @@ export default class EditAccount extends React.Component {
                             onChange={(e) => this.setState({phoneNumber: e.target.value})}
                         />
                     </Form.Group>
-                    {/*Todo: co z peselem dla obcokrajowca? Nic czy coś innnego? Narazie zrobiłem że może być pusty*/}
                     <Form.Group size="lg" controlId="pesel">
-                        <Form.Label>Pesel</Form.Label>
+                        <Form.Label>{t("Pesel")}</Form.Label>
                         <Form.Control
                             type="text"
                             value={this.state.pesel}
@@ -150,10 +177,21 @@ export default class EditAccount extends React.Component {
                     </Form.Group>
                     <Button block size="lg" type="submit"
                             onClick={() => this.handleOnClick(this)}>
-                        {this.state.text}
+                        {this.state.isDisabled ? t("Edit") : t("Save")}
                     </Button>
                 </Form>
             </div>
         );
     }
+}
+
+
+const EditAccountTr = withTranslation()(EditAccountWithoutTranslation)
+
+export default function EditAccount() {
+    return (
+        <Suspense fallback="loading">
+            <EditAccountTr/>
+        </Suspense>
+    );
 }

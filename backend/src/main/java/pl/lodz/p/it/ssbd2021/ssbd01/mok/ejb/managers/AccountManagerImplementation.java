@@ -8,14 +8,15 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.DataValidationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JWTRegistrationConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtResetPasswordConfirmation;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
@@ -23,10 +24,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 
-import javax.annotation.security.PermitAll;
-import javax.ejb.EJB;
 import javax.ejb.Stateful;
-import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
@@ -40,7 +38,7 @@ import java.util.List;
 /**
  * Typ Account manager implementation.
  */
-@Stateless
+@Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
 public class AccountManagerImplementation extends AbstractManager implements AccountManager {
@@ -60,11 +58,17 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @Inject
     private RandomPasswordGenerator passwordGenerator;
 
-    @EJB
+    @Inject
     private JwtEmailConfirmationUtils jwtEmailConfirmationUtils;
 
     @Inject
+    private JWTRegistrationConfirmationUtils jwtRegistrationConfirmationUtils;
+
+    @Inject
     private MailProvider mailProvider;
+
+    @Inject
+    private JwtResetPasswordConfirmation jwtResetPasswordConfirmation;
 
     @Override
     public void createAccount(Account account, ServletContext servletContext) throws AppBaseException {
@@ -93,7 +97,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         mailProvider.sendActivationMail(
                 account.getEmail(),
                 servletContext.getContextPath(),
-                jwtEmailConfirmationUtils.generateRegistrationConfirmationJwtTokenForUser(account.getLogin())
+                jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(account.getLogin())
         );
     }
 
@@ -104,19 +108,43 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
+    public void setEmailRecallTrue(String login) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
+        account.setEmailRecall(true);
+        accountFacade.edit(account);
+    }
+
+    @Override
     public void confirmAccount(Long id) throws AppBaseException {
-        accountFacade.find(id).setEnabled(true);
+        Account account = accountFacade.find(id);
+        account.setEnabled(true);
+        accountFacade.edit(account);
     }
 
     @Override
     public void confirmAccountByToken(String jwt) throws AppBaseException {
-        if (!jwtEmailConfirmationUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+        if (!jwtEmailConfirmationUtils.validateJwtToken(jwt)) {
             throw AccountException.invalidConfirmationToken();
         }
         try {
             String login = jwtEmailConfirmationUtils.getUserNameFromJwtToken(jwt);
-            accountFacade.findByLogin(login).setEnabled(true);
+            Account account = accountFacade.findByLogin(login);
+            account.setEnabled(true);
+            accountFacade.edit(account);
             mailProvider.sendActivationConfirmationMail(accountFacade.findByLogin(login).getEmail());
+        } catch (AppBaseException | ParseException e) {
+            throw AccountException.noSuchAccount(e);
+        }
+    }
+
+    @Override
+    public void resetPasswordByToken(String jwt) throws AppBaseException {
+        if (!jwtResetPasswordConfirmation.validateJwtToken(jwt)) {
+            throw AccountException.invalidConfirmationToken();
+        }
+        try {
+            String input = jwtResetPasswordConfirmation.getUserNameFromJwtToken(jwt);
+            this.resetPassword(input);
         } catch (AppBaseException | ParseException e) {
             throw AccountException.noSuchAccount(e);
         }
@@ -126,6 +154,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     public void lockAccount(String login) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
         account.setActive(false);
+        accountFacade.edit(account);
         // TODO: Zastanowić się i ustawić pole modifiedBy po zablokowaniu konta przez system po nieudanych logowaniach
         //account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
     }
@@ -148,21 +177,17 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             toBeModified.setLastName(editOwnAccountRequestDTO.getLastName());
         }
         if (editOwnAccountRequestDTO.getEmail() != null && !toBeModified.getEmail().equals(editOwnAccountRequestDTO.getEmail())) {
+            toBeModified.setEmail(editOwnAccountRequestDTO.getEmail());
             // TODO: 21.05.2021 Wysylac maila dopieo kiedy edit się powiódł?
             mailProvider.sendEmailChangeConfirmationMail(
                     editOwnAccountRequestDTO.getEmail(),
                     servletContext.getContextPath(),
                     jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(
-                            loggedInAccountUtil.getLoggedInAccountLogin(),
-                            editOwnAccountRequestDTO.getEmail())
+                            loggedInAccountUtil.getLoggedInAccountLogin(), editOwnAccountRequestDTO.getEmail())
             );
         }
-        if (editOwnAccountRequestDTO.getPhoneNumber() != null) {
-            toBeModified.setPhoneNumber(editOwnAccountRequestDTO.getPhoneNumber());
-        }
-        if (editOwnAccountRequestDTO.getPesel() != null) {
-            toBeModified.setPesel(editOwnAccountRequestDTO.getPesel());
-        }
+        toBeModified.setPhoneNumber(editOwnAccountRequestDTO.getPhoneNumber());
+        toBeModified.setPesel(editOwnAccountRequestDTO.getPesel());
         toBeModified.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
         accountFacade.edit(toBeModified);
     }
@@ -201,16 +226,15 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Override
     public void confirmMailChangeByToken(String jwt) throws AppBaseException {
-        if (!jwtEmailConfirmationUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+        if (!jwtEmailConfirmationUtils.validateJwtToken(jwt)) {
             throw AccountException.invalidConfirmationToken();
         }
         try {
-            // TODO: 21.05.2021 Jest zbyt późno żebym to poprawiał ale proszę niech tutaj się pojawi jakaś para, obiekt cokolwiek
-            //   Co sprawi że będzie wiadomo co tutaj jest zwracane, to co tutaj jest ten array i split regexem jest straszny,
-            //   pomijajac dwukrotne wykonanie tej samej metody w identyczny sposób
-            String login = jwtEmailConfirmationUtils.getUserNameAndEmailFromEmailChangeConfirmationJwtToken(jwt).split("/")[0];
-            String newEmail = jwtEmailConfirmationUtils.getUserNameAndEmailFromEmailChangeConfirmationJwtToken(jwt).split("/")[1];
-            accountFacade.findByLogin(login).setEmail(newEmail);
+            String login = jwtEmailConfirmationUtils.getUsernameFromToken(jwt);
+            String newEmail = jwtEmailConfirmationUtils.getEmailFromToken(jwt);
+            Account account = accountFacade.findByLogin(login);
+            account.setEmail(newEmail);
+            accountFacade.edit(account);
         } catch (AppBaseException | ParseException e) {
             throw AccountException.noSuchAccount(e);
         } catch (NullPointerException e) {
@@ -251,6 +275,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         Account account = accountFacade.find(id);
         // TODO: 21.05.2021 Dlugosc do zmiennej w pliku konfiguracyjnym
         account.setPassword(hashGenerator.generateHash(passwordGenerator.generate(32)));
+        accountFacade.edit(account);
         // TODO: send mail with new password
     }
 
@@ -259,33 +284,53 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         Account account = accountFacade.findByLogin(login);
         // TODO: 21.05.2021 Dlugosc do zmiennej w pliku konfiguracyjnym
         account.setPassword(hashGenerator.generateHash(passwordGenerator.generate(32)));
+        accountFacade.edit(account);
+        String pass = passwordGenerator.generate(32);
+        account.setPassword(hashGenerator.generateHash(pass));
+        mailProvider.sendGeneratedPasswordMail(account.getEmail(), pass);
         // TODO: send mail with new password
     }
-    
+
+    @Override
+    public void sendResetPasswordConfirmationEmail(String login, ServletContext servletContext) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
+        mailProvider.sendResetPassConfirmationMail(
+                account.getEmail(),
+                servletContext.getContextPath(),
+                jwtResetPasswordConfirmation.generateJwtTokenForUsername(
+                        login)
+        );
+        // TODO: send mail with new password
+    }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void setLastSuccessfulLoginIp(Account account, String ip) throws AppBaseException {
         account.setLastSuccessfulLoginIp(ip);
+        accountFacade.edit(account);
     }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void setLastSuccessfulLoginTime(Account account, LocalDateTime time) throws AppBaseException {
         account.setLastSuccessfulLogin(time);
+        accountFacade.edit(account);
     }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void increaseInvalidLoginCount(Account account) throws AppBaseException {
         account.setUnsuccessfulLoginCounter(account.getUnsuccessfulLoginCounter() + 1);
+        accountFacade.edit(account);
     }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void zeroInvalidLoginCount(Account account) throws AppBaseException {
         account.setUnsuccessfulLoginCounter(0);
+        accountFacade.edit(account);
     }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void setLastUnsuccessfulLoginTime(Account account, LocalDateTime time) throws AppBaseException {
         account.setLastUnsuccessfulLogin(time);
+        accountFacade.edit(account);
     }
 
     @Override
@@ -309,6 +354,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     private void setLastUnsuccessfulLoginIp(Account account, String ip) throws AppBaseException {
         account.setLastUnsuccessfulLoginIp(ip);
+        accountFacade.edit(account);
     }
 
     @Override

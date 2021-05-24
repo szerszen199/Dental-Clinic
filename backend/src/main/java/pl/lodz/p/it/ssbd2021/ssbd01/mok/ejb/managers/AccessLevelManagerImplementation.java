@@ -22,20 +22,12 @@ public class AccessLevelManagerImplementation extends AbstractManager implements
     @Inject
     private AccessLevelFacade accessLevelFacade;
 
-
-    @Override
-    public void revokeAccessLevel(Long id, String level) throws AppBaseException {
-        AccessLevel accessLevel = accessLevelFacade.findByAccountIdAndAccessLevel(id, level);
-        if (accessLevel.getActive()) {
-            accessLevel.setActive(false);
-        }
-    }
-
     @Override
     public void revokeAccessLevel(String login, String level) throws AppBaseException {
         AccessLevel accessLevel = accessLevelFacade.findByAccountLoginAndAccessLevel(login, level);
         if (accessLevel.getActive()) {
             accessLevel.setActive(false);
+            accessLevelFacade.edit(accessLevel);
         }
     }
 
@@ -44,6 +36,7 @@ public class AccessLevelManagerImplementation extends AbstractManager implements
         AccessLevel accessLevel = accessLevelFacade.findByAccountLoginAndAccessLevel(login, level);
         if (!accessLevel.getActive()) {
             accessLevel.setActive(true);
+            accessLevelFacade.edit(accessLevel);
         }
     }
 

@@ -12,9 +12,8 @@ function ListDoctors() {
                         <Accordion.Toggle as={"text"} variant="link" eventKey="0">
                             <Container style={{width: "100%"}}>
                                 <Row style={{width: "100%"}}>
-                                    <Col><a className="Buttons">dr.Doktor</a></Col>
+                                    <Col><p className="Buttons">dr.Doktor</p></Col>
                                     <Col style={{maxWidth: "100px"}}>
-                                        {/*<a>⭐ 4.7/5</a>*/}
                                         <Rating name="half-rating-read" defaultValue={4.7} precision={0.1} readOnly/>
                                     </Col>
                                 </Row>
@@ -27,7 +26,7 @@ function ListDoctors() {
                         <Accordion.Toggle as={"text"} variant="link" eventKey="1">
                             <Container style={{width: "100%"}}>
                                 <Row style={{width: "100%"}}>
-                                    <Col><a className="Buttons">dr.Lekarz</a></Col>
+                                    <Col><p className="Buttons">dr.Lekarz</p></Col>
                                     <Col style={{maxWidth: "100px"}}>
                                         <Rating name="half-rating-read" defaultValue={3.4} precision={0.1} readOnly/>
                                     </Col>

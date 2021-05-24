@@ -1,15 +1,35 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmMailChangeRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.CreateAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.RevokeAndGrantAccessLevelDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetDarkModeRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetLanguageRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SimpleUsernameRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
+
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.servlet.ServletContext;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -20,27 +40,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmMailChangeRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetLanguageRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetDarkModeRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmAccountRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.CreateAccountRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SimpleUsernameRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.RevokeAndGrantAccessLevelDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 /**
  * Typ Account endpoint.
@@ -74,7 +76,7 @@ public class AccountEndpoint {
     @Path("create")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response createAccount(CreateAccountRequestDTO accountDto, @Context ServletContext servletContext) {
+    public Response createAccount(@NotNull @Valid CreateAccountRequestDTO accountDto, @Context ServletContext servletContext) {
         try {
             this.accountManager.createAccount(
                     AccountConverter.createAccountEntityFromDto(accountDto),
@@ -107,11 +109,29 @@ public class AccountEndpoint {
     @PermitAll
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response confirmAccount(ConfirmAccountRequestDTO confirmAccountRequestDTO) throws AppBaseException {
+    public Response confirmAccount(@NotNull @Valid ConfirmAccountRequestDTO confirmAccountRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
         this.accountManager.confirmAccountByToken(confirmAccountRequestDTO.getConfirmToken());
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CONFIRMED_SUCCESSFULLY)).build();
     }
+
+    /**
+     * Reset password.
+     *
+     * @param confirmAccountRequestDTO the confirm account request dto
+     * @return the response
+     * @throws AppBaseException the app base exception
+     */
+    @PUT
+    @Path("reset")
+    @PermitAll
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response resetPassword(@NotNull @Valid ConfirmAccountRequestDTO confirmAccountRequestDTO) throws AppBaseException {
+        this.accountManager.resetPasswordByToken(confirmAccountRequestDTO.getConfirmToken());
+        return Response.ok().entity(new MessageResponseDto(I18n.PASSWORD_RESET_SUCCESSFULLY)).build();
+    }
+
 
     /**
      * Edit account data.
@@ -127,7 +147,7 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response editAccount(EditOwnAccountRequestDTO accountDto, @Context ServletContext servletContext) throws AppBaseException {
+    public Response editAccount(@NotNull @Valid EditOwnAccountRequestDTO accountDto, @Context ServletContext servletContext) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
         this.accountManager.editOwnAccount(accountDto, servletContext);
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
@@ -148,7 +168,7 @@ public class AccountEndpoint {
     @RolesAllowed({I18n.ADMIN})
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response editOtherAccount(EditAnotherAccountRequestDTO accountDto, @Context ServletContext servletContext) throws AppBaseException {
+    public Response editOtherAccount(@NotNull @Valid EditAnotherAccountRequestDTO accountDto, @Context ServletContext servletContext) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
         accountManager.editOtherAccount(accountDto, servletContext);
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
@@ -167,7 +187,7 @@ public class AccountEndpoint {
     @PermitAll
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response confirmMailChange(ConfirmMailChangeRequestDTO confirmMailChangeRequestDTO) throws AppBaseException {
+    public Response confirmMailChange(@NotNull @Valid ConfirmMailChangeRequestDTO confirmMailChangeRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
         accountManager.confirmMailChangeByToken(confirmMailChangeRequestDTO.getToken());
         return Response.ok().entity(new MessageResponseDto(I18n.EMAIL_CONFIRMED_SUCCESSFULLY)).build();
@@ -186,11 +206,8 @@ public class AccountEndpoint {
     @Path("/revokeAccessLevel")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response revokeAccessLevel(RevokeAndGrantAccessLevelDTO revokeAndGrantAccessLevelDTO) throws AppBaseException {
+    public Response revokeAccessLevel(@NotNull @Valid RevokeAndGrantAccessLevelDTO revokeAndGrantAccessLevelDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
-        if (revokeAndGrantAccessLevelDTO.getLogin().equals(loggedInAccountUtil.getLoggedInAccountLogin())) {
-            return Response.status(Status.BAD_REQUEST).build();
-        }
         accessLevelManager.revokeAccessLevel(revokeAndGrantAccessLevelDTO.getLogin(), revokeAndGrantAccessLevelDTO.getLevel());
         return Response.ok().build();
     }
@@ -207,7 +224,7 @@ public class AccountEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("lock")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response lockAccount(SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
+    public Response lockAccount(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
         accountManager.lockAccount(simpleUsernameRequestDTO.getLogin());
         mailProvider.sendAccountLockByAdminMail(accountManager.findByLogin(simpleUsernameRequestDTO.getLogin()).getEmail());
@@ -226,7 +243,7 @@ public class AccountEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("unlock")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response unlockAccount(SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
+    public Response unlockAccount(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
         accountManager.unlockAccount(simpleUsernameRequestDTO.getLogin());
         mailProvider.sendAccounUnlockByAdminMail(accountManager.findByLogin(simpleUsernameRequestDTO.getLogin()).getEmail());
@@ -245,11 +262,8 @@ public class AccountEndpoint {
     @Path("/addLevelByLogin")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response addAccessLevel(RevokeAndGrantAccessLevelDTO revokeAndGrantAccessLevelDTO) throws AppBaseException {
+    public Response addAccessLevel(@NotNull @Valid RevokeAndGrantAccessLevelDTO revokeAndGrantAccessLevelDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
-        if (revokeAndGrantAccessLevelDTO.getLogin().equals(loggedInAccountUtil.getLoggedInAccountLogin())) {
-            return Response.status(Status.BAD_REQUEST).build();
-        }
         accessLevelManager.addAccessLevel(revokeAndGrantAccessLevelDTO.getLogin(), revokeAndGrantAccessLevelDTO.getLevel());
         return Response.ok().entity(new MessageResponseDto(I18n.ACCESS_LEVEL_ADDED_SUCCESSFULLY)).build();
     }
@@ -262,6 +276,7 @@ public class AccountEndpoint {
      */
     @GET
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
+    @Produces({MediaType.APPLICATION_JSON})
     @Path("/info")
     public Response getLoggedInAccountInfo() throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
@@ -282,7 +297,7 @@ public class AccountEndpoint {
     @Consumes({MediaType.APPLICATION_JSON})
     @RolesAllowed({I18n.ADMIN})
     @Path("/other-account-info")
-    public Response getAccountInfoWithLogin(SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
+    public Response getAccountInfoWithLogin(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków
         AccountInfoResponseDTO account = new AccountInfoResponseDTO(accountManager.findByLogin(simpleUsernameRequestDTO.getLogin()));
         return Response.ok().entity(account).build();
@@ -339,7 +354,7 @@ public class AccountEndpoint {
     @Path("new-password")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changeOwnPassword(ChangePasswordRequestDTO newPassword) {
+    public Response changeOwnPassword(@NotNull @Valid ChangePasswordRequestDTO newPassword) {
         // TODO: 21.05.2021 Lepsza obsługa wyjątków ;)
         try {
             accountManager.changePassword(
@@ -362,31 +377,32 @@ public class AccountEndpoint {
      */
     @PUT
     @RolesAllowed({I18n.ADMIN})
-    @Path("reset-password")
+    @Path("reset-other-password")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response resetOthersPassword(SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
+    public Response resetOthersPassword(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) throws AppBaseException {
         // TODO: 21.05.2021 Obsługa wyjątków.
         accountManager.resetPassword(simpleUsernameRequestDTO.getLogin());
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_RESET_SUCCESSFULLY)).build();
     }
 
     /**
-     * Resetuje hasło zalogowanemu użytkownikowi.
+     * Resetuje hasło użytkownikowi.
      *
+     * @param simpleUsernameRequestDTO the simple username request dto
+     * @param servletContext           the servlet context
      * @return odpowiedź na żądanie
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
-    @Path("reset-other-password")
-    @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
+    @Path("reset-password")
+    @PermitAll
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response resetOwnPassword() throws AppBaseException {
+    public Response resetOwnPassword(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO, @Context ServletContext servletContext) throws AppBaseException {
         // TODO: 21.05.2021  Ob słu ga Wy jąt ków
-        String login = loggedInAccountUtil.getLoggedInAccountLogin();
-        accountManager.resetPassword(login);
-        return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_RESET_SUCCESSFULLY)).build();
+        accountManager.sendResetPasswordConfirmationEmail(simpleUsernameRequestDTO.getLogin(), servletContext);
+        return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_RESET_MAIL_SENT_SUCCESSFULLY)).build();
     }
 
 
@@ -400,7 +416,7 @@ public class AccountEndpoint {
     @Path("dark-mode")
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changeDarkMode(SetDarkModeRequestDTO setDarkModeRequestDTO) {
+    public Response changeDarkMode(@NotNull @Valid SetDarkModeRequestDTO setDarkModeRequestDTO) {
         // TODO: 22.05.2021 OB SLU GA WY JAT KOW
         String login = loggedInAccountUtil.getLoggedInAccountLogin();
         try {
@@ -423,7 +439,7 @@ public class AccountEndpoint {
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response changeLanguage(SetLanguageRequestDTO setLanguageRequestDTO) {
+    public Response changeLanguage(@NotNull @Valid SetLanguageRequestDTO setLanguageRequestDTO) {
         // TODO: 22.05.2021 Ob Słu ga Wiadomo czego
         String login = loggedInAccountUtil.getLoggedInAccountLogin();
         try {

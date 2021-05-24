@@ -1,13 +1,14 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import javax.ejb.Local;
-import javax.servlet.ServletContext;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
+
+import javax.ejb.Local;
+import javax.servlet.ServletContext;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Interfejs Account manager.
@@ -33,6 +34,14 @@ public interface AccountManager {
     void removeAccount(Long id) throws AppBaseException;
 
     /**
+     * usun konto.
+     *
+     * @param login login konta dla którego zostanie zmieniony EmailReccal na true
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    void setEmailRecallTrue(String login) throws AppBaseException;
+
+    /**
      * Potwierdzenie konta.
      *
      * @param id id
@@ -48,6 +57,23 @@ public interface AccountManager {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     void confirmAccountByToken(String jwt) throws AppBaseException;
+
+    /**
+     * reset hasla konta.
+     *
+     * @param login login
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    void resetPasswordByToken(String login) throws AppBaseException;
+
+    /**
+     * Potwierdzenie hasla konta.
+     *
+     * @param login          login
+     * @param servletContext the servlet context
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    void sendResetPasswordConfirmationEmail(String login, ServletContext servletContext) throws AppBaseException;
 
     /**
      * Metoda służąca do blokowania konta.

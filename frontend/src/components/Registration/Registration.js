@@ -7,6 +7,7 @@ import {Col} from "react-bootstrap";
 import Dropdown from 'react-bootstrap/Dropdown';
 import FlagIcon from './FlagIcon.js';
 
+import {useTranslation} from "react-i18next";
 
 export default function Registration() {
     const [login, setLogin] = useState("");
@@ -15,6 +16,9 @@ export default function Registration() {
     const [repeatedPassword, setRepeatedPassword] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [pesel, setPesel] = useState("");
+    const {t} = useTranslation()
     const [phoneNumber, setPhoneNumber] = useState(null);
     const [pesel, setPesel] = useState(null);
     const [selectedLanguage, setSelectedLanguage] = useState("");
@@ -228,10 +232,10 @@ export default function Registration() {
             <Form noValidate onSubmit={handleSubmit}>
                 <Form.Row>
                     <Form.Group as={Col} size="lg" controlId="login">
-                        <Form.Label>Login*</Form.Label>
+                        <Form.Label>{t("UserLogin")}*</Form.Label>
                         <Form.Control
                             required
-                            placeholder="Login"
+                            placeholder={t("UserLogin")}
                             autoFocus
                             type="login"
                             value={login}
@@ -249,10 +253,10 @@ export default function Registration() {
                         </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group as={Col} size="lg" controlId="email">
-                        <Form.Label>Email*</Form.Label>
+                        <Form.Label>{t("Email")}*</Form.Label>
                         <Form.Control
                             required
-                            placeholder="Email"
+                            placeholder={t("Email")}
                             type="email"
                             value={email}
                             onChange={e => {
@@ -271,10 +275,10 @@ export default function Registration() {
                 </Form.Row>
                 <Form.Row>
                     <Form.Group as={Col} size="lg" controlId="password">
-                        <Form.Label>Password*</Form.Label>
+                        <Form.Label>{t("Password")}*</Form.Label>
                         <Form.Control
                             required
-                            placeholder="Password"
+                            placeholder={t("Password")}
                             type="password"
                             value={password}
                             onChange={e => {
@@ -291,10 +295,10 @@ export default function Registration() {
                         </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group as={Col} size="lg" controlId="repeatedPassword">
-                        <Form.Label>Repeat password*</Form.Label>
+                        <Form.Label>{t("Repeat new password")}*</Form.Label>
                         <Form.Control
                             required
-                            placeholder="Repeat password"
+                            placeholder={t("Repeat new password")}
                             type="password"
                             value={repeatedPassword}
                             onChange={e => {
@@ -313,10 +317,10 @@ export default function Registration() {
                 </Form.Row>
                 <Form.Row>
                     <Form.Group as={Col} size="lg" controlId="firstName">
-                        <Form.Label>First Name*</Form.Label>
+                        <Form.Label>{t("First Name")}*</Form.Label>
                         <Form.Control
                             required
-                            placeholder="First name"
+                            placeholder={t("First Name")}
                             type="text"
                             value={firstName}
                             onChange={e => {
@@ -333,10 +337,10 @@ export default function Registration() {
                         </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group as={Col} size="lg" controlId="lastName">
-                        <Form.Label>Last Name*</Form.Label>
+                        <Form.Label>{t("Last Name")}*</Form.Label>
                         <Form.Control
                             required
-                            placeholder="Last name"
+                            placeholder={t("Last Name")}
                             type="text"
                             value={lastName}
                             onChange={e => {
@@ -355,9 +359,9 @@ export default function Registration() {
                 </Form.Row>
                 <Form.Row>
                     <Form.Group as={Col} size="lg" controlId="phoneNumber">
-                        <Form.Label>Phone Number</Form.Label>
+                        <Form.Label>{t("Phone Number")}</Form.Label>
                         <Form.Control
-                            placeholder="Phone number"
+                            placeholder={t("Phone Number")}
                             type="text"
                             value={phoneNumber}
                             onChange={e => {
@@ -374,9 +378,9 @@ export default function Registration() {
                         </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group as={Col} size="lg" controlId="pesel">
-                        <Form.Label>Pesel</Form.Label>
+                        <Form.Label>{t("Pesel")}</Form.Label>
                         <Form.Control
-                            placeholder="Pesel"
+                            placeholder={t("Pesel")}
                             type="text"
                             value={pesel}
                             onChange={e => {
