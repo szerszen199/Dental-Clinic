@@ -109,8 +109,7 @@ public class AccountEndpoint {
         do {
             try {
                 this.accountManager.createAccount(
-                        AccountConverter.createAccountEntityFromDto(accountDto),
-                        servletContext
+                        AccountConverter.createAccountEntityFromDto(accountDto)
                 );
                 rollbackTX = accountManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
@@ -243,7 +242,7 @@ public class AccountEndpoint {
         boolean rollbackTX = false;
         do {
             try {
-                this.accountManager.editOwnAccount(accountDto, servletContext);
+                this.accountManager.editOwnAccount(accountDto);
                 rollbackTX = accountManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
                 rollbackTX = true;
@@ -279,7 +278,7 @@ public class AccountEndpoint {
         boolean rollbackTX = false;
         do {
             try {
-                accountManager.editOtherAccount(accountDto, servletContext);
+                accountManager.editOtherAccount(accountDto);
                 rollbackTX = accountManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
                 rollbackTX = true;
@@ -414,7 +413,7 @@ public class AccountEndpoint {
         if (rollbackTX) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
-        mailProvider.sendAccounUnlockByAdminMail(accountManager.findByLogin(simpleUsernameRequestDTO.getLogin()).getEmail());
+        mailProvider.sendAccountUnlockByAdminMail(accountManager.findByLogin(simpleUsernameRequestDTO.getLogin()).getEmail());
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_UNLOCKED_SUCCESSFULLY)).build();
     }
 
@@ -605,7 +604,7 @@ public class AccountEndpoint {
         boolean rollbackTX = false;
         do {
             try {
-                accountManager.sendResetPasswordConfirmationEmail(simpleUsernameRequestDTO.getLogin(), servletContext);
+                accountManager.sendResetPasswordConfirmationEmail(simpleUsernameRequestDTO.getLogin());
                 rollbackTX = accountManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
                 rollbackTX = true;
