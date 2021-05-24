@@ -9,7 +9,7 @@ function MyAppointment() {
                 <Card className="Card">
                     <Card.Header style={{width: "100%"}}>
                         <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                            <a className="Buttons">17.08.2021 13:45  dr.Doktor</a>
+                            <p className="Buttons">17.08.2021 13:45  dr.Doktor</p>
                         </Accordion.Toggle>
                     </Card.Header>
                     <Accordion.Collapse eventKey="0">
@@ -17,7 +17,7 @@ function MyAppointment() {
                             <Container style={{width: "100%"}}>
                                 <Row style={{width: "100%"}}>
                                     <Col>
-                                        <a>Address: Politechniki 1 Lodz</a>
+                                        <p>Address: Politechniki 1 Lodz</p>
                                     </Col>
                                     <Col style={{maxWidth: "100px"}}>
                                         <Button
@@ -49,7 +49,7 @@ function MyAppointment() {
                             <Container style={{width: "100%"}}>
                                 <Row style={{width: "100%"}}>
                                     <Col>
-                                        <a>Address: Politechniki 2 Lodz</a>
+                                        <p>Address: Politechniki 2 Lodz</p>
                                     </Col>
                                     <Col style={{maxWidth: "100px"}}>
                                         <Button

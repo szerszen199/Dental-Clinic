@@ -1,9 +1,12 @@
-import React from "react";
+import React, {Suspense} from "react";
 import "./AccountsList.css";
-import {Table} from "react-bootstrap";
 import {makeAccountsListRequest} from "./AccountsListRequest";
+import {withTranslation} from "react-i18next";
+import BootstrapTable from 'react-bootstrap-table-next';
+import {Dropdown, Table} from "react-bootstrap";
+import filterFactory, {textFilter} from 'react-bootstrap-table2-filter';
 
-class AccountsList extends React.Component {
+class AccountsListWithoutTranslation extends React.Component {
 
 
     constructor(props) {
@@ -22,7 +25,7 @@ class AccountsList extends React.Component {
     renderAccount(person, index) {
         return (
             <tr key={index}>
-                <td>{index+1}</td>
+                <td>{index + 1}</td>
                 <td>{person.login}</td>
                 <td>{person.name}</td>
                 <td>{person.email}</td>
@@ -31,25 +34,36 @@ class AccountsList extends React.Component {
     }
 
     renderAccounts() {
-        return <Table striped bordered hover>
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>
-                    <div className="LoginInfo">Login</div>
-                </th>
-                <th>
-                    <div className="NameInfo">Name and surname</div>
-                </th>
-                <th>
-                    <div className="EmailInfo">Email</div>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            {this.state.accountsList.map(this.renderAccount)}
-            </tbody>
-        </Table>
+        const {t} = this.props;
+
+        const columns = [
+
+            {
+                dataField: 'login',
+                text: t('UserLogin'),
+                filter: textFilter({
+                    placeholder: t("Filter"),
+                    style: {marginLeft: "20px"}
+                })
+            },
+            {
+                dataField: 'name',
+                text: t('Name and Surname'),
+                filter: textFilter({
+                    placeholder: t("Filter"),
+                    style: {marginLeft: "20px"}
+                })
+            },
+            {
+                dataField: 'email',
+                text: t('Email'),
+                filter: textFilter({
+                    placeholder: t("Filter"),
+                    style: {marginLeft: "20px"}
+                })
+            }
+        ]
+        return <BootstrapTable striped keyField='id' columns={columns} data={this.state.accountsList} filter={filterFactory()}/>;
     }
 
     renderNull() {
@@ -64,5 +78,13 @@ class AccountsList extends React.Component {
     }
 }
 
-export default AccountsList
 
+const AccountsListTr = withTranslation()(AccountsListWithoutTranslation)
+
+export default function AccountsList() {
+    return (
+        <Suspense fallback="loading">
+            <AccountsListTr/>
+        </Suspense>
+    );
+}

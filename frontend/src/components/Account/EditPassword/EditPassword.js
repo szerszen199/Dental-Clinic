@@ -1,15 +1,15 @@
-import React from "react";
+import React, {Suspense} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./EditPassword.css";
+import {withTranslation} from "react-i18next";
 
-export default class EditPassword extends React.Component {
+class EditPasswordWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             isDisabled: true,
-            text: "Edit password",
             currentPassword: "",
             password: "",
             repeatedPassword: "",
@@ -64,11 +64,13 @@ export default class EditPassword extends React.Component {
 
     // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
     render() {
+        const {t} = this.props;
+
         return (
             <div className="EditPassword">
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group size="lg" controlId="currentPassword">
-                        <Form.Label>Current password</Form.Label>
+                        <Form.Label>{t("Current password")}</Form.Label>
                         <Form.Control
                             autoFocus
                             type="password"
@@ -78,7 +80,7 @@ export default class EditPassword extends React.Component {
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="password">
-                        <Form.Label>New password</Form.Label>
+                        <Form.Label>{t("New password")}</Form.Label>
                         <Form.Control
                             type="password"
                             value={this.state.password}
@@ -87,7 +89,7 @@ export default class EditPassword extends React.Component {
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="repeated-password">
-                        <Form.Label>Repeat new password</Form.Label>
+                        <Form.Label>{t("Repeat new password")}</Form.Label>
                         <Form.Control
                             type="password"
                             value={this.state.repeatedPassword}
@@ -96,12 +98,21 @@ export default class EditPassword extends React.Component {
                         />
                     </Form.Group>
                     <Button block size="lg" type="submit"
-                        // disabled={!validateForm()}
                             onClick={() => this.handleOnClick(this)}>
-                        {this.state.text}
+                        {this.state.isDisabled ? t("Edit") : t("Save")}
                     </Button>
                 </Form>
             </div>
         );
     }
+}
+
+const EditPasswordTr = withTranslation()(EditPasswordWithoutTranslation)
+
+export default function EditPassword() {
+    return (
+        <Suspense fallback="loading">
+            <EditPasswordTr/>
+        </Suspense>
+    );
 }
