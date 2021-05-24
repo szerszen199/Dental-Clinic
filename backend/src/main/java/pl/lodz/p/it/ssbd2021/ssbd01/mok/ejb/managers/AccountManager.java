@@ -22,10 +22,11 @@ public interface AccountManager {
      * Utworzenie konta przy rejestracji.
      *
      * @param account        nowe konto
-     * @param servletContext kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @param servletContext kontekst serwletów, służy do współdzielenia informacji w ramach aplikacji
+     * @throws AccountException wyjątek typu AccountException
+     * @throws MailSendingException wyjątek typu MailSendingException
      */
-    void createAccount(Account account, ServletContext servletContext) throws AppBaseException;
+    void createAccount(Account account, ServletContext servletContext) throws AccountException, MailSendingException;
 
     /**
      * usun konto.

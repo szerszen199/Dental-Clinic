@@ -46,8 +46,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CONFIRMATION_BY_TOKEN_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CREATION_FAILED;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOGIN_EMAIL_ALREADY_EXISTS;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_RESET_FAILED;
 
 /**
  * Typ Account endpoint.
@@ -89,12 +90,10 @@ public class AccountEndpoint {
                     AccountConverter.createAccountEntityFromDto(accountDto),
                     servletContext
             );
+        } catch (AccountException | MailSendingException e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         } catch (Exception e) {
-            if (e.getMessage().equals(ACCOUNT_LOGIN_EMAIL_ALREADY_EXISTS)) {
-                return Response.status(Status.CONFLICT).entity(new MessageResponseDto(ACCOUNT_LOGIN_EMAIL_ALREADY_EXISTS)).build();
-            } else {
-                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
-            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CREATED_SUCCESSFULLY)).build();
     }
@@ -114,8 +113,10 @@ public class AccountEndpoint {
     public Response confirmAccount(@NotNull @Valid ConfirmAccountRequestDTO confirmAccountRequestDTO) {
         try {
             this.accountManager.confirmAccountByToken(confirmAccountRequestDTO.getConfirmToken());
-        } catch (Exception e) {
+        } catch (AccountException | MailSendingException e) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CONFIRMATION_BY_TOKEN_FAILED)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CONFIRMED_SUCCESSFULLY)).build();
     }
@@ -133,10 +134,10 @@ public class AccountEndpoint {
     public Response resetPassword(@NotNull @Valid ConfirmAccountRequestDTO confirmAccountRequestDTO) {
         try {
             this.accountManager.resetPasswordByToken(confirmAccountRequestDTO.getConfirmToken());
-        } catch (AccountException accountException) {
+        } catch (AccountException | MailSendingException accountException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
-        } catch (MailSendingException mailSendingException) {
-            return Response.status(Status.CONFLICT).entity(new MessageResponseDto(mailSendingException.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(PASSWORD_RESET_FAILED)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.PASSWORD_RESET_SUCCESSFULLY)).build();
     }
