@@ -72,7 +72,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     private JwtResetPasswordConfirmation jwtResetPasswordConfirmation;
 
     @Override
-    public void createAccount(Account account, ServletContext servletContext) throws AppBaseException {
+    public void createAccount(Account account, ServletContext servletContext) throws AccountException, MailSendingException {
         account.setPassword(hashGenerator.generateHash(account.getPassword()));
 
         // TODO: 21.05.2021  Przetestować czy dzialaja dobrze constructory przed wstawieniem
@@ -93,7 +93,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         account.getAccessLevels().add(adminData);
 
         try {
-            accountFacade.findByLoginOrEmail(account.getLogin(), account.getEmail());
+            accountFacade.findByLoginOrEmailOrPesel(account.getLogin(), account.getEmail(), account.getPesel());
         } catch (AccountException accountException) {
             account.setCreatedBy(account);
             try {
@@ -101,7 +101,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             } catch (Exception e) {
                 throw AccountException.accountCreationFailed();
             }
-
             try {
                 mailProvider.sendActivationMail(
                         account.getEmail(),
@@ -112,6 +111,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
                 throw MailSendingException.activationLink();
             }
             return;
+        } catch (AppBaseException e) {
+            throw AccountException.accountCreationFailed();
         }
         throw AccountException.accountLoginEmailExists();
     }

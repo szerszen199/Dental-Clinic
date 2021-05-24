@@ -77,11 +77,12 @@ public class AccountFacade extends AbstractFacade<Account> {
      * @return konto
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    public Account findByLoginOrEmail(String login, String email) throws AppBaseException {
+    public Account findByLoginOrEmailOrPesel(String login, String email, String pesel) throws AppBaseException {
         try {
-            TypedQuery<Account> tq = em.createNamedQuery("Account.findByLoginOrEmail", Account.class);
+            TypedQuery<Account> tq = em.createNamedQuery("Account.findByLoginOrEmailOrPesel", Account.class);
             tq.setParameter("email", email);
             tq.setParameter("login", login);
+            tq.setParameter("pesel", pesel);
             return tq.getSingleResult();
         } catch (NoResultException e) {
             throw AccountException.noSuchAccount(e);
