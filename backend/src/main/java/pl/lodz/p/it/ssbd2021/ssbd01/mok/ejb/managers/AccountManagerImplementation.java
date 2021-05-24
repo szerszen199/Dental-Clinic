@@ -26,6 +26,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 
+import javax.ejb.SessionSynchronization;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -44,7 +45,7 @@ import java.util.List;
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
-public class AccountManagerImplementation extends AbstractManager implements AccountManager {
+public class AccountManagerImplementation extends AbstractManager implements AccountManager, SessionSynchronization {
 
     @Inject
     private AccountFacade accountFacade;
