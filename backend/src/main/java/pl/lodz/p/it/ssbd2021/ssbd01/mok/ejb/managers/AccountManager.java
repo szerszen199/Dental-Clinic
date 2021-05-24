@@ -2,6 +2,8 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 
@@ -62,9 +64,10 @@ public interface AccountManager {
      * reset hasla konta.
      *
      * @param login login
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @throws AccountException wyjątek typu AccountException
+     * @throws MailSendingException wyjątek typu MailSendingException
      */
-    void resetPasswordByToken(String login) throws AppBaseException;
+    void resetPasswordByToken(String login) throws AccountException, MailSendingException;
 
     /**
      * Potwierdzenie hasla konta.

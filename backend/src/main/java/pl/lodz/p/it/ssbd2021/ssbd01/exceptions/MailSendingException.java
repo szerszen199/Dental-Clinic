@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.exceptions;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_ACCOUNT_LOCK_SEND_ERROR;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_ACTIVATION_CONFIRMATION_SEND_ERROR;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_ACTIVATION_LINK_SEND_ERROR;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_RESET_MAIL_SENT_ERROR;
 
 public class MailSendingException extends AppBaseException {
 
@@ -30,9 +31,7 @@ public class MailSendingException extends AppBaseException {
      * z dedykowaną wiadomością dołączoną do niego sygnalizującą
      * powód wystąpienia wyjątku.
      *
-     * @return obiekt wyjątku MailSendingException z wiadomością
-     *         sygnalizującą niepowodzenie wysyłania wiadomości e-mail
-     *         z linkiem aktywacyjnym do konta.
+     * @return obiekt wyjątku MailSendingException z wiadomością sygnalizującą niepowodzenie wysyłania wiadomości e-mail z linkiem aktywacyjnym do konta.
      */
     public static MailSendingException activationLink() {
         return new MailSendingException(MAIL_ACTIVATION_LINK_SEND_ERROR);
@@ -43,9 +42,18 @@ public class MailSendingException extends AppBaseException {
      * z dedykowaną wiadomością dołączoną do niego sygnalizującą
      * powód wystąpienia wyjątku.
      *
-     * @return obiekt wyjątku MailSendingException z wiadomością
-     *         sygnalizującą niepowodzenie wysyłania wiadomości e-mail
-     *         informacją o zablokowanym koncie.
+     * @return obiekt wyjątku MailSendingException z wiadomością sygnalizującą niepowodzenie wysyłania wiadomości e-mail podczas resetu hasła użytkownika.
+     */
+    public static MailSendingException passwordResetMail() {
+        return new MailSendingException(PASSWORD_RESET_MAIL_SENT_ERROR);
+    }
+
+    /**
+     * Metoda opakowująca wyjątek MailSendingException
+     * z dedykowaną wiadomością dołączoną do niego sygnalizującą
+     * powód wystąpienia wyjątku.
+     *
+     * @return obiekt wyjątku MailSendingException z wiadomością sygnalizującą niepowodzenie wysyłania wiadomości e-mail informacją o zablokowanym koncie.
      */
     public static MailSendingException accountLock() {
         return new MailSendingException(MAIL_ACCOUNT_LOCK_SEND_ERROR);
@@ -56,9 +64,7 @@ public class MailSendingException extends AppBaseException {
      * z dedykowaną wiadomością dołączoną do niego sygnalizującą
      * powód wystąpienia wyjątku.
      *
-     * @return obiekt wyjątku MailSendingException z wiadomością
-     *         sygnalizującą niepowodzenie wysyłania wiadomości e-mail
-     *         informacją o aktywacji konta.
+     * @return obiekt wyjątku MailSendingException z wiadomością sygnalizującą niepowodzenie wysyłania wiadomości e-mail informacją o aktywacji konta.
      */
     public static MailSendingException activationConfirmation() {
         return new MailSendingException(MAIL_ACTIVATION_CONFIRMATION_SEND_ERROR);
