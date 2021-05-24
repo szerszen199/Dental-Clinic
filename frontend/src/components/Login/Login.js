@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import "./Login.css";
 import {makeLoginRequest} from "./LoginRequest";
 import {useTranslation} from "react-i18next";
+import {Link} from "react-router-dom";
 
 export default function Login() {
     const [login, setLogin] = useState("");
@@ -39,6 +40,9 @@ export default function Login() {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </Form.Group>
+                <Link block size="lg" as={Link} to="/reset-password">
+                    {t("ForgotPassword")}
+                </Link>
                 <Button block size="lg" type="submit" disabled={!validateForm()}>
                     {t("Login")}
                 </Button>

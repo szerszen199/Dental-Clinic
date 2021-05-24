@@ -29,6 +29,8 @@
   "page not found" : "Sorry, page not found!",
   "Dental Clinic": "Dental Clinic",
   "Password": "Password",
+  "ForgotPassword": "Forgot your password?",
+  "ResetPassword": "Reset password",
   "Change Access Level": "Change access level",
   "Patient": "Patient",
   "Administrator": "Administrator",
