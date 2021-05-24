@@ -43,12 +43,12 @@ public interface AccountManager {
     void removeAccount(Long id) throws AppBaseException;
 
     /**
-     * Potwierdzenie konta.
+     * usun konto.
      *
-     * @param id id
+     * @param login login konta dla którego zostanie zmieniony EmailReccal na true
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void confirmAccount(Long id) throws AppBaseException;
+    void setEmailRecallTrue(String login) throws AppBaseException;
 
 
     /**
@@ -60,21 +60,13 @@ public interface AccountManager {
     void confirmAccountByToken(String jwt) throws AppBaseException;
 
     /**
-     * reset hasla konta.
-     *
-     * @param login login
-     * @throws AppBaseException wyjątek typu AppBaseException
-     */
-    void resetPasswordByToken(String login) throws AppBaseException;
-
-    /**
      * Potwierdzenie hasla konta.
      *
      * @param login          login
      * @param servletContext the servlet context
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void resetPasswordConfirmation(String login, ServletContext servletContext) throws AppBaseException;
+    void sendResetPasswordConfirmationEmail(String login, ServletContext servletContext) throws AppBaseException;
 
     /**
      * Metoda służąca do blokowania konta.
@@ -169,10 +161,11 @@ public interface AccountManager {
      * Resetuje hasło podanego konta. Ustawia alfanumeryczne hasło o długości
      * 8 znaków.
      *
-     * @param login login konta, którego hasło ma zostać zresetowane
+     * @param accountToReset login konta, którego hasło ma zostać zresetowane
+     * @param whoResets      login konta resetującego
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void resetPassword(String login) throws AppBaseException;
+    void resetPassword(String accountToReset, String whoResets) throws AppBaseException;
 
 
     /**

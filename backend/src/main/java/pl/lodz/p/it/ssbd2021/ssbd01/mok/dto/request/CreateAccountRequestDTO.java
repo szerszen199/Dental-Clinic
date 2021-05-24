@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request;
 
 import com.sun.istack.Nullable;
+import org.hibernate.validator.constraints.pl.PESEL;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 
@@ -39,12 +40,13 @@ public class CreateAccountRequestDTO {
     private String phoneNumber;
 
     @Size(min = 11, max = 11, message = I18n.PESEL_INVALID_SIZE)
+    @PESEL
     private String pesel;
 
     @NotNull(message = I18n.LANGUAGE_NULL)
     @Pattern(regexp = "pl|en", message = I18n.LANGUAGE_NOT_IN_PATTERN)
     private String language;
-    
+
     /**
      * Tworzy nową instancję klasy NewAccountDto.
      *
