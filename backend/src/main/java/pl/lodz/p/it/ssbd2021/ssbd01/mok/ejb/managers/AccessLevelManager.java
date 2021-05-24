@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 
@@ -19,7 +20,7 @@ public interface AccessLevelManager {
      * @throws AccessLevelException wyjątek typu AccessLevelException
      * @throws AccountException     wyjątek typu AccountException
      */
-    void revokeAccessLevel(String login, String level) throws AccessLevelException, AccountException;
+    void revokeAccessLevel(String login, String level) throws AccessLevelException, AccountException, AppBaseException;
 
     /**
      * Dodaje poziom dostępu {@param level} kontowi o loginie równym {@param login}.
@@ -29,7 +30,7 @@ public interface AccessLevelManager {
      * @throws AccessLevelException wyjątek typu AccessLevelException
      * @throws AccountException     wyjątek typu AccountException
      */
-    void addAccessLevel(String login, String level) throws AccessLevelException, AccountException;
+    void addAccessLevel(String login, String level) throws AccessLevelException, AccountException, AppBaseException;
 
     /**
      * Sprawdza czy ostatnia transakcja się powiodła.

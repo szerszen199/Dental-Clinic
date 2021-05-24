@@ -173,7 +173,8 @@ public class LoginEndpoint {
                 }
                 // TODO: 11.05.2021 informacja na maila? Idk
             }
-            Logger.getGlobal().log( Logger.getGlobal().log(Level.INFO, "Nieudana próba logowania na konto {0} z adresu {1}", new Object[]{account.getLogin(), ip}););
+            Logger.getGlobal().log(Level.INFO, "Nieudana próba logowania na konto {0} z adresu {1}", new Object[]{account.getLogin(), ip});
+
             return Response.status(Response.Status.UNAUTHORIZED).entity(new MessageResponseDto(I18n.LOGIN_FAILURE)).build();
         }
         UserInfoResponseDTO userInfoResponseDTO = new UserInfoResponseDTO();
