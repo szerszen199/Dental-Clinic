@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CONFIRMATION_BY_TOKEN_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CREATION_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EDIT_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_RESET_FAILED;
 
 /**
@@ -149,7 +150,6 @@ public class AccountEndpoint {
      * @param accountDto     DTO edytowanego konta
      * @param servletContext kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
      * @return response
-     * @throws AppBaseException wyjątek typu AppBaseException
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit
     @POST
@@ -157,9 +157,14 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response editAccount(@NotNull @Valid EditOwnAccountRequestDTO accountDto, @Context ServletContext servletContext) throws AppBaseException {
-        // TODO: 21.05.2021 Obsługa wyjątków
-        this.accountManager.editOwnAccount(accountDto, servletContext);
+    public Response editAccount(@NotNull @Valid EditOwnAccountRequestDTO accountDto, @Context ServletContext servletContext) {
+        try {
+            this.accountManager.editOwnAccount(accountDto, servletContext);
+        } catch (AccountException | MailSendingException accountException) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_EDIT_FAILED)).build();
+        }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
     }
 

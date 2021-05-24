@@ -100,9 +100,10 @@ public interface AccountManager {
      *
      * @param editOwnAccountRequestDTO edit own account request dto
      * @param servletContext           kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @throws AccountException wyjątek typu AccountException
+     * @throws MailSendingException wyjątek typu MailSendingException
      */
-    void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO, ServletContext servletContext) throws AppBaseException;
+    void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO, ServletContext servletContext) throws MailSendingException, AccountException;
 
 
     /**

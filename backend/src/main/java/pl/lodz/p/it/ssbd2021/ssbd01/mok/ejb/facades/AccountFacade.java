@@ -74,6 +74,7 @@ public class AccountFacade extends AbstractFacade<Account> {
      *
      * @param login login
      * @param email email
+     * @param pesel pesel
      * @return konto
      * @throws AppBaseException wyjątek typu AppBaseException
      */
