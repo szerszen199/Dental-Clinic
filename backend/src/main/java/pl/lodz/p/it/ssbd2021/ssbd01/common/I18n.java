@@ -85,7 +85,6 @@ public class I18n {
     public static final String ACCOUNT_LOGIN_EMAIL_PESEL_ALREADY_EXISTS = "account_login_email_pesel_already_exists";
     public static final String ACCOUNT_IS_BLOCKED = "account_is_blocked";
     public static final String ACCOUNT_NOT_FOUND = "account_not_found";
-    public static final String ACCOUNT_CREATION_FAILED = "account_creation_failed";
     public static final String ACCOUNT_CONFIRMATION_BY_TOKEN_FAILED = "account_confirmation_by_token_failed";
     public static final String PASSWORD_RESET_FAILED = "password_reset_failed";
     public static final String MAIL_CONFIRMATION_PARSING_ERROR = "mail_confirmation_parsing_error";

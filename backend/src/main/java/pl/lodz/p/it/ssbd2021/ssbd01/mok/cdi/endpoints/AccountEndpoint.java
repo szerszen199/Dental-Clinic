@@ -127,25 +127,25 @@ public class AccountEndpoint {
         int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         Exception exception;
-            do {
-                try {
-                    exception = null;
-                    this.accountManager.createAccount(
-                            AccountConverter.createAccountEntityFromDto(accountDto)
-                    );
-                    rollbackTX = accountManager.isLastTransactionRollback();
-                } catch (AppBaseException | EJBTransactionRolledbackException e) {
-                    rollbackTX = true;
-                    exception = e;
-                }
-            } while (rollbackTX && --retryTXCounter > 0);
-
-            if(rollbackTX) {
-                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        do {
+            try {
+                exception = null;
+                this.accountManager.createAccount(
+                        AccountConverter.createAccountEntityFromDto(accountDto)
+                );
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
             }
-        if(exception != null && (exception instanceof  AccountException || exception instanceof  MailSendingException)){
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
-        } else if (exception != null && exception instanceof  AppBaseException) {
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        if (exception != null && (exception instanceof AccountException || exception instanceof MailSendingException)) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
+        } else if (exception != null && exception instanceof AppBaseException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CREATED_SUCCESSFULLY)).build();
@@ -191,22 +191,22 @@ public class AccountEndpoint {
         int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         Exception exception;
-            do {
-                try {
-                    exception = null;
-                    this.accountManager.confirmAccountByToken(confirmAccountRequestDTO.getConfirmToken());
-                    rollbackTX = accountManager.isLastTransactionRollback();
-                } catch (AppBaseException | EJBTransactionRolledbackException e) {
-                    rollbackTX = true;
-                    exception = e;
-                }
-            } while (rollbackTX && --retryTXCounter > 0);
-            if(rollbackTX) {
-                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        do {
+            try {
+                exception = null;
+                this.accountManager.confirmAccountByToken(confirmAccountRequestDTO.getConfirmToken());
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
             }
-        if(exception != null && (exception instanceof  AccountException || exception instanceof  MailSendingException)){
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        if (exception != null && (exception instanceof AccountException || exception instanceof MailSendingException)) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
-        } else if (exception != null && exception instanceof  AppBaseException) {
+        } else if (exception != null && exception instanceof AppBaseException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CONFIRMATION_BY_TOKEN_FAILED)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CONFIRMED_SUCCESSFULLY)).build();
@@ -251,9 +251,9 @@ public class AccountEndpoint {
         if (rollbackTX) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
-        if(exception != null && (exception instanceof  AccountException || exception instanceof  MailSendingException)){
+        if (exception != null && (exception instanceof AccountException || exception instanceof MailSendingException)) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
-        } else if (exception != null && exception instanceof  AppBaseException) {
+        } else if (exception != null && exception instanceof AppBaseException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_EDIT_FAILED)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.PASSWORD_RESET_SUCCESSFULLY)).build();
@@ -284,19 +284,19 @@ public class AccountEndpoint {
         do {
             try {
                 exception = null;
-                    this.accountManager.editOwnAccount(accountDto);
-                    rollbackTX = accountManager.isLastTransactionRollback();
-                } catch (AppBaseException | EJBTransactionRolledbackException e) {
-                    rollbackTX = true;
-                    exception = e;
-                }
-            } while (rollbackTX && --retryTXCounter > 0);
-            if (rollbackTX) {
-                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+                this.accountManager.editOwnAccount(accountDto);
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
             }
-        if(exception != null && (exception instanceof  AccountException || exception instanceof  MailSendingException)){
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        if (exception != null && (exception instanceof AccountException || exception instanceof MailSendingException)) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
-        } else if (exception != null && exception instanceof  AppBaseException){
+        } else if (exception != null && exception instanceof AppBaseException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_EDIT_FAILED)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
@@ -324,22 +324,22 @@ public class AccountEndpoint {
         int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         Exception exception;
-            do {
-                try {
-                    exception = null;
-                    accountManager.editOtherAccount(accountDto);
-                    rollbackTX = accountManager.isLastTransactionRollback();
-                } catch (AppBaseException | EJBTransactionRolledbackException e) {
-                    rollbackTX = true;
-                    exception = e;
-                }
-            } while (rollbackTX && --retryTXCounter > 0);
-            if (rollbackTX) {
-                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        do {
+            try {
+                exception = null;
+                accountManager.editOtherAccount(accountDto);
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
             }
-        if(exception != null && (exception instanceof  AccountException || exception instanceof  MailSendingException)){
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        if (exception != null && (exception instanceof AccountException || exception instanceof MailSendingException)) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
-        } else if (exception != null && exception instanceof  AppBaseException){
+        } else if (exception != null && exception instanceof AppBaseException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_EDIT_FAILED)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
@@ -374,9 +374,9 @@ public class AccountEndpoint {
         if (rollbackTX) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
-        if(exception != null && (exception instanceof  AccountException || exception instanceof  MailSendingException)){
+        if (exception != null && (exception instanceof AccountException || exception instanceof MailSendingException)) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
-        } else if (exception != null && exception instanceof  AppBaseException){
+        } else if (exception != null && exception instanceof AppBaseException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(EMAIL_CONFIRMATION_FAILED)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.EMAIL_CONFIRMED_SUCCESSFULLY)).build();
@@ -408,12 +408,12 @@ public class AccountEndpoint {
                 exception = e;
             }
         } while (rollbackTX && --retryTXCounter > 0);
-        if(rollbackTX) {
+        if (rollbackTX) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
-        if(exception != null && exception instanceof  AccountException){
+        if (exception != null && exception instanceof AccountException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
-        } else if(exception != null && exception instanceof AppBaseException){
+        } else if (exception != null && exception instanceof AppBaseException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_LOCKED_FAILED)).build();
         }
         try {
@@ -454,9 +454,9 @@ public class AccountEndpoint {
         if (rollbackTX) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
-        if(exception != null && exception instanceof  AccountException){
+        if (exception != null && exception instanceof AccountException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
-        } else if(exception != null && exception instanceof AppBaseException){
+        } else if (exception != null && exception instanceof AppBaseException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_UNLOCKED_FAILED)).build();
         }
         try {
@@ -500,9 +500,9 @@ public class AccountEndpoint {
         if (rollbackTX) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
-        if (exception != null && (exception instanceof  AccountException || exception instanceof AccessLevelException)){
+        if (exception != null && (exception instanceof AccountException || exception instanceof AccessLevelException)) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
-        } else if(exception != null && exception instanceof AppBaseException){
+        } else if (exception != null && exception instanceof AppBaseException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCESS_LEVEL_ADD_FAILED)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCESS_LEVEL_ADDED_SUCCESSFULLY)).build();
@@ -538,9 +538,9 @@ public class AccountEndpoint {
                 exception = e;
             }
         } while (rollbackTX && --retryTXCounter > 0);
-        if (exception != null && (exception instanceof  AccountException || exception instanceof AccessLevelException)){
+        if (exception != null && (exception instanceof AccountException || exception instanceof AccessLevelException)) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
-        } else if(exception != null && exception instanceof AppBaseException){
+        } else if (exception != null && exception instanceof AppBaseException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCESS_LEVEL_REVOKE_FAILED)).build();
         }
         return Response.ok().entity(new MessageResponseDto(ACCESS_LEVEL_REVOKED_SUCCESSFULLY)).build();
@@ -667,9 +667,9 @@ public class AccountEndpoint {
         if (rollbackTX) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
-        if(exception != null && (exception instanceof  AccountException || exception instanceof PasswordException)){
+        if (exception != null && (exception instanceof AccountException || exception instanceof PasswordException)) {
             return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
-        } else if(exception != null && exception instanceof AppBaseException){
+        } else if (exception != null && exception instanceof AppBaseException) {
             return Response.status(Status.BAD_REQUEST).entity(PASSWORD_CHANGE_FAILED).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_CHANGED_SUCCESSFULLY)).build();
@@ -703,9 +703,9 @@ public class AccountEndpoint {
         if (rollbackTX) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
-        if(exception != null && (exception instanceof  AccountException || exception instanceof MailSendingException || exception instanceof  PasswordException)){
+        if (exception != null && (exception instanceof AccountException || exception instanceof MailSendingException || exception instanceof PasswordException)) {
             return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
-        } else if (exception != null && exception instanceof AppBaseException){
+        } else if (exception != null && exception instanceof AppBaseException) {
             return Response.status(Status.BAD_REQUEST).entity(PASSWORD_RESET_FAILED).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_RESET_MAIL_SENT_SUCCESSFULLY)).build();
@@ -738,10 +738,11 @@ public class AccountEndpoint {
         } while (rollbackTX && --retryTXCounter > 0);
         if (rollbackTX) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
-        };
-        if (exception != null && (exception instanceof AccountException || exception instanceof  MailSendingException)){
+        }
+        ;
+        if (exception != null && (exception instanceof AccountException || exception instanceof MailSendingException)) {
             return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
-        } else if(exception != null && exception instanceof AppBaseException) {
+        } else if (exception != null && exception instanceof AppBaseException) {
             return Response.status(Status.BAD_REQUEST).entity(PASSWORD_RESET_FAILED).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_RESET_MAIL_SENT_SUCCESSFULLY)).build();
@@ -776,9 +777,9 @@ public class AccountEndpoint {
         if (rollbackTX) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
-        if(exception != null && exception instanceof  AccountException){
+        if (exception != null && exception instanceof AccountException) {
             return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
-        } else if(exception != null && exception instanceof AppBaseException){
+        } else if (exception != null && exception instanceof AppBaseException) {
             return Response.status(Status.BAD_REQUEST).entity(ACCOUNT_SET_DARK_MODE_FAILED).build();
         }
         return Response.status(Status.OK).entity(I18n.ACCOUNT_DARK_MODE_SET_SUCCESSFULLY).build();
