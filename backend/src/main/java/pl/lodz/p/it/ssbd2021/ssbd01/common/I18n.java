@@ -19,6 +19,8 @@ public class I18n {
     public static final String ACCOUNT_EDITED_SUCCESSFULLY = "account_edited_successfully";
     public static final String EMAIL_CONFIRMED_SUCCESSFULLY = "email_confirmed_successfully";
     public static final String EMAIL_CONFIRMATION_FAILED = "email_confirmation_failed";
+    public static final String CONFIRM_BY_MAIL_SUCCESSFULLY = "confirm_by_mail_successfully";
+    public static final String CONFIRM_BY_MAIL_FAILED = "confirm_by_mail_failed";
     public static final String ACCOUNT_LOCKED_SUCCESSFULLY = "account_locked_successfully";
     public static final String ACCOUNT_LOCKED_FAILED = "account_locked_failed";
     public static final String ACCOUNT_UNLOCKED_FAILED = "account_unlocked_failed";
@@ -116,6 +118,9 @@ public class I18n {
     public static final String ACCOUNT_MAIL_LOGIN_TEXT = "account_mail_login_text";
     public static final String ACCOUNT_MAIL_GENERATED_PASSWORD_SUBJECT = "account_mail_generated_password_subject";
     public static final String ACCOUNT_MAIL_GENERATED_PASSWORD_TEXT = "account_mail_generated_password_text";
+    public static final String ACCOUNT_MAIL_SCHEDULER_LOCK_SUBJECT = "account_mail_scheduler_lock_subject";
+    public static final String ACCOUNT_MAIL_SCHEDULER_LOCK_TEXT = "account_mail_scheduler_lock_text";
+    public static final String ACCOUNT_MAIL_SCHEDULER_LOCK_BUTTON = "account_mail_scheduler_lock_button";
     public static final String PASSWORD_RESET_MAIL_SENT_ERROR = "password_reset_mail_sent_error";
     public static final String ACCOUNT_MAIL_PASSWORD_CONFIRMATION_SUBJECT = "account_mail_pass_confirmation_subject";
     public static final String ACCOUNT_MAIL_PASSWORD_CONFIRMATION_TEXT = "account_mail_pass_confirmation_text";

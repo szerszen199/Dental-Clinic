@@ -111,4 +111,24 @@ public class AccountFacade extends AbstractFacade<Account> {
         }
     }
 
+    /**
+     * Wyszukuje kont na podstawie pola 'enabled'.
+     *
+     * @param active wartość pola 'enabled'
+     * @return lista kont o podanej wartości pola 'enabled'
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    public List<Account> findByActive(Boolean active) throws AppBaseException {
+        try {
+            TypedQuery<Account> tq = em.createNamedQuery("Account.findByActive", Account.class);
+            tq.setParameter("active", active);
+            return tq.getResultList();
+        } catch (PersistenceException e) {
+            throw AppBaseException.databaseError(e);
+        } catch (IllegalArgumentException e) {
+            throw AppBaseException.mismatchedPersistenceArguments(e);
+        }
+    }
+
+
 }

@@ -17,6 +17,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JWTRegistrationConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtResetPasswordConfirmation;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtUnlockByMailConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
@@ -69,6 +70,9 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Inject
     private JWTRegistrationConfirmationUtils jwtRegistrationConfirmationUtils;
+
+    @Inject
+    private JwtUnlockByMailConfirmationUtils jwtUnlockByMailConfirmationUtils;
 
     @Inject
     private MailProvider mailProvider;
@@ -187,11 +191,19 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
+    public void setActiveFalse(String login) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
+        account.setActive(false);
+        accountFacade.edit(account);
+    }
+
+    @Override
     public void setEmailRecallTrue(String login) throws AppBaseException {
         Account account = accountFacade.findByLogin(login);
         account.setEmailRecall(true);
         accountFacade.edit(account);
     }
+
 
     @Override
     public void confirmAccountByToken(String jwt) throws AccountException, MailSendingException {
@@ -387,6 +399,35 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
+    public void confirmUnlockByToken(String jwt) throws AccountException {
+        if (!jwtUnlockByMailConfirmationUtils.validateJwtToken(jwt)) {
+            throw AccountException.invalidConfirmationToken();
+        }
+        String login;
+        try {
+            login = jwtUnlockByMailConfirmationUtils.getUserNameFromJwtToken(jwt);
+        } catch (ParseException e) {
+            throw AccountException.invalidConfirmationToken();
+        }
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (Exception e) {
+            throw AccountException.emailConfirmationFailed();
+        }
+        account.setModifiedBy(account);
+        account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        account.setActive(true);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.emailConfirmationFailed();
+        }
+    }
+
+    @Override
     public List<Account> getAllAccounts() throws AppBaseException {
         try {
             return accountFacade.findAll();
@@ -429,6 +470,11 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @Override
     public List<Account> findByEnabled(boolean enabled) throws AppBaseException {
         return accountFacade.findByEnabled(enabled);
+    }
+
+    @Override
+    public List<Account> findByActive(boolean enabled) throws AppBaseException {
+        return accountFacade.findByActive(enabled);
     }
 
     @Override
