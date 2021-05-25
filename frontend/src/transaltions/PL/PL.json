@@ -76,5 +76,8 @@
   "Success": "Udało się!",
   "Error": "Błąd!",
   "Question edit password": "Czy na pewno chcesz zmienić swoje hasło?",
-  "Question edit account": "Czy na pewno chcesz zmienić dane konta?"
+  "Question edit account": "Czy na pewno chcesz zmienić dane konta?",
+  "invalid_login_password_combination": "Błędny login lub hasło",
+  "account_not_found": "Konto nie znalezione",
+  "login_failure": "Logowanie nieudane"
 }
