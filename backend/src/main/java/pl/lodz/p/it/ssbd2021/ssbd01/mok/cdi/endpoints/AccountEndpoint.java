@@ -17,6 +17,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetDarkModeRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetLanguageRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SimpleUsernameRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoWithAccessLevelsResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
@@ -368,7 +369,7 @@ public class AccountEndpoint {
         // TODO: 21.05.2021 Obsługa Wyjątków
         List<AccountInfoResponseDTO> accountInfoResponseDTOList = accountManager.getAllAccounts()
                 .stream()
-                .map(AccountInfoResponseDTO::new)
+                .map(AccountInfoWithAccessLevelsResponseDto::new)
                 .collect(Collectors.toList());
         return Response.ok(accountInfoResponseDTOList).build();
     }

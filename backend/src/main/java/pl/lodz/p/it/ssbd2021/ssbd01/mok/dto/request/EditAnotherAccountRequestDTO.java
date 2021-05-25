@@ -20,9 +20,6 @@ public class EditAnotherAccountRequestDTO extends EditOwnAccountRequestDTO {
     @Login
     private String login;
 
-    @NotNull
-    private List<AccessLevelWithActiveDto> accessLevelDtoList;
-
     /**
      * Ustawia pole login.
      *
