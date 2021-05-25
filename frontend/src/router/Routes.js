@@ -7,7 +7,7 @@ import Login from "../components/Login/Login";
 import Reset from "../components/ResetPassword/Reset";
 import Dashboard from "../components/Dashboard/Dashboard"
 import PrivateRoute from "./PrivateRoute";
-import Account from "../components/Account/Account"
+import Account from "../components/Account/OwnAccount/Account"
 import AccountsList from "../components/AccountsList/AccountsList";
 import Prescription from "../components/Prescription/Prescription"
 import MyAppointment from "../components/Appointment/MyAppointment/MyAppointment";
@@ -15,6 +15,7 @@ import PlanAppointment from "../components/Appointment/PlanAppointment/PlanAppoi
 import ListDoctors from "../components/Appointment/ListDoctors/ListDoctors";
 import HomeRoute from "./HomeRoute";
 import Cookies from "js-cookie";
+import OtherAccount from "../components/Account/OtherAccount/OtherAccount";
 
 export default function Routes() {
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
@@ -60,6 +61,7 @@ export default function Routes() {
             <PrivateRoute authed={isPatient()} path='/prescriptions' component={Prescription}/>
             <PrivateRoute authed={isLoggedIn()} path='/account' component={Account}/>
             <PrivateRoute authed={isAdministrator()} path='/accounts' component={AccountsList}/>
+            <PrivateRoute authed={isAdministrator()} path='/other-account/:accId' component={OtherAccount} />
             <PrivateRoute authed={isPatient() || isReceptionist() || isDoctor()} path='/my-appointments'
                           component={MyAppointment}/>
             <PrivateRoute authed={isPatient() || isReceptionist()} path='/plan-appointment'
