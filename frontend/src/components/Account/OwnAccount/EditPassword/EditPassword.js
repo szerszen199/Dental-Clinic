@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import "./EditPassword.css";
 import {withTranslation} from "react-i18next";
 import confirmationAlerts from "../../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
+import {editPasswordRequest} from "./EditPasswordRequest";
 
 class EditPasswordWithoutTranslation extends React.Component {
     constructor(props) {
@@ -34,8 +35,6 @@ class EditPasswordWithoutTranslation extends React.Component {
         return currentPasswordCorrect() && newPasswordCorrect() && newRepeatedPasswordCorrect();
     }
 
-
-    // Todo: prawdopodobnie wysyłać zapytanie do backendu tutaj, chciałbym zrobić tak jak w vue się da żeby jeśli odpalam w trybie debug front to łącze z localhostem, narazie nie ruszam.
     handleSubmit(event) {
         event.preventDefault();
     }
@@ -50,19 +49,17 @@ class EditPasswordWithoutTranslation extends React.Component {
 
     setEditable() {
         this.setState({
-            isDisabled: false,
-            text: "Save password"
+            isDisabled: false
         });
     }
 
     setNotEditable(t, title, question) {
         confirmationAlerts(title, question).then((confirmed) => {
             if (t.validateForm(t) && confirmed) {
-                //todo zrobić tutaj zapytanie o zmiane hasła
                 this.setState({
-                    isDisabled: true,
-                    text: "Edit password"
+                    isDisabled: true
                 });
+                editPasswordRequest(this.state.currentPassword, this.state.password, this.state.repeatedPassword)
             }
         });
     }
