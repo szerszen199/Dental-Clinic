@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./Login.css";
 import {makeLoginRequest} from "./LoginRequest";
+import "../../commonStyles/common_style.css"
 import {useTranslation} from "react-i18next";
 import {Link} from "react-router-dom";
 
@@ -24,7 +25,7 @@ export default function Login() {
         <div className="Login">
             <Form onSubmit={handleSubmit}>
                 <Form.Group size="lg" controlId="login">
-                    <Form.Label>{t("UserLogin")}</Form.Label>
+                    <Form.Label className="required">{t("UserLogin")}</Form.Label>
                     <Form.Control
                         autoFocus
                         type="text"
@@ -33,7 +34,7 @@ export default function Login() {
                     />
                 </Form.Group>
                 <Form.Group size="lg" controlId="password">
-                    <Form.Label>{t("Password")}</Form.Label>
+                    <Form.Label className="required">{t("Password")}</Form.Label>
                     <Form.Control
                         type="password"
                         value={password}

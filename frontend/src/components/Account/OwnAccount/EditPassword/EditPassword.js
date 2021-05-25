@@ -70,7 +70,7 @@ class EditPasswordWithoutTranslation extends React.Component {
             <div className="EditPassword">
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group size="lg" controlId="currentPassword">
-                        <Form.Label>{t("Current password")}</Form.Label>
+                        <Form.Label className="required">{t("Current password")}</Form.Label>
                         <Form.Control
                             autoFocus
                             type="password"
@@ -80,7 +80,7 @@ class EditPasswordWithoutTranslation extends React.Component {
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="password">
-                        <Form.Label>{t("New password")}</Form.Label>
+                        <Form.Label className="required">{t("New password")}</Form.Label>
                         <Form.Control
                             type="password"
                             value={this.state.password}
@@ -89,7 +89,7 @@ class EditPasswordWithoutTranslation extends React.Component {
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="repeated-password">
-                        <Form.Label>{t("Repeat new password")}</Form.Label>
+                        <Form.Label className="required">{t("Repeat new password")}</Form.Label>
                         <Form.Control
                             type="password"
                             value={this.state.repeatedPassword}

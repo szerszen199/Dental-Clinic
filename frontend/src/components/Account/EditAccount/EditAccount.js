@@ -140,7 +140,7 @@ class EditAccountWithoutTranslation extends React.Component {
             <div className="EditAccount">
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group size="lg" controlId="email">
-                        <Form.Label>{t("Email")}</Form.Label>
+                        <Form.Label className="required">{t("Email")}</Form.Label>
                         <Form.Control
                             autoFocus
                             type="email"
@@ -150,7 +150,7 @@ class EditAccountWithoutTranslation extends React.Component {
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="firstName">
-                        <Form.Label>{t("First Name")}</Form.Label>
+                        <Form.Label className="required">{t("First Name")}</Form.Label>
                         <Form.Control
                             type="text"
                             value={this.state.firstName}
@@ -159,7 +159,7 @@ class EditAccountWithoutTranslation extends React.Component {
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="lastName">
-                        <Form.Label>{t("Last Name")}</Form.Label>
+                        <Form.Label className="required">{t("Last Name")}</Form.Label>
                         <Form.Control
                             type="text"
                             value={this.state.lastName}
