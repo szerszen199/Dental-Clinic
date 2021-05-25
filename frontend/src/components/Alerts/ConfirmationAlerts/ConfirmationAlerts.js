@@ -2,7 +2,7 @@ import swal from "sweetalert";
 import "../Alerts.css"
 
 export default function confirmationAlerts(title, message) {
-    swal({
+    return swal({
         title: title,
         text: message,
         closeOnClickOutside: false,
