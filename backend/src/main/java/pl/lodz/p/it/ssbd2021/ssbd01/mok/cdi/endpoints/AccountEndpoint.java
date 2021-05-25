@@ -35,6 +35,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBTransactionRolledbackException;
+import javax.ejb.Stateful;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
@@ -80,7 +81,7 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_RESET_FAILED;
  * Typ Account endpoint.
  */
 @Path("account")
-@RequestScoped
+@Stateful
 @Interceptors(LogInterceptor.class)
 public class AccountEndpoint {
 
