@@ -113,7 +113,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             try {
                 mailProvider.sendActivationMail(
                         account.getEmail(),
-                        jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(account.getLogin())
+                        jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(account.getLogin()), account.getLanguage()
                 );
             } catch (Exception e) {
                 throw MailSendingException.activationLink();
@@ -162,7 +162,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             try {
                 mailProvider.sendActivationMail(
                         account.getEmail(),
-                        jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(account.getLogin())
+                        jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(account.getLogin()), account.getLanguage()
                 );
             } catch (Exception e) {
                 throw MailSendingException.activationLink();
@@ -217,7 +217,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             throw AccountException.accountConfirmationByTokenFailed();
         }
         try {
-            mailProvider.sendActivationConfirmationMail(accountFacade.findByLogin(login).getEmail());
+            mailProvider.sendActivationConfirmationMail(account.getEmail(), account.getLanguage());
         } catch (Exception e) {
             throw MailSendingException.activationConfirmation();
         }
@@ -328,7 +328,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
                 mailProvider.sendEmailChangeConfirmationMail(
                         editAccountRequestDTO.getEmail(),
                         jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(
-                                loggedInAccountUtil.getLoggedInAccountLogin(), editAccountRequestDTO.getEmail())
+                                loggedInAccountUtil.getLoggedInAccountLogin(), editAccountRequestDTO.getEmail()),
+                        account.getLanguage()
                 );
             } catch (MailSendingException mailSendingException) {
                 throw MailSendingException.editAccountMail();
@@ -448,7 +449,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (Exception e) {
             throw PasswordException.passwordResetFailed();
         }
-        mailProvider.sendGeneratedPasswordMail(account.getEmail(), pass);
+        mailProvider.sendGeneratedPasswordMail(account.getEmail(), pass, account.getLanguage());
     }
 
     @Override
@@ -463,7 +464,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             mailProvider.sendResetPassConfirmationMail(
                     account.getEmail(),
                     jwtResetPasswordConfirmation.generateJwtTokenForUsername(
-                            login)
+                            login), account.getLanguage()
             );
         } catch (MailSendingException mailSendingException) {
             throw MailSendingException.editAccountMail();
