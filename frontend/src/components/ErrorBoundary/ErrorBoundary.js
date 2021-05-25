@@ -1,10 +1,15 @@
 import React from "react";
+import errorAlerts from "../Alerts/ErrorAlerts/ErrorAlerts";
 
 export default class ErrorBoundary extends React.Component {
     constructor(props) {
         super(props);
         this.state = {error: null, errorInfo: null};
     }
+
+    static getDerivedStateFromError = error => {
+        return {hasError: true};
+    };
 
     componentDidCatch(error, errorInfo) {
         this.setState({
@@ -13,14 +18,9 @@ export default class ErrorBoundary extends React.Component {
         })
     }
 
-    static getDerivedStateFromError = error => {
-        return {hasError: true};
-    };
-
-
     render() {
         if (this.state.errorInfo) {
-            alert(this.state.errorInfo + "\n" + this.state.error)
+            errorAlerts(this.state.errorInfo, this.state.error);
             return (
                 <span/>
             );
