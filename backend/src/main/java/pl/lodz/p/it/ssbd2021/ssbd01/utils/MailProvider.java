@@ -72,11 +72,11 @@ public class MailProvider {
     @PostConstruct
     public void init() {
         Properties properties = new Properties();
-        properties.put("mail.smtp.host", "smtp.gmail.com");
-        properties.put("mail.smtp.port", "465");
-        properties.put("mail.smtp.ssl.enable", "true");
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        properties.put("mail.smtp.host", propertiesLoader.getMailSmtpHost());
+        properties.put("mail.smtp.port", propertiesLoader.getMailSmtpPort());
+        properties.put("mail.smtp.ssl.enable", propertiesLoader.getMailSmtpSSLEnable());
+        properties.put("mail.smtp.auth", propertiesLoader.getMailSmtpAuth());
+        properties.put("mail.smtp.ssl.trust", propertiesLoader.getMailSmtpSSLTrust());
 
         Authenticator authenticator = new Authenticator() {
             @Override
