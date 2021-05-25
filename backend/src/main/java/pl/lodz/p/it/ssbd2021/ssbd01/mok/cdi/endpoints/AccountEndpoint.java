@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
@@ -454,7 +455,8 @@ public class AccountEndpoint {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
         try {
-            mailProvider.sendAccountLockByAdminMail(accountManager.findByLogin(simpleUsernameRequestDTO.getLogin()).getEmail());
+            Account account = accountManager.findByLogin(simpleUsernameRequestDTO.getLogin());
+            mailProvider.sendAccountLockByAdminMail(account.getEmail(), account.getLanguage());
         } catch (AccountException | MailSendingException accountException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
         } catch (Exception e) {
@@ -502,7 +504,8 @@ public class AccountEndpoint {
 
         }
         try {
-            mailProvider.sendAccountUnlockByAdminMail(accountManager.findByLogin(simpleUsernameRequestDTO.getLogin()).getEmail());
+            Account account = accountManager.findByLogin(simpleUsernameRequestDTO.getLogin());
+            mailProvider.sendAccountUnlockByAdminMail(account.getEmail(), account.getLanguage());
         } catch (MailSendingException accountException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
         } catch (Exception e) {
