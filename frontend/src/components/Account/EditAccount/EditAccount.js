@@ -30,7 +30,9 @@ class EditAccountWithoutTranslation extends React.Component {
                 }
             })
             .then(res => {
-                this.state.etag = res.headers['etag']
+                this.setState({
+                    etag: res.headers['etag']
+                })
                 return res.data
             })
             .then(result => this.setState({
@@ -44,8 +46,6 @@ class EditAccountWithoutTranslation extends React.Component {
     }
 
     validateForm(t) {
-        // Todo: zrobić walidację taką jaką wymaga projekt
-
         function emailCorrect() {
             if (t.state.email !== undefined) {
                 return t.state.email.length >= 4 && t.state.email.length <= 100;
@@ -123,7 +123,7 @@ class EditAccountWithoutTranslation extends React.Component {
             if (t.state.pesel === "") {
                 pesel = null;
             }
-            editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, this.state.phoneNumber, this.state.pesel,this.state.version, this.state.etag)
+            editAccountRequest(t.state.email, t.state.firstName, t.state.lastName, phoneNumber, pesel, t.state.version, t.state.etag)
         }
     }
 
