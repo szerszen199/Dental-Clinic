@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./EditPassword.css";
 import {withTranslation} from "react-i18next";
+import confirmationAlerts from "../../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
 
 class EditPasswordWithoutTranslation extends React.Component {
     constructor(props) {
@@ -39,11 +40,11 @@ class EditPasswordWithoutTranslation extends React.Component {
         event.preventDefault();
     }
 
-    handleOnClick(t) {
+    handleOnClick(t, title, question) {
         if (this.state.isDisabled === true) {
             this.setEditable()
         } else {
-            this.setNotEditable(t)
+            this.setNotEditable(t, title, question)
         }
     }
 
@@ -54,15 +55,18 @@ class EditPasswordWithoutTranslation extends React.Component {
         });
     }
 
-    setNotEditable(t) {
-        this.validateForm(t)
-        this.setState({
-            isDisabled: true,
-            text: "Edit password"
+    setNotEditable(t, title, question) {
+        confirmationAlerts(title, question).then((confirmed) => {
+            if (t.validateForm(t) && confirmed) {
+                //todo zrobić tutaj zapytanie o zmiane hasła
+                this.setState({
+                    isDisabled: true,
+                    text: "Edit password"
+                });
+            }
         });
     }
 
-    // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
     render() {
         const {t} = this.props;
 
@@ -98,7 +102,7 @@ class EditPasswordWithoutTranslation extends React.Component {
                         />
                     </Form.Group>
                     <Button block size="lg" type="submit"
-                            onClick={() => this.handleOnClick(this)}>
+                            onClick={() => this.handleOnClick(this, t("Warning"), t("Question edit password"))}>
                         {this.state.isDisabled ? t("Edit") : t("Save")}
                     </Button>
                 </Form>
