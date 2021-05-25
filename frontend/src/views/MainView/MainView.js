@@ -53,12 +53,13 @@ class MainViewWithoutTranslation extends React.Component {
             login: "",
 
         }
-        let token = Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE)
-        if (typeof token !== 'undefined' && token !== null && token !== "null" && token !== undefined) {
+        let darkModeCheck = Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE)
+        if (typeof darkModeCheck !== 'undefined' && darkModeCheck !== null && darkModeCheck !== "null" && darkModeCheck !== undefined) {
             this.setState({
                 isDarkMode: Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE)
             })
         }
+        console.log(this.state.isDarkMode)
         darkModeStyleChange(this.state.isDarkMode)
     }
 
@@ -153,6 +154,7 @@ class MainViewWithoutTranslation extends React.Component {
                                         checked={this.state.isDarkMode}
                                         onChange={(e) => {
                                             this.setState({isDarkMode: e})
+                                            Cookies.set(process.env.REACT_APP_DARK_MODE_COOKIE, this.state.isDarkMode, {expires: process.env.jwtCookieExpirationTime})
                                             darkModeRequest(this.state.isDarkMode)
                                             accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode)
                                         }}
@@ -185,7 +187,7 @@ function darkModeStyleChange(isDarkMode) {
 
 
     if (isDarkMode) {
-        document.getElementById("root").style.backgroundColor = "#22272e";
+        document.getElementById("root").style.backgroundColor = "#928787";
         // document.getElementById("card").style.backgroundColor = "#22272e";
         return {
             [roleGuestName]: "rgba(1, 1, 1, 0.5)",
