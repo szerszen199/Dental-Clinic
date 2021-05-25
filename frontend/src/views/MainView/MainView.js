@@ -1,4 +1,4 @@
-import React, {Suspense} from "react";
+import React, {Suspense, useState} from "react";
 import Navbar from "react-bootstrap/Navbar";
 import {Col, Container, Row} from "react-bootstrap";
 import {DarkModeSwitch} from "react-toggle-dark-mode";
@@ -20,6 +20,8 @@ import {MDBContainer, MDBFooter} from "mdbreact";
 import './MainView.css';
 import {Link} from "react-router-dom";
 import findDefaultRole from "../../roles/findDefaultRole";
+import {darkModeRequest} from "../../components/DarkMode/DarkModeRequest"
+import {map} from "react-bootstrap/ElementChildren";
 
 const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
 const roleDoctorName = process.env.REACT_APP_ROLE_DOCTOR
@@ -27,13 +29,14 @@ const roleReceptionistName = process.env.REACT_APP_ROLE_RECEPTIONIST
 const rolePatientName = process.env.REACT_APP_ROLE_PATIENT
 const roleGuestName = process.env.REACT_APP_ROLE_GUEST
 
-const accessLevelDictionary = {
+let accessLevelDictionary = {
     [roleGuestName]: "rgba(1, 1, 1, 0.1)",
     [rolePatientName]: "rgba(93, 188, 242, 0.2)",
     [roleReceptionistName]: "rgba(192, 255, 0, 0.4)",
     [roleDoctorName]: "rgba(255, 216, 0, 0.2)",
     [roleAdminName]: "rgba(238, 0, 0, 0.1)",
 };
+let loginColor = "grey"
 export const jwtCookieExpirationTime = process.env.REACT_APP_JWT_EXPIRATION_MS / (24 * 60 * 60 * 100)
 const actualAccessLevel = Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) !== undefined ? Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) : roleGuestName;
 
@@ -41,11 +44,12 @@ class MainViewWithoutTranslation extends React.Component {
     urlPL = "https://img.icons8.com/color/96/000000/poland-circular.png";
     urlEN = "https://img.icons8.com/color/48/000000/great-britain-circular.png";
 
+
     constructor(props) {
         super(props);
         this.state = {
-            isDarkMode: false,
             language: "PL",
+            isDarkMode: false,
             flag: this.urlEN,
             login: "",
         }
@@ -93,7 +97,16 @@ class MainViewWithoutTranslation extends React.Component {
                 } else {
                     Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME), {expires: jwtCookieExpirationTime});
                 }
+                if (Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE) != null) {
+                    Cookies.set(process.env.REACT_APP_DARK_MODE_COOKIE, Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE), {expires: jwtCookieExpirationTime});
+                    this.setState({
+                        isDarkMode: Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE)
+                    })
+                }
                 localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, response.data.refreshJwtToken.token);
+                accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode)
+
+
             }).catch((response) => {
                 // todo cos z tym response?
                 console.log(response);
@@ -104,6 +117,7 @@ class MainViewWithoutTranslation extends React.Component {
 
 
     componentDidMount() {
+        accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode)
         this.makeRefreshRequest();
         setInterval(this.makeRefreshRequest, parseInt(process.env.REACT_APP_JWT_EXPIRATION_MS) / 10);
         let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
@@ -118,7 +132,6 @@ class MainViewWithoutTranslation extends React.Component {
 
     render() {
         const {t} = this.props;
-
         return (
             <div className="App container py-3 ">
                 <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"
@@ -143,13 +156,20 @@ class MainViewWithoutTranslation extends React.Component {
                                 <Col className="d-flex justify-content-end"
                                      style={{maxHeight: "30px", marginRight: "10px"}}>
                                     <p style={{
-                                        color: "gray",
+                                        color: loginColor,
                                         marginTop: "5px",
                                     }}>{this.state.login === "" || this.state.login === undefined ? '' : t("UserLogin") + ': ' + this.state.login}</p>
                                     <DarkModeSwitch
                                         style={{marginLeft: '1rem'}}
                                         checked={this.state.isDarkMode}
-                                        onChange={(e) => this.setState({isDarkMode: e})}
+                                        onChange={(e) => {
+                                            this.setState({isDarkMode: e})
+                                            Cookies.set(process.env.REACT_APP_DARK_MODE_COOKIE, e, {expires: process.env.jwtCookieExpirationTime})
+                                            accessLevelDictionary = darkModeStyleChange(e)
+                                            if (this.state.login) {
+                                                darkModeRequest(e)
+                                            }
+                                        }}
                                         size={30}
                                         sunColor={"#FFDF37"}
                                         moonColor={"#bfbfbb"}
@@ -174,6 +194,32 @@ class MainViewWithoutTranslation extends React.Component {
         );
     }
 }
+
+function darkModeStyleChange(isDarkMode) {
+    if (isDarkMode) {
+        document.getElementById("root").style.backgroundColor = "#a8b4ae";
+        loginColor = "black"
+        return {
+            [roleGuestName]: "rgba(1, 1, 1, 0.5)",
+            [rolePatientName]: "rgba(34, 55, 147, 0.2)",
+            [roleReceptionistName]: "rgba(46, 95, 0, 0.4)",
+            [roleDoctorName]: "rgba(146, 134, 0, 0.2)",
+            [roleAdminName]: "rgba(106, 0, 0, 0.1)",
+        };
+
+    } else {
+        document.getElementById("root").style.backgroundColor = "#ffffff";
+        loginColor = "grey"
+        return {
+            [roleGuestName]: "rgba(1, 1, 1, 0.1)",
+            [rolePatientName]: "rgba(93, 188, 242, 0.2)",
+            [roleReceptionistName]: "rgba(192, 255, 0, 0.4)",
+            [roleDoctorName]: "rgba(255, 216, 0, 0.2)",
+            [roleAdminName]: "rgba(238, 0, 0, 0.1)",
+        };
+    }
+}
+
 
 function CurrentUserViewComponent() {
     const myMap = new Map();
