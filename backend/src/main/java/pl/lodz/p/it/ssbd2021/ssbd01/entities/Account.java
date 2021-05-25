@@ -57,6 +57,7 @@ import java.util.Set;
         @NamedQuery(name = "Account.findByEmailRecall", query = "SELECT a FROM Account a WHERE a.emailRecall = :emailrecall"),
         @NamedQuery(name = "Account.findByLanguage", query = "SELECT a FROM Account a WHERE a.language = :language"),
         @NamedQuery(name = "Account.findByVersion", query = "SELECT a FROM Account a WHERE a.version = :version"),
+        @NamedQuery(name = "Account.findByLoginOrEmailOrPesel", query = "SELECT a FROM Account a WHERE a.login = :login OR a.email = :email OR a.pesel = :pesel"),
         @NamedQuery(name = "Account.findByLogin", query = "SELECT a FROM Account a WHERE a.login = :login")})
 public class Account extends AbstractEntity implements Serializable {
 
@@ -199,18 +200,18 @@ public class Account extends AbstractEntity implements Serializable {
      *
      * @param login       login konta
      * @param email       adres e-mail przypisany do konta
-     * @param password    hasło konta
      * @param firstName   imię użytkownika
      * @param lastName    nazwisko użytkownika
      * @param phoneNumber numer telefonu
+     * @param pesel       the pesel
      */
-    public Account(String login, String email, String password, String firstName, String lastName, String phoneNumber) {
+    public Account(String login, String email, String firstName, String lastName, String phoneNumber, String pesel) {
         this.login = login;
         this.email = email;
-        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
+        this.pesel = pesel;
     }
 
     /**

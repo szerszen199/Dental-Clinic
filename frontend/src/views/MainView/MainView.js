@@ -101,26 +101,9 @@ class MainViewWithoutTranslation extends React.Component {
         let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
         console.log(token)
         if (typeof token !== 'undefined' && token !== null && token !== "null" && token !== undefined) {
-            axios.get(process.env.REACT_APP_BACKEND_URL + "account/info", {
-                headers: {
-                    Authorization: "Bearer " + token
-                }
-            })
-                .then(res => res.data)
-                .then(result => {
-                    this.setState({
-                        login: result.login,
-                    });
-                    console.log(this.state.login)
-                })
-                .catch(result => {
-                    // TODO:
-                    console.log(result);
-                })
-        } else {
             this.setState({
-                login: "",
-            });
+                login: Cookies.get(process.env.REACT_APP_LOGIN_COOKIE)
+            })
         }
     }
 

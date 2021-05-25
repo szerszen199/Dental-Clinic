@@ -14,12 +14,19 @@ import java.util.Properties;
 @Singleton
 public class PropertiesLoader {
 
+    private String appMailUrl;
+    private String appMailPassword;
+    private String appDefaultUrl;
+
     private String confirmationJwtSecret;
     private String refreshJwtSecret;
     private Long refreshJwtExpiration;
     private Long confirmationJwtExpiration;
     private Long deleteInactiveAccountTimeDelay;
     private String anonymousUserName;
+    private String etagSecret;
+
+
     private String jwtSecret;
     private Long invalidLoginCountBlock;
     private Long jwtExpiration;
@@ -27,6 +34,8 @@ public class PropertiesLoader {
     private Long emailChangeConfirmationJWTExpiration;
     private String resetPasswordConfirmationJwtSecret;
     private Long resetPasswordConfirmationJwtExpiration;
+    private int transactionRetryCount;
+
 
     public String getResetPasswordConfirmationJwtSecret() {
         return resetPasswordConfirmationJwtSecret;
@@ -54,6 +63,14 @@ public class PropertiesLoader {
 
     public Long getRefreshJwtExpiration() {
         return refreshJwtExpiration;
+    }
+
+    public String getEtagSecret() {
+        return etagSecret;
+    }
+
+    public int getTransactionRetryCount() {
+        return transactionRetryCount;
     }
 
     /**
@@ -95,6 +112,18 @@ public class PropertiesLoader {
         return anonymousUserName;
     }
 
+    public String getAppMailUrl() {
+        return appMailUrl;
+    }
+
+    public String getAppMailPassword() {
+        return appMailPassword;
+    }
+
+    public String getAppDefaultUrl() {
+        return appDefaultUrl;
+    }
+
     @PostConstruct
     private void loadProperties() {
         Properties prop = null;
@@ -122,5 +151,10 @@ public class PropertiesLoader {
         emailChangeConfirmationJWTExpiration = Long.valueOf(prop.getProperty("email.change.confirmation.jwt.expirationMs"));
         resetPasswordConfirmationJwtSecret = prop.getProperty("reset.password.confirmation.jwt.secret");
         resetPasswordConfirmationJwtExpiration = Long.valueOf(prop.getProperty("reset.password.confirmation.jwt.expirationMs"));
+        etagSecret = prop.getProperty("etag.secret");
+        transactionRetryCount = Integer.parseInt(prop.getProperty("transaction.retry.count"));
+        appDefaultUrl = prop.getProperty("application.default.url");
+        appMailUrl = prop.getProperty("application.email_url");
+        appMailPassword = prop.getProperty("application.email.password");
     }
 }

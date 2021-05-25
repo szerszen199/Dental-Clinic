@@ -3,17 +3,21 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request;
 
 import org.hibernate.validator.constraints.pl.PESEL;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Klasa Dto dla edytowanego konta.
  */
 // TODO: 21.05.2021 Poprawić zapytanie na froncie
-public class EditOwnAccountRequestDTO {
+public class EditOwnAccountRequestDTO implements SignableEntity {
+
 
     // Uważam, że przy edycji onta wszystkie pola powinny być nullable i zmieniane tylko odpowiednie pola
 
@@ -171,4 +175,11 @@ public class EditOwnAccountRequestDTO {
     }
 
 
+    @Override
+    @JsonbTransient
+    public Map<String, String> getPayload() {
+        Map<String,String> map = new HashMap<>();
+        map.put("version", String.valueOf(getVersion()));
+        return map;
+    }
 }

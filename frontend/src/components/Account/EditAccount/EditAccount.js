@@ -17,7 +17,8 @@ class EditAccountWithoutTranslation extends React.Component {
             lastName: "",
             phoneNumber: "",
             pesel: "",
-            version: "",
+            version: 0,
+            etag: "",
         }
     }
 
@@ -28,7 +29,10 @@ class EditAccountWithoutTranslation extends React.Component {
                     Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
                 }
             })
-            .then(res => res.data)
+            .then(res => {
+                this.state.etag = res.headers['etag']
+                return res.data
+            })
             .then(result => this.setState({
                 email: result.email,
                 firstName: result.firstName,
@@ -119,7 +123,7 @@ class EditAccountWithoutTranslation extends React.Component {
             if (t.state.pesel === "") {
                 pesel = null;
             }
-            editAccountRequest(t.state.email, t.state.firstName, t.state.lastName, phoneNumber, pesel, t.state.version)
+            editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, this.state.phoneNumber, this.state.pesel,this.state.version, this.state.etag)
         }
     }
 

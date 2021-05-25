@@ -2,15 +2,27 @@ package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CONSTRAINT_VIOLATION;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CONFIRMATION_BY_TOKEN_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CREATION_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EDIT_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EMAIL_ALREADY_EXISTS;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_GET_ALL_ACCOUNTS_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_IS_BLOCKED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOCKED_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOGIN_ALREADY_EXISTS;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOGIN_EMAIL_PESEL_ALREADY_EXISTS;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_NOT_FOUND;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_PESEL_ALREADY_EXISTS;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_SET_DARK_MODE_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_SET_LANGUAGE_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_UNLOCKED_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.EMAIL_CONFIRMATION_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.INVALID_CONFIRMATION_TOKEN;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_CONFIRMATION_PARSING_ERROR;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.UPDATE_ACCOUNT_AFTER_SUCCESSFUL_LOGIN;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.UPDATE_ACCOUNT_AFTER_UNSUCCESSFUL_LOGIN;
 
+/**
+ * Typ Account exception.
+ */
 public class AccountException extends AppBaseException {
 
     /**
@@ -43,6 +55,15 @@ public class AccountException extends AppBaseException {
     }
 
     /**
+     * Tworzy wyjątek reprezentujący próbę zablokowania konta.
+     *
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException accountLockFailed() {
+        return new AccountException(ACCOUNT_LOCKED_FAILED);
+    }
+
+    /**
      * Tworzy wyjątek reprezentujący próbę utworzenia konta o emailu który już istnieje.
      *
      * @param cause przyczyna wystąpienia wyjątku
@@ -53,23 +74,48 @@ public class AccountException extends AppBaseException {
     }
 
     /**
-     * Tworzy wyjątek reprezentujący próbę utworzenia konta o peselu który już istnieje.
+     * Tworzy wyjątek reprezentujący próbę utworzenia konta o loginie lub emailu lub peselu który już istnieje.
      *
-     * @param cause przyczyna wystąpienia wyjątku
      * @return wyjątek typu AccountException
      */
-    public static AccountException accountPeselExists(Throwable cause) {
-        return new AccountException(ACCOUNT_PESEL_ALREADY_EXISTS, cause);
+    public static AccountException accountLoginEmailPeselExists() {
+        return new AccountException(ACCOUNT_LOGIN_EMAIL_PESEL_ALREADY_EXISTS);
     }
 
     /**
-     * Tworzy wyjątek reprezentujący próbę utworzenia konta o wartościach naruszających ograniczenia.
+     * Tworzy wyjątek reprezentujący próbę potwirdzenia konta emailem.
      *
-     * @param cause przyczyna wystąpienia wyjątku
      * @return wyjątek typu AccountException
      */
-    public static AccountException constraintViolation(Throwable cause) {
-        return new AccountException(ACCOUNT_CONSTRAINT_VIOLATION, cause);
+    public static AccountException emailConfirmationFailed() {
+        return new AccountException(EMAIL_CONFIRMATION_FAILED);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę ustawienia ciemnego motywu.
+     *
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException accountSetDarkMode() {
+        return new AccountException(ACCOUNT_SET_DARK_MODE_FAILED);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę ustawienia języka.
+     *
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException accountSetLanguage() {
+        return new AccountException(ACCOUNT_SET_LANGUAGE_FAILED);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę utworzenia konta, która się nie powiodła.
+     *
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException accountCreationFailed() {
+        return new AccountException(ACCOUNT_CREATION_FAILED);
     }
 
     /**
@@ -89,6 +135,29 @@ public class AccountException extends AppBaseException {
      */
     public static AccountException noSuchAccount(Throwable cause) {
         return new AccountException(ACCOUNT_NOT_FOUND, cause);
+    }
+
+    public static AccountException getAllAccountsFailed() {
+        return new AccountException(ACCOUNT_GET_ALL_ACCOUNTS_FAILED);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę wykonania edycji konta.
+     *
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException accountEditFailed() {
+        return new AccountException(ACCOUNT_EDIT_FAILED);
+    }
+
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę potwierdzenia konta zakończoną niepowodzeniem.
+     *
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException accountConfirmationByTokenFailed() {
+        return new AccountException(ACCOUNT_CONFIRMATION_BY_TOKEN_FAILED);
     }
 
     /**
@@ -113,14 +182,29 @@ public class AccountException extends AppBaseException {
     }
 
     /**
-     * Tworzy wyjątek reprezentujący próbę aktywacji konta z użyciem niepoprawnego
-     * tokenu aktywacyjnego.
+     * Tworzy wyjątek reprezentujący próbę odblokowania konta.
      *
-     * @param cause przyczyna wystąpienia wyjątku
      * @return wyjątek typu AccountException
      */
-    public static AccountException mailConfirmationParsingError(Throwable cause) {
-        return new AccountException(MAIL_CONFIRMATION_PARSING_ERROR, cause);
+    public static AccountException accountUnlockFailed() {
+        return new AccountException(ACCOUNT_UNLOCKED_FAILED);
     }
 
+    /**
+     * Tworzy wyjątek reprezentujący próbę uaktualnienia po nieudanym logowaniu.
+     *
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException updateAfterUnsuccessfulLogin() {
+        return new AccountException(UPDATE_ACCOUNT_AFTER_UNSUCCESSFUL_LOGIN);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę uaktualnienia po udanym logowaniu.
+     *
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException updateAfterSuccessfulLogin() {
+        return new AccountException(UPDATE_ACCOUNT_AFTER_SUCCESSFUL_LOGIN);
+    }
 }

@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
-package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
 

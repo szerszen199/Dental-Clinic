@@ -2,11 +2,13 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 
 import javax.ejb.Local;
-import javax.servlet.ServletContext;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,10 +22,18 @@ public interface AccountManager {
      * Utworzenie konta przy rejestracji.
      *
      * @param account        nowe konto
-     * @param servletContext kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
+     * @throws AccountException wyjątek typu AccountException
+     * @throws MailSendingException wyjątek typu MailSendingException
+     */
+    void createAccount(Account account) throws AccountException, MailSendingException;
+
+    /**
+     * Utworzenie konta przez administratora.
+     *
+     * @param account        nowe konto
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void createAccount(Account account, ServletContext servletContext) throws AppBaseException;
+    void createAccountByAdministrator(Account account) throws AppBaseException;
 
     /**
      * usun konto.
@@ -41,14 +51,6 @@ public interface AccountManager {
      */
     void setEmailRecallTrue(String login) throws AppBaseException;
 
-    /**
-     * Potwierdzenie konta.
-     *
-     * @param id id
-     * @throws AppBaseException wyjątek typu AppBaseException
-     */
-    void confirmAccount(Long id) throws AppBaseException;
-
 
     /**
      * Potwierdzenie konta.
@@ -62,18 +64,19 @@ public interface AccountManager {
      * reset hasla konta.
      *
      * @param login login
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @throws AccountException wyjątek typu AccountException
+     * @throws MailSendingException wyjątek typu MailSendingException
+     * @throws PasswordException wyjątek typu PasswordException
      */
-    void resetPasswordByToken(String login) throws AppBaseException;
+    void resetPasswordByToken(String login) throws AccountException, MailSendingException, PasswordException;
 
     /**
      * Potwierdzenie hasla konta.
      *
      * @param login          login
-     * @param servletContext the servlet context
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void sendResetPasswordConfirmationEmail(String login, ServletContext servletContext) throws AppBaseException;
+    void sendResetPasswordConfirmationEmail(String login) throws AppBaseException;
 
     /**
      * Metoda służąca do blokowania konta.
@@ -95,20 +98,19 @@ public interface AccountManager {
      * Edytuje wlasne konto.
      *
      * @param editOwnAccountRequestDTO edit own account request dto
-     * @param servletContext           kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @throws AccountException wyjątek typu AccountException
+     * @throws MailSendingException wyjątek typu MailSendingException
      */
-    void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO, ServletContext servletContext) throws AppBaseException;
+    void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO) throws MailSendingException, AccountException;
 
 
     /**
      * Edytuje konto innego użytkownika.
      *
      * @param editAnotherAccountRequestDTO edit another account request dto
-     * @param servletContext               kontekst serwletów, służy do współdzielenia informacji                       w ramach aplikacji
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO, ServletContext servletContext) throws AppBaseException;
+    void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO) throws AppBaseException;
 
     /**
      * Potwierdzenie zmiany maila.
@@ -156,22 +158,14 @@ public interface AccountManager {
     List<Account> findByEnabled(boolean enabled) throws AppBaseException;
 
     /**
-     * Resetuje hasło do konta o podanym id. Ustawia alfanumeryczne hasło
-     * o długości 8 znaków.
-     *
-     * @param id identyfikator konta
-     * @throws AppBaseException wyjątek typu AppBaseException
-     */
-    void resetPassword(Long id) throws AppBaseException;
-
-    /**
      * Resetuje hasło podanego konta. Ustawia alfanumeryczne hasło o długości
      * 8 znaków.
      *
-     * @param login login konta, którego hasło ma zostać zresetowane
+     * @param accountToReset login konta, którego hasło ma zostać zresetowane
+     * @param whoResets      login konta resetującego
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    void resetPassword(String login) throws AppBaseException;
+    void resetPassword(String accountToReset, String whoResets) throws AppBaseException;
 
     /**
      * Ustawia pole dark mode na {@param isDarkMode} w koncie {@param account}.
@@ -212,4 +206,11 @@ public interface AccountManager {
      * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych nie powiedzie się.
      */
     void setLanguage(String login, String language) throws AppBaseException;
+
+    /**
+     * Sprawdza czy ostatnia transakcja się powiodła.
+     *
+     * @return true jeśli ostatnia transakcja się nie powiodła, false w przeciwnym wypadku.
+     */
+    boolean isLastTransactionRollback();
 }
