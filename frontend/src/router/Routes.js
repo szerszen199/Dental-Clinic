@@ -64,7 +64,9 @@ export default function Routes() {
                           component={MyAppointment}/>
             <PrivateRoute authed={isPatient() || isReceptionist()} path='/plan-appointment'
                           component={PlanAppointment}/>
-            <PrivateRoute authed={isPatient() || isReceptionist() || isDoctor()} path='/list-doctors' component={ListDoctors}/>
+            <PrivateRoute authed={isPatient() || isReceptionist() || isDoctor()} path='/list-doctors'
+                          component={ListDoctors}/>
+            <Route path='/not-found' component={Error404}/>
             <Route>
                 <Error404/>
             </Route>
