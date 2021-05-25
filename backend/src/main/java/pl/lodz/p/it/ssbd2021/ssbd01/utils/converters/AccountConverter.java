@@ -6,7 +6,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.CreateAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 
 public class AccountConverter {
-    //FIXME account dto cant contain password
 
     /**
      * Tworzy nową instancję obiektu AccountEntity korzystając z danych z obiektu AccountEditDto (konwertuje obiekt).
@@ -17,7 +16,7 @@ public class AccountConverter {
      */
     public static Account createAccountEntityFromDto(EditOwnAccountRequestDTO accountDto, Account account) {
         return new Account(account.getLogin(), accountDto.getEmail(), account.getPassword(),
-                accountDto.getFirstName(), accountDto.getLastName(), accountDto.getPhoneNumber(), accountDto.getPesel());
+                accountDto.getFirstName(), accountDto.getLastName(), accountDto.getPhoneNumber(), accountDto.getPesel(), account.getLanguage());
     }
 
     /**
@@ -29,7 +28,7 @@ public class AccountConverter {
     public static Account createAccountEntityFromDto(CreateAccountRequestDTO createAccountRequestDTO) {
         return new Account(createAccountRequestDTO.getLogin(), createAccountRequestDTO.getEmail(), createAccountRequestDTO.getPassword(),
                 createAccountRequestDTO.getFirstName(), createAccountRequestDTO.getLastName(), createAccountRequestDTO.getPhoneNumber(),
-                createAccountRequestDTO.getPesel());
+                createAccountRequestDTO.getPesel(), createAccountRequestDTO.getLanguage());
     }
 
     /**
@@ -41,7 +40,7 @@ public class AccountConverter {
     public static Account createAccountByAdminEntityFromDto(NewAccountByAdminDto newAccountByAdminDto) {
         return new Account(newAccountByAdminDto.getLogin(), newAccountByAdminDto.getEmail(),
                 newAccountByAdminDto.getFirstName(), newAccountByAdminDto.getLastName(),
-                newAccountByAdminDto.getPhoneNumber(), newAccountByAdminDto.getPesel());
+                newAccountByAdminDto.getPhoneNumber(), newAccountByAdminDto.getPesel(), newAccountByAdminDto.getLanguage());
     }
 
 }
