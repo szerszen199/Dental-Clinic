@@ -17,6 +17,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JWTRegistrationConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtResetPasswordConfirmation;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtUnlockByMailConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
@@ -71,6 +72,9 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     private JWTRegistrationConfirmationUtils jwtRegistrationConfirmationUtils;
 
     @Inject
+    private JwtUnlockByMailConfirmationUtils jwtUnlockByMailConfirmationUtils;
+
+    @Inject
     private MailProvider mailProvider;
 
     @Inject
@@ -113,7 +117,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             try {
                 mailProvider.sendActivationMail(
                         account.getEmail(),
-                        jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(account.getLogin())
+                        jwtUnlockByMailConfirmationUtils.generateJwtTokenForUsername(account.getLogin())
                 );
             } catch (Exception e) {
                 throw MailSendingException.activationLink();
@@ -365,12 +369,12 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Override
     public void confirmUnlockByToken(String jwt) throws AccountException {
-        if (!jwtRegistrationConfirmationUtils.validateJwtToken(jwt)) {
+        if (!jwtUnlockByMailConfirmationUtils.validateJwtToken(jwt)) {
             throw AccountException.invalidConfirmationToken();
         }
         String login;
         try {
-            login = jwtRegistrationConfirmationUtils.getUserNameFromJwtToken(jwt);
+            login = jwtUnlockByMailConfirmationUtils.getUserNameFromJwtToken(jwt);
         } catch (ParseException e) {
             throw AccountException.invalidConfirmationToken();
         }

@@ -4,6 +4,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JWTRegistrationConfirmationUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtUnlockByMailConfirmationUtils;
 
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
@@ -25,6 +26,8 @@ public class InactivatedAccountScheduler {
     private MailProvider mailProvider;
     @Inject
     private JWTRegistrationConfirmationUtils jwtRegistrationConfirmationUtils;
+    @Inject
+    private JwtUnlockByMailConfirmationUtils jwtUnlockByMailConfirmationUtils;
 
     /**
      * automatycznie kolejkuje usuwanie nieaktywnych kont oraz w połowie czasu usunięcia wysyła maila z przypomnieniem.
@@ -46,7 +49,7 @@ public class InactivatedAccountScheduler {
         }
     }
 
-    @Schedule(hour = "*", minute = "*/3", second = "1", info = "Every day timer")
+    @Schedule(hour = "1", minute = "1", second = "1", info = "Every day timer")
     public void automaticallySchedule() throws AppBaseException {
         List<Account> activeAccounts = accountManager.findByActive(true);
         for (Account activeAccount : activeAccounts) {
@@ -54,7 +57,7 @@ public class InactivatedAccountScheduler {
                 Long time = Duration.between(activeAccount.getLastSuccessfulLogin(), LocalDateTime.now()).toMillis();
                 if (time >= propertiesLoader.getDeactivateInactiveAccountTimeDelay()) {
                     accountManager.setActiveFalse(activeAccount.getLogin());
-                    mailProvider.sendAccountLockedByScheduler(activeAccount.getEmail(), jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(activeAccount.getLogin()));
+                    mailProvider.sendAccountLockedByScheduler(activeAccount.getEmail(), jwtUnlockByMailConfirmationUtils.generateJwtTokenForUsername(activeAccount.getLogin()));
                 }
             }
         }

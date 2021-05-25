@@ -280,9 +280,9 @@ public class AccountEndpoint {
         if (exception != null && (exception instanceof AccountException || exception instanceof MailSendingException)) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
         } else if (exception != null && exception instanceof AppBaseException) {
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(EMAIL_CONFIRMATION_FAILED)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.CONFIRM_BY_MAIL_FAILED)).build();
         }
-        return Response.ok().entity(new MessageResponseDto(I18n.EMAIL_CONFIRMED_SUCCESSFULLY)).build();
+        return Response.ok().entity(new MessageResponseDto(I18n.CONFIRM_BY_MAIL_SUCCESSFULLY)).build();
     }
 
     /**

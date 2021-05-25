@@ -20,6 +20,7 @@ public class PropertiesLoader {
 
     private String confirmationJwtSecret;
     private String refreshJwtSecret;
+    private String unlockByMailConfirmationJwtSecret;
     private Long refreshJwtExpiration;
     private Long confirmationJwtExpiration;
     private Long deleteInactiveAccountTimeDelay;
@@ -129,6 +130,10 @@ public class PropertiesLoader {
         return appDefaultUrl;
     }
 
+    public String getUnlockByMailConfirmationJwtSecret() {
+        return unlockByMailConfirmationJwtSecret;
+    }
+
     @PostConstruct
     private void loadProperties() {
         Properties prop = null;
@@ -162,5 +167,6 @@ public class PropertiesLoader {
         appDefaultUrl = prop.getProperty("application.default.url");
         appMailUrl = prop.getProperty("application.email_url");
         appMailPassword = prop.getProperty("application.email.password");
+        unlockByMailConfirmationJwtSecret = prop.getProperty("unlock.by.mail.confirmation.jwt.secret");
     }
 }
