@@ -6,7 +6,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountByAdminDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmAccountRequestDTO;
@@ -657,7 +656,7 @@ public class AccountEndpoint {
         try {
             accountInfoResponseDTOList = accountManager.getAllAccounts()
                     .stream()
-                    .map(AccountInfoResponseDTO::new)
+                    .map(AccountInfoWithAccessLevelsResponseDto::new)
                     .collect(Collectors.toList());
         } catch (AccountException e) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
