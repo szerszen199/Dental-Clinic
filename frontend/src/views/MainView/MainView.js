@@ -22,6 +22,7 @@ import {Link} from "react-router-dom";
 import findDefaultRole from "../../roles/findDefaultRole";
 import {darkModeRequest} from "../../components/DarkMode/DarkModeRequest"
 import {map} from "react-bootstrap/ElementChildren";
+import {languageRequest} from "../../components/Language/LanguageRequest";
 
 const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
 const roleDoctorName = process.env.REACT_APP_ROLE_DOCTOR
@@ -53,30 +54,32 @@ class MainViewWithoutTranslation extends React.Component {
             flag: this.urlEN,
             login: "",
         }
-        let languageCheck = Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE)
-        if (typeof languageCheck !== 'undefined' && languageCheck !== null && languageCheck !== "null" && languageCheck !== undefined) {
-            this.setState({
-                language: Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE)
-            })
-        }
     }
 
     handleOnClick() {
         if (this.state.language === "EN") {
             this.setPL()
-            i18n.changeLanguage("PL");
         } else {
             this.setEN()
-            i18n.changeLanguage("EN");
         }
     }
 
     setEN() {
         this.setState({language: "EN", flag: this.urlPL})
+        Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, "EN", {expires: process.env.jwtCookieExpirationTime})
+        if (this.state.login) {
+            languageRequest("en")
+        }
+        i18n.changeLanguage("EN");
     }
 
     setPL() {
         this.setState({language: "PL", flag: this.urlEN})
+        Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, "PL", {expires: process.env.jwtCookieExpirationTime})
+        if (this.state.login) {
+            languageRequest("pl")
+        }
+        i18n.changeLanguage("PL");
     }
 
     makeRefreshRequest() {
@@ -99,12 +102,12 @@ class MainViewWithoutTranslation extends React.Component {
                 }
                 if (Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE) != null) {
                     Cookies.set(process.env.REACT_APP_DARK_MODE_COOKIE, Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE), {expires: jwtCookieExpirationTime});
-                    this.setState({
-                        isDarkMode: Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE)
-                    })
+                }
+                if (Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE) != null) {
+                    Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE), {expires: jwtCookieExpirationTime});
                 }
                 localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, response.data.refreshJwtToken.token);
-                accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode)
+
 
 
             }).catch((response) => {
@@ -117,15 +120,22 @@ class MainViewWithoutTranslation extends React.Component {
 
 
     componentDidMount() {
-        accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode)
         this.makeRefreshRequest();
-        setInterval(this.makeRefreshRequest, parseInt(process.env.REACT_APP_JWT_EXPIRATION_MS) / 10);
+        setInterval(this.makeRefreshRequest, parseInt(process.env.REACT_APP_JWT_EXPIRATION_MS) / 2);
         let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
-        console.log(token)
         if (typeof token !== 'undefined' && token !== null && token !== "null" && token !== undefined) {
             this.setState({
-                login: Cookies.get(process.env.REACT_APP_LOGIN_COOKIE)
+                login: Cookies.get(process.env.REACT_APP_LOGIN_COOKIE),
+                isDarkMode: Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE),
+                language: Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE)
             })
+            accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode)
+            if (Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE).toUpperCase() === "PL") {
+                this.setPL();
+            }
+            else {
+                this.setEN();
+            }
         }
     }
 
