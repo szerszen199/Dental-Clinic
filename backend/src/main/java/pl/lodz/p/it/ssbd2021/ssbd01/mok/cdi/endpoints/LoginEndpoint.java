@@ -4,10 +4,12 @@ import pl.lodz.p.it.ssbd2021.ssbd01.auth.ejb.managers.AuthViewEntityManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.AuthenticationRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.RefreshTokenRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AuthAndRefreshTokenResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.JwtTokenAndUserDataReponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.AuthenticationRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.UserInfoResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
@@ -33,12 +35,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_NOT_FOUND;
 
 /**
  * Typ Login endpoint.
@@ -104,20 +107,26 @@ public class LoginEndpoint {
     public Response getNewTokenForRefreshToken(@NotNull @Valid RefreshTokenRequestDTO refreshTokenRequestDTO) {
         String jwt = refreshTokenRequestDTO.getRefreshToken();
         if (jwtRefreshUtils.validateJwtToken(jwt)) {
+            String username;
+            Set<String> roleNames;
             try {
-                String username = jwtRefreshUtils.getUserNameFromJwtToken(jwt);
-                Set<String> roleNames = new HashSet<>();
+                username = jwtRefreshUtils.getUserNameFromJwtToken(jwt);
+                roleNames = new HashSet<>();
+
                 for (var i : authViewEntityManager.findByLogin(username)) {
                     roleNames.add(i.getLevel());
                 }
-                return Response.ok()
-                        .entity(new AuthAndRefreshTokenResponseDTO(
-                                jwtLoginUtils.generateJwtTokenForUser(username),
-                                jwtRefreshUtils.generateJwtTokenForUser(username), username, roleNames))
-                        .build();
-            } catch (ParseException | AppBaseException e) {
-                e.printStackTrace();
+            } catch (AccountException e) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_NOT_FOUND)).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.INVALID_REFRESH_TOKEN)).build();
             }
+
+            return Response.ok()
+                    .entity(new AuthAndRefreshTokenResponseDTO(
+                            jwtLoginUtils.generateJwtTokenForUser(username),
+                            jwtRefreshUtils.generateJwtTokenForUser(username), username, roleNames))
+                    .build();
         }
         return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.INVALID_REFRESH_TOKEN)).build();
     }
@@ -137,20 +146,36 @@ public class LoginEndpoint {
     public Response authenticate(@NotNull @Valid AuthenticationRequestDTO authenticationRequestDTO) {
         String ip = IpAddressUtils.getClientIpAddressFromHttpServletRequest(request);
         CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(authenticationRequestDTO.toCredential());
+
+        Account account;
         try {
-            Account account = accountManager.findByLogin(authenticationRequestDTO.getUsername());
-            if (credentialValidationResult.getStatus() != CredentialValidationResult.Status.VALID) {
-                accountManager.updateAfterUnsuccessfulLogin(authenticationRequestDTO.getUsername(), ip, LocalDateTime.now());
-                if (account.getUnsuccessfulLoginCounter() >= propertiesLoader.getInvalidLoginCountBlock() && account.getActive()) {
-                    accountManager.lockAccount(account.getLogin());
-                    // TODO: 11.05.2021 informacja na maila? Idk
-                }
-                Logger.getGlobal().log(Level.INFO, "Nieudana próba logowania na konto {0} z adresu {1}", new Object[]{account.getLogin(), ip});
-                return Response.status(Response.Status.UNAUTHORIZED).entity(new MessageResponseDto(I18n.AUTHENTICATION_FAILURE)).build();
-            }
+            account = accountManager.findByLogin(authenticationRequestDTO.getUsername());
+        } catch (AccountException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_NOT_FOUND)).build();
         } catch (AppBaseException e) {
-            // TODO: 11.05.2021 Moze tutaj cos zrobic?
-            e.printStackTrace();
+            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.AUTHENTICATION_FAILURE)).build();
+        }
+        if (credentialValidationResult.getStatus() != CredentialValidationResult.Status.VALID) {
+            try {
+                accountManager.updateAfterUnsuccessfulLogin(authenticationRequestDTO.getUsername(), ip, LocalDateTime.now());
+            } catch (AccountException accountException) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.LOGIN_FAILURE)).build();
+            }
+            if (account.getUnsuccessfulLoginCounter() >= propertiesLoader.getInvalidLoginCountBlock() && account.getActive()) {
+                try {
+                    accountManager.lockAccount(account.getLogin());
+                } catch (AccountException accountException) {
+                    return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
+                } catch (Exception e) {
+                    return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.LOGIN_FAILURE)).build();
+                }
+                // TODO: 11.05.2021 informacja na maila? Idk
+            }
+            Logger.getGlobal().log(Level.INFO, "Nieudana próba logowania na konto {0} z adresu {1}", new Object[]{account.getLogin(), ip});
+
+            return Response.status(Response.Status.UNAUTHORIZED).entity(new MessageResponseDto(I18n.LOGIN_FAILURE)).build();
         }
         UserInfoResponseDTO userInfoResponseDTO = new UserInfoResponseDTO();
         try {
@@ -160,17 +185,22 @@ public class LoginEndpoint {
             userInfoResponseDTO.setLastName(loggedInAccount.getLastName());
             userInfoResponseDTO.setDarkMode(loggedInAccount.isDarkMode());
             userInfoResponseDTO.setLanguage(loggedInAccount.getLanguage());
-        } catch (AppBaseException e) {
-            // TODO: 11.05.2021 Moze tutaj cos zrobic?
-            e.printStackTrace();
+        } catch (AccountException accountException) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.LOGIN_FAILURE)).build();
         }
+
         try {
             if (credentialValidationResult.getStatus() == CredentialValidationResult.Status.VALID && credentialValidationResult.getCallerGroups().contains(I18n.ADMIN)) {
                 mailProvider.sendAdminLoginMail(accountManager.findByLogin(authenticationRequestDTO.getUsername()).getEmail());
             }
-        } catch (AppBaseException e) {
-            e.printStackTrace();
+        } catch (MailSendingException | AccountException accountException) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.LOGIN_FAILURE)).build();
         }
+
 
         Logger.getGlobal().log(Level.INFO, "Zalogowano na konto {0} z adresu {1}", new Object[]{credentialValidationResult.getCallerPrincipal().getName(), ip});
         return Response.ok().entity(

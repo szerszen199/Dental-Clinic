@@ -1,10 +1,10 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 
 import javax.ejb.Local;
-import java.util.Set;
 
 /**
  * Interfejs Access level manager.
@@ -17,17 +17,27 @@ public interface AccessLevelManager {
      *
      * @param login login uzytkownika, któremu zostanie odebrany poziom dostępu
      * @param level level odbierany poziom odstępu
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @throws AccessLevelException wyjątek typu AccessLevelException
+     * @throws AccountException     wyjątek typu AccountException
+     * @throws AppBaseException     wyjątek typu AppBaseException
      */
-    void revokeAccessLevel(String login, String level) throws AppBaseException;
-
+    void revokeAccessLevel(String login, String level) throws AccessLevelException, AccountException, AppBaseException;
 
     /**
      * Dodaje poziom dostępu {@param level} kontowi o loginie równym {@param login}.
      *
      * @param level nazwa poziomu dostępu konta
      * @param login login użytkownika, któremu zostanie dodany poziom dostępu
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @throws AccessLevelException wyjątek typu AccessLevelException
+     * @throws AccountException     wyjątek typu AccountException
+     * @throws AppBaseException     wyjątek typu AppBaseException
      */
-    void addAccessLevel(String login, String level) throws AppBaseException;
+    void addAccessLevel(String login, String level) throws AccessLevelException, AccountException, AppBaseException;
+
+    /**
+     * Sprawdza czy ostatnia transakcja się powiodła.
+     *
+     * @return true jeśli ostatnia transakcja się nie powiodła, false w przeciwnym wypadku.
+     */
+    boolean isLastTransactionRollback();
 }
