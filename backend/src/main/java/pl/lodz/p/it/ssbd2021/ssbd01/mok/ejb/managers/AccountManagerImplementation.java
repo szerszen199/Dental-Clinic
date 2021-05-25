@@ -168,9 +168,9 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
                 throw MailSendingException.activationLink();
             }
             try {
-                this.resetPassword(account.getLogin(), loggedInAccountUtil.getLoggedInAccountLogin());
+                this.sendResetPasswordConfirmationEmail(account.getLogin());
             } catch (Exception e) {
-                throw MailSendingException.passwordResetMail();
+                throw MailSendingException.editAccountMail();
             }
             return;
         } catch (AppBaseException e) {
