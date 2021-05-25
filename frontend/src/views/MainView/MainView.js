@@ -137,7 +137,7 @@ class MainViewWithoutTranslation extends React.Component {
                                     <p style={{
                                         color: "gray",
                                         marginTop: "5px",
-                                    }}>{this.state.login === "" ? '' : 'login: ' + this.state.login}</p>
+                                    }}>{this.state.login === "" || this.state.login === undefined ? '' : t("UserLogin") + ': ' + this.state.login}</p>
                                     <DarkModeSwitch
                                         style={{marginLeft: '1rem'}}
                                         checked={this.state.isDarkMode}
