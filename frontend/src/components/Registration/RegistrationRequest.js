@@ -14,8 +14,6 @@ export function registrationRequest(login, email, password, firstName, lastName,
         }
     )
         .then((response) => {
-            console.log(JSON.stringify(response.data));
-            console.log(JSON.stringify(response.statusText));
             window.location = "/home";
         })
         .catch((error) => {
