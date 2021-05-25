@@ -125,7 +125,9 @@ public class LoginEndpoint {
             return Response.ok()
                     .entity(new AuthAndRefreshTokenResponseDTO(
                             jwtLoginUtils.generateJwtTokenForUser(username),
-                            jwtRefreshUtils.generateJwtTokenForUser(username), username, roleNames))
+                            jwtRefreshUtils.generateJwtTokenForUser(username),
+                            username,
+                            roleNames))
                     .build();
         }
         return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.INVALID_REFRESH_TOKEN)).build();
