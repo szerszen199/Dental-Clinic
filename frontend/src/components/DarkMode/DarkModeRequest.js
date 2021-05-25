@@ -11,7 +11,7 @@ export function darkModeRequest(isDarkMode){
             'Content-Type': 'application/json',
         },
         data: {
-            isDarkMode: isDarkMode
+            darkMode: isDarkMode
         }
     };
 

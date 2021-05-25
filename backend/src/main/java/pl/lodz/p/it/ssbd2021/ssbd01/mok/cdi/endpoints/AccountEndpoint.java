@@ -444,12 +444,12 @@ public class AccountEndpoint {
     @PUT
     @Path("dark-mode")
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response changeDarkMode(@NotNull @Valid SetDarkModeRequestDTO setDarkModeRequestDTO) {
-        // TODO: 22.05.2021 OB SLU GA WY JAT KOW
         String login = loggedInAccountUtil.getLoggedInAccountLogin();
         try {
-            accountManager.setDarkMode(login, setDarkModeRequestDTO.isDarkMode());
+            accountManager.setDarkMode(login, setDarkModeRequestDTO.getDarkMode());
         } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }

@@ -5,24 +5,28 @@ import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import javax.validation.constraints.NotNull;
 
 /**
- * Klasa DarkModeDto dla motywu ciemnego.
+ * Klasa SetDarkModeRequestDTO dla motywu ciemnego.
  */
 public class SetDarkModeRequestDTO {
 
     @NotNull(message = I18n.DARK_MODE_NULL)
-    private boolean isDarkMode;
+    private boolean darkMode;
 
-    public boolean isDarkMode() {
-        return isDarkMode;
+    public boolean getDarkMode() {
+        return darkMode;
+    }
+
+    public void setDarkMode(boolean darkMode) {
+        this.darkMode = darkMode;
     }
 
     /**
      * Tworzy nową instancję klasy DarkModeDto.
      *
-     * @param isDarkMode ustawienie trybu ciemnego
+     * @param darkMode ustawienie trybu ciemnego
      */
-    public SetDarkModeRequestDTO(boolean isDarkMode) {
-        this.isDarkMode = isDarkMode;
+    public SetDarkModeRequestDTO(boolean darkMode) {
+        this.darkMode = darkMode;
     }
 
     /**
