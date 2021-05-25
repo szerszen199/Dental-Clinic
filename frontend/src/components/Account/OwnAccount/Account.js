@@ -1,6 +1,6 @@
 import React from "react";
 import "./Account.css";
-import EditAccount from "./EditAccount/EditAccount";
+import EditAccount from "../EditAccount/EditAccount";
 import EditPassword from "./EditPassword/EditPassword";
 import {Col, Container, Row} from "react-bootstrap";
 

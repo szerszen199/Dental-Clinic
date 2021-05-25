@@ -3,8 +3,10 @@ import "./AccountsList.css";
 import {makeAccountsListRequest} from "./AccountsListRequest";
 import {withTranslation} from "react-i18next";
 import BootstrapTable from 'react-bootstrap-table-next';
-import {Dropdown, Table} from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import filterFactory, {textFilter} from 'react-bootstrap-table2-filter';
+import {Link} from "react-router-dom";
+import edit from "../../assets/edit.png"
 
 class AccountsListWithoutTranslation extends React.Component {
 
@@ -22,17 +24,6 @@ class AccountsListWithoutTranslation extends React.Component {
         })
     }
 
-    renderAccount(person, index) {
-        return (
-            <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{person.login}</td>
-                <td>{person.name}</td>
-                <td>{person.email}</td>
-            </tr>
-        )
-    }
-
     renderAccounts() {
         const {t} = this.props;
 
@@ -43,31 +34,54 @@ class AccountsListWithoutTranslation extends React.Component {
                 text: t('UserLogin'),
                 filter: textFilter({
                     placeholder: t("Filter"),
-                    style: {marginLeft: "20px"}
-                })
+                    style: {marginLeft: "10px"}
+                }),
+                style: {verticalAlign: "middle"}
             },
             {
                 dataField: 'name',
                 text: t('Name and Surname'),
                 filter: textFilter({
                     placeholder: t("Filter"),
-                    style: {marginLeft: "20px"}
-                })
+                    style: {marginLeft: "10px"}
+                }),
+                style: {verticalAlign: "middle"}
             },
             {
                 dataField: 'email',
                 text: t('Email'),
                 filter: textFilter({
                     placeholder: t("Filter"),
-                    style: {marginLeft: "20px"}
-                })
+                    style: {marginLeft: "10px"}
+                }),
+                style: {verticalAlign: "middle"}
+            },
+            {
+                dataField: 'actions',
+                text: t('Actions'),
+                headerStyle: {verticalAlign: "middle"},
+                style: {textAlign: "center"},
+                formatter: this.linkEdit
             }
         ]
-        return <BootstrapTable striped keyField='id' columns={columns} data={this.state.accountsList} filter={filterFactory()}/>;
+        return <BootstrapTable striped keyField='login' columns={columns} data={this.state.accountsList} filter={filterFactory()}/>;
+    }
+
+    linkEdit = (cell, row, rowIndex, formatExtraData) => {
+        const {t} = this.props;
+        console.log(this.state.accountsList[rowIndex].login)
+        return (
+            <Link to={"/other-account/" + this.state.accountsList[rowIndex].login}>
+                <Button variant="outline-secondary" >
+                    <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}/>
+                </Button>
+            </Link>
+        );
     }
 
     renderNull() {
-        return <div>Trwa wczytywanie...</div>
+        const {t} = this.props;
+        return <div>{t('Loading')}</div>
 
     }
 
