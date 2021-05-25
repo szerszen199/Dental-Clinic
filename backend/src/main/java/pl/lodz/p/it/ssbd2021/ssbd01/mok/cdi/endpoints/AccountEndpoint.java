@@ -22,6 +22,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetDarkModeRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetLanguageRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SimpleUsernameRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoWithAccessLevelsResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
@@ -48,6 +49,7 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -571,24 +573,24 @@ public class AccountEndpoint {
     /**
      * Pobiera informacje o koncie o {@param login}.
      *
-     * @param simpleUsernameRequestDTO simple username request dto
+     * @param login login konta o którym chcemy pobrać informacje
      * @return informacje o zalogowanym koncie
      */
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @RolesAllowed({I18n.ADMIN})
-    @Path("/other-account-info")
-    public Response getAccountInfoWithLogin(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) {
-        AccountInfoResponseDTO account;
+    @Path("/other-account-info/{login}")
+    public Response getAccountInfoWithLogin(@NotNull @PathParam("login") String login) {
+        AccountInfoWithAccessLevelsResponseDto account;
         try {
-            account = new AccountInfoResponseDTO(accountManager.findByLogin(simpleUsernameRequestDTO.getLogin()));
+            account = new AccountInfoWithAccessLevelsResponseDto(accountManager.findByLogin(login));
         } catch (AccountException e) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_NOT_FOUND)).build();
         } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_GET_WITH_LOGIN_FAILED)).build();
         }
-        return Response.ok().entity(account).build();
+        return Response.ok().entity(account).tag(signer.sign(account)).build();
     }
 
     /**
@@ -614,26 +616,6 @@ public class AccountEndpoint {
         }
         return Response.ok(accountInfoResponseDTOList).build();
     }
-
-    // TODO: 21.05.2021 To jest niepotrzebne bo teraz zawsze info jest zwracane wraz z poziomami dostepu :o
-
-    //    /**
-    //     * Pobiera listę wszystkich kont z poziomami dostępu.
-    //     *
-    //     * @return lista wszystkich kont
-    //     * @throws AppBaseException wyjątek typu AppBaseException
-    //     */
-    //    @GET
-    //    @RolesAllowed({I18n.ADMIN})
-    //    @Produces({MediaType.APPLICATION_JSON})
-    //    @Path("/accounts-with-levels")
-    //    public Response getAllAccountsWithLevels() throws AppBaseException {
-    //        List<AccountAccessLevelDto> accountDtoList = accountManager.getAllAccounts()
-    //                .stream()
-    //                .map(AccountAccessLevelDto::new)
-    //                .collect(Collectors.toList());
-    //        return Response.ok(accountDtoList).build();
-    //    }
 
     /**
      * Zmienia hasło do własnego konta.
