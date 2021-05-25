@@ -1,6 +1,6 @@
 import React from "react";
 import "./PlanAppointment.css";
-import {Accordion, Card, Button, Container, Row, Col} from "react-bootstrap";
+import {Accordion, Button, Card, Col, Container, Fade, Modal, Row} from "react-bootstrap";
 
 function PlanAppointment() {
     return (
@@ -9,7 +9,7 @@ function PlanAppointment() {
                 <Card className="Card">
                     <Card.Header style={{width: "100%"}}>
                         <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                            <p className="Buttons">17.08.2021 13:45  dr.Doktor</p>
+                            <p className="Buttons">17.08.2021 13:45 dr.Doktor</p>
                         </Accordion.Toggle>
                     </Card.Header>
                     <Accordion.Collapse eventKey="0">
