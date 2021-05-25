@@ -35,7 +35,7 @@ public class InactivatedAccountScheduler {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     @Schedule(hour = "*", minute = "1", second = "1", info = "Every 1 hour timer")
-    public void automaticallyScheduled() throws AppBaseException {
+    public void automaticallyScheduleInactivatedAccounts() throws AppBaseException {
         List<Account> notEnabledAccounts = accountManager.findByEnabled(false);
         for (Account notEnabledAccount : notEnabledAccounts) {
             Long time = Duration.between(notEnabledAccount.getCreationDateTime(), LocalDateTime.now()).toMillis();
@@ -49,11 +49,16 @@ public class InactivatedAccountScheduler {
         }
     }
 
+    /**
+     * automatycznie kolejkuje usuwanie nieaktywnych kont oraz w połowie czasu usunięcia wysyła maila z przypomnieniem.
+     *
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
     @Schedule(hour = "1", minute = "1", second = "1", info = "Every day timer")
-    public void automaticallySchedule() throws AppBaseException {
+    public void automaticallyScheduleInactiveAccounts() throws AppBaseException {
         List<Account> activeAccounts = accountManager.findByActive(true);
         for (Account activeAccount : activeAccounts) {
-            if(activeAccount.getLastSuccessfulLogin()!=null){
+            if (activeAccount.getLastSuccessfulLogin() != null) {
                 Long time = Duration.between(activeAccount.getLastSuccessfulLogin(), LocalDateTime.now()).toMillis();
                 if (time >= propertiesLoader.getDeactivateInactiveAccountTimeDelay()) {
                     accountManager.setActiveFalse(activeAccount.getLogin());

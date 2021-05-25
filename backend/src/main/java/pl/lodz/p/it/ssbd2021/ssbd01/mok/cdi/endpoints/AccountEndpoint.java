@@ -255,6 +255,12 @@ public class AccountEndpoint {
         return Response.ok().entity(new MessageResponseDto(I18n.PASSWORD_RESET_SUCCESSFULLY)).build();
     }
 
+    /**
+     * Odblokowanie poprzez maila po automatycznym zablokowaniu konta.
+     *
+     * @param confirmMailChangeRequestDTO the confirm mail change request dto
+     * @return response response
+     */
     @PUT
     @Path("unlock-by-mail")
     @PermitAll

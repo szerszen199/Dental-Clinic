@@ -259,6 +259,13 @@ public class MailProvider {
         }
     }
 
+    /**
+     * Wysyła wiadomość z linkiem do odblokowania konta po jego automatycznym zablokowaniu z powodu nie aktywności.
+     *
+     * @param email the email
+     * @param token the token
+     * @throws MailSendingException the mail sending exception
+     */
     public void sendAccountLockedByScheduler(String email, String token) throws MailSendingException {
         String subject = ACCOUNT_MAIL_SCHEDULER_LOCK_SUBJECT;
         String activationLink = buildMailConfirmationLink(getContextPath(), token);

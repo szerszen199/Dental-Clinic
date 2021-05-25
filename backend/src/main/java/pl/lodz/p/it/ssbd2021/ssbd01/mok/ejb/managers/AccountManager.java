@@ -44,13 +44,19 @@ public interface AccountManager {
     void removeAccount(Long id) throws AppBaseException;
 
     /**
-     * usun konto.
+     * Ustawia EmailRecall na false.
      *
      * @param login login konta dla którego zostanie zmieniony EmailReccal na true
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     void setEmailRecallTrue(String login) throws AppBaseException;
 
+    /**
+     * Ustawia Active na false.
+     *
+     * @param login login konta dla którego zostanie zmieniony EmailReccal na true
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
     void setActiveFalse(String login) throws AppBaseException;
 
     /**
@@ -121,7 +127,15 @@ public interface AccountManager {
      */
     void confirmMailChangeByToken(String jwt) throws AppBaseException;
 
+
+    /**
+     * Potwierdzenie odblokowania konta.
+     *
+     * @param jwt token jwt
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
     void confirmUnlockByToken(String jwt) throws AppBaseException;
+
     /**
      * Pobranie listy wszystkich kont.
      *
