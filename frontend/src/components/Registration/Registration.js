@@ -89,17 +89,17 @@ export default function Registration() {
 
         function findPasswordErrors(pwd) {
             if (password === '') {
-                newErrors.pwd = "Password blank error";
+                newErrors[pwd] = "Password blank error";
                 return;
             }
 
             if (password.length < 8) {
-                newErrors.pwd = "Password too short error";
+                newErrors[pwd] = "Password too short error";
                 return;
             }
 
             if (password !== repeatedPassword) {
-                newErrors.pwd = "Passwords mismatch error";
+                newErrors[pwd] = "Passwords mismatch error";
             }
         }
 
@@ -184,8 +184,8 @@ export default function Registration() {
 
         findLoginErrors();
         findEmailErrors();
-        findPasswordErrors(password);
-        findPasswordErrors(repeatedPassword);
+        findPasswordErrors('password');
+        findPasswordErrors('repeatedPassword');
         findFirstNameErrors();
         findLastNameErrors();
         findPhoneNumberErrors();
