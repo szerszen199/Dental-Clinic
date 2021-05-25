@@ -127,27 +127,57 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Override
     public void createAccountByAdministrator(Account account) throws AppBaseException {
-        account.setPassword(hashGenerator.generateHash(passwordGenerator.generate(32)));
+
+        Account adminAccount = this.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        String requestIp = IpAddressUtils.getClientIpAddressFromHttpServletRequest(request);
+        account.setPassword(hashGenerator.generateHash(account.getPassword()));
+        account.setCreatedByIp(requestIp);
+
         AccessLevel patientData = new PatientData(account, true);
-        patientData.setCreatedBy(account);
+        patientData.setCreatedBy(adminAccount);
         account.getAccessLevels().add(patientData);
 
         AccessLevel receptionistData = new ReceptionistData(account, false);
-        receptionistData.setCreatedBy(account);
+        receptionistData.setCreatedBy(adminAccount);
         account.getAccessLevels().add(receptionistData);
 
         AccessLevel doctorData = new DoctorData(account, false);
-        doctorData.setCreatedBy(account);
+        doctorData.setCreatedBy(adminAccount);
         account.getAccessLevels().add(doctorData);
 
         AccessLevel adminData = new AdminData(account, false);
-        adminData.setCreatedBy(account);
+        adminData.setCreatedBy(adminAccount);
         account.getAccessLevels().add(adminData);
 
-        account.setCreatedBy(account);
-        accountFacade.create(account);
 
-        this.resetPassword(account.getLogin(), loggedInAccountUtil.getLoggedInAccountLogin());
+        try {
+            accountFacade.findByLoginOrEmailOrPesel(account.getLogin(), account.getEmail(), account.getPesel());
+        } catch (AccountException accountException) {
+            account.setCreatedBy(adminAccount);
+            try {
+                accountFacade.create(account);
+            } catch (Exception e) {
+                throw AccountException.accountCreationFailed();
+            }
+            try {
+                mailProvider.sendActivationMail(
+                        account.getEmail(),
+                        jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(account.getLogin())
+                );
+            } catch (Exception e) {
+                throw MailSendingException.activationLink();
+            }
+            try {
+                this.sendResetPasswordConfirmationEmail(account.getLogin());
+            } catch (Exception e) {
+                throw MailSendingException.editAccountMail();
+            }
+            return;
+        } catch (AppBaseException e) {
+            throw AccountException.accountCreationFailed();
+        }
+        throw AccountException.accountLoginEmailPeselExists();
+
     }
 
     @Override
@@ -201,7 +231,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         }
         try {
             String input = jwtResetPasswordConfirmation.getUserNameFromJwtToken(jwt);
-            this.resetPassword(input,input);
+            this.resetPassword(input, input);
         } catch (ParseException e) {
             throw AccountException.noSuchAccount(e);
         } catch (MailSendingException e) {
