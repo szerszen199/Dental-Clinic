@@ -801,6 +801,7 @@ public class AccountEndpoint {
     @PUT
     @Path("dark-mode")
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response changeDarkMode(@NotNull @Valid SetDarkModeRequestDTO setDarkModeRequestDTO) {
         String login = loggedInAccountUtil.getLoggedInAccountLogin();
