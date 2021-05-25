@@ -6,6 +6,7 @@ import "./EditAccount.css";
 import axios from "axios";
 import {editAccountRequest} from "./EditAccountRequest";
 import Cookies from "js-cookie";
+import confirmationAlerts from "../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
 
 class EditAccountWithoutTranslation extends React.Component {
     constructor(props) {
@@ -102,11 +103,11 @@ class EditAccountWithoutTranslation extends React.Component {
         event.preventDefault();
     }
 
-    handleOnClick(t) {
+    handleOnClick(t, title, question) {
         if (this.state.isDisabled === true) {
             this.setEditable()
         } else {
-            this.setNotEditable(t)
+            this.setNotEditable(t, title, question)
         }
     }
 
@@ -116,21 +117,23 @@ class EditAccountWithoutTranslation extends React.Component {
         });
     }
 
-    setNotEditable(t) {
-        if (t.validateForm(t)) {
-            t.setState({
-                isDisabled: true,
-            });
-            let phoneNumber = t.state.phoneNumber;
-            if (t.state.phoneNumber === "") {
-                phoneNumber = null;
+    setNotEditable(t, title, question) {
+        confirmationAlerts(title, question).then((confirmed) => {
+            if (confirmed && t.validateForm(t)) {
+                t.setState({
+                    isDisabled: true,
+                });
+                let phoneNumber = t.state.phoneNumber;
+                if (t.state.phoneNumber === "") {
+                    phoneNumber = null;
+                }
+                let pesel = t.state.pesel
+                if (t.state.pesel === "") {
+                    pesel = null;
+                }
+                editAccountRequest(t.state.email, t.state.firstName, t.state.lastName, phoneNumber, pesel, t.state.version, t.state.etag, t.props.account)
             }
-            let pesel = t.state.pesel
-            if (t.state.pesel === "") {
-                pesel = null;
-            }
-            editAccountRequest(t.state.email, t.state.firstName, t.state.lastName, phoneNumber, pesel, t.state.version, t.state.etag, t.props.account)
-        }
+        });
     }
 
     render() {
@@ -186,7 +189,7 @@ class EditAccountWithoutTranslation extends React.Component {
                         />
                     </Form.Group>
                     <Button block size="lg" type="submit"
-                            onClick={() => this.handleOnClick(this)}>
+                            onClick={() => this.handleOnClick(this, t("Warning"), t("Question edit account"))}>
                         {this.state.isDisabled ? t("Edit") : t("Save")}
                     </Button>
                 </Form>
