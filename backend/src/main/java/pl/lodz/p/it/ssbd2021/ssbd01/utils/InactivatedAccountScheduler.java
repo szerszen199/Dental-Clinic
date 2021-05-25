@@ -40,7 +40,8 @@ public class InactivatedAccountScheduler {
                 accountManager.removeAccount(notEnabledAccount.getId());
             } else if (time >= (propertiesLoader.getDeleteInactiveAccountTimeDelay() / 2) && !notEnabledAccount.getEmailRecall()) {
                 accountManager.setEmailRecallTrue(notEnabledAccount.getLogin());
-                mailProvider.sendActivationMail(notEnabledAccount.getEmail(), jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(notEnabledAccount.getLogin()), notEnabledAccount.getLanguage()
+                mailProvider.sendActivationMail(notEnabledAccount.getEmail(), jwtRegistrationConfirmationUtils
+                        .generateJwtTokenForUsername(notEnabledAccount.getLogin()), notEnabledAccount.getLanguage()
                 );
             }
         }

@@ -98,6 +98,7 @@ public class MailProvider {
      *
      * @param email Adres, na który zostanie wysłana wiadomość.
      * @param token Login konta, którego link aktywacyjny wysyłamy.
+     * @param lang język wiadomości email
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
     public void sendActivationMail(String email, String token, String lang) throws MailSendingException {
@@ -120,6 +121,7 @@ public class MailProvider {
      * Wysyła wiadomość z potwierdzeniem aktywacji konta.
      *
      * @param email Adres, na który zostanie wysłana wiadomość.
+     * @param lang język wiadomości email
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
     public void sendActivationConfirmationMail(String email, String lang) throws MailSendingException {
@@ -138,6 +140,7 @@ public class MailProvider {
      * Wysyła wiadomość informującą o zablokowanym koncie przez administratora.
      *
      * @param email Adres, na który zostanie wysłana wiadomość.
+     * @param lang język wiadomości email
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
     public void sendAccountLockByAdminMail(String email, String lang) throws MailSendingException {
@@ -156,6 +159,8 @@ public class MailProvider {
      * Wysyła wiadomość informującą o logowaniu administratora.
      *
      * @param email Adres, na który zostanie wysłana wiadomość.
+     * @param lang język wiadomości email
+     * @param ip język wiadomości adres ip
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
     @Asynchronous
@@ -176,6 +181,7 @@ public class MailProvider {
      * Wysyła wiadomość informującą o odblokowanym koncie przez administratora.
      *
      * @param email Adres, na który zostanie wysłana wiadomość.
+     * @param lang język wiadomości email
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
     public void sendAccountUnlockByAdminMail(String email, String lang) throws MailSendingException {
@@ -195,6 +201,7 @@ public class MailProvider {
      * Wysyła wiadomość informującą o zablokowanym koncie po nieudanych logowaniach.
      *
      * @param email Adres, na który zostanie wysłana wiadomość.
+     * @param lang język wiadomości email
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
     public void sendAccountLockByUnsuccessfulLoginMail(String email, String lang) throws MailSendingException {
@@ -215,6 +222,7 @@ public class MailProvider {
      *
      * @param email Adres, na który zostanie wysłana wiadomość.
      * @param token Login konta, którego link aktywacyjny wysyłamy.
+     * @param lang język wiadomości email
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
     public void sendEmailChangeConfirmationMail(String email, String token, String lang) throws MailSendingException {
@@ -238,6 +246,7 @@ public class MailProvider {
      *
      * @param email the email
      * @param token the token
+     * @param lang język wiadomości email
      * @throws MailSendingException the mail sending exception
      */
     public void sendResetPassConfirmationMail(String email, String token, String lang) throws MailSendingException {
@@ -261,6 +270,7 @@ public class MailProvider {
      *
      * @param email the email
      * @param pass  the pass
+     * @param lang język wiadomości email
      * @throws MailSendingException the mail sending exception
      */
     public void sendGeneratedPasswordMail(String email, String pass, String lang) throws MailSendingException {
