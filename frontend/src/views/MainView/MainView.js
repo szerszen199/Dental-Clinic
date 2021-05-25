@@ -84,11 +84,14 @@ class MainViewWithoutTranslation extends React.Component {
             }, {
                 headers: {Authorization: "Bearer " + JWTAuthToken}
             }).then((response) => {
-                // TODO: Czas expieracji.
+                console.log(response)
                 Cookies.set(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME, response.data.authJwtToken.token, {expires: jwtCookieExpirationTime});
                 Cookies.set(process.env.REACT_APP_ROLES_COOKIE_NAME, response.data.roles, {expires: jwtCookieExpirationTime});
+                Cookies.set(process.env.REACT_APP_LOGIN_COOKIE, response.data.username, {expires: jwtCookieExpirationTime});
                 if (Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) == null) {
-                    Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, findDefaultRole(response.data.roles), {expires: process.env.jwtCookieExpirationTime});
+                    Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, findDefaultRole(response.data.roles), {expires: jwtCookieExpirationTime});
+                } else {
+                    Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME), {expires: jwtCookieExpirationTime});
                 }
                 localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, response.data.refreshJwtToken.token);
             }).catch((response) => {

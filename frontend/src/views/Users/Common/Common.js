@@ -6,6 +6,7 @@ import React, {Fragment} from "react";
 import {useTranslation} from "react-i18next";
 import "./Common.css"
 import Cookies from "js-cookie";
+import {jwtCookieExpirationTime} from "../../MainView/MainView";
 
 export default function MyAccount() {
     const {t} = useTranslation();
@@ -38,7 +39,7 @@ export default function MyAccount() {
 }
 
 function updateAccessLevel(access_level) {
-    Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, access_level);
+    Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, access_level, {expires: jwtCookieExpirationTime});
     window.location = "/home";
 }
 
