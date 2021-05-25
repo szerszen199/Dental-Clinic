@@ -121,6 +121,7 @@ public interface AccountManager {
      */
     void confirmMailChangeByToken(String jwt) throws AppBaseException;
 
+    void confirmUnlockByToken(String jwt) throws AppBaseException;
     /**
      * Pobranie listy wszystkich kont.
      *
