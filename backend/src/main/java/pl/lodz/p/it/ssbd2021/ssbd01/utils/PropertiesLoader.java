@@ -36,6 +36,12 @@ public class PropertiesLoader {
     private Long resetPasswordConfirmationJwtExpiration;
     private int transactionRetryCount;
 
+    private String mailSmtpHost;
+    private String mailSmtpPort;
+    private String mailSmtpSSLEnable;
+    private String mailSmtpAuth;
+    private String mailSmtpSSLTrust;
+
 
     public String getResetPasswordConfirmationJwtSecret() {
         return resetPasswordConfirmationJwtSecret;
@@ -124,6 +130,16 @@ public class PropertiesLoader {
         return appDefaultUrl;
     }
 
+    public String getMailSmtpHost() { return mailSmtpHost; }
+
+    public String getMailSmtpPort() { return mailSmtpPort; }
+
+    public String getMailSmtpSSLEnable() { return mailSmtpSSLEnable; }
+
+    public String getMailSmtpAuth() { return mailSmtpAuth; }
+
+    public String getMailSmtpSSLTrust() { return mailSmtpSSLTrust; }
+
     @PostConstruct
     private void loadProperties() {
         Properties prop = null;
@@ -156,5 +172,10 @@ public class PropertiesLoader {
         appDefaultUrl = prop.getProperty("application.default.url");
         appMailUrl = prop.getProperty("application.email_url");
         appMailPassword = prop.getProperty("application.email.password");
+        mailSmtpHost = prop.getProperty("mail.smtp.host");
+        mailSmtpPort = prop.getProperty("mail.smtp.port");
+        mailSmtpSSLEnable = prop.getProperty("mail.smtp.ssl.enable");
+        mailSmtpAuth = prop.getProperty("mail.smtp.auth");
+        mailSmtpSSLTrust = prop.getProperty("mail.smtp.ssl.trust");
     }
 }
