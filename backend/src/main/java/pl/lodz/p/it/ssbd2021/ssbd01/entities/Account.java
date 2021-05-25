@@ -147,8 +147,9 @@ public class Account extends AbstractEntity implements Serializable {
     @Column(name = "unsuccessful_login_count_since_last_login")
     @Min(0)
     private Integer unsuccessfulLoginCounter = 0;
-    @Column(name = "language", columnDefinition = "bpchar", length = 2)
+    @Column(name = "language", columnDefinition = "bpchar", length = 2, nullable = false)
     @Size(min = 2, max = 2)
+    @NotNull
     private String language;
     @Basic(optional = false)
     @Column(name = "email_recall", nullable = false)
