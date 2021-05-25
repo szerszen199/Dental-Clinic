@@ -70,6 +70,29 @@ public class AccountFacade extends AbstractFacade<Account> {
     }
 
     /**
+     * Wyszukuje konta na podstawie danego loginu lub emaila.
+     *
+     * @param login login
+     * @param email email
+     * @param pesel pesel
+     * @return konto
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    public Account findByLoginOrEmailOrPesel(String login, String email, String pesel) throws AppBaseException {
+        try {
+            TypedQuery<Account> tq = em.createNamedQuery("Account.findByLoginOrEmailOrPesel", Account.class);
+            tq.setParameter("email", email);
+            tq.setParameter("login", login);
+            tq.setParameter("pesel", pesel);
+            return tq.getSingleResult();
+        } catch (NoResultException e) {
+            throw AccountException.noSuchAccount(e);
+        } catch (PersistenceException e) {
+            throw AppBaseException.databaseError(e);
+        }
+    }
+
+    /**
      * Wyszukuje kont na podstawie pola 'enabled'.
      *
      * @param enabled wartość pola 'enabled'
