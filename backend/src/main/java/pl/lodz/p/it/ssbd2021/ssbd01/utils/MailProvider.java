@@ -12,7 +12,9 @@ import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.servlet.ServletContext;
+import java.util.Locale;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATE_BUTTON;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATE_SUBJECT;
@@ -70,11 +72,11 @@ public class MailProvider {
     @PostConstruct
     public void init() {
         Properties properties = new Properties();
-        properties.put("mail.smtp.host", "smtp.gmail.com");
-        properties.put("mail.smtp.port", "465");
-        properties.put("mail.smtp.ssl.enable", "true");
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        properties.put("mail.smtp.host", propertiesLoader.getMailSmtpHost());
+        properties.put("mail.smtp.port", propertiesLoader.getMailSmtpPort());
+        properties.put("mail.smtp.ssl.enable", propertiesLoader.getMailSmtpSSLEnable());
+        properties.put("mail.smtp.auth", propertiesLoader.getMailSmtpAuth());
+        properties.put("mail.smtp.ssl.trust", propertiesLoader.getMailSmtpSSLTrust());
 
         Authenticator authenticator = new Authenticator() {
             @Override
@@ -98,12 +100,14 @@ public class MailProvider {
      * @param token Login konta, którego link aktywacyjny wysyłamy.
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
-    public void sendActivationMail(String email, String token) throws MailSendingException {
-        String subject = ACCOUNT_MAIL_ACTIVATE_SUBJECT;
+    public void sendActivationMail(String email, String token, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(ACCOUNT_MAIL_ACTIVATE_SUBJECT);
         String activationLink = buildConfirmationLink(getContextPath(), token);
         String messageText =
-                paragraph(ACCOUNT_MAIL_ACTIVATE_TEXT)
-                        + hyperlink(activationLink, ACCOUNT_MAIL_ACTIVATE_BUTTON);
+                paragraph(langBundle.getString(ACCOUNT_MAIL_ACTIVATE_TEXT))
+                        + hyperlink(activationLink, langBundle.getString(ACCOUNT_MAIL_ACTIVATE_BUTTON));
 
         try {
             mailManager.sendMail(email, subject, getFrom(), messageText, session);
@@ -118,9 +122,11 @@ public class MailProvider {
      * @param email Adres, na który zostanie wysłana wiadomość.
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
-    public void sendActivationConfirmationMail(String email) throws MailSendingException {
-        String subject = ACCOUNT_MAIL_ACTIVATION_CONFIRMATION_SUBJECT;
-        String messageText = paragraph(ACCOUNT_MAIL_ACTIVATION_CONFIRMATION_TEXT);
+    public void sendActivationConfirmationMail(String email, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(ACCOUNT_MAIL_ACTIVATION_CONFIRMATION_SUBJECT);
+        String messageText = paragraph(langBundle.getString(ACCOUNT_MAIL_ACTIVATION_CONFIRMATION_TEXT));
         try {
             mailManager.sendMail(email, subject, getFrom(), messageText, session);
         } catch (MessagingException e) {
@@ -134,9 +140,11 @@ public class MailProvider {
      * @param email Adres, na który zostanie wysłana wiadomość.
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
-    public void sendAccountLockByAdminMail(String email) throws MailSendingException {
-        String subject = ACCOUNT_MAIL_LOCK_BY_ADMIN_SUBJECT;
-        String messageText = paragraph(ACCOUNT_MAIL_LOCK_BY_ADMIN_TEXT);
+    public void sendAccountLockByAdminMail(String email, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(ACCOUNT_MAIL_LOCK_BY_ADMIN_SUBJECT);
+        String messageText = paragraph(langBundle.getString(ACCOUNT_MAIL_LOCK_BY_ADMIN_TEXT));
         try {
             mailManager.sendMail(email, subject, getFrom(), messageText, session);
         } catch (MessagingException e) {
@@ -151,9 +159,12 @@ public class MailProvider {
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
     @Asynchronous
-    public void sendAdminLoginMail(String email) throws MailSendingException {
-        String subject = ACCOUNT_MAIL_LOGIN_SUBJECT;
-        String messageText = paragraph(ACCOUNT_MAIL_LOGIN_TEXT);
+    public void sendAdminLoginMail(String email, String lang, String ip) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(ACCOUNT_MAIL_LOGIN_SUBJECT);
+        String messageText = paragraph(langBundle.getString(ACCOUNT_MAIL_LOGIN_TEXT)) + ip;
+        System.out.println(messageText);
         try {
             mailManager.sendMail(email, subject, getFrom(), messageText, session);
         } catch (MessagingException e) {
@@ -167,9 +178,11 @@ public class MailProvider {
      * @param email Adres, na który zostanie wysłana wiadomość.
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
-    public void sendAccountUnlockByAdminMail(String email) throws MailSendingException {
-        String subject = ACCOUNT_MAIL_UNLOCK_BY_ADMIN_SUBJECT;
-        String messageText = paragraph(ACCOUNT_MAIL_UNLOCK_BY_ADMIN_TEXT);
+    public void sendAccountUnlockByAdminMail(String email, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(ACCOUNT_MAIL_UNLOCK_BY_ADMIN_SUBJECT);
+        String messageText = paragraph(langBundle.getString(ACCOUNT_MAIL_UNLOCK_BY_ADMIN_TEXT));
         try {
             mailManager.sendMail(email, subject, getFrom(), messageText, session);
         } catch (MessagingException e) {
@@ -184,9 +197,11 @@ public class MailProvider {
      * @param email Adres, na który zostanie wysłana wiadomość.
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
-    public void sendAccountLockByUnsuccessfulLoginMail(String email) throws MailSendingException {
-        String subject = ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_SUBJECT;
-        String messageText = paragraph(ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_TEXT);
+    public void sendAccountLockByUnsuccessfulLoginMail(String email, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_SUBJECT);
+        String messageText = paragraph(langBundle.getString(ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_TEXT));
         try {
             mailManager.sendMail(email, subject, getFrom(), messageText, session);
         } catch (MessagingException e) {
@@ -202,12 +217,14 @@ public class MailProvider {
      * @param token Login konta, którego link aktywacyjny wysyłamy.
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
-    public void sendEmailChangeConfirmationMail(String email, String token) throws MailSendingException {
-        String subject = ACCOUNT_MAIL_CHANGE_CONFIRM_SUBJECT;
+    public void sendEmailChangeConfirmationMail(String email, String token, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(ACCOUNT_MAIL_CHANGE_CONFIRM_SUBJECT);
         String activationLink = buildMailConfirmationLink(getContextPath(), token);
         String messageText =
-                paragraph(ACCOUNT_MAIL_CHANGE_CONFIRM_TEXT)
-                        + hyperlink(activationLink, ACCOUNT_MAIL_CHANGE_CONFIRM_BUTTON);
+                paragraph(langBundle.getString(ACCOUNT_MAIL_CHANGE_CONFIRM_TEXT))
+                        + hyperlink(activationLink, langBundle.getString(ACCOUNT_MAIL_CHANGE_CONFIRM_BUTTON));
 
         try {
             mailManager.sendMail(email, subject, getFrom(), messageText, session);
@@ -223,12 +240,14 @@ public class MailProvider {
      * @param token the token
      * @throws MailSendingException the mail sending exception
      */
-    public void sendResetPassConfirmationMail(String email, String token) throws MailSendingException {
-        String subject = ACCOUNT_MAIL_PASSWORD_CONFIRMATION_SUBJECT;
+    public void sendResetPassConfirmationMail(String email, String token, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(ACCOUNT_MAIL_PASSWORD_CONFIRMATION_SUBJECT);
         String activationLink = buildResetPassLink(getContextPath(), token);
         String messageText =
-                paragraph(ACCOUNT_MAIL_PASSWORD_CONFIRMATION_TEXT)
-                        + hyperlink(activationLink, ACCOUNT_MAIL_CHANGE_CONFIRM_BUTTON);
+                paragraph(langBundle.getString(ACCOUNT_MAIL_PASSWORD_CONFIRMATION_TEXT))
+                        + hyperlink(activationLink, langBundle.getString(ACCOUNT_MAIL_CHANGE_CONFIRM_BUTTON));
 
         try {
             mailManager.sendMail(email, subject, getFrom(), messageText, session);
@@ -244,10 +263,12 @@ public class MailProvider {
      * @param pass  the pass
      * @throws MailSendingException the mail sending exception
      */
-    public void sendGeneratedPasswordMail(String email, String pass) throws MailSendingException {
-        String subject = ACCOUNT_MAIL_GENERATED_PASSWORD_SUBJECT;
+    public void sendGeneratedPasswordMail(String email, String pass, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(ACCOUNT_MAIL_GENERATED_PASSWORD_SUBJECT);
         String messageText =
-                paragraph(ACCOUNT_MAIL_GENERATED_PASSWORD_TEXT)
+                paragraph(langBundle.getString(ACCOUNT_MAIL_GENERATED_PASSWORD_TEXT))
                         + pass;
         try {
             mailManager.sendMail(email, subject, getFrom(), messageText, session);

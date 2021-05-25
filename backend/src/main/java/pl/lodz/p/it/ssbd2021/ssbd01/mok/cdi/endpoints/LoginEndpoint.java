@@ -195,7 +195,7 @@ public class LoginEndpoint {
 
         try {
             if (credentialValidationResult.getStatus() == CredentialValidationResult.Status.VALID && credentialValidationResult.getCallerGroups().contains(I18n.ADMIN)) {
-                mailProvider.sendAdminLoginMail(accountManager.findByLogin(authenticationRequestDTO.getUsername()).getEmail());
+                mailProvider.sendAdminLoginMail(accountManager.findByLogin(authenticationRequestDTO.getUsername()).getEmail(),account.getLanguage(),ip);
             }
         } catch (MailSendingException | AccountException accountException) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
