@@ -170,6 +170,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         accountFacade.edit(account);
     }
 
+
     @Override
     public void confirmAccountByToken(String jwt) throws AccountException, MailSendingException {
         if (!jwtEmailConfirmationUtils.validateJwtToken(jwt)) {
@@ -355,6 +356,35 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         account.setModifiedBy(account);
         account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         account.setEmail(newEmail);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.emailConfirmationFailed();
+        }
+    }
+
+    @Override
+    public void confirmUnlockByToken(String jwt) throws AccountException {
+        if (!jwtRegistrationConfirmationUtils.validateJwtToken(jwt)) {
+            throw AccountException.invalidConfirmationToken();
+        }
+        String login;
+        try {
+            login = jwtRegistrationConfirmationUtils.getUserNameFromJwtToken(jwt);
+        } catch (ParseException e) {
+            throw AccountException.invalidConfirmationToken();
+        }
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (Exception e) {
+            throw AccountException.emailConfirmationFailed();
+        }
+        account.setModifiedBy(account);
+        account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        account.setActive(true);
         try {
             accountFacade.edit(account);
         } catch (Exception e) {

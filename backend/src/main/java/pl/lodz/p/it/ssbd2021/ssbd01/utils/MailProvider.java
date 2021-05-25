@@ -32,6 +32,9 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOGIN_SUBJEC
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOGIN_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_PASSWORD_CONFIRMATION_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_PASSWORD_CONFIRMATION_TEXT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_SCHEDULER_LOCK_BUTTON;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_SCHEDULER_LOCK_SUBJECT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_SCHEDULER_LOCK_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_UNLOCK_BY_ADMIN_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_UNLOCK_BY_ADMIN_TEXT;
 
@@ -249,6 +252,19 @@ public class MailProvider {
         String messageText =
                 paragraph(ACCOUNT_MAIL_GENERATED_PASSWORD_TEXT)
                         + pass;
+        try {
+            mailManager.sendMail(email, subject, getFrom(), messageText, session);
+        } catch (MessagingException e) {
+            throw MailSendingException.passwordResetMail();
+        }
+    }
+
+    public void sendAccountLockedByScheduler(String email, String token) throws MailSendingException {
+        String subject = ACCOUNT_MAIL_SCHEDULER_LOCK_SUBJECT;
+        String activationLink = buildMailConfirmationLink(getContextPath(), token);
+        String messageText = paragraph(ACCOUNT_MAIL_SCHEDULER_LOCK_TEXT)
+                + hyperlink(activationLink, ACCOUNT_MAIL_SCHEDULER_LOCK_BUTTON)
+                + token;
         try {
             mailManager.sendMail(email, subject, getFrom(), messageText, session);
         } catch (MessagingException e) {
