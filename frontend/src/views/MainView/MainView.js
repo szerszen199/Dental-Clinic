@@ -48,7 +48,12 @@ class MainViewWithoutTranslation extends React.Component {
             language: "PL",
             flag: this.urlEN,
             login: "",
-
+        }
+        let languageCheck = Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE)
+        if (typeof languageCheck !== 'undefined' && languageCheck !== null && languageCheck !== "null" && languageCheck !== undefined) {
+            this.setState({
+                language: Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE)
+            })
         }
     }
 
@@ -137,7 +142,7 @@ class MainViewWithoutTranslation extends React.Component {
                                     <p style={{
                                         color: "gray",
                                         marginTop: "5px",
-                                    }}>{this.state.login === "" ? '' : 'login: ' + this.state.login}</p>
+                                    }}>{this.state.login === "" || this.state.login === undefined ? '' : t("UserLogin") + ': ' + this.state.login}</p>
                                     <DarkModeSwitch
                                         style={{marginLeft: '1rem'}}
                                         checked={this.state.isDarkMode}
