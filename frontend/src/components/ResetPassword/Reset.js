@@ -15,7 +15,7 @@ export default function Reset() {
 
     function handleSubmit(event) {
         event.preventDefault();
-        makeResetPasswordRequest(login);
+        makeResetPasswordRequest(login, t);
     }
 
     return (
