@@ -130,15 +130,25 @@ public class PropertiesLoader {
         return appDefaultUrl;
     }
 
-    public String getMailSmtpHost() { return mailSmtpHost; }
+    public String getMailSmtpHost() {
+        return mailSmtpHost;
+    }
 
-    public String getMailSmtpPort() { return mailSmtpPort; }
+    public String getMailSmtpPort() {
+        return mailSmtpPort;
+    }
 
-    public String getMailSmtpSSLEnable() { return mailSmtpSSLEnable; }
+    public String getMailSmtpSSLEnable() {
+        return mailSmtpSSLEnable;
+    }
 
-    public String getMailSmtpAuth() { return mailSmtpAuth; }
+    public String getMailSmtpAuth() {
+        return mailSmtpAuth;
+    }
 
-    public String getMailSmtpSSLTrust() { return mailSmtpSSLTrust; }
+    public String getMailSmtpSSLTrust() {
+        return mailSmtpSSLTrust;
+    }
 
     @PostConstruct
     private void loadProperties() {

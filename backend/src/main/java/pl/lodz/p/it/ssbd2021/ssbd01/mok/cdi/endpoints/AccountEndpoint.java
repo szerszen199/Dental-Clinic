@@ -811,7 +811,7 @@ public class AccountEndpoint {
         do {
             try {
                 exception = null;
-                accountManager.setDarkMode(login, setDarkModeRequestDTO.isDarkMode());
+                accountManager.setDarkMode(login, setDarkModeRequestDTO.getDarkMode());
                 rollbackTX = accountManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
                 rollbackTX = true;
