@@ -1,4 +1,4 @@
-import React, {Suspense} from "react";
+import React, {Suspense, useState} from "react";
 import Navbar from "react-bootstrap/Navbar";
 import {Col, Container, Row} from "react-bootstrap";
 import {DarkModeSwitch} from "react-toggle-dark-mode";
@@ -36,6 +36,7 @@ let accessLevelDictionary = {
     [roleDoctorName]: "rgba(255, 216, 0, 0.2)",
     [roleAdminName]: "rgba(238, 0, 0, 0.1)",
 };
+let loginColor = "grey"
 export const jwtCookieExpirationTime = process.env.REACT_APP_JWT_EXPIRATION_MS / (24 * 60 * 60 * 100)
 const actualAccessLevel = Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) !== undefined ? Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) : roleGuestName;
 
@@ -47,20 +48,12 @@ class MainViewWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isDarkMode: false,
             language: "PL",
+            isDarkMode: false,
             flag: this.urlEN,
             login: "",
 
         }
-        let darkModeCheck = Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE)
-        if (typeof darkModeCheck !== 'undefined' && darkModeCheck !== null && darkModeCheck !== "null" && darkModeCheck !== undefined) {
-            this.setState({
-                isDarkMode: Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE)
-            })
-        }
-        console.log(this.state.isDarkMode)
-        darkModeStyleChange(this.state.isDarkMode)
     }
 
     handleOnClick() {
@@ -96,7 +89,16 @@ class MainViewWithoutTranslation extends React.Component {
                 if (Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) == null) {
                     Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, findDefaultRole(response.data.roles), {expires: process.env.jwtCookieExpirationTime});
                 }
+                if (Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE) != null) {
+                    Cookies.set(process.env.REACT_APP_DARK_MODE_COOKIE, Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE), {expires: jwtCookieExpirationTime});
+                    this.setState({
+                        isDarkMode: Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE)
+                    })
+                }
                 localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, response.data.refreshJwtToken.token);
+                accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode)
+
+
             }).catch((response) => {
                 // todo cos z tym response?
                 console.log(response);
@@ -107,6 +109,7 @@ class MainViewWithoutTranslation extends React.Component {
 
 
     componentDidMount() {
+        accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode)
         this.makeRefreshRequest();
         setInterval(this.makeRefreshRequest, parseInt(process.env.REACT_APP_JWT_EXPIRATION_MS) / 10);
         let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
@@ -121,7 +124,6 @@ class MainViewWithoutTranslation extends React.Component {
 
     render() {
         const {t} = this.props;
-
         return (
             <div className="App container py-3 ">
                 <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"
@@ -146,7 +148,7 @@ class MainViewWithoutTranslation extends React.Component {
                                 <Col className="d-flex justify-content-end"
                                      style={{maxHeight: "30px", marginRight: "10px"}}>
                                     <p style={{
-                                        color: "gray",
+                                        color: loginColor,
                                         marginTop: "5px",
                                     }}>{this.state.login === "" ? '' : 'login: ' + this.state.login}</p>
                                     <DarkModeSwitch
@@ -154,9 +156,11 @@ class MainViewWithoutTranslation extends React.Component {
                                         checked={this.state.isDarkMode}
                                         onChange={(e) => {
                                             this.setState({isDarkMode: e})
-                                            Cookies.set(process.env.REACT_APP_DARK_MODE_COOKIE, this.state.isDarkMode, {expires: process.env.jwtCookieExpirationTime})
-                                            darkModeRequest(this.state.isDarkMode)
-                                            accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode)
+                                            Cookies.set(process.env.REACT_APP_DARK_MODE_COOKIE, e, {expires: process.env.jwtCookieExpirationTime})
+                                            accessLevelDictionary = darkModeStyleChange(e)
+                                            if (this.state.login) {
+                                                darkModeRequest(e)
+                                            }
                                         }}
                                         size={30}
                                         sunColor={"#FFDF37"}
@@ -184,11 +188,9 @@ class MainViewWithoutTranslation extends React.Component {
 }
 
 function darkModeStyleChange(isDarkMode) {
-
-
     if (isDarkMode) {
-        document.getElementById("root").style.backgroundColor = "#928787";
-        // document.getElementById("card").style.backgroundColor = "#22272e";
+        document.getElementById("root").style.backgroundColor = "#a8b4ae";
+        loginColor = "black"
         return {
             [roleGuestName]: "rgba(1, 1, 1, 0.5)",
             [rolePatientName]: "rgba(34, 55, 147, 0.2)",
@@ -199,8 +201,7 @@ function darkModeStyleChange(isDarkMode) {
 
     } else {
         document.getElementById("root").style.backgroundColor = "#ffffff";
-        // document.getElementById("div.card").style.backgroundColor = "#ffffff";
-        let elements = document.getElementsByClassName("card")
+        loginColor = "grey"
         return {
             [roleGuestName]: "rgba(1, 1, 1, 0.1)",
             [rolePatientName]: "rgba(93, 188, 242, 0.2)",
@@ -209,8 +210,6 @@ function darkModeStyleChange(isDarkMode) {
             [roleAdminName]: "rgba(238, 0, 0, 0.1)",
         };
     }
-
-
 }
 
 
