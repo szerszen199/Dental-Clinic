@@ -20,9 +20,11 @@ public class PropertiesLoader {
 
     private String confirmationJwtSecret;
     private String refreshJwtSecret;
+    private String unlockByMailConfirmationJwtSecret;
     private Long refreshJwtExpiration;
     private Long confirmationJwtExpiration;
     private Long deleteInactiveAccountTimeDelay;
+    private Long deactivateInactiveAccountTimeDelay;
     private String anonymousUserName;
     private String etagSecret;
 
@@ -106,6 +108,10 @@ public class PropertiesLoader {
         return deleteInactiveAccountTimeDelay;
     }
 
+    public Long getDeactivateInactiveAccountTimeDelay() {
+        return deactivateInactiveAccountTimeDelay;
+    }
+
     public String getJwtSecret() {
         return jwtSecret;
     }
@@ -150,6 +156,10 @@ public class PropertiesLoader {
         return mailSmtpSSLTrust;
     }
 
+    public String getUnlockByMailConfirmationJwtSecret() {
+        return unlockByMailConfirmationJwtSecret;
+    }
+
     @PostConstruct
     private void loadProperties() {
         Properties prop = null;
@@ -168,6 +178,7 @@ public class PropertiesLoader {
         jwtSecret = prop.getProperty("jwt.secret");
         confirmationJwtExpiration = Long.valueOf(prop.getProperty("account.confirmation.jwt.expirationMs"));
         deleteInactiveAccountTimeDelay = Long.valueOf(prop.getProperty("delete.inactive.accountMs"));
+        deactivateInactiveAccountTimeDelay = Long.valueOf(prop.getProperty("deactivate.inactive.accountMs"));
         jwtExpiration = Long.valueOf(prop.getProperty("jwt.expirationMs"));
         invalidLoginCountBlock = Long.valueOf(prop.getProperty("invalid.login.count.block"));
         anonymousUserName = prop.getProperty("anonymous.user.name");
@@ -187,5 +198,6 @@ public class PropertiesLoader {
         mailSmtpSSLEnable = prop.getProperty("mail.smtp.ssl.enable");
         mailSmtpAuth = prop.getProperty("mail.smtp.auth");
         mailSmtpSSLTrust = prop.getProperty("mail.smtp.ssl.trust");
+        unlockByMailConfirmationJwtSecret = prop.getProperty("unlock.by.mail.confirmation.jwt.secret");
     }
 }

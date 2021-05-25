@@ -19,7 +19,7 @@ import java.util.List;
 
 public abstract class AbstractFacade<T> {
 
-    private Class<T> entityClass;
+    private final Class<T> entityClass;
 
     /**
      * Tworzy nową instancję klasy AbstractFacade.
@@ -133,5 +133,4 @@ public abstract class AbstractFacade<T> {
         Query q = getEntityManager().createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
     }
-
 }

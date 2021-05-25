@@ -286,6 +286,41 @@ public class AccountEndpoint {
         return Response.ok().entity(new MessageResponseDto(I18n.PASSWORD_RESET_SUCCESSFULLY)).build();
     }
 
+    /**
+     * Odblokowanie poprzez maila po automatycznym zablokowaniu konta.
+     *
+     * @param confirmMailChangeRequestDTO the confirm mail change request dto
+     * @return response response
+     */
+    @PUT
+    @Path("unlock-by-mail")
+    @PermitAll
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response unlockByMail(@NotNull @Valid ConfirmMailChangeRequestDTO confirmMailChangeRequestDTO) {
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                accountManager.confirmUnlockByToken(confirmMailChangeRequestDTO.getToken());
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        if (exception != null && (exception instanceof AccountException || exception instanceof MailSendingException)) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
+        } else if (exception != null && exception instanceof AppBaseException) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.CONFIRM_BY_MAIL_FAILED)).build();
+        }
+        return Response.ok().entity(new MessageResponseDto(I18n.CONFIRM_BY_MAIL_SUCCESSFULLY)).build();
+    }
 
     /**
      * Edit account data.
