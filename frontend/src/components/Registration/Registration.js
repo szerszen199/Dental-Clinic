@@ -16,18 +16,16 @@ export default function Registration() {
     const [repeatedPassword, setRepeatedPassword] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [pesel, setPesel] = useState("");
     const {t} = useTranslation()
     const [phoneNumber, setPhoneNumber] = useState(null);
     const [pesel, setPesel] = useState(null);
     const [selectedLanguage, setSelectedLanguage] = useState("");
 
     const [languages] = useState([
-        {language: "pl", code: 'pl', title: 'Polish'},
-        {language: "en", code: 'gb', title: 'English'}
+        {language: "pl", code: 'pl', title: t("Polish")},
+        {language: "en", code: 'gb', title: t("English")}
     ]);
-    const [toggleContents, setToggleContents] = useState("Select language");
+    const [toggleContents, setToggleContents] = useState(t("Select language"));
 
     const [errors, setErrors] = useState({})
 
@@ -49,97 +47,97 @@ export default function Registration() {
 
         function findLoginErrors() {
             if (login === '') {
-                newErrors.login = "Login cannot be blank!";
+                newErrors.login = t("Login blank error");
                 return;
             }
 
             if (!loginRegex.test(login)) {
-                newErrors.login = "Login can contain letters and numbers, and must not contain spaces, special characters or emoji."
+                newErrors.login = t("Login format error");
                 return;
             }
 
             if (login.length < 3) {
-                newErrors.login = "Login too short! Must be at least 3 characters long.";
+                newErrors.login = t("Login too short error");
                 return;
             }
 
             if (login.length > 60) {
-                newErrors.login = "Login too long! Cannot be more than 60 characters long.";
+                newErrors.login = t("Login too long error");
             }
         }
 
         function findEmailErrors() {
             if (email === '') {
-                newErrors.email = "Email cannot be blank!";
+                newErrors.email = t("Email blank error");
                 return;
             }
 
             if (!emailRegex.test(email.toLowerCase())) {
-                newErrors.email = "Email format is invalid!"
+                newErrors.email = t("Email format error");
                 return;
             }
 
             if (email.length < 4) {
-                newErrors.email = "Email too short! Must be at least 4 characters long.";
+                newErrors.email = t("Email too short error");
                 return;
             }
 
             if (email.length > 100) {
-                newErrors.email = "Email too long! Cannot be more than 100 characters long.";
+                newErrors.email = t("Email too long error");
             }
         }
 
         function findPasswordErrors() {
             if (password === '') {
-                newErrors.password = "Password cannot be blank!";
+                newErrors.password = t("Password blank error");
                 return;
             }
 
             if (password.length < 8) {
-                newErrors.password = "Password too short! Must be at least 8 characters long.";
+                newErrors.password = t("Password too short error");
                 return;
             }
 
             if (password !== repeatedPassword) {
-                newErrors.password = "Passwords mismatch!"
+                newErrors.password = t("Passwords mismatch error");
             }
         }
 
         function findRepeatedPasswordErrors() {
             if (repeatedPassword === '') {
-                newErrors.repeatedPassword = "Password cannot be blank!";
+                newErrors.repeatedPassword = t("Password blank error");
                 return;
             }
 
             if (repeatedPassword.length < 8) {
-                newErrors.repeatedPassword = "Password too short! Must be at least 8 characters long.";
+                newErrors.repeatedPassword = t("Password too short error");
                 return;
             }
 
             if (password !== repeatedPassword) {
-                newErrors.repeatedPassword = "Passwords mismatch!"
+                newErrors.repeatedPassword = t("Passwords mismatch error");
             }
         }
 
         function findFirstNameErrors() {
             if (firstName === '') {
-                newErrors.firstName = "First name cannot be blank!";
+                newErrors.firstName = t("First name blank error");
                 return;
             }
 
             if (firstName.length > 50) {
-                newErrors.firstName = "First name too long! Cannot be more than 50 characters long.";
+                newErrors.firstName = t("First name too long error");
             }
         }
 
         function findLastNameErrors() {
             if (lastName === '') {
-                newErrors.lastName = "Last name cannot be blank!";
+                newErrors.lastName = t("Last name blank error");
                 return;
             }
 
             if (lastName.length > 50) {
-                newErrors.lastName = "Last name too long! Cannot be more than 80 characters long.";
+                newErrors.lastName = t("Last name too long error")
             }
         }
 
@@ -150,17 +148,17 @@ export default function Registration() {
             }
 
             if (!phoneNumberRegex.test(String(phoneNumber))) {
-                newErrors.phoneNumber = "Phone number can contain only numbers!";
+                newErrors.phoneNumber = t("Phone number format error");
                 return;
             }
 
             if (phoneNumber.length < 9) {
-                newErrors.phoneNumber = "Phone number too short! Must be at least 9 characters long.";
+                newErrors.phoneNumber = t("Phone number too short error");
                 return;
             }
 
             if (phoneNumber.length > 15) {
-                newErrors.phoneNumber = "Phone number too long! Cannot be more than 15 characters long.";
+                newErrors.phoneNumber = t("Phone number too long error");
             }
         }
 
@@ -171,12 +169,12 @@ export default function Registration() {
             }
 
             if (!peselRegex.test(String(pesel))) {
-                newErrors.pesel = "Pesel can contain only numbers!";
+                newErrors.pesel = t("Pesel format error");
                 return;
             }
 
             if (pesel.length !== 11) {
-                newErrors.pesel = "Pesel must be 11 characters long!";
+                newErrors.pesel = t("Pesel length error");
                 return;
             }
 
@@ -190,13 +188,13 @@ export default function Registration() {
             sum = sum % 10;
 
             if ((10 - sum) % 10 !== controlNumber) {
-                newErrors.pesel = "Pesel is invalid!";
+                newErrors.pesel = t("Pesel control digit error");
             }
         }
 
         function findLanguageErrors() {
             if (selectedLanguage == null || selectedLanguage === '') {
-                newErrors.language = "Language must be selected!";
+                newErrors.language = t("Language not selected error");
             }
         }
 

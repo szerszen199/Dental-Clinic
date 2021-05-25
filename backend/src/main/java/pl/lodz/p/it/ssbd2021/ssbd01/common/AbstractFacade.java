@@ -7,7 +7,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.List;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
 /**
  * Klasa abstrakcyjna definiująca główne operacje wykonywane na encjach

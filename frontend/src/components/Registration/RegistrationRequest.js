@@ -17,10 +17,7 @@ export function registrationRequest(login, email, password, firstName, lastName,
     )
         .then(function (response) {
             console.log(JSON.stringify(response.data));
-            // window.location = "/home";
-            return <Alert key={"successAlery"} variant={"success"}>
-                Your account has been registered!
-            </Alert>;
+            window.location = "/home";
         })
         .catch(function (error) {
             console.log(JSON.stringify(error));
