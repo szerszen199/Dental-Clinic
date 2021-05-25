@@ -175,8 +175,9 @@ public class Account extends AbstractEntity implements Serializable {
      * @param lastName    nazwisko użytkownika
      * @param phoneNumber numer telefonu
      * @param pesel       pesel
+     * @param language    język
      */
-    public Account(String login, String email, String password, String firstName, String lastName, String phoneNumber, String pesel) {
+    public Account(String login, String email, String password, String firstName, String lastName, String phoneNumber, String pesel, String language) {
         this.login = login;
         this.email = email;
         this.password = password;
@@ -184,6 +185,7 @@ public class Account extends AbstractEntity implements Serializable {
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.pesel = pesel;
+        this.language = language;
     }
 
     /**
@@ -195,14 +197,16 @@ public class Account extends AbstractEntity implements Serializable {
      * @param lastName    nazwisko użytkownika
      * @param phoneNumber numer telefonu
      * @param pesel       the pesel
+     * @param language    język
      */
-    public Account(String login, String email, String firstName, String lastName, String phoneNumber, String pesel) {
+    public Account(String login, String email, String firstName, String lastName, String phoneNumber, String pesel, String language) {
         this.login = login;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.pesel = pesel;
+        this.language = language;
     }
 
     /**
@@ -216,8 +220,9 @@ public class Account extends AbstractEntity implements Serializable {
      * @param lastName    nazwisko użytkownika
      * @param phoneNumber numer telefonu
      * @param pesel       pesel
+     * @param language    język
      */
-    public Account(long id, String login, String email, String password, String firstName, String lastName, String phoneNumber, String pesel) {
+    public Account(long id, String login, String email, String password, String firstName, String lastName, String phoneNumber, String pesel, String language) {
         this.id = id;
         this.login = login;
         this.email = email;
@@ -226,6 +231,7 @@ public class Account extends AbstractEntity implements Serializable {
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.pesel = pesel;
+        this.language = language;
     }
 
     public LocalDateTime getLastBlockUnlockDateTime() {
