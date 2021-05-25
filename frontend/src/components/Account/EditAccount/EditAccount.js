@@ -23,8 +23,14 @@ class EditAccountWithoutTranslation extends React.Component {
     }
 
     componentDidMount() {
+        let requestPath
+        if (this.props.account === undefined) {
+            requestPath = process.env.REACT_APP_BACKEND_URL + "account/info"
+        } else {
+            requestPath = process.env.REACT_APP_BACKEND_URL + "account/other-account-info/" + this.props.account
+        }
         axios
-            .get(process.env.REACT_APP_BACKEND_URL + "account/info", {
+            .get(requestPath, {
                 headers: {
                     Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
                 }
@@ -123,7 +129,7 @@ class EditAccountWithoutTranslation extends React.Component {
             if (t.state.pesel === "") {
                 pesel = null;
             }
-            editAccountRequest(t.state.email, t.state.firstName, t.state.lastName, phoneNumber, pesel, t.state.version, t.state.etag)
+            editAccountRequest(t.state.email, t.state.firstName, t.state.lastName, phoneNumber, pesel, t.state.version, t.state.etag, t.props.account)
         }
     }
 
@@ -192,10 +198,10 @@ class EditAccountWithoutTranslation extends React.Component {
 
 const EditAccountTr = withTranslation()(EditAccountWithoutTranslation)
 
-export default function EditAccount() {
+export default function EditAccount(props) {
     return (
         <Suspense fallback="loading">
-            <EditAccountTr/>
+            <EditAccountTr account={props.account}/>
         </Suspense>
     );
 }

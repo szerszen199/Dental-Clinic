@@ -657,7 +657,7 @@ public class AccountEndpoint {
         try {
             accountInfoResponseDTOList = accountManager.getAllAccounts()
                     .stream()
-                    .map(AccountInfoResponseDTO::new)
+                    .map(AccountInfoWithAccessLevelsResponseDto::new)
                     .collect(Collectors.toList());
         } catch (AccountException e) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
