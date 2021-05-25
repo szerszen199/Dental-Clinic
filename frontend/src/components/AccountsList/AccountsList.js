@@ -69,7 +69,6 @@ class AccountsListWithoutTranslation extends React.Component {
 
     linkEdit = (cell, row, rowIndex, formatExtraData) => {
         const {t} = this.props;
-        console.log(this.state.accountsList[rowIndex].login)
         return (
             <Link to={"/other-account/" + this.state.accountsList[rowIndex].login}>
                 <Button variant="outline-secondary" >
