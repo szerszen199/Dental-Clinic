@@ -48,7 +48,12 @@ class MainViewWithoutTranslation extends React.Component {
             language: "PL",
             flag: this.urlEN,
             login: "",
-
+        }
+        let languageCheck = Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE)
+        if (typeof languageCheck !== 'undefined' && languageCheck !== null && languageCheck !== "null" && languageCheck !== undefined) {
+            this.setState({
+                language: Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE)
+            })
         }
     }
 
