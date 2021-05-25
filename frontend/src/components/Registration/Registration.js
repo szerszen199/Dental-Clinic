@@ -87,35 +87,19 @@ export default function Registration() {
             }
         }
 
-        function findPasswordErrors() {
+        function findPasswordErrors(pwd) {
             if (password === '') {
-                newErrors.password = "Password blank error";
+                newErrors.pwd = "Password blank error";
                 return;
             }
 
             if (password.length < 8) {
-                newErrors.password = "Password too short error";
+                newErrors.pwd = "Password too short error";
                 return;
             }
 
             if (password !== repeatedPassword) {
-                newErrors.password = "Passwords mismatch error";
-            }
-        }
-
-        function findRepeatedPasswordErrors() {
-            if (repeatedPassword === '') {
-                newErrors.repeatedPassword ="Password blank error";
-                return;
-            }
-
-            if (repeatedPassword.length < 8) {
-                newErrors.repeatedPassword = "Password too short error";
-                return;
-            }
-
-            if (password !== repeatedPassword) {
-                newErrors.repeatedPassword = "Passwords mismatch error";
+                newErrors.pwd = "Passwords mismatch error";
             }
         }
 
@@ -136,7 +120,7 @@ export default function Registration() {
                 return;
             }
 
-            if (lastName.length > 50) {
+            if (lastName.length > 80) {
                 newErrors.lastName = "Last name too long error";
             }
         }
@@ -200,8 +184,8 @@ export default function Registration() {
 
         findLoginErrors();
         findEmailErrors();
-        findPasswordErrors();
-        findRepeatedPasswordErrors();
+        findPasswordErrors(password);
+        findPasswordErrors(repeatedPassword);
         findFirstNameErrors();
         findLastNameErrors();
         findPhoneNumberErrors();

@@ -1,14 +1,12 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request;
 
-import com.sun.istack.Nullable;
-import org.hibernate.validator.constraints.pl.PESEL;
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.pl.PESEL;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 
 /**
  * Klasa Dto dla nowo tworzonego konta.
@@ -33,7 +31,7 @@ public class CreateAccountRequestDTO {
     private String firstName;
 
     @NotNull(message = I18n.LAST_NAME_NULL)
-    @Size(min = 1, max = 50, message = I18n.LAST_NAME_INVALID_SIZE)
+    @Size(min = 1, max = 80, message = I18n.LAST_NAME_INVALID_SIZE)
     private String lastName;
 
     @Size(min = 9, max = 15, message = I18n.PHONE_NUMBER_INVALID_SIZE)
