@@ -1,5 +1,4 @@
 import axios from "axios";
-import React from "react";
 
 export function registrationRequest(login, email, password, firstName, lastName, phoneNumber, pesel, language) {
 
@@ -14,11 +13,12 @@ export function registrationRequest(login, email, password, firstName, lastName,
             language: language
         }
     )
-        .then(function (response) {
+        .then((response) => {
             console.log(JSON.stringify(response.data));
+            console.log(JSON.stringify(response.statusText));
             window.location = "/home";
         })
-        .catch(function (error) {
+        .catch((error) => {
             console.log(JSON.stringify(error));
         });
 }

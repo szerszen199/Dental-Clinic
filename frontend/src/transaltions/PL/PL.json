@@ -21,7 +21,7 @@
   "Pesel": "Pesel",
   "Edit": "Edytuj",
   "Save": "Zapisz",
-  "UserLogin": "Login",
+  "UserLogin": "Nazwa użytkownika",
   "Current password": "Aktualne hasło",
   "New password": "Nowe hasło",
   "Repeat new password": "Powtórz nowe hasło",
@@ -69,5 +69,6 @@
   "Language not selected error": "Wybierz język!",
   "Select language": "Wybierz język",
   "Polish": "Polski",
-  "English": "Angielski"
+  "English": "Angielski",
+  "Language": "Język"
 }
