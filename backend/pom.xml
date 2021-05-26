@@ -216,7 +216,7 @@
                             </arguments>
                             <environmentVariables>
                                 <NPM_CONFIG_PREFIX>${project.build.directory}</NPM_CONFIG_PREFIX>
-                                <NPM_CONFIG_CACHE>$/tmp/ssbd01/</NPM_CONFIG_CACHE>
+                                <NPM_CONFIG_CACHE>/tmp/ssbd01/</NPM_CONFIG_CACHE>
                             </environmentVariables>
                             <workingDirectory>${frontend.directory}</workingDirectory>
                         </configuration>
@@ -255,18 +255,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <compilerArguments>
-                        <endorseddirs>${endorsed.dir}</endorseddirs>
-                    </compilerArguments>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
