@@ -1,0 +1,10 @@
+.required:after {
+    content:"*";
+    top:-2px;
+    right:-10px;
+    color:#c00 ;
+    font-family: FontAwesome, serif;
+    font-style: normal;
+    font-weight: 200;
+    text-decoration: inherit;
+}

@@ -89,17 +89,17 @@ export default function Registration() {
 
         function findPasswordErrors(pwd) {
             if (password === '') {
-                newErrors.pwd = "Password blank error";
+                newErrors[pwd] = "Password blank error";
                 return;
             }
 
             if (password.length < 8) {
-                newErrors.pwd = "Password too short error";
+                newErrors[pwd] = "Password too short error";
                 return;
             }
 
             if (password !== repeatedPassword) {
-                newErrors.pwd = "Passwords mismatch error";
+                newErrors[pwd] = "Passwords mismatch error";
             }
         }
 
@@ -184,8 +184,8 @@ export default function Registration() {
 
         findLoginErrors();
         findEmailErrors();
-        findPasswordErrors(password);
-        findPasswordErrors(repeatedPassword);
+        findPasswordErrors('password');
+        findPasswordErrors('repeatedPassword');
         findFirstNameErrors();
         findLastNameErrors();
         findPhoneNumberErrors();
@@ -213,7 +213,7 @@ export default function Registration() {
             <Form noValidate onSubmit={handleSubmit}>
                 <Form.Row>
                     <Form.Group as={Col} size="lg" controlId="login">
-                        <Form.Label>{t("UserLogin")}*</Form.Label>
+                        <Form.Label className="required">{t("UserLogin")}</Form.Label>
                         <Form.Control
                             required
                             placeholder={t("UserLogin")}
@@ -231,7 +231,7 @@ export default function Registration() {
                         </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group as={Col} size="lg" controlId="email">
-                        <Form.Label>{t("Email")}*</Form.Label>
+                        <Form.Label className="required">{t("Email")}</Form.Label>
                         <Form.Control
                             required
                             placeholder={t("Email")}
@@ -250,7 +250,7 @@ export default function Registration() {
                 </Form.Row>
                 <Form.Row>
                     <Form.Group as={Col} size="lg" controlId="password">
-                        <Form.Label>{t("Password")}*</Form.Label>
+                        <Form.Label className="required">{t("Password")}</Form.Label>
                         <Form.Control
                             required
                             placeholder={t("Password")}
@@ -267,7 +267,7 @@ export default function Registration() {
                         </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group as={Col} size="lg" controlId="repeatedPassword">
-                        <Form.Label>{t("Repeat new password")}*</Form.Label>
+                        <Form.Label className="required">{t("Repeat new password")}</Form.Label>
                         <Form.Control
                             required
                             placeholder={t("Repeat new password")}
@@ -286,7 +286,7 @@ export default function Registration() {
                 </Form.Row>
                 <Form.Row>
                     <Form.Group as={Col} size="lg" controlId="firstName">
-                        <Form.Label>{t("First Name")}*</Form.Label>
+                        <Form.Label className="required">{t("First Name")}</Form.Label>
                         <Form.Control
                             required
                             placeholder={t("First Name")}
@@ -303,7 +303,7 @@ export default function Registration() {
                         </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group as={Col} size="lg" controlId="lastName">
-                        <Form.Label>{t("Last Name")}*</Form.Label>
+                        <Form.Label className="required">{t("Last Name")}</Form.Label>
                         <Form.Control
                             required
                             placeholder={t("Last Name")}
@@ -354,7 +354,7 @@ export default function Registration() {
                         </Form.Control.Feedback>
                     </Form.Group>
                 </Form.Row>
-                <Form.Label>{t("Language")}*</Form.Label>
+                <Form.Label className="required">{t("Language")}</Form.Label>
                 <Form.Row>
                     <Form.Group as={Col} size="lg" controlId="language">
                         <Dropdown

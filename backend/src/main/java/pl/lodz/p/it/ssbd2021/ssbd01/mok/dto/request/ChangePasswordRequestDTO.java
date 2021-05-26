@@ -24,8 +24,15 @@ public class ChangePasswordRequestDTO {
     @NotNull(message = I18n.PASSWORD_NULL)
     private String secondPassword;
 
+
     /**
-     * Tworzy nową instancję klasy NewPasswordDTO reprezentującej zmianę hasła własnego konta.
+     * Tworzy nową instancję klasy ChangePasswordRequestDTO.
+     */
+    public ChangePasswordRequestDTO() {
+    }
+
+    /**
+     * Tworzy nową instancję klasy ChangePasswordRequestDTO reprezentującej zmianę hasła własnego konta.
      *
      * @param oldPassword    aktualne hasło
      * @param firstPassword  pierwsze powtórzenie nowego hasła
