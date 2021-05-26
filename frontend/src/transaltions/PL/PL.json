@@ -55,6 +55,7 @@
   "Email too long error": "Adres email jest zbyt długi! Nie może być dłuższy niż 100 znaków.",
   "Password blank error": "Hasło nie może być puste!",
   "Password format error": "Hasło zbyt krótkie! Nie może być krótsze niż 8 znaków.",
+  "Password too short error": "Hasło zbyt krótkie! Nie może być krótsze niż 8 znaków.",
   "Passwords mismatch error": "Hasła różnią się!",
   "First name blank error": "Imię nie może być puste!",
   "First name too long error": "Imię jest zbyt długie! Nie może być dłuższe niż 50 znaków.",
