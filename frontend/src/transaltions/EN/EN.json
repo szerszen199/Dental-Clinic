@@ -55,6 +55,7 @@
   "Email too long error": "Email too long! Cannot be more than 100 characters long.",
   "Password blank error": "Password cannot be blank!",
   "Password format error": "Password too short! Must be at least 8 characters long.",
+  "Password too short error": "Password too short! Must be at least 8 characters long.",
   "Passwords mismatch error": "Passwords mismatch!",
   "First name blank error": "First name cannot be blank!",
   "First name too long error": "First name too long! Cannot be more than 50 characters long.",
@@ -70,5 +71,10 @@
   "Select language": "Select language",
   "Polish": "Polish",
   "English": "English",
-  "Language": "Language"
+  "Language": "Language",
+  "Warning": "Warning!",
+  "Success": "Success!",
+  "Error": "Error!",
+  "Question edit password": "Do you want to edit your password?",
+  "Question edit account": "Do you want to edit account?"
 }

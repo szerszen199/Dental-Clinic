@@ -168,12 +168,12 @@ public class LoginEndpoint {
             if (account.getUnsuccessfulLoginCounter() >= propertiesLoader.getInvalidLoginCountBlock() && account.getActive()) {
                 try {
                     accountManager.lockAccount(account.getLogin());
+                    mailProvider.sendAccountLockByUnsuccessfulLoginMail(account.getEmail(), account.getLanguage());
                 } catch (AccountException accountException) {
                     return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
                 } catch (Exception e) {
                     return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.LOGIN_FAILURE)).build();
                 }
-                // TODO: 11.05.2021 informacja na maila? Idk
             }
             Logger.getGlobal().log(Level.INFO, "Nieudana próba logowania na konto {0} z adresu {1}", new Object[]{account.getLogin(), ip});
 

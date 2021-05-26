@@ -8,19 +8,19 @@ import {useParams} from "react-router-dom";
 
 // TODO adding roles
 function OtherAccount(props) {
-    let { accId } = useParams();
+    let {accId} = useParams();
     return (
         <div className="OtherAccount">
             <Container>
                 <Row>
                     <Col style={{maxWidth: "515px"}}>
-                        <Label className={"LoginLabel"}>
+                        <Label className={"LoginLabel required"} >
                             Login
                         </Label>
                         <FormControl
-                        type="text"
-                        disabled={true}
-                        value={accId}
+                            type="text"
+                            disabled={true}
+                            value={accId}
                         />
                     </Col>
                     <Col style={{maxWidth: "60px"}}/>
