@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import "./EditPassword.css";
 import {withTranslation} from "react-i18next";
 import confirmationAlerts from "../../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
+import {editPasswordRequest} from "./EditPasswordRequest";
 
 class EditPasswordWithoutTranslation extends React.Component {
     constructor(props) {
@@ -71,6 +72,7 @@ class EditPasswordWithoutTranslation extends React.Component {
                     confirmationAlerts(title, question).then((confirmed) => {
                         if (confirmed) {
                             this.setNotEditable(this);
+                            editPasswordRequest(this.state.currentPassword, this.state.password, this.state.repeatedPassword)
                         }
                     })
                 }
@@ -81,8 +83,7 @@ class EditPasswordWithoutTranslation extends React.Component {
 
     setEditable() {
         this.setState({
-            isDisabled: false,
-            text: "Save password"
+            isDisabled: false
         });
     }
 
