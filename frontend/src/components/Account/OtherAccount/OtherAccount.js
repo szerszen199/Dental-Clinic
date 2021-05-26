@@ -14,7 +14,7 @@ function OtherAccount(props) {
             <Container>
                 <Row>
                     <Col style={{maxWidth: "515px"}}>
-                        <Label className={"LoginLabel"}>
+                        <Label className={"LoginLabel required"} >
                             Login
                         </Label>
                         <FormControl
