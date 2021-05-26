@@ -2,6 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@babel/preset-env": "^7.13.13",
     "@babel/preset-react": "^7.13.13",
