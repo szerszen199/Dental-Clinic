@@ -124,6 +124,8 @@ public class I18n {
     public static final String PASSWORD_RESET_MAIL_SENT_ERROR = "password_reset_mail_sent_error";
     public static final String ACCOUNT_MAIL_PASSWORD_CONFIRMATION_SUBJECT = "account_mail_pass_confirmation_subject";
     public static final String ACCOUNT_MAIL_PASSWORD_CONFIRMATION_TEXT = "account_mail_pass_confirmation_text";
+    public static final String ACCOUNT_MAIL_GRANT_ACCESS_LEVEL_SUBJECT = "account_mail_grant_access_level_subject";
+    public static final String ACCOUNT_MAIL_GRANT_ACCESS_LEVEL_TEXT = "account_mail_grant_access_level_text";
 
     public static final String ACCOUNT_MAIL_UNLOCK_BY_ADMIN_SUBJECT = "account_mail_unlock_by_admin_subject";
     public static final String ACCOUNT_MAIL_UNLOCK_BY_ADMIN_TEXT = "account_mail_unlock_by_admin_text";
