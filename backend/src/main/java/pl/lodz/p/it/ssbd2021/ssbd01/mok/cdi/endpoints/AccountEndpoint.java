@@ -589,7 +589,14 @@ public class AccountEndpoint {
             }
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
-
+        try {
+            Account account = accountManager.findByLogin(revokeAndGrantAccessLevelDTO.getLogin());
+            mailProvider.sendAccountGrantAccessLevelMail(account.getEmail(), revokeAndGrantAccessLevelDTO.getLevel(), account.getLanguage());
+        } catch (MailSendingException accountException) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCESS_LEVEL_ADD_FAILED)).build();
+        }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCESS_LEVEL_ADDED_SUCCESSFULLY)).build();
     }
 
