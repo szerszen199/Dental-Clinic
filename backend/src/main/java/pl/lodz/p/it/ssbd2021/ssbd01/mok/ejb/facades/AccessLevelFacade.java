@@ -43,12 +43,18 @@ public class AccessLevelFacade extends AbstractFacade<AccessLevel> {
         super(entityClass);
     }
 
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
+    }
+
     /**
-     * Find by account login and access level access level - znalezienie poziomu dostępu dla użytkownika o {@param login}.
+     * Znajduje poziom dostępu konta o loginie {@param login} na podstawie nazwy
+     * poziomu dostępu.
      *
      * @param login login użytkownika
-     * @param level level szukany poziom dostępu
-     * @return access level zadany poziom dostępu dla zadanego użytkownika
+     * @param level szukany poziom dostępu
+     * @return zadany poziom dostępu dla zadanego użytkownika
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     public AccessLevel findByAccountLoginAndAccessLevel(String login, String level) throws AppBaseException {
@@ -65,11 +71,12 @@ public class AccessLevelFacade extends AbstractFacade<AccessLevel> {
     }
 
     /**
-     * Find by account id and access level access level - znalezienie poziomu dostępu dla użytkownika o  {@param id}.
+     * Znajduje poziom dostępu konta o kluczu głównym {@param login} na podstawie nazwy
+     * poziomu dostępu.
      *
      * @param id    id użytkownika
-     * @param level level szukany poziom dostępu
-     * @return access level zadany poziom dostępu dla zadanego użytkownika
+     * @param level szukany poziom dostępu
+     * @return zadany poziom dostępu dla zadanego użytkownika
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     public AccessLevel findByAccountIdAndAccessLevel(Long id, String level) throws AppBaseException {
@@ -83,10 +90,5 @@ public class AccessLevelFacade extends AbstractFacade<AccessLevel> {
         } catch (PersistenceException e) {
             throw AppBaseException.databaseError(e);
         }
-    }
-
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
     }
 }

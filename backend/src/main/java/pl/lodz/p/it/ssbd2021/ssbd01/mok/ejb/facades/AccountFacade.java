@@ -1,21 +1,20 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades;
 
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.interceptor.Interceptors;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.OptimisticLockException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
-import javax.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.interceptor.Interceptors;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 /**
@@ -51,10 +50,10 @@ public class AccountFacade extends AbstractFacade<Account> {
     }
 
     /**
-     * Find by login account.
+     * Wyszukuje konta na podstawie danego loginu.
      *
      * @param login login
-     * @return account
+     * @return konto
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     public Account findByLogin(String login) throws AppBaseException {
@@ -70,35 +69,66 @@ public class AccountFacade extends AbstractFacade<Account> {
 
     }
 
-    @Override
-    public void edit(Account entity) throws AppBaseException {
+    /**
+     * Wyszukuje konta na podstawie danego loginu lub emaila.
+     *
+     * @param login login
+     * @param email email
+     * @param pesel pesel
+     * @return konto
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    public Account findByLoginOrEmailOrPesel(String login, String email, String pesel) throws AppBaseException {
         try {
-            Account oldAcc = findByLogin(entity.getLogin());
-            Account newAcc = new Account(oldAcc.getId(), entity.getLogin(), entity.getEmail(),
-                    entity.getPassword(), entity.getFirstName(), entity.getLastName(), entity.getPhoneNumber(), entity.getPesel());
-            super.edit(newAcc);
-        } catch (OptimisticLockException e) {
-            throw AppBaseException.optimisticLockError(e);
+            TypedQuery<Account> tq = em.createNamedQuery("Account.findByLoginOrEmailOrPesel", Account.class);
+            tq.setParameter("email", email);
+            tq.setParameter("login", login);
+            tq.setParameter("pesel", pesel);
+            return tq.getSingleResult();
+        } catch (NoResultException e) {
+            throw AccountException.noSuchAccount(e);
         } catch (PersistenceException e) {
             throw AppBaseException.databaseError(e);
         }
     }
 
     /**
-     * Find by enabled list.
+     * Wyszukuje kont na podstawie pola 'enabled'.
      *
-     * @param enabled the enabled
-     * @return the list
-     * @throws PersistenceException the persistence exception
+     * @param enabled wartość pola 'enabled'
+     * @return lista kont o podanej wartości pola 'enabled'
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
-    public List<Account> findByEnabled(Boolean enabled) throws PersistenceException {
+    public List<Account> findByEnabled(Boolean enabled) throws AppBaseException {
         try {
             TypedQuery<Account> tq = em.createNamedQuery("Account.findByEnabled", Account.class);
             tq.setParameter("enabled", enabled);
             return tq.getResultList();
         } catch (PersistenceException e) {
-            throw e;
+            throw AppBaseException.databaseError(e);
+        } catch (IllegalArgumentException e) {
+            throw AppBaseException.mismatchedPersistenceArguments(e);
         }
     }
+
+    /**
+     * Wyszukuje kont na podstawie pola 'enabled'.
+     *
+     * @param active wartość pola 'enabled'
+     * @return lista kont o podanej wartości pola 'enabled'
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    public List<Account> findByActive(Boolean active) throws AppBaseException {
+        try {
+            TypedQuery<Account> tq = em.createNamedQuery("Account.findByActive", Account.class);
+            tq.setParameter("active", active);
+            return tq.getResultList();
+        } catch (PersistenceException e) {
+            throw AppBaseException.databaseError(e);
+        } catch (IllegalArgumentException e) {
+            throw AppBaseException.mismatchedPersistenceArguments(e);
+        }
+    }
+
 
 }

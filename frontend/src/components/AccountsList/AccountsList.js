@@ -1,52 +1,103 @@
-import React from "react";
+import React, {Suspense} from "react";
 import "./AccountsList.css";
-import {Table} from "react-bootstrap";
+import {makeAccountsListRequest} from "./AccountsListRequest";
+import {withTranslation} from "react-i18next";
+import BootstrapTable from 'react-bootstrap-table-next';
+import { Button } from "react-bootstrap";
+import filterFactory, {textFilter} from 'react-bootstrap-table2-filter';
+import {Link} from "react-router-dom";
+import edit from "../../assets/edit.png"
 
-export default class AccountsList extends Comment {
+class AccountsListWithoutTranslation extends React.Component {
 
 
     constructor(props) {
         super(props);
-        this.accountsList = [new Account("Jan Kowalski", "jkowalski@yahoo.com"), new Account("Adam Nowak", "adamnowak@gmail.com"), new Account("Anna Kowalska", "aka@gmail.com"), new Account("Janek Kowal", "janektoja@gmail.com")]
+        this.state = {
+            accountsList: []
+        };
     }
 
-    renderAccount(person, index) {
+    componentDidMount() {
+        makeAccountsListRequest().then((response) => {
+            this.setState({accountsList: response})
+        })
+    }
+
+    renderAccounts() {
+        const {t} = this.props;
+
+        const columns = [
+
+            {
+                dataField: 'login',
+                text: t('UserLogin'),
+                filter: textFilter({
+                    placeholder: t("Filter"),
+                    style: {marginLeft: "10px"}
+                }),
+                style: {verticalAlign: "middle"}
+            },
+            {
+                dataField: 'name',
+                text: t('Name and Surname'),
+                filter: textFilter({
+                    placeholder: t("Filter"),
+                    style: {marginLeft: "10px"}
+                }),
+                style: {verticalAlign: "middle"}
+            },
+            {
+                dataField: 'email',
+                text: t('Email'),
+                filter: textFilter({
+                    placeholder: t("Filter"),
+                    style: {marginLeft: "10px"}
+                }),
+                style: {verticalAlign: "middle"}
+            },
+            {
+                dataField: 'actions',
+                text: t('Actions'),
+                headerStyle: {verticalAlign: "middle"},
+                style: {textAlign: "center"},
+                formatter: this.linkEdit
+            }
+        ]
+        return <BootstrapTable striped keyField='login' columns={columns} data={this.state.accountsList} filter={filterFactory()}/>;
+    }
+
+    linkEdit = (cell, row, rowIndex, formatExtraData) => {
+        const {t} = this.props;
         return (
-            <tr key={index}>
-                <td>1</td>
-                <td>{person.name}</td>
-                <td>{person.email}</td>
-            </tr>
-        )
+            <Link to={"/other-account/" + this.state.accountsList[rowIndex].login}>
+                <Button variant="outline-secondary" >
+                    <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}/>
+                </Button>
+            </Link>
+        );
+    }
+
+    renderNull() {
+        const {t} = this.props;
+        return <div>{t('Loading')}</div>
+
     }
 
     render() {
         return <div className="AccountListGroup">
-            <Table striped bordered hover>
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>
-                        <div className="NameInfo">Name and surname</div>
-                    </th>
-                    <th>
-                        <div className="EmailInfo">Email</div>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                {this.accountsList.map(this.renderAccount)}
-                </tbody>
-            </Table>
+            {!this.state.accountsList.length ? this.renderNull() : this.renderAccounts()}
         </div>
     }
 }
 
-class Account {
-    constructor(name, email) {
-        this.name = name;
-        this.email = email;
-    }
 
+const AccountsListTr = withTranslation()(AccountsListWithoutTranslation)
+
+export default function AccountsList() {
+    return (
+        <Suspense fallback="loading">
+            <AccountsListTr/>
+        </Suspense>
+    );
 }
-

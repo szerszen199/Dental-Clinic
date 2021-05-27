@@ -1,16 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
-import java.text.ParseException;
-import java.time.LocalDateTime;
-import java.util.List;
-import javax.ejb.EJB;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.servlet.ServletContext;
-
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AdminData;
@@ -18,19 +7,36 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.DataValidationException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsSameException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JWTRegistrationConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtEmailConfirmationUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtResetPasswordConfirmation;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtUnlockByMailConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.HashGenerator;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
+
+import javax.ejb.SessionSynchronization;
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
+import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.util.List;
 
 
 /**
@@ -39,7 +45,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
-public class AccountManagerImplementation extends AbstractManager implements AccountManager {
+public class AccountManagerImplementation extends AbstractManager implements AccountManager, SessionSynchronization {
 
     @Inject
     private AccountFacade accountFacade;
@@ -56,48 +62,126 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @Inject
     private RandomPasswordGenerator passwordGenerator;
 
-    @EJB
+    @Inject
     private JwtEmailConfirmationUtils jwtEmailConfirmationUtils;
+
+    @Inject
+    private HttpServletRequest request;
+
+    @Inject
+    private JWTRegistrationConfirmationUtils jwtRegistrationConfirmationUtils;
+
+    @Inject
+    private JwtUnlockByMailConfirmationUtils jwtUnlockByMailConfirmationUtils;
 
     @Inject
     private MailProvider mailProvider;
 
-    @Override
-    public void createAccount(Account account, ServletContext servletContext) throws AppBaseException {
-        account.setPassword(hashGenerator.generateHash(account.getPassword()));
+    @Inject
+    private JwtResetPasswordConfirmation jwtResetPasswordConfirmation;
+    @Inject
+    private PropertiesLoader propertiesLoader;
 
-        AccessLevel patientData = new PatientData();
-        patientData.setActive(true);
+    @Override
+    public void createAccount(Account account) throws AccountException, MailSendingException {
+        String requestIp = IpAddressUtils.getClientIpAddressFromHttpServletRequest(request);
+        account.setPassword(hashGenerator.generateHash(account.getPassword()));
+        account.setCreatedByIp(requestIp);
+
+        // TODO: 21.05.2021  Przetestować czy dzialaja dobrze constructory przed wstawieniem
+        AccessLevel patientData = new PatientData(account, true);
         patientData.setCreatedBy(account);
-        patientData.setAccountId(account);
         account.getAccessLevels().add(patientData);
 
-        AccessLevel receptionistData = new ReceptionistData();
-        receptionistData.setActive(false);
+        AccessLevel receptionistData = new ReceptionistData(account, false);
         receptionistData.setCreatedBy(account);
-        receptionistData.setAccountId(account);
         account.getAccessLevels().add(receptionistData);
 
-        AccessLevel doctorData = new DoctorData();
-        doctorData.setActive(false);
+        AccessLevel doctorData = new DoctorData(account, false);
         doctorData.setCreatedBy(account);
-        doctorData.setAccountId(account);
         account.getAccessLevels().add(doctorData);
 
-        AccessLevel adminData = new AdminData();
-        adminData.setActive(false);
+        AccessLevel adminData = new AdminData(account, false);
         adminData.setCreatedBy(account);
-        adminData.setAccountId(account);
         account.getAccessLevels().add(adminData);
 
-        account.setCreatedBy(account);
-        accountFacade.create(account);
+        try {
+            accountFacade.findByLoginOrEmailOrPesel(account.getLogin(), account.getEmail(), account.getPesel());
+        } catch (AccountException accountException) {
+            account.setCreatedBy(account);
+            try {
+                accountFacade.create(account);
+            } catch (Exception e) {
+                throw AccountException.accountCreationFailed();
+            }
+            try {
+                mailProvider.sendActivationMail(
+                        account.getEmail(),
+                        jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(account.getLogin()), account.getLanguage()
+                );
+            } catch (Exception e) {
+                throw MailSendingException.activationLink();
+            }
+            return;
+        } catch (AppBaseException e) {
+            throw AccountException.accountCreationFailed();
+        }
+        throw AccountException.accountLoginEmailPeselExists();
+    }
 
-        mailProvider.sendActivationMail(
-                account.getEmail(),
-                servletContext.getContextPath(),
-                jwtEmailConfirmationUtils.generateRegistrationConfirmationJwtTokenForUser(account.getLogin())
-        );
+    @Override
+    public void createAccountByAdministrator(Account account) throws AppBaseException {
+
+        Account adminAccount = this.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        String requestIp = IpAddressUtils.getClientIpAddressFromHttpServletRequest(request);
+        account.setPassword(hashGenerator.generateHash(account.getPassword()));
+        account.setCreatedByIp(requestIp);
+
+        AccessLevel patientData = new PatientData(account, true);
+        patientData.setCreatedBy(adminAccount);
+        account.getAccessLevels().add(patientData);
+
+        AccessLevel receptionistData = new ReceptionistData(account, false);
+        receptionistData.setCreatedBy(adminAccount);
+        account.getAccessLevels().add(receptionistData);
+
+        AccessLevel doctorData = new DoctorData(account, false);
+        doctorData.setCreatedBy(adminAccount);
+        account.getAccessLevels().add(doctorData);
+
+        AccessLevel adminData = new AdminData(account, false);
+        adminData.setCreatedBy(adminAccount);
+        account.getAccessLevels().add(adminData);
+
+
+        try {
+            accountFacade.findByLoginOrEmailOrPesel(account.getLogin(), account.getEmail(), account.getPesel());
+        } catch (AccountException accountException) {
+            account.setCreatedBy(adminAccount);
+            try {
+                accountFacade.create(account);
+            } catch (Exception e) {
+                throw AccountException.accountCreationFailed();
+            }
+            try {
+                mailProvider.sendActivationMail(
+                        account.getEmail(),
+                        jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(account.getLogin()), account.getLanguage()
+                );
+            } catch (Exception e) {
+                throw MailSendingException.activationLink();
+            }
+            try {
+                this.sendResetPasswordConfirmationEmail(account.getLogin());
+            } catch (Exception e) {
+                throw MailSendingException.editAccountMail();
+            }
+            return;
+        } catch (AppBaseException e) {
+            throw AccountException.accountCreationFailed();
+        }
+        throw AccountException.accountLoginEmailPeselExists();
+
     }
 
     @Override
@@ -107,70 +191,275 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void confirmAccount(Long id) throws AppBaseException {
-        accountFacade.find(id).setEnabled(true);
+    public void setActiveFalse(String login) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
+        account.setActive(false);
+        accountFacade.edit(account);
     }
 
     @Override
-    public void confirmAccountByToken(String jwt) throws AppBaseException {
-        if (!jwtEmailConfirmationUtils.validateRegistrationConfirmationJwtToken(jwt)) {
+    public void setEmailRecallTrue(String login) throws AppBaseException {
+        Account account = accountFacade.findByLogin(login);
+        account.setEmailRecall(true);
+        accountFacade.edit(account);
+    }
+
+
+    @Override
+    public void confirmAccountByToken(String jwt) throws AccountException, MailSendingException {
+        if (!jwtEmailConfirmationUtils.validateJwtToken(jwt)) {
+            throw AccountException.invalidConfirmationToken();
+        }
+        String login;
+        Account account;
+        try {
+            login = jwtEmailConfirmationUtils.getUserNameFromJwtToken(jwt);
+        } catch (Exception e) {
             throw AccountException.invalidConfirmationToken();
         }
         try {
-            String login = jwtEmailConfirmationUtils.getUserNameFromRegistrationConfirmationJwtToken(jwt);
-            accountFacade.findByLogin(login).setEnabled(true);
-        } catch (AppBaseException | ParseException e) {
+            account = accountFacade.findByLogin(login);
+        } catch (Exception e) {
             throw AccountException.noSuchAccount(e);
+        }
+        account.setEnabled(true);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.accountConfirmationByTokenFailed();
+        }
+        try {
+            mailProvider.sendActivationConfirmationMail(account.getEmail(), account.getLanguage());
+        } catch (Exception e) {
+            throw MailSendingException.activationConfirmation();
+        }
+
+    }
+
+    @Override
+    public void resetPasswordByToken(String jwt) throws AccountException, MailSendingException, PasswordException {
+        if (!jwtResetPasswordConfirmation.validateJwtToken(jwt)) {
+            throw AccountException.invalidConfirmationToken();
+        }
+        try {
+            String input = jwtResetPasswordConfirmation.getUserNameFromJwtToken(jwt);
+            this.resetPassword(input, input);
+        } catch (ParseException e) {
+            throw AccountException.noSuchAccount(e);
+        } catch (MailSendingException e) {
+            throw MailSendingException.passwordResetMail();
         }
     }
 
     @Override
     public void lockAccount(String login) throws AppBaseException {
-        Account account = accountFacade.findByLogin(login);
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
         account.setActive(false);
+        account.setLastBlockUnlockDateTime(LocalDateTime.now());
+        account.setLastBlockUnlockIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        if (!loggedInAccountUtil.getLoggedInAccountLogin().equals(propertiesLoader.getAnonymousUserName())) {
+            // TODO: Zastanowić się i ustawić pole modifiedBy po zablokowaniu konta przez system po nieudanych logowaniach
+            account.setLastBlockUnlockModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+        }
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.accountLockFailed();
+        }
         // TODO: Zastanowić się i ustawić pole modifiedBy po zablokowaniu konta przez system po nieudanych logowaniach
         //account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
     }
 
     @Override
-    public void unlockAccount(String login) throws AppBaseException {
-        Account account = accountFacade.findByLogin(login);
+    public void unlockAccount(String login) throws AccountException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
+        account.setLastBlockUnlockDateTime(LocalDateTime.now());
+        account.setLastBlockUnlockIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         account.setActive(true);
-        accountFacade.edit(account);
+        try {
+            account.setLastBlockUnlockModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw AccountException.accountEditFailed();
+        }
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.accountUnlockFailed();
+        }
     }
 
     @Override
-    public void editAccount(Account account) throws AppBaseException {
+    public void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO) throws MailSendingException, AccountException {
+        Account toBeModified;
+        try {
+            toBeModified = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw AccountException.accountEditFailed();
+        }
+        this.commonEditAccount(editOwnAccountRequestDTO, toBeModified);
+    }
+
+    @Override
+    public void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO) throws AccountException, MailSendingException {
+        Account toBeModified;
+        try {
+            toBeModified = accountFacade.findByLogin(editAnotherAccountRequestDTO.getLogin());
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw AccountException.accountEditFailed();
+        }
+        this.commonEditAccount(editAnotherAccountRequestDTO, toBeModified);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
+    private void commonEditAccount(EditOwnAccountRequestDTO editAccountRequestDTO, Account account) throws MailSendingException, AccountException {
+        if (editAccountRequestDTO.getFirstName() != null) {
+            account.setFirstName(editAccountRequestDTO.getFirstName());
+        }
+        if (editAccountRequestDTO.getLastName() != null) {
+            account.setLastName(editAccountRequestDTO.getLastName());
+        }
+        if (editAccountRequestDTO.getEmail() != null && !account.getEmail().equals(editAccountRequestDTO.getEmail())) {
+            // TODO: 21.05.2021 Wysylac maila dopieo kiedy edit się powiódł?
+            try {
+                mailProvider.sendEmailChangeConfirmationMail(
+                        editAccountRequestDTO.getEmail(),
+                        jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(
+                                loggedInAccountUtil.getLoggedInAccountLogin(), editAccountRequestDTO.getEmail()),
+                        account.getLanguage()
+                );
+            } catch (MailSendingException mailSendingException) {
+                throw MailSendingException.editAccountMail();
+            }
+        }
+        if (editAccountRequestDTO.getPhoneNumber() != null) {
+            account.setPhoneNumber(editAccountRequestDTO.getPhoneNumber());
+        }
+        if (editAccountRequestDTO.getPesel() != null) {
+            account.setPesel(editAccountRequestDTO.getPesel());
+        }
+        try {
+            account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (Exception e) {
+            throw AccountException.accountEditFailed();
+        }
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.accountEditFailed();
+        }
+    }
+
+    @Override
+    public void confirmMailChangeByToken(String jwt) throws AccountException {
+        if (!jwtEmailConfirmationUtils.validateJwtToken(jwt)) {
+            throw AccountException.invalidConfirmationToken();
+        }
+        String login;
+        String newEmail;
+        try {
+            login = jwtEmailConfirmationUtils.getUsernameFromToken(jwt);
+            newEmail = jwtEmailConfirmationUtils.getEmailFromToken(jwt);
+        } catch (ParseException e) {
+            throw AccountException.invalidConfirmationToken();
+        }
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (Exception e) {
+            throw AccountException.emailConfirmationFailed();
+        }
         account.setModifiedBy(account);
-        Account old = accountFacade.findByLogin(account.getLogin());
-        if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
-            throw DataValidationException.accountEditValidationError();
+        account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        account.setEmail(newEmail);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.emailConfirmationFailed();
         }
-        accountFacade.edit(account);
     }
 
     @Override
-    public void editOtherAccount(Account account) throws AppBaseException {
-        account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
-        Account old = accountFacade.findByLogin(account.getLogin());
-        if (old.getActive() != account.getActive() || old.getEnabled() != account.getEnabled() || !old.getPesel().equals(account.getPesel())) {
-            throw DataValidationException.accountEditValidationError();
+    public void confirmUnlockByToken(String jwt) throws AccountException {
+        if (!jwtUnlockByMailConfirmationUtils.validateJwtToken(jwt)) {
+            throw AccountException.invalidConfirmationToken();
         }
-        accountFacade.edit(account);
+        String login;
+        try {
+            login = jwtUnlockByMailConfirmationUtils.getUserNameFromJwtToken(jwt);
+        } catch (ParseException e) {
+            throw AccountException.invalidConfirmationToken();
+        }
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (Exception e) {
+            throw AccountException.emailConfirmationFailed();
+        }
+        account.setModifiedBy(account);
+        account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        account.setActive(true);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.emailConfirmationFailed();
+        }
     }
 
     @Override
     public List<Account> getAllAccounts() throws AppBaseException {
-        return accountFacade.findAll();
+        try {
+            return accountFacade.findAll();
+        } catch (AppBaseException e) {
+            throw AccountException.getAllAccountsFailed();
+        }
     }
 
     @Override
     public void changePassword(String login, String oldPassword, String newPassword) throws AppBaseException {
-        Account account = accountFacade.findByLogin(login);
-        this.verifyOldPassword(account.getPassword(), oldPassword);
-        this.validateNewPassword(account.getPassword(), newPassword);
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw PasswordException.passwordChangeFailed();
+        }
+        account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+        account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        if (!account.getPassword().contentEquals(hashGenerator.generateHash(oldPassword))) {
+            throw PasswordException.currentPasswordNotMatch();
+        }
+        if (account.getPassword().contentEquals(hashGenerator.generateHash(newPassword))) {
+            throw PasswordException.passwordsNotDifferent();
+        }
         account.setPassword(hashGenerator.generateHash(newPassword));
-        accountFacade.edit(account);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw PasswordException.passwordChangeFailed();
+        }
     }
 
     @Override
@@ -179,95 +468,135 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public List<Account> findByEnabled(boolean enabled) {
+    public List<Account> findByEnabled(boolean enabled) throws AppBaseException {
         return accountFacade.findByEnabled(enabled);
     }
 
     @Override
-    public void resetPassword(Long id) throws AppBaseException {
-        Account account = accountFacade.find(id);
-        account.setPassword(generateNewRandomPassword());
-        // TODO: send mail with new password
+    public List<Account> findByActive(boolean enabled) throws AppBaseException {
+        return accountFacade.findByActive(enabled);
     }
 
     @Override
-    public void resetPassword(String login) throws AppBaseException {
-        Account account = accountFacade.findByLogin(login);
-        account.setPassword(generateNewRandomPassword());
+    public void resetPassword(String login, String whoResets) throws AccountException, MailSendingException, PasswordException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+            account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+            account.setModifiedBy(accountFacade.findByLogin(whoResets));
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
+        // TODO: 21.05.2021 Dlugosc do zmiennej w pliku konfiguracyjnym
+        String pass = passwordGenerator.generate(32);
+        account.setPassword(hashGenerator.generateHash(pass));
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw PasswordException.passwordResetFailed();
+        }
+        mailProvider.sendGeneratedPasswordMail(account.getEmail(), pass, account.getLanguage());
+    }
+
+    @Override
+    public void sendResetPasswordConfirmationEmail(String login) throws AppBaseException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
+        try {
+            mailProvider.sendResetPassConfirmationMail(
+                    account.getEmail(),
+                    jwtResetPasswordConfirmation.generateJwtTokenForUsername(
+                            login), account.getLanguage()
+            );
+        } catch (MailSendingException mailSendingException) {
+            throw MailSendingException.editAccountMail();
+        }
         // TODO: send mail with new password
-    }
-
-    private String generateNewRandomPassword() {
-        String generatedPassword = passwordGenerator.generate(8);
-        return hashGenerator.generateHash(generatedPassword);
-    }
-
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    private void setLastSuccessfulLoginIp(Account account, String ip) throws AppBaseException {
-        account.setLastSuccessfulLoginIp(ip);
-    }
-
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    private void setLastSuccessfulLoginTime(Account account, LocalDateTime time) throws AppBaseException {
-        account.setLastSuccessfulLogin(time);
-    }
-
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    private void increaseInvalidLoginCount(Account account) throws AppBaseException {
-        account.setUnsuccessfulLoginCounter(account.getUnsuccessfulLoginCounter() + 1);
-    }
-
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    private void zeroInvalidLoginCount(Account account) throws AppBaseException {
-        account.setUnsuccessfulLoginCounter(0);
-    }
-
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    private void setLastUnsuccessfulLoginTime(Account account, LocalDateTime time) throws AppBaseException {
-        account.setLastUnsuccessfulLogin(time);
     }
 
     @Override
     public void updateAfterSuccessfulLogin(String login, String ip, LocalDateTime time) throws AppBaseException {
-        Account account = findByLogin(login);
-        setLastSuccessfulLoginIp(account, ip);
-        setLastSuccessfulLoginTime(account, time);
-        zeroInvalidLoginCount(account);
-        //        accountFacade.edit(account);
+        Account account;
+        try {
+            account = findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw AccountException.accountEditFailed();
+        }
+        account.setLastSuccessfulLoginIp(ip);
+        account.setLastSuccessfulLogin(time);
+        account.setUnsuccessfulLoginCounter(0);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.updateAfterSuccessfulLogin();
+        }
     }
 
     @Override
     public void updateAfterUnsuccessfulLogin(String login, String ip, LocalDateTime time) throws AppBaseException {
-        Account account = findByLogin(login);
-        setLastUnsuccessfulLoginIp(account, ip);
-        setLastUnsuccessfulLoginTime(account, time);
-        increaseInvalidLoginCount(account);
-        //        accountFacade.edit(account);
-    }
-
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    private void setLastUnsuccessfulLoginIp(Account account, String ip) throws AppBaseException {
+        Account account;
+        try {
+            account = findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw AccountException.accountEditFailed();
+        }
         account.setLastUnsuccessfulLoginIp(ip);
+        account.setLastUnsuccessfulLogin(time);
+        account.setUnsuccessfulLoginCounter(account.getUnsuccessfulLoginCounter() + 1);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.updateAfterUnsuccessfulLogin();
+        }
     }
 
     @Override
     public void setDarkMode(String login, boolean isDarkMode) throws AppBaseException {
-        Account account = accountFacade.findByLogin(login);
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw AccountException.accountEditFailed();
+        }
+        account.setModifiedBy(account);
+        account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         account.setDarkMode(isDarkMode);
-        accountFacade.edit(account);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.accountSetDarkMode();
+        }
+
     }
 
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    private void verifyOldPassword(String currentPasswordHash, String oldPassword) throws AppBaseException {
-        if (!currentPasswordHash.contentEquals(hashGenerator.generateHash(oldPassword))) {
-            throw PasswordsNotMatchException.currentPasswordNotMatch();
+    @Override
+    public void setLanguage(String login, String language) throws AppBaseException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw AccountException.accountEditFailed();
+        }
+        account.setModifiedBy(account);
+        account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        account.setLanguage(language);
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw AccountException.accountSetLanguage();
         }
     }
 
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    private void validateNewPassword(String currentPasswordHash, String newPassword) throws AppBaseException {
-        if (currentPasswordHash.contentEquals(hashGenerator.generateHash(newPassword))) {
-            throw PasswordsSameException.passwordsNotDifferent();
-        }
-    }
 }

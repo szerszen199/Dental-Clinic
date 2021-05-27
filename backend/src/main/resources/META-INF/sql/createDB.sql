@@ -19,7 +19,8 @@ CREATE TABLE accounts
 (
     id                                        BIGINT PRIMARY KEY,          -- klucz główny tabeli
     login                                     VARCHAR(60)        NOT NULL  -- login użytkownika, niezmienny
-        CONSTRAINT acc_login_unique UNIQUE,
+        CONSTRAINT acc_login_unique UNIQUE
+        constraint account_login_not_anon check (login not in ('anonymous')),
     email                                     VARCHAR(100)       NOT NULL  -- Adres email użytkownika, wykorzystywany do wysłania wiadomości z linkiem weryfikacyjnym
         CONSTRAINT acc_email_unique UNIQUE,
     password                                  CHAR(64)           NOT NULL, -- Skrót hasła uzytkownika - SHA-256.
@@ -32,23 +33,27 @@ CREATE TABLE accounts
     enabled                                   BOOL DEFAULT FALSE NOT NULL, -- Pole reprezentujące czy konto zostało aktywowane po rejestracji, domyśnie wartość fałsz (nie aktywowane).
     is_dark_mode                              bool default false,
     last_successful_login                     TIMESTAMPTZ,                 -- Pole reprezentujące datę ostatniego logowania użytkownika
-    last_successful_login_ip                  VARCHAR(256),                 -- Pole reprezentujące ip ostatniego logowania użytkownika
+    last_successful_login_ip                  VARCHAR(256),                -- Pole reprezentujące ip ostatniego logowania użytkownika
     last_unsuccessful_login                   TIMESTAMPTZ,                 -- Pole reprezentujące datę ostatniego nieudanego logowania użytkownika
-    last_unsuccessful_login_ip                VARCHAR(256),                 -- Pole reprezentujące ip ostatniego nieudanego logowania użytkownika
+    last_unsuccessful_login_ip                VARCHAR(256),                -- Pole reprezentujące ip ostatniego nieudanego logowania użytkownika
     unsuccessful_login_count_since_last_login INT  DEFAULT 0               -- Ilość nieudanych logowań od czasu ostatniego udanego logowania
         CONSTRAINT acc_unsuccessful_login_count_since_last_login_gr0 CHECK
             ( unsuccessful_login_count_since_last_login >= 0 ),            -- bigger than 0
     modified_by                               BIGINT,                      -- ID konta które ostatnio modyfikowało dane tabeli
-
     modification_date_time                    TIMESTAMPTZ,                 -- Data ostatniej modyfikacji tabeli
+    modified_by_ip                            VARCHAR(256),
+    last_block_unlock_modified_by             BIGINT,
+    last_block_unlock_date_time               timestamptz,
+    last_block_unlock_ip                      VARCHAR(256),
+
     created_by                                BIGINT             NOT NULL, -- ID konta które utworzyło tabelę,
     creation_date_time                        TIMESTAMPTZ        NOT NULL DEFAULT
         CURRENT_TIMESTAMP,                                                 -- Data utworzenia konta
-    language                                  CHAR(2)
+    created_by_ip                             VARCHAR(256),
+    email_recall                              BOOL DEFAULT FALSE NOT NULL,
+    language                                  CHAR(2) NOT NULL
         CONSTRAINT acc_language CHECK
-            (language in ('pl', 'PL', 'en', 'EN')),
-    -- Język konta
-
+            (language in ('pl', 'PL', 'en', 'EN')),                        -- Język konta
     version                                   BIGINT                       -- Wersja
         CONSTRAINT acc_version_gr0 CHECK (version >= 0)
 );
@@ -58,6 +63,8 @@ ALTER TABLE accounts
     ADD FOREIGN KEY (created_by) REFERENCES accounts (id);
 ALTER TABLE accounts
     ADD FOREIGN KEY (modified_by) REFERENCES accounts (id);
+ALTER TABLE accounts
+    ADD FOREIGN KEY (last_block_unlock_modified_by) REFERENCES accounts (id);
 
 
 CREATE
@@ -89,8 +96,10 @@ CREATE TABLE access_levels
         CONSTRAINT acc_lvl_version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,                    -- Data utworzenia tabeli
     created_by             BIGINT      NOT NULL,                                              -- ID konta które utworzyło tabelę
+    created_by_ip          VARCHAR(256),
     modification_date_time TIMESTAMPTZ,                                                       -- Data ostatniej modyfikacji tabeli
-    modified_by            BIGINT                                                             -- Użytkownik który ostatni modyfikował tabelę
+    modified_by            BIGINT,                                                            -- Użytkownik który ostatni modyfikował tabelę
+    modified_by_ip         VARCHAR(256)
 );
 
 -- Klucze obce dla tabeli access_levels
@@ -144,8 +153,16 @@ CREATE TABLE appointments
         CONSTRAINT appoint_version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ        NOT NULL DEFAULT CURRENT_TIMESTAMP,-- Data utworzenia wizyty
     created_by             BIGINT             NOT NULL,                          -- Konto które stworzyło wizytę
+    created_by_ip          VARCHAR(256),
     modification_date_time TIMESTAMPTZ,                                          -- Data modyfikacji,
-    modified_by            BIGINT                                                -- Konto które modyfikowało ostatnio tabelę
+    modified_by            BIGINT,                                               -- Konto które modyfikowało ostatnio tabelę
+    modified_by_ip         VARCHAR(256),
+    confirmation_date_time timestamptz,
+    confirmed_by           BIGINT,
+    confirmed_by_ip        VARCHAR(256),
+    cancellation_date_time timestamptz,
+    canceled_by            BIGINT,
+    canceled_by_ip         VARCHAR(256)
 );
 
 -- Klucze obce dla tabeli appointments
@@ -157,6 +174,12 @@ ALTER TABLE appointments
     ADD FOREIGN KEY (doctor_id) REFERENCES accounts (id);
 ALTER TABLE appointments
     ADD FOREIGN KEY (patient_id) REFERENCES accounts (id);
+ALTER TABLE appointments
+    ADD FOREIGN KEY (confirmed_by) REFERENCES accounts (id);
+ALTER TABLE appointments
+    ADD FOREIGN KEY (canceled_by) REFERENCES accounts (id);
+
+
 
 CREATE
     INDEX appoint_id_index ON appointments (id);
@@ -188,8 +211,10 @@ CREATE TABLE medical_documentations
         CONSTRAINT version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Data stworzenia wiersza w tabeli
     created_by             BIGINT      NOT NULL,                           -- Id użytkownika
+    created_by_ip          VARCHAR(256),
     modification_date_time TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji
-    modified_by            BIGINT                                          -- Konto które ostatnio modyfikowało dane tabeli
+    modified_by            BIGINT,                                         -- Konto które ostatnio modyfikowało dane tabeli
+    modified_by_ip         VARCHAR(256)
 );
 
 -- Klucze obce dla tabeli medical_documentations
@@ -229,8 +254,10 @@ CREATE TABLE documentation_entries
         CONSTRAINT version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Data utworzenia wiersza tabeli
     created_by             BIGINT      NOT NULL,                           -- Konto, które tworzyło wiersz tabeli
+    created_by_ip          VARCHAR(256),
     modification_date_time TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji wiersza w tabelik
-    modified_by            BIGINT                                          -- Konto które ostatnio modyfikowało wiersz w tabeli.
+    modified_by            BIGINT,                                         -- Konto które ostatnio modyfikowało wiersz w tabeli.
+    modified_by_ip         VARCHAR(256)
 );
 
 -- Klucze obce dla tabeli documentation_entries
@@ -263,7 +290,7 @@ CREATE SEQUENCE documentation_entries_seq -- Sekwencja uzywana do tworzenia pola
 CREATE TABLE prescriptions
 (
     id                     BIGINT PRIMARY KEY,                             -- Klucz główny tabeli
-    business_id            CHAR(8)     NOT NULL                           -- biznes id
+    business_id            CHAR(8)     NOT NULL                            -- biznes id
         CONSTRAINT pre_business_id_unique UNIQUE,
     expiration             TIMESTAMPTZ NOT NULL,                           -- data ważności recepty
     patient_id             BIGINT      NOT NULL,                           -- Id pacjenta, którego dotyczy recepta
@@ -273,8 +300,10 @@ CREATE TABLE prescriptions
         CONSTRAINT version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Czas utworzenia wiersza w tabeli
     created_by             BIGINT      NOT NULL,                           -- Konto które utworzyło wiersz w tabeli
+    created_by_ip          VARCHAR(256),
     modification_date_time TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji wiersza w tabeli
-    modified_by            BIGINT                                          -- Konto ostatnio modyfikujące wiersza w tabeli
+    modified_by            BIGINT,                                         -- Konto ostatnio modyfikujące wiersza w tabeli
+    modified_by_ip         VARCHAR(256)
 );
 
 -- Klucze obce dla tabeli documentation_entries

@@ -1,52 +1,93 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 
-import java.util.List;
-import java.util.stream.Collectors;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountByAdminDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmMailChangeRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.CreateAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.RevokeAndGrantAccessLevelDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetDarkModeRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetLanguageRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SimpleUsernameRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoWithAccessLevelsResponseDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtResetPasswordConfirmation;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.SignatureFilterBinding;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
+
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.ejb.EJBTransactionRolledbackException;
+import javax.ejb.Stateful;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
-import javax.servlet.ServletContext;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordTooShortException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordsNotMatchException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountAccessLevelDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccountEditDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewPasswordDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCESS_LEVEL_ADD_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCESS_LEVEL_REVOKED_SUCCESSFULLY;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCESS_LEVEL_REVOKE_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CONFIRMATION_BY_TOKEN_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CREATION_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EDIT_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_GET_ALL_ACCOUNTS_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_GET_LOGGED_IN_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_GET_WITH_LOGIN_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOCKED_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_NOT_FOUND;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_SET_DARK_MODE_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_SET_LANGUAGE_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_UNLOCKED_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_OPTIMISTIC_LOCK_ERROR;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.EMAIL_CONFIRMATION_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_CHANGE_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_RESET_FAILED;
 
 /**
  * Typ Account endpoint.
  */
 @Path("account")
-@RequestScoped
+@Stateful
 @Interceptors(LogInterceptor.class)
 public class AccountEndpoint {
+
+    @Inject
+    private PropertiesLoader propertiesLoader;
 
     @Inject
     private AccountManager accountManager;
@@ -59,200 +100,609 @@ public class AccountEndpoint {
 
     @Inject
     private MailProvider mailProvider;
+    @Inject
+    private JwtResetPasswordConfirmation jwtResetPasswordConfirmation;
+
+    @Context
+    private HttpHeaders httpHeaders;
+
+    @Inject
+    private EntityIdentitySignerVerifier signer;
+
 
     /**
      * Tworzy nowe konto.
      *
-     * @param accountDto     obiekt zawierający login, email, hasło i inne wymagane dane
-     * @param servletContext kontekst serwletów, służy do współdzielenia informacji
-     *                       w ramach aplikacji
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @param accountDto obiekt zawierający login, email, hasło i inne wymagane dane
+     * @return response
      */
     @POST
     @PermitAll
     @Path("create")
+    @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public void createAccount(NewAccountDto accountDto, @Context ServletContext servletContext)
-            throws AppBaseException {
+    // TODO: 22.05.2021 Co do validów na metodach zastanawia mnie wywołanie pustej metody na której będzie valid i łapanie wyjątków i coś robienie
+    //  Ale generalnie mamy obsłużyć tylko 403, 404 i 500 a to zwraca 400 więc :p
+    public Response createAccount(@NotNull @Valid CreateAccountRequestDTO accountDto) {
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                this.accountManager.createAccount(
+                        AccountConverter.createAccountEntityFromDto(accountDto)
+                );
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            } catch (Exception e) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (exception != null) {
+            if ((exception instanceof AccountException || exception instanceof MailSendingException)) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
+            }
+            if (exception instanceof AppBaseException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CREATED_SUCCESSFULLY)).build();
+    }
 
-        accountManager.createAccount(
-                AccountConverter.createAccountEntityFromDto(accountDto),
-                servletContext
-        );
+    /**
+     * Tworzy nowe konto przez admina.
+     *
+     * @param newAccountByAdminDto obiekt zawierający login, email i inne wymagane dane
+     * @return the response
+     */
+    @POST
+    @RolesAllowed({I18n.ADMIN})
+    @Path("admin/create")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response createAccountByAdmin(NewAccountByAdminDto newAccountByAdminDto) {
+
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                this.accountManager.createAccountByAdministrator(
+                        AccountConverter.createAccountByAdminEntityFromDto(newAccountByAdminDto)
+                );
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        if (exception != null && (exception instanceof AccountException || exception instanceof MailSendingException)) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
+        } else if (exception != null && exception instanceof AppBaseException) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+        }
+        return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CREATED_SUCCESSFULLY)).build();
+
+
     }
 
     /**
      * Confirm account.
      *
-     * @param jwt jwt
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @param confirmAccountRequestDTO confirm account request dto
+     * @return response
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/confirm?token={token}
     @PUT
     @Path("confirm")
     @PermitAll
+    @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public void confirmAccount(@QueryParam("token") String jwt) throws AppBaseException {
-        accountManager.confirmAccountByToken(jwt);
+    public Response confirmAccount(@NotNull @Valid ConfirmAccountRequestDTO confirmAccountRequestDTO) {
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                this.accountManager.confirmAccountByToken(confirmAccountRequestDTO.getConfirmToken());
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            } catch (Exception e) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (exception != null) {
+            if (exception instanceof AccountException || exception instanceof MailSendingException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
+            } else if (exception instanceof AppBaseException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CONFIRMATION_BY_TOKEN_FAILED)).build();
+            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CONFIRMED_SUCCESSFULLY)).build();
+    }
+
+    /**
+     * Reset password.
+     *
+     * @param confirmAccountRequestDTO the confirm account request dto
+     * @return response
+     */
+    @PUT
+    @Path("reset")
+    @PermitAll
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response resetPassword(@NotNull @Valid ConfirmAccountRequestDTO confirmAccountRequestDTO) {
+        String username;
+        try {
+            username = jwtResetPasswordConfirmation.getUserNameFromJwtToken(confirmAccountRequestDTO.getConfirmToken());
+            if (!jwtResetPasswordConfirmation.validateJwtToken(confirmAccountRequestDTO.getConfirmToken())) {
+                throw AccountException.invalidConfirmationToken();
+            }
+        } catch (AccountException accountException) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(PASSWORD_RESET_FAILED)).build();
+        }
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                this.accountManager.resetPassword(username, username);
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            } catch (Exception e) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (exception != null) {
+            if (exception instanceof AccountException || exception instanceof MailSendingException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
+            } else if (exception instanceof AppBaseException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_EDIT_FAILED)).build();
+            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        return Response.ok().entity(new MessageResponseDto(I18n.PASSWORD_RESET_SUCCESSFULLY)).build();
+    }
+
+    /**
+     * Odblokowanie poprzez maila po automatycznym zablokowaniu konta.
+     *
+     * @param confirmMailChangeRequestDTO the confirm mail change request dto
+     * @return response response
+     */
+    @PUT
+    @Path("unlock-by-mail")
+    @PermitAll
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response unlockByMail(@NotNull @Valid ConfirmMailChangeRequestDTO confirmMailChangeRequestDTO) {
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                accountManager.confirmUnlockByToken(confirmMailChangeRequestDTO.getToken());
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (rollbackTX) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        if (exception != null && (exception instanceof AccountException || exception instanceof MailSendingException)) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
+        } else if (exception != null && exception instanceof AppBaseException) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.CONFIRM_BY_MAIL_FAILED)).build();
+        }
+        return Response.ok().entity(new MessageResponseDto(I18n.CONFIRM_BY_MAIL_SUCCESSFULLY)).build();
     }
 
     /**
      * Edit account data.
      *
-     * @param accountDto Account with edited data.
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @param accountDto DTO edytowanego konta
+     * @param header     nagłówek If-Match
+     * @return response
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit
     @POST
     @Path("edit")
+    @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
+    @SignatureFilterBinding
     @Produces({MediaType.APPLICATION_JSON})
-    public void editAccount(AccountEditDto accountDto) throws AppBaseException {
-        Account account = accountManager.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
-        accountManager.editAccount(AccountConverter.createAccountEntityFromDto(accountDto, account));
+    public Response editAccount(@NotNull @Valid EditOwnAccountRequestDTO accountDto, @HeaderParam("If-Match") String header) {
+        if (!signer.verifyEntityIntegrity(header, accountDto)) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(DATABASE_OPTIMISTIC_LOCK_ERROR)).build();
+        }
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                this.accountManager.editOwnAccount(accountDto);
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            } catch (Exception e) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (exception != null) {
+            if (exception instanceof AccountException || exception instanceof MailSendingException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
+            } else if (exception instanceof AppBaseException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_EDIT_FAILED)).build();
+            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
     }
 
 
     /**
      * Edycja konta innego użytkownika.
      *
-     * @param accountDto the edited account
-     * @param login      login edytowanego konta
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @param accountDto DTO edytowanego konta
+     * @param header     nagłówek If-Match
+     * @return response
      */
     // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/edit/other
     @POST
-    @Path("edit/{login}")
+    @Path("edit-other")
     @RolesAllowed({I18n.ADMIN})
     @Produces({MediaType.APPLICATION_JSON})
-    public void editOtherAccount(@PathParam("login") String login, AccountEditDto accountDto) throws AppBaseException {
-        Account account = accountManager.findByLogin(login);
-        accountManager.editOtherAccount(AccountConverter.createAccountEntityFromDto(accountDto, account));
+    @Consumes({MediaType.APPLICATION_JSON})
+    @SignatureFilterBinding
+    public Response editOtherAccount(@NotNull @Valid EditAnotherAccountRequestDTO accountDto, @HeaderParam("If-Match") String header) {
+        if (!signer.verifyEntityIntegrity(header, accountDto)) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(DATABASE_OPTIMISTIC_LOCK_ERROR)).build();
+        }
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                accountManager.editOtherAccount(accountDto);
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            } catch (Exception e) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (exception != null) {
+            if (exception instanceof AccountException || exception instanceof MailSendingException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
+            } else if (exception instanceof AppBaseException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_EDIT_FAILED)).build();
+            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
     }
 
     /**
-     * Revoke access level - enpoint odbierający poziom dostępu.
+     * Endpoint potwierdzający zmianę maila.
      *
-     * @param accessLevelDto obiekt zawierający poziom oraz login
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @param confirmMailChangeRequestDTO confirm mail change request dto
+     * @return response
      */
-    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{login}/{level}
     @PUT
-    @RolesAllowed({I18n.ADMIN})
-    @Path("/revokeAccessLevel}")
+    @Path("confirm-mail")
+    // Rozumiem że to nie wymaga zalogowania
+    @PermitAll
     @Produces({MediaType.APPLICATION_JSON})
-    public void revokeAccessLevel(AccessLevelDto accessLevelDto) throws AppBaseException {
-        accessLevelManager.revokeAccessLevel(accessLevelDto.getLogin(), accessLevelDto.getLevel());
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response confirmMailChange(@NotNull @Valid ConfirmMailChangeRequestDTO confirmMailChangeRequestDTO) {
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                accountManager.confirmMailChangeByToken(confirmMailChangeRequestDTO.getToken());
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            } catch (Exception e) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (exception != null) {
+            if (exception instanceof AccountException || exception instanceof MailSendingException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
+            } else if (exception instanceof AppBaseException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(EMAIL_CONFIRMATION_FAILED)).build();
+            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        return Response.ok().entity(new MessageResponseDto(I18n.EMAIL_CONFIRMED_SUCCESSFULLY)).build();
     }
+
 
     /**
      * Metoda służąca do blokowania konta przez administratora.
      *
-     * @param login login blokowanego konta
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @param simpleUsernameRequestDTO simple username request dto
+     * @return response
      */
     @PUT
     @RolesAllowed({I18n.ADMIN})
-    @Path("lock/{login}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path("lock")
     @Produces({MediaType.APPLICATION_JSON})
-    public void lockAccount(@PathParam("login") String login) throws AppBaseException {
-        accountManager.lockAccount(login);
-        mailProvider.sendAccountLockByAdminMail(accountManager.findByLogin(login).getEmail());
+    public Response lockAccount(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) {
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                accountManager.lockAccount(simpleUsernameRequestDTO.getLogin());
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            } catch (Exception e) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (exception != null) {
+            if (exception instanceof AccountException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
+            } else if (exception instanceof AppBaseException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_LOCKED_FAILED)).build();
+            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        try {
+            Account account = accountManager.findByLogin(simpleUsernameRequestDTO.getLogin());
+            mailProvider.sendAccountLockByAdminMail(account.getEmail(), account.getLanguage());
+        } catch (AccountException | MailSendingException accountException) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_LOCKED_FAILED)).build();
+        }
+        return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_LOCKED_SUCCESSFULLY)).build();
     }
 
     /**
      * Metoda służąca do odblokowywania konta przez administratora.
      *
-     * @param login login odblokowywanego konta
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @param simpleUsernameRequestDTO simple username request dto
+     * @return response
      */
     @PUT
     @RolesAllowed({I18n.ADMIN})
-    @Path("unlock/{login}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path("unlock")
     @Produces({MediaType.APPLICATION_JSON})
-    public void unlockAccount(@PathParam("login") String login) throws AppBaseException {
-        accountManager.unlockAccount(login);
-        mailProvider.sendAccounUnlockByAdminMail(accountManager.findByLogin(login).getEmail());
+    public Response unlockAccount(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) {
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                accountManager.unlockAccount(simpleUsernameRequestDTO.getLogin());
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = null;
+            } catch (Exception e) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (exception != null) {
+
+            if (exception instanceof AccountException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
+            } else if (exception instanceof AppBaseException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_UNLOCKED_FAILED)).build();
+            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+
+        }
+        try {
+            Account account = accountManager.findByLogin(simpleUsernameRequestDTO.getLogin());
+            mailProvider.sendAccountUnlockByAdminMail(account.getEmail(), account.getLanguage());
+        } catch (MailSendingException accountException) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_UNLOCKED_FAILED)).build();
+        }
+        return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_UNLOCKED_SUCCESSFULLY)).build();
     }
 
     /**
      * Dodanie poziomu dostępu {@param level} dla użytkownika o {@param login}.
      *
-     * @param accessLevelDto obiekt zawierający poziom oraz login
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @param revokeAndGrantAccessLevelDTO revoke and grant access level dto
+     * @return @return odpowiedź 400 gdy administrator próbuje sam sobie dodać poziom dostępu, 200 gdy dodanie poprawne
      */
     @PUT
     @RolesAllowed({I18n.ADMIN})
     @Path("/addLevelByLogin")
+    @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public void addAccessLevel(AccessLevelDto accessLevelDto) throws AppBaseException {
-        accessLevelManager.addAccessLevel(accessLevelDto.getLogin(), accessLevelDto.getLevel());
+    public Response addAccessLevel(@NotNull @Valid RevokeAndGrantAccessLevelDTO revokeAndGrantAccessLevelDTO) {
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        if (revokeAndGrantAccessLevelDTO.getLogin().equals(loggedInAccountUtil.getLoggedInAccountLogin())) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCESS_LEVEL_ADD_FAILED)).build();
+        }
+        do {
+            try {
+                exception = null;
+                accessLevelManager.addAccessLevel(revokeAndGrantAccessLevelDTO.getLogin(), revokeAndGrantAccessLevelDTO.getLevel());
+                rollbackTX = accessLevelManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            } catch (Exception e) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (exception != null) {
+            if (exception instanceof AccountException || exception instanceof AccessLevelException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
+            } else if (exception instanceof AppBaseException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCESS_LEVEL_ADD_FAILED)).build();
+            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+
+        return Response.ok().entity(new MessageResponseDto(I18n.ACCESS_LEVEL_ADDED_SUCCESSFULLY)).build();
+    }
+
+    /**
+     * Revoke access level - enpoint odbierający poziom dostępu.
+     *
+     * @param revokeAndGrantAccessLevelDTO obiekt zawierający poziom oraz login
+     * @return odpowiedź 400 gdy administrator próbuje sam sobie odebrać poziom dostępu, 200 gdy dodanie poprawne
+     */
+    // localhost:8181/ssbd01-0.0.7-SNAPSHOT/api/account/revokeAccessLevel/{login}/{level}
+    @PUT
+    @RolesAllowed({I18n.ADMIN})
+    @Path("/revokeAccessLevel")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    //TODO: komunikat
+    public Response revokeAccessLevel(@NotNull @Valid RevokeAndGrantAccessLevelDTO revokeAndGrantAccessLevelDTO) {
+        if (revokeAndGrantAccessLevelDTO.getLogin().equals(loggedInAccountUtil.getLoggedInAccountLogin())) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                accessLevelManager.revokeAccessLevel(revokeAndGrantAccessLevelDTO.getLogin(), revokeAndGrantAccessLevelDTO.getLevel());
+                rollbackTX = accessLevelManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            } catch (Exception e) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+        if (exception != null) {
+            if (exception instanceof AccountException || exception instanceof AccessLevelException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
+            } else if (exception instanceof AppBaseException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCESS_LEVEL_REVOKE_FAILED)).build();
+            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        return Response.ok().entity(new MessageResponseDto(ACCESS_LEVEL_REVOKED_SUCCESSFULLY)).build();
     }
 
     /**
      * Pobiera informacje o zalogowanm koncie.
      *
      * @return informacje o zalogowanym koncie
-     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @GET
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
+    @Produces({MediaType.APPLICATION_JSON})
     @Path("/info")
-    public Response getLoggedInAccountInfo() throws AppBaseException {
-        AccountDto account = new AccountDto(accountManager.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
-        return Response.ok(account).build();
+    public Response getLoggedInAccountInfo() {
+        AccountInfoResponseDTO account;
+        try {
+            account = new AccountInfoResponseDTO(accountManager.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+        } catch (AccountException e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_NOT_FOUND)).build();
+        } catch (AppBaseException e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_GET_LOGGED_IN_FAILED)).build();
+        }
+        return Response.ok().entity(account).tag(signer.sign(account)).build();
     }
 
 
     /**
      * Pobiera informacje o koncie o {@param login}.
      *
-     * @param login login konta o jakim pobrane zostaną informacje
+     * @param login login konta o którym chcemy pobrać informacje
      * @return informacje o zalogowanym koncie
-     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     @RolesAllowed({I18n.ADMIN})
-    @Path("/info/{login}")
-    public Response getAccountInfoWithLogin(@PathParam("login") String login) throws AppBaseException {
-        AccountDto account = new AccountDto(accountManager.findByLogin(login));
-        return Response.ok(account).build();
+    @Path("/other-account-info/{login}")
+    public Response getAccountInfoWithLogin(@NotNull @PathParam("login") String login) {
+        AccountInfoWithAccessLevelsResponseDto account;
+        try {
+            account = new AccountInfoWithAccessLevelsResponseDto(accountManager.findByLogin(login));
+        } catch (AccountException e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_NOT_FOUND)).build();
+        } catch (AppBaseException e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_GET_WITH_LOGIN_FAILED)).build();
+        }
+        return Response.ok().entity(account).tag(signer.sign(account)).build();
     }
 
     /**
      * Pobiera listę wszystkich kont.
      *
      * @return lista wszystkich kont
-     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @GET
     @RolesAllowed({I18n.ADMIN})
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/accounts")
-    public Response getAllAccounts() throws AppBaseException {
-        List<AccountDto> accountDtoList = accountManager.getAllAccounts()
-                .stream()
-                .map(AccountDto::new)
-                .collect(Collectors.toList());
-        return Response.ok(accountDtoList).build();
-    }
-
-    /**
-     * Pobiera listę wszystkich kont z poziomami dostępu.
-     *
-     * @return lista wszystkich kont
-     * @throws AppBaseException wyjątek typu AppBaseException
-     */
-    @GET
-    @RolesAllowed({I18n.ADMIN})
-    @Produces({MediaType.APPLICATION_JSON})
-    @Path("/accounts-with-levels")
-    public Response getAllAccountsWithLevels() throws AppBaseException {
-        List<AccountAccessLevelDto> accountDtoList = accountManager.getAllAccounts()
-                .stream()
-                .map(AccountAccessLevelDto::new)
-                .collect(Collectors.toList());
-        return Response.ok(accountDtoList).build();
+    public Response getAllAccounts() {
+        List<AccountInfoResponseDTO> accountInfoResponseDTOList;
+        try {
+            accountInfoResponseDTOList = accountManager.getAllAccounts()
+                    .stream()
+                    .map(AccountInfoWithAccessLevelsResponseDto::new)
+                    .collect(Collectors.toList());
+        } catch (AccountException e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
+        } catch (AppBaseException e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_GET_ALL_ACCOUNTS_FAILED)).build();
+        }
+        return Response.ok(accountInfoResponseDTOList).build();
     }
 
     /**
@@ -260,98 +710,203 @@ public class AccountEndpoint {
      *
      * @param newPassword informacje uwierzytelniające o starym haśle i nowym, które ma zostać ustawione
      * @return odpowiedź na żądanie
-     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
     @Path("new-password")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changeOwnPassword(NewPasswordDto newPassword) {
-        try {
-            this.validatePassword(newPassword);
-            accountManager.changePassword(
-                    loggedInAccountUtil.getLoggedInAccountLogin(), 
-                    newPassword.getOldPassword(), 
-                    newPassword.getFirstPassword()
-            );
-            return Response.status(Status.OK).build();
-        } catch (AppBaseException e) {
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+    public Response changeOwnPassword(@NotNull @Valid ChangePasswordRequestDTO newPassword) {
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                accountManager.changePassword(
+                        loggedInAccountUtil.getLoggedInAccountLogin(),
+                        newPassword.getOldPassword(),
+                        newPassword.getFirstPassword()
+                );
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            } catch (Exception e) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (exception != null) {
+            if (exception instanceof AccountException || exception instanceof PasswordException) {
+                return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
+            } else if (exception instanceof AppBaseException) {
+                return Response.status(Status.BAD_REQUEST).entity(PASSWORD_CHANGE_FAILED).build();
+            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
+        return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_CHANGED_SUCCESSFULLY)).build();
     }
 
     /**
      * Resetuje hasło innego użytkownika z poziomu konta administratora.
      *
-     * @param login login konta, którego hasło chcemy zresetować
+     * @param simpleUsernameRequestDTO simple username request dto
      * @return odpowiedź na żądanie
-     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
     @RolesAllowed({I18n.ADMIN})
-    @Path("reset-password/{login}")
+    @Path("reset-other-password")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response resetOthersPassword(@PathParam("login") String login) throws AppBaseException {
-        accountManager.resetPassword(login);
-        return Response.status(Status.OK).build();
+    public Response resetOthersPassword(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) {
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                accountManager.resetPassword(simpleUsernameRequestDTO.getLogin(), loggedInAccountUtil.getLoggedInAccountLogin());
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            } catch (Exception e) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (exception != null) {
+            if (exception instanceof AccountException || exception instanceof MailSendingException || exception instanceof PasswordException) {
+                return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
+            } else if (exception instanceof AppBaseException) {
+                return Response.status(Status.BAD_REQUEST).entity(PASSWORD_RESET_FAILED).build();
+            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_RESET_MAIL_SENT_SUCCESSFULLY)).build();
     }
 
     /**
-     * Resetuje hasło zalogowanemu użytkownikowi.
+     * Resetuje hasło użytkownikowi.
      *
+     * @param simpleUsernameRequestDTO the simple username request dto
      * @return odpowiedź na żądanie
-     * @throws AppBaseException wyjątek typu AppBaseException
      */
     @PUT
     @Path("reset-password")
-    @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
+    @PermitAll
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response resetOwnPassword() throws AppBaseException {
-        String login = loggedInAccountUtil.getLoggedInAccountLogin();
+    public Response resetOwnPassword(@NotNull @Valid SimpleUsernameRequestDTO simpleUsernameRequestDTO) {
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                accountManager.sendResetPasswordConfirmationEmail(simpleUsernameRequestDTO.getLogin());
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            } catch (Exception e) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
 
-        if (login == null) {
-            return Response.status(Status.BAD_REQUEST).build();
+        if (exception != null) {
+            if (exception instanceof AccountException || exception instanceof MailSendingException) {
+                return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
+            } else if (exception instanceof AppBaseException) {
+                return Response.status(Status.BAD_REQUEST).entity(PASSWORD_RESET_FAILED).build();
+            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
-
-        accountManager.resetPassword(login);
-        return Response.status(Status.OK).build();
+        return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_RESET_MAIL_SENT_SUCCESSFULLY)).build();
     }
 
 
     /**
      * Endpoint dla ustawiania w aktualnym koncie trybu ciemnego.
      *
-     * @param isDarkMode true jeśli chcemy ustawić tryb ciemny, inaczej false.
-     * @return Response 401 jeśli użytkownik jest unauthorised, 200 jeśli udało się ustawić tryb ciemny, inaczej 400
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @param setDarkModeRequestDTO dto zawierające ustawienia trybu ciemnego.
+     * @return 200 jeśli udało się ustawić tryb ciemny, inaczej 400
      */
     @PUT
     @Path("dark-mode")
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changeDarkMode(@QueryParam("dark-mode") boolean isDarkMode) throws AppBaseException {
+    public Response changeDarkMode(@NotNull @Valid SetDarkModeRequestDTO setDarkModeRequestDTO) {
         String login = loggedInAccountUtil.getLoggedInAccountLogin();
-        if (login == null) {
-            return Response.status(Status.UNAUTHORIZED).build();
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                accountManager.setDarkMode(login, setDarkModeRequestDTO.getDarkMode());
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            } catch (Exception e) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (exception != null) {
+            if (exception instanceof AccountException) {
+                return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
+            } else if (exception instanceof AppBaseException) {
+                return Response.status(Status.BAD_REQUEST).entity(ACCOUNT_SET_DARK_MODE_FAILED).build();
+            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
-        try {
-            accountManager.setDarkMode(login, isDarkMode);
-        } catch (AppBaseException e) {
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
-        }
-        return Response.status(Status.OK).build();
+        return Response.status(Status.OK).entity(I18n.ACCOUNT_DARK_MODE_SET_SUCCESSFULLY).build();
     }
 
-    private void validatePassword(NewPasswordDto newPassword) throws AppBaseException {
-        if (!newPassword.getFirstPassword().equals(newPassword.getSecondPassword())) {
-            throw PasswordsNotMatchException.newPasswordsNotMatch();
+
+    /**
+     * Endpoint dla ustawiania w aktualnym koncie języka interfejsu.
+     *
+     * @param setLanguageRequestDTO dto z pożądanym przez użytkownka językiem
+     * @return 200 jeśli udało się zmienić język, inaczej 400
+     */
+    @PUT
+    @Path("language")
+    @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response changeLanguage(@NotNull @Valid SetLanguageRequestDTO setLanguageRequestDTO) {
+        String login = loggedInAccountUtil.getLoggedInAccountLogin();
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                accountManager.setLanguage(login, setLanguageRequestDTO.getLanguage().toLowerCase(Locale.ROOT));
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            } catch (Exception e) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (exception != null) {
+            if (exception instanceof AccountException) {
+                return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
+            } else if (exception instanceof AppBaseException) {
+                return Response.status(Status.BAD_REQUEST).entity(ACCOUNT_SET_LANGUAGE_FAILED).build();
+            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
         }
-        if (newPassword.getFirstPassword().length() < 8) {
-            throw PasswordTooShortException.passwordTooShort();
-        }
+        return Response.status(Status.OK).entity(new MessageResponseDto(I18n.LANGUAGE_SET_SUCCESSFULLY)).build();
     }
+
 }
 
