@@ -60,7 +60,7 @@
 
         <frontend.directory>../frontend</frontend.directory>
         <frontend.directory.output>${frontend.directory}/build</frontend.directory.output>
-        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+        <npm.executable>node/npm.cmd</npm.executable>
     </properties>
 
     <dependencies>
@@ -218,7 +218,7 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>npm</executable>
+                            <executable>${npm.executable}</executable>
                             <arguments>
                                 <argument>install</argument>
                             </arguments>
@@ -236,7 +236,7 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>npm</executable>
+                            <executable>${npm.executable}</executable>
                             <arguments>
                                 <argument>run</argument>
                                 <argument>build</argument>
