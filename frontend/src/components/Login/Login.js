@@ -4,12 +4,13 @@ import Button from "react-bootstrap/Button";
 import "./Login.css";
 import {makeLoginRequest} from "./LoginRequest";
 import {useTranslation} from "react-i18next";
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 
 export default function Login() {
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
-    const {t} = useTranslation()
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const {t} = useTranslation();
 
     function validateForm() {
         return login.length > 0 && login.length <= 60 && password.length > 0;
@@ -17,7 +18,9 @@ export default function Login() {
 
     function handleSubmit(event) {
         event.preventDefault();
-        makeLoginRequest(login, password);
+        makeLoginRequest(login, password).then((res) => {
+            setIsLoggedIn(res);
+        });
     }
 
     return (
@@ -47,6 +50,7 @@ export default function Login() {
                     {t("Login")}
                 </Button>
             </Form>
+            <span>{isLoggedIn ? <Redirect to={{pathname: '/home'}}/> : ''}</span>
         </div>
     );
 }

@@ -6,7 +6,7 @@ import {jwtCookieExpirationTime} from "../../views/MainView/MainView";
 // TODO usuwanie tego gdy minie określony czas czytaj przedawni się
 
 export function makeLoginRequest(login, password) {
-    axios.post(process.env.REACT_APP_BACKEND_URL + "auth/login", {
+    return axios.post(process.env.REACT_APP_BACKEND_URL + "auth/login", {
         username: login,
         password: password
     }).then((response) => {
@@ -22,6 +22,7 @@ export function makeLoginRequest(login, password) {
         localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, response.data.refreshJwtToken.token);
         // TODO: To redirect po poprawnym zalogowaniu, nie podoba mi się, nie korzysta z routera ale inaczej mi nie chce narazie pojsc.
         window.location = "/home";
+        return true;
     }).catch((response) => {
         // todo Wyświetlić odpowiedni komunikat
     })
