@@ -3,8 +3,7 @@ import "./AccountsList.css";
 import {makeAccountsListRequest} from "./AccountsListRequest";
 import {withTranslation} from "react-i18next";
 import BootstrapTable from 'react-bootstrap-table-next';
-import { Button } from "react-bootstrap";
-import filterFactory, {textFilter} from 'react-bootstrap-table2-filter';
+import {Button} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import edit from "../../assets/edit.png"
 import { FiRefreshCw } from "react-icons/fi";
@@ -20,9 +19,7 @@ class AccountsListWithoutTranslation extends React.Component {
     }
 
     componentDidMount() {
-        makeAccountsListRequest().then((response) => {
-            this.setState({accountsList: response})
-        })
+        this.makeGetAccountsRequest();
     }
 
     makeGetAccountsRequest() {
@@ -59,14 +56,13 @@ class AccountsListWithoutTranslation extends React.Component {
                 formatter: this.linkEdit
             }
         ]
-        return <BootstrapTable striped keyField='login' columns={columns} data={this.state.accountsList} filter={filterFactory()}/>;
+        return <BootstrapTable striped keyField='login' columns={columns} data={this.state.accountsList}/>;
     }
 
     linkEdit = (cell, row, rowIndex, formatExtraData) => {
-        const {t} = this.props;
         return (
             <Link to={"/other-account/" + this.state.accountsList[rowIndex].login}>
-                <Button variant="outline-secondary" >
+                <Button variant="outline-secondary">
                     <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}/>
                 </Button>
             </Link>
@@ -79,8 +75,21 @@ class AccountsListWithoutTranslation extends React.Component {
 
     }
 
+    renderButton() {
+        let self = this;
+        return <Button variant={"secondary"} onClick={() => {
+            this.makeGetAccountsRequest(self)
+        }}>
+            <FiRefreshCw />
+        </Button>
+    }
+
     render() {
-        return <div className="AccountListGroup">
+        return <span>
+        <div className="account-refresh-button-div">
+            {this.renderButton()}
+        </div>
+            <div className="AccountListGroup">
             {!this.state.accountsList.length ? this.renderNull() : this.renderAccounts()}
         </div>
         </span>
