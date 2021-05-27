@@ -196,27 +196,16 @@
                         <goals>
                             <goal>install-node-and-npm</goal>
                         </goals>
-                        <phase>generate-resources</phase>
+                        <phase>generate-sources</phase>
                     </execution>
                 </executions>
                 <configuration>
+                    <workingDirectory>${frontend.directory}</workingDirectory>
                     <nodeVersion>v14.16.1</nodeVersion>
                     <npmVersion>7.12.1</npmVersion>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <webResources>
-                        <resource>
-                            <directory>${frontend.directory.output}</directory>
-                        </resource>
-                    </webResources>
-                </configuration>
-            </plugin>
+            
             <plugin>
                 <artifactId>exec-maven-plugin</artifactId>
                 <groupId>org.codehaus.mojo</groupId>
@@ -256,6 +245,19 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <webResources>
+                        <resource>
+                            <directory>${frontend.directory.output}</directory>
+                        </resource>
+                    </webResources>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
