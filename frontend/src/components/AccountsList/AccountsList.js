@@ -4,9 +4,10 @@ import {makeAccountsListRequest} from "./AccountsListRequest";
 import {withTranslation} from "react-i18next";
 import BootstrapTable from 'react-bootstrap-table-next';
 import { Button } from "react-bootstrap";
-import filterFactory, {textFilter} from 'react-bootstrap-table2-filter';
 import {Link} from "react-router-dom";
-import edit from "../../assets/edit.png"
+import edit from "../../assets/edit.png";
+import {Input} from "semantic-ui-react";
+import {Fragment} from "react";
 
 class AccountsListWithoutTranslation extends React.Component {
 
@@ -20,9 +21,21 @@ class AccountsListWithoutTranslation extends React.Component {
 
     componentDidMount() {
         makeAccountsListRequest().then((response) => {
-            this.setState({accountsList: response})
+            this.unFilteredList = response
+            this.setState({accountsList: this.unFilteredList})
         })
     }
+
+    filterList(input) {
+        let tempList = []
+        for (let i in this.unFilteredList) {
+            if (this.unFilteredList[i].name.toUpperCase().includes(input.toUpperCase())) {
+                tempList.push(this.unFilteredList[i])
+            }
+        }
+        this.setState({accountsList: tempList})
+    }
+
 
     renderAccounts() {
         const {t} = this.props;
@@ -32,28 +45,16 @@ class AccountsListWithoutTranslation extends React.Component {
             {
                 dataField: 'login',
                 text: t('UserLogin'),
-                filter: textFilter({
-                    placeholder: t("Filter"),
-                    style: {marginLeft: "10px"}
-                }),
                 style: {verticalAlign: "middle"}
             },
             {
                 dataField: 'name',
                 text: t('Name and Surname'),
-                filter: textFilter({
-                    placeholder: t("Filter"),
-                    style: {marginLeft: "10px"}
-                }),
                 style: {verticalAlign: "middle"}
             },
             {
                 dataField: 'email',
                 text: t('Email'),
-                filter: textFilter({
-                    placeholder: t("Filter"),
-                    style: {marginLeft: "10px"}
-                }),
                 style: {verticalAlign: "middle"}
             },
             {
@@ -64,7 +65,7 @@ class AccountsListWithoutTranslation extends React.Component {
                 formatter: this.linkEdit
             }
         ]
-        return <BootstrapTable striped keyField='login' columns={columns} data={this.state.accountsList} filter={filterFactory()}/>;
+        return <BootstrapTable striped keyField='login' columns={columns} data={this.state.accountsList} />;
     }
 
     linkEdit = (cell, row, rowIndex, formatExtraData) => {
@@ -85,9 +86,13 @@ class AccountsListWithoutTranslation extends React.Component {
     }
 
     render() {
-        return <div className="AccountListGroup">
-            {!this.state.accountsList.length ? this.renderNull() : this.renderAccounts()}
-        </div>
+        const {t} = this.props;
+        return <Fragment>
+            <Input onChange={e => this.filterList(e.target.value)} placeholder={t("Filter")}/>
+            <div className="AccountListGroup">
+                {!this.state.accountsList.length ? this.renderNull() : this.renderAccounts()}
+            </div>
+        </Fragment>
     }
 }
 
