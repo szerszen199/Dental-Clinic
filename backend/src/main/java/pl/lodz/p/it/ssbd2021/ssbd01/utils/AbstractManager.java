@@ -1,10 +1,13 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
+
 import javax.ejb.AfterBegin;
 import javax.ejb.AfterCompletion;
 import javax.ejb.BeforeCompletion;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,6 +16,9 @@ import java.util.logging.Logger;
  * Abstrakcyjna klasa po której powinne dziedziczyć inne managery, umożliwia logowanie.
  */
 public abstract class AbstractManager {
+
+    @Inject
+    LoggedInAccountUtil loggedInAccountUtil;
 
     protected static final Logger LOGGER = Logger.getGlobal();
     private String transactionID;
@@ -29,7 +35,7 @@ public abstract class AbstractManager {
     @AfterBegin
     public void afterBegin() {
         transactionID = Long.toString(System.currentTimeMillis()) + ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
-        LOGGER.log(Level.INFO, "Transakcja TXid = {0} rozpoczęta w {1}.", new Object[]{transactionID, this.getClass().getName()});
+        LOGGER.log(Level.INFO, "Transakcja TXid = {0} rozpoczęta w {1}. dla użytkownika {2}", new Object[]{transactionID, this.getClass().getName(), loggedInAccountUtil.getLoggedInAccountLogin()});
     }
 
     /**
@@ -37,7 +43,8 @@ public abstract class AbstractManager {
      */
     @BeforeCompletion
     public void beforeCompletion() {
-        LOGGER.log(Level.INFO, "Transakcja TXid={0} przed zatwierdzeniem w {1}.", new Object[]{transactionID, this.getClass().getName()});
+        LOGGER.log(Level.INFO, "Transakcja TXid={0} przed zatwierdzeniem w {1} dla użytkownika {2}.",
+                new Object[]{transactionID, this.getClass().getName(), loggedInAccountUtil.getLoggedInAccountLogin()});
     }
 
     /**
@@ -48,6 +55,7 @@ public abstract class AbstractManager {
     @AfterCompletion
     public void afterCompletion(boolean commmitted) {
         lastTransactionRollback = !commmitted;
-        LOGGER.log(Level.INFO, "Transakcja TXid={0} zatwierdzona w {1} poprzez {2}.", new Object[]{transactionID, this.getClass().getName(), commmitted ? "ZATWIERDZENIE" : "ODWOłANIE"});
+        LOGGER.log(Level.INFO, "Transakcja TXid={0} zakończona w {1} poprzez {2} dla użytkownika {3}.",
+                new Object[]{transactionID, this.getClass().getName(), commmitted ? "ZATWIERDZENIE" : "ODWOłANIE", loggedInAccountUtil.getLoggedInAccountLogin()});
     }
 }

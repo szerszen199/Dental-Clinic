@@ -15,6 +15,22 @@ import org.hibernate.annotations.NamedQuery;
         @NamedQuery(name = "ReceptionistData.findAll", query = "SELECT r FROM ReceptionistData r")})
 public class ReceptionistData extends AccessLevel implements Serializable {
 
+    /**
+     * Tworzy nową instancję klasy Receptionist data.
+     *
+     * @param account account
+     * @param active  active
+     */
+    public ReceptionistData(Account account, Boolean active) {
+        super(account, active);
+    }
+
+    /**
+     * Tworzy nową instancję klasy Receptionist data.
+     */
+    public ReceptionistData() {
+    }
+
     @Override
     public String toString() {
         return "pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData[ id=" + this.getId() + " ]";

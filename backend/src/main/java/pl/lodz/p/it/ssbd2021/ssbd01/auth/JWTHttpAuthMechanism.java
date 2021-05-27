@@ -1,10 +1,9 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.auth;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.auth.ejb.managers.AuthViewEntityManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AuthViewEntity;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtLoginUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Default;
@@ -23,6 +22,9 @@ import java.util.Set;
 public class JWTHttpAuthMechanism implements HttpAuthenticationMechanism {
 
     @Inject
+    private PropertiesLoader propertiesLoader;
+
+    @Inject
     private JwtLoginUtils jwtLoginUtils;
 
     @Inject
@@ -31,7 +33,7 @@ public class JWTHttpAuthMechanism implements HttpAuthenticationMechanism {
     @Override
     public AuthenticationStatus validateRequest(HttpServletRequest req, HttpServletResponse res, HttpMessageContext msgContext) {
         try {
-            String jwt = parseJwt(req);
+            String jwt = jwtLoginUtils.parseAuthJwtFromHttpServletRequest(req);
             if (jwt != null && jwtLoginUtils.validateJwtToken(jwt)) {
                 String username = jwtLoginUtils.getUserNameFromJwtToken(jwt);
                 List<AuthViewEntity> authViewEntities = authViewEntityManager.findByLogin(username);
@@ -49,16 +51,8 @@ public class JWTHttpAuthMechanism implements HttpAuthenticationMechanism {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return msgContext.responseUnauthorized();
+        // Unauthenticated shows as anon
+        return msgContext.notifyContainerAboutLogin(propertiesLoader.getAnonymousUserName(), new HashSet<>());
     }
 
-    private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
-
-        if (headerAuth != null && headerAuth.length() > 0 && !headerAuth.isBlank() && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7);
-        }
-
-        return null;
-    }
 }

@@ -3,7 +3,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.utils.converters;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.AccessLevelMapper;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.AccessLevelDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.AccessLevelDto;
 
 public class AccessLevelConverter {
 

@@ -1,62 +1,39 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.security;
 
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.JWSObject;
-import com.nimbusds.jose.JWSSigner;
-import com.nimbusds.jose.JWSVerifier;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
-import java.text.ParseException;
-import java.util.Date;
-import javax.annotation.PostConstruct;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
+import java.text.ParseException;
 
 /**
  * Typ Jwt utils.
  */
 @Stateless
-public class JwtEmailConfirmationUtils {
+public class JwtEmailConfirmationUtils extends JwtUtilsAbstract {
 
     @Inject
     private PropertiesLoader propertiesLoader;
 
-    private String registrationConfirmationJwtSecret;
-    private Long registrationConfirmationJwtExpirationMs;
-
-    @PostConstruct
-    private void init() {
-        registrationConfirmationJwtSecret = propertiesLoader.getConfirmationJwtSecret();
-        registrationConfirmationJwtExpirationMs = propertiesLoader.getConfirmationJwtExpiration();
-    }
-
     /**
-     * Generuje token JWT na potrzeby weryfikacji rejestracji.
+     * Generuje token JWT na potrzeby potwierdzenia zmiany adresu email.
      *
      * @param username username
+     * @param email email
      * @return JWT token
      */
-    public String generateRegistrationConfirmationJwtTokenForUser(String username) {
-        try {
-            final JWSSigner signer = new MACSigner(registrationConfirmationJwtSecret);
-            final JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                    .subject(username)
-                    .expirationTime(new Date(new Date().getTime() + registrationConfirmationJwtExpirationMs))
-                    .build();
-            final SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS384), claimsSet);
-            signedJWT.sign(signer);
-            return signedJWT.serialize();
-        } catch (JOSEException e) {
-            e.printStackTrace();
-            // TODO: 18.04.2021
-            return "JWT error";
-        }
+    public String generateEmailChangeConfirmationJwtTokenForUser(String username, String email) {
+        return super.generateJwtTokenForUsername(username + "/" + email);
+    }
+
+    @Override
+    protected Long getJwtExpiration() {
+        return propertiesLoader.getEmailChangeConfirmationJWTExpiration();
+    }
+
+    @Override
+    protected String getJwtSecret() {
+        return propertiesLoader.getEmailChangeConfirmationJWTSecret();
     }
 
     /**
@@ -65,8 +42,8 @@ public class JwtEmailConfirmationUtils {
      * @return Login użytkownika o zadanym tokenie
      * @throws ParseException ParseException
      */
-    public String getUserNameFromRegistrationConfirmationJwtToken(String token) throws ParseException {
-        return SignedJWT.parse(token).getJWTClaimsSet().getSubject();
+    public String getUserNameFromJwtToken(String token) throws ParseException {
+        return super.getUserNameFromJwtToken(token);
     }
 
     /**
@@ -74,16 +51,30 @@ public class JwtEmailConfirmationUtils {
      * @param tokenToValidate JWT token
      * @return boolean
      */
+    @Override
+    public boolean validateJwtToken(String tokenToValidate) {
+        return super.validateJwtToken(tokenToValidate);
+    }
 
-    public boolean validateRegistrationConfirmationJwtToken(String tokenToValidate) {
-        try {
-            JWSObject jwsObject = JWSObject.parse(tokenToValidate);
-            JWSVerifier jwsVerifier = new MACVerifier(registrationConfirmationJwtSecret);
-            return jwsObject.verify(jwsVerifier);
-        } catch (ParseException | JOSEException e) {
-            e.printStackTrace();
-            return false;
-        }
+
+    /**
+     * Pobiera login z JWT wydanego na potrzebę potwierdzenia zmiany adresu email.
+     * @param token JWT token
+     * @return Login użytkownika o zadanym tokenie
+     * @throws ParseException ParseException
+     */
+    public String getUsernameFromToken(String token) throws ParseException {
+        return super.getUserNameFromJwtToken(token).split("/")[0];
+    }
+
+    /**
+     * Pobiera nowy mail użytkownika z JWT wydanego na potrzebę potwierdzenia zmiany adresu email.
+     * @param token JWT token
+     * @return Login użytkownika o zadanym tokenie
+     * @throws ParseException ParseException
+     */
+    public String getEmailFromToken(String token) throws ParseException {
+        return super.getUserNameFromJwtToken(token).split("/")[1];
     }
 
 

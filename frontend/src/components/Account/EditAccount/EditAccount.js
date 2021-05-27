@@ -1,148 +1,339 @@
-import React from "react";
+import React, {Suspense, useState} from 'react';
+import {withTranslation} from 'react-i18next';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./EditAccount.css";
+import axios from "axios";
+import {editAccountRequest} from "./EditAccountRequest";
+import Cookies from "js-cookie";
+import confirmationAlerts from "../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
 
-export default class EditAccount extends React.Component {
+
+const emailRegex = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
+const phoneNumberRegex = new RegExp(/^\d+$/);
+
+const peselRegex = new RegExp(/^\d+$/);
+
+class EditAccountWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             isDisabled: true,
-            text: "Edit",
-            login: "",
             email: "",
             firstName: "",
             lastName: "",
             phoneNumber: "",
             pesel: "",
+            version: 0,
+            etag: "",
+            errors: {}
         }
     }
 
-    validateForm(t) {
-        // Todo: zrobić walidację taką jaką wymaga projekt
-
-        function emailCorrect() {
-            return t.state.email.length > 0;
+    setValid(field) {
+        var array = this.state.errors;
+        if (!!array[field]) {
+            array[field] = null;
         }
-
-        function firstNameCorrect() {
-            return t.state.firstName.length > 0;
-        }
-
-        function lastNameCorrect() {
-            return t.state.lastName.length > 0;
-        }
-
-        function phoneNumberCorrect() {
-            return t.state.phoneNumber.length > 0 && /^\d+$/.test(t.state.phoneNumber);
-        }
-
-        // TODO: przypadek obcokrajowca wymusza że peselu może nie być ale nadal warto by go zwalidowac, tylko jak?
-        function peselCorrect() {
-            return true;
-        }
-
-        return emailCorrect() && firstNameCorrect() && lastNameCorrect() && phoneNumberCorrect() && peselCorrect();
+        this.setState({errors: array})
     }
 
+    findFormErrors(t) {
+
+        const newErrors = {}
+
+        function findEmailErrors() {
+            if (t.state.email === '') {
+                newErrors.email = "Email blank error";
+                return;
+            }
+
+            if (!emailRegex.test(t.state.email.toLowerCase())) {
+                newErrors.email = "Email format error";
+                return;
+            }
+
+            if (t.state.email.length < 4) {
+                newErrors.this.state.email = "Email too short error";
+                return;
+            }
+
+            if (t.state.email.length > 100) {
+                newErrors.email = "Email too long error";
+            }
+        }
+
+
+        function findFirstNameErrors() {
+            if (t.state.firstName === '') {
+                newErrors.firstName = "First name blank error";
+                return;
+            }
+
+            if (t.state.firstName.length > 50) {
+                newErrors.firstName = "First name too long error";
+            }
+        }
+
+        function findLastNameErrors() {
+            if (t.state.lastName === '') {
+                newErrors.lastName = "Last name blank error";
+                return;
+            }
+
+            if (t.state.lastName.length > 80) {
+                newErrors.lastName = "Last name too long error";
+            }
+        }
+
+        function findPhoneNumberErrors() {
+            if (t.state.phoneNumber === null || t.state.phoneNumber === '') {
+                t.setState({
+                    phoneNumber: "",
+                });
+                return;
+            }
+
+            if (!phoneNumberRegex.test(String(t.state.phoneNumber))) {
+                newErrors.phoneNumber = "Phone number format error";
+                return;
+            }
+
+            if (t.state.phoneNumber.length < 9) {
+                newErrors.phoneNumber = "Phone number too short error";
+                return;
+            }
+
+            if (t.state.phoneNumber.length > 15) {
+                newErrors.phoneNumber = "Phone number too long error";
+            }
+        }
+
+        function findPeselErrors() {
+            if (t.state.pesel === null || t.state.pesel === '') {
+                t.setState({
+                    pesel: "",
+                });
+                return;
+            }
+
+            if (!peselRegex.test(String(t.state.pesel))) {
+                newErrors.pesel = "Pesel format error";
+                return;
+            }
+
+            if (t.state.pesel.length !== 11) {
+                newErrors.pesel = "Pesel length error";
+                return;
+            }
+
+            let weight = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3];
+            let sum = 0;
+            let controlNumber = parseInt(t.state.pesel.substring(10, 11));
+
+            for (let i = 0; i < weight.length; i++) {
+                sum += (parseInt(t.state.pesel.substring(i, i + 1)) * weight[i]);
+            }
+            sum = sum % 10;
+
+            if ((10 - sum) % 10 !== controlNumber) {
+                newErrors.pesel = "Pesel control digit error";
+            }
+        }
+
+
+        findEmailErrors();
+        findFirstNameErrors();
+        findLastNameErrors();
+        findPhoneNumberErrors();
+        findPeselErrors();
+
+        return newErrors;
+    }
+
+
+    componentDidMount() {
+        let requestPath
+        if (this.props.account === undefined) {
+            requestPath = process.env.REACT_APP_BACKEND_URL + "account/info"
+        } else {
+            requestPath = process.env.REACT_APP_BACKEND_URL + "account/other-account-info/" + this.props.account
+        }
+        axios
+            .get(requestPath, {
+                headers: {
+                    Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
+                }
+            })
+            .then(res => {
+                this.setState({
+                    etag: res.headers['etag']
+                })
+                return res.data
+            })
+            .then(result => this.setState({
+                email: result.email,
+                firstName: result.firstName,
+                lastName: result.lastName,
+                phoneNumber: result.phoneNumber,
+                pesel: result.pesel,
+                version: result.version,
+            }))
+    }
 
     // Todo: prawdopodobnie wysyłać zapytanie do backendu tutaj, chciałbym zrobić tak jak w vue się da żeby jeśli odpalam w trybie debug front to łącze z localhostem, narazie nie ruszam.
-    handleSubmit(event) {
-        event.preventDefault();
+
+    handleSubmit(title, question) {
+        return function (event) {
+            event.preventDefault()
+            console.log(this.state.errors)
+            if (this.state.isDisabled === true) {
+                this.setEditable()
+            } else {
+                const newErrors = this.findFormErrors(this);
+
+                if (Object.keys(newErrors).length > 0) {
+                    // We got errors!
+                    this.setState({errors: newErrors})
+                } else {
+                    confirmationAlerts(title, question).then((confirmed) => {
+                        if (confirmed) {
+                            let phoneNumber = this.state.phoneNumber;
+                            if (this.state.phoneNumber === "") {
+                                phoneNumber = null;
+                            }
+                            let pesel = this.state.pesel
+                            if (this.state.pesel === "") {
+                                pesel = null;
+                            }
+                            editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, phoneNumber, pesel, this.state.version, this.state.etag, this.props.account);
+                            this.setNotEditable(this)
+                        }
+
+                    });
+                }
+            }
+        }.bind(this);
     }
 
-    handleOnClick(t) {
-        if (this.state.isDisabled === true) {
-            this.setEditable()
-        } else {
-            this.setNotEditable(t)
-        }
-    }
 
     setEditable() {
         this.setState({
             isDisabled: false,
-            text: "Save"
         });
     }
 
     setNotEditable(t) {
-        this.validateForm(t)
-        this.setState({
+        t.setState({
             isDisabled: true,
-            text: "Edit"
         });
     }
 
-    // todo: Czy dodawać tutaj też język do wyboru z en / pl? W dto go nie ma
     render() {
+        const {t} = this.props;
+
         return (
             <div className="EditAccount">
-                <Form onSubmit={this.handleSubmit}>
-                    <Form.Group size="lg" controlId="login">
-                        <Form.Label>Login</Form.Label>
-                        <Form.Control
-                            autoFocus
-                            type="login"
-                            value={this.state.login}
-                            disabled={true}
-                            onChange={(e) => this.setState({login: e.target.value})}
-                        />
-                    </Form.Group>
+                <Form onSubmit={this.handleSubmit(t("Warning"), t("Question edit account"))}>
                     <Form.Group size="lg" controlId="email">
-                        <Form.Label>Email</Form.Label>
+                        <Form.Label className="required">{t("Email")}</Form.Label>
                         <Form.Control
                             autoFocus
                             type="email"
                             value={this.state.email}
                             disabled={this.state.isDisabled}
-                            onChange={(e) => this.setState({email: e.target.value})}
+                            onChange={
+                                (e) => {
+                                    this.setState({email: e.target.value});
+                                    this.setValid('email');
+                                }}
+                            isInvalid={!!this.state.errors.email}
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {t(this.state.errors.email)}
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group size="lg" controlId="firstName">
-                        <Form.Label>First Name</Form.Label>
+                        <Form.Label className="required">{t("First Name")}</Form.Label>
                         <Form.Control
                             type="text"
                             value={this.state.firstName}
                             disabled={this.state.isDisabled}
-                            onChange={(e) => this.setState({firstName: e.target.value})}
+                            onChange={(e) => {
+                                this.setState({firstName: e.target.value});
+                                this.setValid('firstName')
+                            }}
+                            isInvalid={!!this.state.errors.firstName}
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {t(this.state.errors.firstName)}
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group size="lg" controlId="lastName">
-                        <Form.Label>Last Name</Form.Label>
+                        <Form.Label className="required">{t("Last Name")}</Form.Label>
                         <Form.Control
                             type="text"
                             value={this.state.lastName}
                             disabled={this.state.isDisabled}
-                            onChange={(e) => this.setState({lastName: e.target.value})}
+                            onChange={(e) => {
+                                this.setState({lastName: e.target.value});
+                                this.setValid('lastName');
+                            }}
+                            isInvalid={!!this.state.errors.lastName}
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {t(this.state.errors.lastName)}
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group size="lg" controlId="phoneNumber">
-                        <Form.Label>Phone Number</Form.Label>
+                        <Form.Label>{t("Phone Number")}</Form.Label>
                         <Form.Control
                             type="text"
                             value={this.state.phoneNumber}
                             disabled={this.state.isDisabled}
-                            onChange={(e) => this.setState({phoneNumber: e.target.value})}
+                            onChange={(e) => {
+                                this.setState({phoneNumber: e.target.value});
+                                this.setValid('phoneNumber');
+                            }}
+                            isInvalid={!!this.state.errors.phoneNumber}
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {t(this.state.errors.phoneNumber)}
+                        </Form.Control.Feedback>
                     </Form.Group>
-                    {/*Todo: co z peselem dla obcokrajowca? Nic czy coś innnego? Narazie zrobiłem że może być pusty*/}
                     <Form.Group size="lg" controlId="pesel">
-                        <Form.Label>Pesel</Form.Label>
+                        <Form.Label>{t("Pesel")}</Form.Label>
                         <Form.Control
                             type="text"
                             value={this.state.pesel}
                             disabled={this.state.isDisabled}
-                            onChange={(e) => this.setState({pesel: e.target.value})}
+                            onChange={(e) => {
+                                this.setState({pesel: e.target.value});
+                                this.setValid('pesel');
+                            }}
+                            isInvalid={!!this.state.errors.pesel}
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {t(this.state.errors.pesel)}
+                        </Form.Control.Feedback>
                     </Form.Group>
-                    <Button block size="lg" type="submit"
-                            onClick={() => this.handleOnClick(this)}>
-                        {this.state.text}
+                    <Button block size="lg" type="submit">
+                        {this.state.isDisabled ? t("Edit") : t("Save")}
                     </Button>
                 </Form>
             </div>
         );
     }
+}
+
+
+const EditAccountTr = withTranslation()(EditAccountWithoutTranslation)
+
+export default function EditAccount(props) {
+    return (
+        <Suspense fallback="loading">
+            <EditAccountTr account={props.account}/>
+        </Suspense>
+    );
 }

@@ -80,12 +80,23 @@ public class AccessLevel extends AbstractEntity implements Serializable {
     /**
      * Tworzy nową instancję klasy AccessLevel.
      *
-     * @param level            nazwa poziomu dostepu
-     * @param account           status
+     * @param level   nazwa poziomu dostepu
+     * @param account status
      */
     public AccessLevel(String level, Account account) {
         this.level = level;
         this.accountId = account;
+    }
+
+    /**
+     * Tworzy nową instancję klasy Access level.
+     *
+     * @param account account
+     * @param active  active
+     */
+    public AccessLevel(Account account, Boolean active) {
+        this.accountId = account;
+        this.active = active;
     }
 
     @Override
@@ -93,18 +104,38 @@ public class AccessLevel extends AbstractEntity implements Serializable {
         return id;
     }
 
+    /**
+     * Pobiera pole level.
+     *
+     * @return level
+     */
     public String getLevel() {
         return level;
     }
 
+    /**
+     * Pobiera pole active.
+     *
+     * @return active
+     */
     public Boolean getActive() {
         return active;
     }
 
+    /**
+     * Ustawia pole active.
+     *
+     * @param active active
+     */
     public void setActive(Boolean active) {
         this.active = active;
     }
 
+    /**
+     * Ustawia pole account id.
+     *
+     * @param accountId account id
+     */
     public void setAccountId(Account accountId) {
         this.accountId = accountId;
     }
