@@ -60,7 +60,7 @@
 
         <frontend.directory>../frontend</frontend.directory>
         <frontend.directory.output>${frontend.directory}/build</frontend.directory.output>
-        <npm.executable>${frontend.directory}/node/npm.cmd</npm.executable>
+        <npm.executable>node/npm</npm.executable>
     </properties>
 
     <dependencies>
