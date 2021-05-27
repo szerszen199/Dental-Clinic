@@ -26,6 +26,8 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_CHANGE_CONFI
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_CHANGE_CONFIRM_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_GENERATED_PASSWORD_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_GENERATED_PASSWORD_TEXT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_GRANT_ACCESS_LEVEL_SUBJECT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_GRANT_ACCESS_LEVEL_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_ADMIN_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_ADMIN_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_SUBJECT;
@@ -307,6 +309,28 @@ public class MailProvider {
             mailManager.sendMail(email, subject, getFrom(), messageText, session);
         } catch (MessagingException e) {
             throw MailSendingException.passwordResetMail();
+        }
+    }
+
+    /**
+     * Wysyła wiadomość informującą o przyznanym poziomie dostępu dla konta.
+     *
+     * @param email Adres, na który zostanie wysłana wiadomość.
+     * @param level Poziom dostępu, który został przyznany
+     * @param lang język wiadomości email
+     * @throws MailSendingException Błąd wysyłania wiadomości.
+     */
+    public void sendAccountGrantAccessLevelMail(String email, String level, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(ACCOUNT_MAIL_GRANT_ACCESS_LEVEL_SUBJECT);
+        try {
+            String splittedLevel = level.split("\\.")[1];
+            String capitalizedLevel = splittedLevel.substring(0, 1).toUpperCase() + splittedLevel.substring(1);
+            String messageText = paragraph(langBundle.getString(ACCOUNT_MAIL_GRANT_ACCESS_LEVEL_TEXT)) + capitalizedLevel;
+            mailManager.sendMail(email, subject, getFrom(), messageText, session);
+        } catch (MessagingException | ArrayIndexOutOfBoundsException e) {
+            throw MailSendingException.accountLock();
         }
     }
 
