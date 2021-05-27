@@ -184,7 +184,7 @@ class EditAccountWithoutTranslation extends React.Component {
 
     // Todo: prawdopodobnie wysyłać zapytanie do backendu tutaj, chciałbym zrobić tak jak w vue się da żeby jeśli odpalam w trybie debug front to łącze z localhostem, narazie nie ruszam.
 
-    handleSubmit(title, question) {
+    handleSubmit(title, question, t) {
         return function (event) {
             event.preventDefault()
             console.log(this.state.errors)
@@ -207,7 +207,7 @@ class EditAccountWithoutTranslation extends React.Component {
                             if (this.state.pesel === "") {
                                 pesel = null;
                             }
-                            editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, phoneNumber, pesel, this.state.version, this.state.etag, this.props.account);
+                            editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, phoneNumber, pesel, this.state.version, this.state.etag, this.props.account, t);
                             this.setNotEditable(this)
                         }
 
@@ -235,7 +235,7 @@ class EditAccountWithoutTranslation extends React.Component {
 
         return (
             <div className="EditAccount">
-                <Form onSubmit={this.handleSubmit(t("Warning"), t("Question edit account"))}>
+                <Form onSubmit={this.handleSubmit(t("Warning"), t("Question edit account"), t)}>
                     <Form.Group size="lg" controlId="email">
                         <Form.Label className="required">{t("Email")}</Form.Label>
                         <Form.Control
