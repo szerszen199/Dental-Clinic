@@ -6,6 +6,9 @@ import "./EditAccount.css";
 import axios from "axios";
 import {editAccountRequest} from "./EditAccountRequest";
 import Cookies from "js-cookie";
+import {makeAccountsListRequest} from "../../AccountsList/AccountsListRequest";
+import {FiRefreshCw} from "react-icons/fi";
+import {Col, Container, Row, Table} from "react-bootstrap";
 
 class EditAccountWithoutTranslation extends React.Component {
     constructor(props) {
@@ -23,6 +26,10 @@ class EditAccountWithoutTranslation extends React.Component {
     }
 
     componentDidMount() {
+        this.makeGetAccountRequest()
+    }
+
+    makeGetAccountRequest() {
         let requestPath
         if (this.props.account === undefined) {
             requestPath = process.env.REACT_APP_BACKEND_URL + "account/info"
@@ -133,6 +140,20 @@ class EditAccountWithoutTranslation extends React.Component {
         }
     }
 
+    refreshList(self) {
+        makeAccountsListRequest().then((response) => {
+            self.setState({accountsList: response});
+        })
+    }
+
+    renderButton() {
+        return <Button variant={"secondary"} size="lg" as={Col} onClick={() => {
+            this.makeGetAccountRequest()
+        }}>
+            <FiRefreshCw />
+        </Button>
+    }
+
     render() {
         const {t} = this.props;
 
@@ -185,10 +206,23 @@ class EditAccountWithoutTranslation extends React.Component {
                             onChange={(e) => this.setState({pesel: e.target.value})}
                         />
                     </Form.Group>
-                    <Button block size="lg" type="submit"
-                            onClick={() => this.handleOnClick(this)}>
-                        {this.state.isDisabled ? t("Edit") : t("Save")}
-                    </Button>
+                    <Form.Row>
+                        <Container>
+                            <Row>
+                                <Col sm={10}>
+                                    <Button size="lg" type="submit" as={Col}
+                                            onClick={() => this.handleOnClick(this)}>
+                                        {this.state.isDisabled ? t("Edit") : t("Save")}
+                                    </Button>
+                                </Col>
+                                <Col sm={2}>
+                                    <div className="edit-account-refresh-button-div" >
+                                        {this.renderButton()}
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Form.Row>
                 </Form>
             </div>
         );

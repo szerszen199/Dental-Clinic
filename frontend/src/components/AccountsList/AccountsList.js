@@ -7,6 +7,7 @@ import { Button } from "react-bootstrap";
 import filterFactory, {textFilter} from 'react-bootstrap-table2-filter';
 import {Link} from "react-router-dom";
 import edit from "../../assets/edit.png"
+import { FiRefreshCw } from "react-icons/fi";
 
 class AccountsListWithoutTranslation extends React.Component {
 
@@ -24,6 +25,12 @@ class AccountsListWithoutTranslation extends React.Component {
         })
     }
 
+    makeGetAccountsRequest() {
+        makeAccountsListRequest().then((response) => {
+            this.setState({accountsList: response});
+        })
+    }
+
     renderAccounts() {
         const {t} = this.props;
 
@@ -32,28 +39,16 @@ class AccountsListWithoutTranslation extends React.Component {
             {
                 dataField: 'login',
                 text: t('UserLogin'),
-                filter: textFilter({
-                    placeholder: t("Filter"),
-                    style: {marginLeft: "10px"}
-                }),
                 style: {verticalAlign: "middle"}
             },
             {
                 dataField: 'name',
                 text: t('Name and Surname'),
-                filter: textFilter({
-                    placeholder: t("Filter"),
-                    style: {marginLeft: "10px"}
-                }),
                 style: {verticalAlign: "middle"}
             },
             {
                 dataField: 'email',
                 text: t('Email'),
-                filter: textFilter({
-                    placeholder: t("Filter"),
-                    style: {marginLeft: "10px"}
-                }),
                 style: {verticalAlign: "middle"}
             },
             {
@@ -88,6 +83,7 @@ class AccountsListWithoutTranslation extends React.Component {
         return <div className="AccountListGroup">
             {!this.state.accountsList.length ? this.renderNull() : this.renderAccounts()}
         </div>
+        </span>
     }
 }
 
