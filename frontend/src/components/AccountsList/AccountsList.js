@@ -17,6 +17,7 @@ class AccountsListWithoutTranslation extends React.Component {
         this.state = {
             accountsList: []
         };
+        this.unFilteredList = []
     }
 
     componentDidMount() {
@@ -36,6 +37,15 @@ class AccountsListWithoutTranslation extends React.Component {
         this.setState({accountsList: tempList})
     }
 
+    getHintList(list){
+        let tempList = [];
+        let uniqueList = [...new Set(this.state.accountsList.map(a =>a.name))];
+        for(let i in uniqueList){
+            tempList.push(<option key={i} value={uniqueList[i]}>{uniqueList[i]}</option>);
+        }
+        return tempList;
+
+    }
 
     renderAccounts() {
         const {t} = this.props;
@@ -88,8 +98,11 @@ class AccountsListWithoutTranslation extends React.Component {
     render() {
         const {t} = this.props;
         return <Fragment>
-            <Input onChange={e => this.filterList(e.target.value)} placeholder={t("Filter")}/>
+            <datalist id='options'>
+                {this.state.accountsList.length !== this.unFilteredList.length?this.getHintList():[]}
+            </datalist>
             <div className="AccountListGroup">
+                <Input list='options' id="ListFilter" onChange={e => this.filterList(e.target.value)} placeholder={t("Filter")}/>
                 {!this.state.accountsList.length ? this.renderNull() : this.renderAccounts()}
             </div>
         </Fragment>
