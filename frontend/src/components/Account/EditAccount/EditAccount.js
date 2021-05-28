@@ -147,7 +147,7 @@ class EditAccountWithoutTranslation extends React.Component {
     }
 
     renderButton() {
-        return <Button variant={"secondary"} size="lg" as={Col} onClick={() => {
+        return <Button variant={"secondary"} size="lg" onClick={() => {
             this.makeGetAccountRequest()
         }}>
             <FiRefreshCw />
@@ -207,15 +207,15 @@ class EditAccountWithoutTranslation extends React.Component {
                         />
                     </Form.Group>
                     <Form.Row>
-                        <Container>
-                            <Row>
-                                <Col sm={10}>
+                        <Container id="containerForButtons">
+                            <Row id="rowForEditButton">
+                                <Col sm={11}>
                                     <Button size="lg" type="submit" as={Col}
                                             onClick={() => this.handleOnClick(this)}>
                                         {this.state.isDisabled ? t("Edit") : t("Save")}
                                     </Button>
-                                </Col>
-                                <Col sm={2}>
+                                </Col >
+                                <Col sm={1} id="refreshColumn">
                                     <div className="edit-account-refresh-button-div" >
                                         {this.renderButton()}
                                     </div>
