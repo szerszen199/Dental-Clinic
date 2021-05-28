@@ -12,7 +12,7 @@ export default function Login() {
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
     const {t} = useTranslation()
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
     const loginRegex = new RegExp(/^[a-z0-9]+$/i);
 
     function handleSubmit(event) {
@@ -124,6 +124,7 @@ export default function Login() {
                 </Button>
             </Form>
             <span>{isLoggedIn ? <Redirect to={{pathname: '/home'}}/> : ''}</span>
+            {/*<Link to={{pathname: "/#/home", state: { isLoggedIn: true } }}/>*/}
         </div>
     );
 }

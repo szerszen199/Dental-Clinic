@@ -21,7 +21,7 @@ export function makeLoginRequest(login, password) {
         }
         localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, response.data.refreshJwtToken.token);
         // TODO: To redirect po poprawnym zalogowaniu, nie podoba mi się, nie korzysta z routera ale inaczej mi nie chce narazie pojsc.
-        window.location = "/home";
+        // window.location = "/#/home";
         return true;
     }).catch((response) => {
         // todo Wyświetlić odpowiedni komunikat
