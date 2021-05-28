@@ -343,8 +343,7 @@ class EditAccountWithoutTranslation extends React.Component {
                         <Container id="containerForButtons">
                             <Row id="rowForEditButton">
                                 <Col sm={11}>
-                                    <Button size="lg" type="submit" as={Col}
-                                            onClick={() => this.handleOnClick(this)}>
+                                    <Button block size="lg" type="submit">
                                         {this.state.isDisabled ? t("Edit") : t("Save")}
                                     </Button>
                                 </Col >
@@ -356,9 +355,6 @@ class EditAccountWithoutTranslation extends React.Component {
                             </Row>
                         </Container>
                     </Form.Row>
-                    <Button block size="lg" type="submit">
-                        {this.state.isDisabled ? t("Edit") : t("Save")}
-                    </Button>
                 </Form>
             </div>
         );
