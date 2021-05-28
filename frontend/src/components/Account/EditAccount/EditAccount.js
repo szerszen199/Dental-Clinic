@@ -7,13 +7,16 @@ import axios from "axios";
 import {editAccountRequest} from "./EditAccountRequest";
 import Cookies from "js-cookie";
 import confirmationAlerts from "../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
-
+import {makeAccountsListRequest} from "../../AccountsList/AccountsListRequest";
+import {FiRefreshCw} from "react-icons/fi";
+import {Col, Container, Row, Table} from "react-bootstrap";
 
 const emailRegex = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
 const phoneNumberRegex = new RegExp(/^\d+$/);
 
 const peselRegex = new RegExp(/^\d+$/);
+
 
 class EditAccountWithoutTranslation extends React.Component {
     constructor(props) {
@@ -154,6 +157,10 @@ class EditAccountWithoutTranslation extends React.Component {
 
 
     componentDidMount() {
+        this.makeGetAccountRequest()
+    }
+
+    makeGetAccountRequest() {
         let requestPath
         if (this.props.account === undefined) {
             requestPath = process.env.REACT_APP_BACKEND_URL + "account/info"
@@ -228,6 +235,20 @@ class EditAccountWithoutTranslation extends React.Component {
         t.setState({
             isDisabled: true,
         });
+    }
+
+    refreshList(self) {
+        makeAccountsListRequest().then((response) => {
+            self.setState({accountsList: response});
+        })
+    }
+
+    renderButton() {
+        return <Button variant={"secondary"} size="lg" onClick={() => {
+            this.makeGetAccountRequest()
+        }}>
+            <FiRefreshCw />
+        </Button>
     }
 
     render() {
@@ -318,6 +339,23 @@ class EditAccountWithoutTranslation extends React.Component {
                             {t(this.state.errors.pesel)}
                         </Form.Control.Feedback>
                     </Form.Group>
+                    <Form.Row>
+                        <Container id="containerForButtons">
+                            <Row id="rowForEditButton">
+                                <Col sm={11}>
+                                    <Button size="lg" type="submit" as={Col}
+                                            onClick={() => this.handleOnClick(this)}>
+                                        {this.state.isDisabled ? t("Edit") : t("Save")}
+                                    </Button>
+                                </Col >
+                                <Col sm={1} id="refreshColumn">
+                                    <div className="edit-account-refresh-button-div" >
+                                        {this.renderButton()}
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Form.Row>
                     <Button block size="lg" type="submit">
                         {this.state.isDisabled ? t("Edit") : t("Save")}
                     </Button>
