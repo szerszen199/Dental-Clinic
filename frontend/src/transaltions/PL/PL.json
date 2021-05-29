@@ -83,5 +83,8 @@
   "LockAccount": "Zablokuj Konto",
   "Active": "Aktywne",
   "account_locked_successfully": "Konto zablokowane pomyślnie",
-  "account_locked_failed": "Nie udało sie zablokować konta"
+  "account_locked_failed": "Nie udało sie zablokować konta",
+  "UnlockAccount": "Odblokuj Konto",
+  "account_unlocked_successfully": "Konto odblokowane pomyślnie",
+  "account_unlocked_failed": "Nie udało się odblokować konta"
 }
