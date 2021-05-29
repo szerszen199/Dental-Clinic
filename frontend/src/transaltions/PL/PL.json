@@ -158,5 +158,6 @@
   "edit_account_mail": "Nie udało się wysłać maila",
   "password_reset_mail_sent_error": "Nie udało sie wysłać maila resetowania hasła"
   "LockAccount": "Zablokuj Konto",
-  "Active": "Aktywne"
+  "Active": "Aktywne",
+  "UnlockAccount": "Odblokuj Konto"
 }
