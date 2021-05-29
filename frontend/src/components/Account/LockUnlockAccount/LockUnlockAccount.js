@@ -65,7 +65,7 @@ class LockAccountWithoutTranslation extends React.Component {
         return (
             <div className="LockAccount">
                 <Row>
-                    <Form>
+                    <Form style={{width: "100%"}}>
                         <Form.Group size="lg" controlId="isLocked">
                             <Form.Label>{t("Active")}</Form.Label>
                                 <Form.Control
@@ -76,7 +76,7 @@ class LockAccountWithoutTranslation extends React.Component {
                         </Form.Group>
                     </Form>
                 </Row>
-                <Container id="containerForButtons">
+                <Container id="containerForButtons" style={{minWidth: "108%", marginLeft: "-20px"}}>
                     <Row id="rowForLockButton">
                         <Col>
                             <div className="lockAccountDiv">
