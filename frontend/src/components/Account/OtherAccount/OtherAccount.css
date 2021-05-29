@@ -5,6 +5,10 @@
         /*margin-right: 60px;*/
     }
 
+    .ResetPasswordByAdmin {
+        padding: 10px 0;
+    }
+
 }
 
 .LoginLabel{

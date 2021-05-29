@@ -159,5 +159,6 @@
   "password_reset_mail_sent_error": "Unable to send password reset email",
   "LockAccount": "Lock Account",
   "Active": "Active",
-  "UnlockAccount": "Unlock Account"
+  "UnlockAccount": "Unlock Account",
+  "Question reset password by admin": "Do you want to send password reset link?"
 }

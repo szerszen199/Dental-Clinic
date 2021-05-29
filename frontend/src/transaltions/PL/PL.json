@@ -159,5 +159,6 @@
   "password_reset_mail_sent_error": "Nie udało sie wysłać maila resetowania hasła",
   "LockAccount": "Zablokuj Konto",
   "Active": "Aktywne",
-  "UnlockAccount": "Odblokuj Konto"
+  "UnlockAccount": "Odblokuj Konto",
+  "Question reset password by admin": "Czy na pewno chcesz wysłać link do resetowania hasła?"
 }
