@@ -18,10 +18,9 @@ export function setNewPasswordRequest(token, firstPassword, secondPassword){
     axios(config)
         .then(function (response) {
             console.log(JSON.stringify(response.data));
+            window.location = "/home";
         })
         .catch(function (error) {
             console.log(error);
         });
-
-    window.location = "/home";
 }
