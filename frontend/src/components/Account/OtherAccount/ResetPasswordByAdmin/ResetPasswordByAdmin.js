@@ -1,6 +1,7 @@
 import React, {Suspense} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import "./ResetPasswordByAdmin.css";
 import {withTranslation} from "react-i18next";
 import confirmationAlerts from "../../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
 import {makeResetPasswordByAdminRequest} from "./ResetPasswordByAdminRequest";
@@ -25,7 +26,7 @@ class ResetPasswordByAdminWithoutTranslation extends React.Component {
         const {t} = this.props;
 
         return (
-            <div className="EditPassword">
+            <div className="ResetPasswordByAdmin">
                 <Form onSubmit={this.handleSubmit(this, t("Warning"), t("Question reset password by admin"))}>
                     <Button block size="lg" type="submit">
                         {t("ResetPassword")}
