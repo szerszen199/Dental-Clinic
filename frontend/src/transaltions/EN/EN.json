@@ -83,5 +83,8 @@
   "LockAccount": "Lock Account",
   "Active": "Active",
   "account_locked_successfully": "Account locked successfully",
-  "account_locked_failed": "Unable to lock account"
+  "account_locked_failed": "Unable to lock account",
+  "UnlockAccount": "Unlock Account",
+  "account_unlocked_successfully": "Account unlocked successfully",
+  "account_unlocked_failed": "Unable to unlock account"
 }
