@@ -50,7 +50,13 @@ class LockAccountWithoutTranslation extends React.Component {
         </Button>
     }
 
-
+    renderUnLockButton(t) {
+        return <Button block size="lg" type="submit" onClick={() => {
+            this.makeUnlockAccountRequest(t)
+        }}>
+            {t("UnlockAccount")}
+        </Button>
+    }
 
 
     render() {
@@ -59,7 +65,7 @@ class LockAccountWithoutTranslation extends React.Component {
         return (
             <div className="LockAccount">
                 <Row>
-                    <Form>
+                    <Form style={{width: "100%"}}>
                         <Form.Group size="lg" controlId="isLocked">
                             <Form.Label>{t("Active")}</Form.Label>
                                 <Form.Control
@@ -70,11 +76,16 @@ class LockAccountWithoutTranslation extends React.Component {
                         </Form.Group>
                     </Form>
                 </Row>
-                <Container id="containerForButtons">
+                <Container id="containerForButtons" style={{minWidth: "108%", marginLeft: "-20px"}}>
                     <Row id="rowForLockButton">
                         <Col>
                             <div className="lockAccountDiv">
                                 {this.renderLockButton(t)}
+                            </div>
+                        </Col>
+                        <Col>
+                            <div className="UnlockAccountDiv">
+                                {this.renderUnLockButton(t)}
                             </div>
                         </Col>
                     </Row>
@@ -86,6 +97,18 @@ class LockAccountWithoutTranslation extends React.Component {
     makeLockAccountRequest(t) {
         let requestPath = process.env.REACT_APP_BACKEND_URL + "account/lock"
 
+        this.makeLockUnlockRequest(requestPath, t);
+
+    }
+
+    makeUnlockAccountRequest(t) {
+        let requestPath = process.env.REACT_APP_BACKEND_URL + "account/unlock"
+
+        this.makeLockUnlockRequest(requestPath, t);
+
+    }
+
+    makeLockUnlockRequest(requestPath, t) {
         axios
             .put(requestPath, {
                 login: this.props.userLogin
@@ -103,7 +126,6 @@ class LockAccountWithoutTranslation extends React.Component {
                     errorAlerts(t(response.response.data.message), response.response.status.toString(10));
                 }
             });
-
     }
 }
 
