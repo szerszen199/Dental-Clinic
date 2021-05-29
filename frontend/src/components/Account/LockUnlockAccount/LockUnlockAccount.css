@@ -1,0 +1,18 @@
+@media all and (min-width: 480px) {
+    .LockAccount{
+        margin-top: 20px;
+        padding: -60px 0;
+    }
+
+    .LockAccount form {
+        margin: 0 auto;
+        max-width: 520px;
+    }
+
+    #containerForButtons{
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+
+
+}
