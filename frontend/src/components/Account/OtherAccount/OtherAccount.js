@@ -36,7 +36,7 @@ function OtherAccount(props) {
                     <Col>
                         <Row>Adding Roles</Row>
                         <Row>
-                            <ResetPasswordByAdmin account={accId}/>
+                            <ResetPasswordByAdmin className="ResetPasswordByAdmin" account={accId}/>
                         </Row>
                     </Col>
                 </Row>
