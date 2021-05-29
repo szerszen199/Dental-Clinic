@@ -16,15 +16,15 @@ export default function SetNewPassword() {
     function handleSubmit(event) {
         event.preventDefault();
 
-        // const newErrors = findFormErrors();
-        //
-        // if (Object.keys(newErrors).length > 0) {
-        //     // We got errors!
-        //     setErrors(newErrors);
-        // } else {
-        //     //makeLoginRequest(login, password);
-        // }
-        setNewPasswordRequest(token, password, repeatedPassword);
+         const newErrors = findFormErrors();
+
+         if (Object.keys(newErrors).length > 0) {
+            // We got errors!
+            setErrors(newErrors);
+        } else {
+             setNewPasswordRequest(token, password, repeatedPassword);
+        }
+
 
 
     }
@@ -38,32 +38,32 @@ export default function SetNewPassword() {
         })
     }
 
-    // findFormErrors(t) {
-    //
-    //     const newErrors = {}
-    //
-    //     function findPasswordErrors(pwd) {
-    //         if (t.state.password === '') {
-    //             newErrors[pwd] = "Password blank error";
-    //             return;
-    //         }
-    //
-    //         if (t.state.password.length < 8) {
-    //             newErrors[pwd] = "Password too short error";
-    //             return;
-    //         }
-    //
-    //         if (t.state.password !== t.state.repeatedPassword) {
-    //             newErrors[pwd] = "Passwords mismatch error";
-    //         }
-    //     }
-    //
-    //
-    //     //findPasswordErrors(password);
-    //     findPasswordErrors('repeatedPassword');
-    //     console.log(newErrors)
-    //     return newErrors;
-    // }
+    const findFormErrors = () => {
+
+        const newErrors = {}
+
+        function findPasswordErrors(pwd) {
+            if (password === '') {
+                newErrors[pwd] = "Password blank error";
+                return;
+            }
+
+            if (password.length < 8) {
+                newErrors[pwd] = "Password too short error";
+                return;
+            }
+
+            if (password !== repeatedPassword) {
+                newErrors[pwd] = "Passwords mismatch error";
+            }
+        }
+
+
+        findPasswordErrors('password');
+        findPasswordErrors('repeatedPassword');
+        console.log(newErrors)
+        return newErrors;
+    }
 
 
     return (
