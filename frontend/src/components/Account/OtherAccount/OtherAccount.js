@@ -5,6 +5,7 @@ import {Col, Container, FormControl, Row} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import {Label} from "semantic-ui-react";
 import {useParams} from "react-router-dom";
+import LockUnlockAccount from "../LockUnlockAccount/LockUnlockAccount"
 
 // TODO adding roles
 function OtherAccount(props) {
@@ -14,7 +15,7 @@ function OtherAccount(props) {
             <Container>
                 <Row>
                     <Col style={{maxWidth: "515px"}}>
-                        <Label className={"LoginLabel required"} >
+                        <Label className={"LoginLabel required"}>
                             Login
                         </Label>
                         <FormControl
@@ -40,6 +41,7 @@ function OtherAccount(props) {
                                 Reset password
                             </Button>
                         </Row>
+                        <LockUnlockAccount userLogin={accId}/>
                     </Col>
                 </Row>
             </Container>

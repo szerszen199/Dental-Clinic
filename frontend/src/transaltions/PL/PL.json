@@ -79,5 +79,9 @@
   "Question edit account": "Czy na pewno chcesz zmienić dane konta?",
   "invalid_login_password_combination": "Błędny login lub hasło",
   "account_not_found": "Konto nie znalezione",
-  "login_failure": "Logowanie nieudane"
+  "login_failure": "Logowanie nieudane",
+  "LockAccount": "Zablokuj Konto",
+  "Active": "Aktywne",
+  "account_locked_successfully": "Konto zablokowane pomyślnie",
+  "account_locked_failed": "Nie udało sie zablokować konta"
 }
