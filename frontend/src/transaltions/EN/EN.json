@@ -79,5 +79,9 @@
   "Question edit account": "Do you want to edit account?",
   "invalid_login_password_combination": "Invalid login or password",
   "account_not_found": "Account not found",
-  "login_failure": "Authentication failed"
+  "login_failure": "Authentication failed",
+  "LockAccount": "Lock Account",
+  "Active": "Active",
+  "account_locked_successfully": "Account locked successfully",
+  "account_locked_failed": "Unable to lock account"
 }
