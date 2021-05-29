@@ -252,6 +252,7 @@ public class MailProvider {
      * @param lang język wiadomości email
      * @throws MailSendingException the mail sending exception
      */
+    @Asynchronous
     public void sendResetPassConfirmationMail(String email, String token, String lang) throws MailSendingException {
         Locale locale = new Locale(lang);
         ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
@@ -342,7 +343,7 @@ public class MailProvider {
         StringBuilder sb = new StringBuilder(getDefaultUrl());
 
         sb.append(defaultContext);
-        sb.append("/api/account/reset?token=");
+        sb.append("/new-password/");
         sb.append(token);
 
         return sb.toString();

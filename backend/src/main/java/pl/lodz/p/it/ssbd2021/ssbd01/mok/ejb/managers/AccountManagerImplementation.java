@@ -463,6 +463,29 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
+    public void setNewPassword(String login, String newPassword) throws AppBaseException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw PasswordException.passwordChangeFailed();
+        }
+        account.setModifiedBy(findByLogin(login));
+        account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        if (account.getPassword().contentEquals(hashGenerator.generateHash(newPassword))) {
+            throw PasswordException.passwordsNotDifferent();
+        }
+        account.setPassword(hashGenerator.generateHash(newPassword));
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw PasswordException.passwordChangeFailed();
+        }
+    }
+
+    @Override
     public Account findByLogin(String login) throws AppBaseException {
         return accountFacade.findByLogin(login);
     }

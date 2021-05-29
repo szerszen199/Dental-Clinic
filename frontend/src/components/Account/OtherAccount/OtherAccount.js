@@ -5,6 +5,8 @@ import {Col, Container, FormControl, Row} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import {Label} from "semantic-ui-react";
 import {useParams} from "react-router-dom";
+import {makeResetPasswordByAdminRequest} from "./ResetPasswordByAdmin/ResetPasswordByAdminRequest";
+import ResetPasswordByAdmin from "./ResetPasswordByAdmin/ResetPasswordByAdmin";
 
 // TODO adding roles
 function OtherAccount(props) {
@@ -28,17 +30,13 @@ function OtherAccount(props) {
                 </Row>
                 <Row>
                     <Col>
-                        <EditAccount className="EditAccount" path={"other-account-info"} account={accId}/>
+                        <EditAccount className="EditAccount" account={accId}/>
                     </Col>
                     <Col style={{maxWidth: "60px"}}/>
                     <Col>
                         <Row>Adding Roles</Row>
                         <Row>
-                            <Button
-                                block size="lg"
-                                type="submit">
-                                Reset password
-                            </Button>
+                            <ResetPasswordByAdmin account={accId}/>
                         </Row>
                     </Col>
                 </Row>

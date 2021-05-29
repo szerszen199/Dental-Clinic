@@ -76,5 +76,6 @@
   "Success": "Udało się!",
   "Error": "Błąd!",
   "Question edit password": "Czy na pewno chcesz zmienić swoje hasło?",
-  "Question edit account": "Czy na pewno chcesz zmienić dane konta?"
+  "Question edit account": "Czy na pewno chcesz zmienić dane konta?",
+  "Question reset password by admin": "Czy na pewno chcesz wysłać link do resetowania hasła?"
 }

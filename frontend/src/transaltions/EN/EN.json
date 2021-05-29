@@ -76,5 +76,6 @@
   "Success": "Success!",
   "Error": "Error!",
   "Question edit password": "Do you want to edit your password?",
-  "Question edit account": "Do you want to edit account?"
+  "Question edit account": "Do you want to edit account?",
+  "Question reset password by admin": "Do you want to send password reset link?"
 }

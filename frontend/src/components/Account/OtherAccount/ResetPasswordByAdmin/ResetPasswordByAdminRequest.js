@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export function makeResetPasswordRequest(login) {
+export function makeResetPasswordByAdminRequest(login) {
     axios.put(process.env.REACT_APP_BACKEND_URL + "account/reset-password", {
         login: login,
     }).then(function (response) {
@@ -8,6 +8,4 @@ export function makeResetPasswordRequest(login) {
     }).catch(function (error) {
         console.log(error);
     });
-    window.location = "/home";
 }
-
