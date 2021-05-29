@@ -36,6 +36,8 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOGIN_SUBJEC
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOGIN_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_PASSWORD_CONFIRMATION_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_PASSWORD_CONFIRMATION_TEXT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_REVOKE_ACCESS_LEVEL_SUBJECT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_REVOKE_ACCESS_LEVEL_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_SCHEDULER_LOCK_BUTTON;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_SCHEDULER_LOCK_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_SCHEDULER_LOCK_TEXT;
@@ -334,6 +336,29 @@ public class MailProvider {
         }
     }
 
+
+    /**
+     * Wysyła wiadomość informującą o odebranym poziomie dostępu dla konta.
+     *
+     * @param email Adres, na który zostanie wysłana wiadomość.
+     * @param level Poziom dostępu, który został odebrany
+     * @param lang język wiadomości email
+     * @throws MailSendingException Błąd wysyłania wiadomości.
+     */
+    public void sendAccountRevokeAccessLevelMail(String email, String level, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(ACCOUNT_MAIL_REVOKE_ACCESS_LEVEL_SUBJECT);
+        try {
+            String splittedLevel = level.split("\\.")[1];
+            String capitalizedLevel = splittedLevel.substring(0, 1).toUpperCase() + splittedLevel.substring(1);
+            String messageText = paragraph(langBundle.getString(ACCOUNT_MAIL_REVOKE_ACCESS_LEVEL_TEXT)) + capitalizedLevel;
+            mailManager.sendMail(email, subject, getFrom(), messageText, session);
+        } catch (MessagingException | ArrayIndexOutOfBoundsException e) {
+            throw MailSendingException.accountLock();
+        }
+    }
+
     private String paragraph(String text) {
         return "<p>" + text + "</p>";
     }
@@ -371,4 +396,5 @@ public class MailProvider {
 
         return sb.toString();
     }
+
 }
