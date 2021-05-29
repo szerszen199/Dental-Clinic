@@ -154,6 +154,14 @@ public interface AccountManager {
      */
     void changePassword(String login, String oldPassword, String newPassword) throws AppBaseException;
 
+    /**
+     * Zmienia hasło {@param newPassword} wskazanego konta {@param account}.
+     *
+     * @param login       login konta, którego hasło jest edytowane
+     * @param newPassword nowe hasło
+     * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                          nie powiedzie się.
+     */
+    void setNewPassword(String login, String newPassword) throws AppBaseException;
 
     /**
      * Wyszukuje konto na podstawie loginu.

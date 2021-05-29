@@ -49,9 +49,9 @@ class MainViewWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            language: "PL",
+            language: "EN",
             isDarkMode: false,
-            flag: this.urlEN,
+            flag: this.urlPL,
             login: "",
         }
     }
