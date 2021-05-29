@@ -156,7 +156,7 @@
   "mail_account_lock_send_error":  "Unable to send account lock email",
   "mail_activation_confirmation_send_error": "Unable to send confirmation email",
   "edit_account_mail": "Unable to send email",
-  "password_reset_mail_sent_error": "Unable to send password reset email"
+  "password_reset_mail_sent_error": "Unable to send password reset email",
   "LockAccount": "Lock Account",
   "Active": "Active",
   "UnlockAccount": "Unlock Account"
