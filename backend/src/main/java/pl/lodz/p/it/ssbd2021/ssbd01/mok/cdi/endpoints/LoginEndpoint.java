@@ -9,11 +9,13 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.AuthenticationRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.RefreshTokenRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AuthAndRefreshTokenResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.JwtTokenAndUserDataReponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.JwtTokenResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.UserInfoResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtLoginUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtRefreshUtils;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtResetPasswordConfirmation;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
@@ -58,6 +60,7 @@ public class LoginEndpoint {
     private final PropertiesLoader propertiesLoader;
     private final JwtRefreshUtils jwtRefreshUtils;
     private final MailProvider mailProvider;
+    private final JwtResetPasswordConfirmation jwtResetPasswordConfirmation;
 
 
     /**
@@ -80,7 +83,8 @@ public class LoginEndpoint {
                          PropertiesLoader propertiesLoader,
                          JwtRefreshUtils jwtRefreshUtils,
                          MailProvider mailProvider,
-                         AuthViewEntityManager authViewEntityManager) {
+                         AuthViewEntityManager authViewEntityManager,
+                         JwtResetPasswordConfirmation jwtResetPasswordConfirmation) {
         this.identityStoreHandler = identityStoreHandler;
         this.jwtLoginUtils = jwtLoginUtils;
         this.request = httpServletRequest;
@@ -89,6 +93,7 @@ public class LoginEndpoint {
         this.jwtRefreshUtils = jwtRefreshUtils;
         this.mailProvider = mailProvider;
         this.authViewEntityManager = authViewEntityManager;
+        this.jwtResetPasswordConfirmation = jwtResetPasswordConfirmation;
     }
 
     /**
@@ -178,6 +183,18 @@ public class LoginEndpoint {
 
             return Response.status(Response.Status.UNAUTHORIZED).entity(new MessageResponseDto(I18n.LOGIN_FAILURE)).build();
         }
+        try {
+            Account checkedAccount = accountManager.findByLogin(authenticationRequestDTO.getUsername());
+            if(!checkedAccount.getFirstPasswordChange()) {
+                String token = jwtResetPasswordConfirmation.generateJwtTokenForUsername(checkedAccount.getLogin());
+                return Response.status(210).entity(new JwtTokenResponseDto(token)).build();
+            }
+        } catch (AccountException accountException) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.LOGIN_FAILURE)).build();
+        }
+
         UserInfoResponseDTO userInfoResponseDTO = new UserInfoResponseDTO();
         try {
             accountManager.updateAfterSuccessfulLogin(credentialValidationResult.getCallerPrincipal().getName(), ip, LocalDateTime.now());

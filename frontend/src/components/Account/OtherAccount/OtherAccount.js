@@ -2,11 +2,12 @@ import React from "react";
 import "./OtherAccount.css";
 import EditAccount from "../EditAccount/EditAccount";
 import {Col, Container, FormControl, Row} from "react-bootstrap";
-import Button from "react-bootstrap/Button";
 import {Label} from "semantic-ui-react";
 import {useParams} from "react-router-dom";
+import GiveRole from "../Role/GiveRole";
+import LockUnlockAccount from "../LockUnlockAccount/LockUnlockAccount"
+import ResetPasswordByAdmin from "./ResetPasswordByAdmin/ResetPasswordByAdmin";
 
-// TODO adding roles
 function OtherAccount(props) {
     let {accId} = useParams();
     return (
@@ -14,7 +15,7 @@ function OtherAccount(props) {
             <Container>
                 <Row>
                     <Col style={{maxWidth: "515px"}}>
-                        <Label className={"LoginLabel required"} >
+                        <Label className={"LoginLabel required"}>
                             Login
                         </Label>
                         <FormControl
@@ -28,23 +29,23 @@ function OtherAccount(props) {
                 </Row>
                 <Row>
                     <Col>
-                        <EditAccount className="EditAccount" path={"other-account-info"} account={accId}/>
+                        <EditAccount className="EditAccount" account={accId}/>
                     </Col>
                     <Col style={{maxWidth: "60px"}}/>
                     <Col>
-                        <Row>Adding Roles</Row>
                         <Row>
-                            <Button
-                                block size="lg"
-                                type="submit">
-                                Reset password
-                            </Button>
+                            <GiveRole account={accId}/>
                         </Row>
+                        <Row>
+                            <ResetPasswordByAdmin className="ResetPasswordByAdmin" account={accId}/>
+                        </Row>
+                        <LockUnlockAccount userLogin={accId}/>
                     </Col>
                 </Row>
             </Container>
         </div>
     );
+
 }
 
 export default OtherAccount;

@@ -27,6 +27,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.SessionSynchronization;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
@@ -43,6 +44,7 @@ import java.util.List;
  * Typ Account manager implementation.
  */
 @Stateful
+@PermitAll
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
 public class AccountManagerImplementation extends AbstractManager implements AccountManager, SessionSynchronization {
@@ -88,7 +90,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         account.setPassword(hashGenerator.generateHash(account.getPassword()));
         account.setCreatedByIp(requestIp);
 
-        // TODO: 21.05.2021  Przetestować czy dzialaja dobrze constructory przed wstawieniem
         AccessLevel patientData = new PatientData(account, true);
         patientData.setCreatedBy(account);
         account.getAccessLevels().add(patientData);
@@ -463,6 +464,30 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
+    public void setNewPassword(String login, String newPassword) throws AppBaseException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw PasswordException.passwordChangeFailed();
+        }
+        account.setModifiedBy(findByLogin(login));
+        account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        account.setFirstPasswordChange(true);
+        if (account.getPassword().contentEquals(hashGenerator.generateHash(newPassword))) {
+            throw PasswordException.passwordsNotDifferent();
+        }
+        account.setPassword(hashGenerator.generateHash(newPassword));
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw PasswordException.passwordChangeFailed();
+        }
+    }
+
+    @Override
     public Account findByLogin(String login) throws AppBaseException {
         return accountFacade.findByLogin(login);
     }
@@ -487,7 +512,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (Exception e) {
             throw AccountException.noSuchAccount(e);
         }
-        // TODO: 21.05.2021 Dlugosc do zmiennej w pliku konfiguracyjnym
         String pass = passwordGenerator.generate(32);
         account.setPassword(hashGenerator.generateHash(pass));
         try {
@@ -495,7 +519,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (Exception e) {
             throw PasswordException.passwordResetFailed();
         }
-        mailProvider.sendGeneratedPasswordMail(account.getEmail(), pass, account.getLanguage());
     }
 
     @Override
@@ -515,7 +538,25 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (MailSendingException mailSendingException) {
             throw MailSendingException.editAccountMail();
         }
-        // TODO: send mail with new password
+    }
+
+    @Override
+    public void sendResetPasswordByAdminConfirmationEmail(String login) throws AppBaseException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
+        try {
+            mailProvider.sendResetPassByAdminConfirmationMail(
+                    account.getEmail(),
+                    jwtResetPasswordConfirmation.generateJwtTokenForUsername(
+                            login), account.getLanguage()
+            );
+        } catch (MailSendingException mailSendingException) {
+            throw MailSendingException.editAccountMail();
+        }
     }
 
     @Override

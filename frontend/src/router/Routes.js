@@ -16,6 +16,7 @@ import ListDoctors from "../components/Appointment/ListDoctors/ListDoctors";
 import HomeRoute from "./HomeRoute";
 import Cookies from "js-cookie";
 import OtherAccount from "../components/Account/OtherAccount/OtherAccount";
+import SetNewPassword from "../components/ResetPassword/SetNewPassword";
 
 export default function Routes() {
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
@@ -53,6 +54,9 @@ export default function Routes() {
             <PrivateRoute authed={!isLoggedIn()}  path="/login" component={Login}/>
             <Route exact path="/reset-password">
                 <Reset/>
+            </Route>
+            <Route exact path="/new-password/:token">
+                <SetNewPassword/>
             </Route>
             <PrivateRoute authed={isPatient()} path='/prescriptions' component={Prescription}/>
             <PrivateRoute authed={isLoggedIn()} path='/account' component={Account}/>

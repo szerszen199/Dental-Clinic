@@ -18,6 +18,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.RevokeAndGrantAccessLevelDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetDarkModeRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetLanguageRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetNewPasswordRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SimpleUsernameRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoWithAccessLevelsResponseDto;
@@ -37,7 +38,6 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateful;
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.validation.Valid;
@@ -266,6 +266,56 @@ public class AccountEndpoint {
             try {
                 exception = null;
                 this.accountManager.resetPassword(username, username);
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            } catch (Exception e) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (exception != null) {
+            if (exception instanceof AccountException || exception instanceof MailSendingException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
+            } else if (exception instanceof AppBaseException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_EDIT_FAILED)).build();
+            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        return Response.ok().entity(new MessageResponseDto(I18n.PASSWORD_RESET_SUCCESSFULLY)).build();
+    }
+
+    /**
+     * Reset password.
+     *
+     * @param setNewPasswordRequestDTO the setNewPasswordRequestDTO
+     * @return response
+     */
+    @PUT
+    @Path("set-new-password")
+    @PermitAll
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response setNewPassword(@NotNull @Valid SetNewPasswordRequestDTO setNewPasswordRequestDTO) {
+        String username;
+        try {
+            username = jwtResetPasswordConfirmation.getUserNameFromJwtToken(setNewPasswordRequestDTO.getConfirmToken());
+            if (!jwtResetPasswordConfirmation.validateJwtToken(setNewPasswordRequestDTO.getConfirmToken())) {
+                throw AccountException.invalidConfirmationToken();
+            }
+        } catch (AccountException accountException) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(PASSWORD_RESET_FAILED)).build();
+        }
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                this.accountManager.setNewPassword(username, setNewPasswordRequestDTO.getFirstPassword());
                 rollbackTX = accountManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
                 rollbackTX = true;
@@ -615,7 +665,7 @@ public class AccountEndpoint {
     //TODO: komunikat
     public Response revokeAccessLevel(@NotNull @Valid RevokeAndGrantAccessLevelDTO revokeAndGrantAccessLevelDTO) {
         if (revokeAndGrantAccessLevelDTO.getLogin().equals(loggedInAccountUtil.getLoggedInAccountLogin())) {
-            return Response.status(Status.BAD_REQUEST).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.ACCESS_LEVEL_SELF_REVOKE)).build();
         }
         int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
@@ -639,6 +689,15 @@ public class AccountEndpoint {
                 return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCESS_LEVEL_REVOKE_FAILED)).build();
             }
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+
+        try {
+            Account account = accountManager.findByLogin(revokeAndGrantAccessLevelDTO.getLogin());
+            mailProvider.sendAccountRevokeAccessLevelMail(account.getEmail(), revokeAndGrantAccessLevelDTO.getLevel(), account.getLanguage());
+        } catch (MailSendingException accountException) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCESS_LEVEL_REVOKE_FAILED)).build();
         }
         return Response.ok().entity(new MessageResponseDto(ACCESS_LEVEL_REVOKED_SUCCESSFULLY)).build();
     }
@@ -774,6 +833,7 @@ public class AccountEndpoint {
             try {
                 exception = null;
                 accountManager.resetPassword(simpleUsernameRequestDTO.getLogin(), loggedInAccountUtil.getLoggedInAccountLogin());
+                accountManager.sendResetPasswordByAdminConfirmationEmail(simpleUsernameRequestDTO.getLogin());
                 rollbackTX = accountManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
                 rollbackTX = true;

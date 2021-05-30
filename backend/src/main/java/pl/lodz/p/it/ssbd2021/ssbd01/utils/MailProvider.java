@@ -34,8 +34,11 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_UNSU
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOGIN_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOGIN_TEXT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_PASSWORD_BY_ADMIN_CONFIRMATION_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_PASSWORD_CONFIRMATION_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_PASSWORD_CONFIRMATION_TEXT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_REVOKE_ACCESS_LEVEL_SUBJECT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_REVOKE_ACCESS_LEVEL_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_SCHEDULER_LOCK_BUTTON;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_SCHEDULER_LOCK_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_SCHEDULER_LOCK_TEXT;
@@ -254,6 +257,7 @@ public class MailProvider {
      * @param lang język wiadomości email
      * @throws MailSendingException the mail sending exception
      */
+    @Asynchronous
     public void sendResetPassConfirmationMail(String email, String token, String lang) throws MailSendingException {
         Locale locale = new Locale(lang);
         ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
@@ -271,24 +275,27 @@ public class MailProvider {
     }
 
     /**
-     * Send generaterd password mail.
+     * Wysyła wiadomość z linkiem do zresetowania hasła po zmianie hasła przez administratora.
      *
      * @param email the email
-     * @param pass  the pass
+     * @param token the token
      * @param lang język wiadomości email
      * @throws MailSendingException the mail sending exception
      */
-    public void sendGeneratedPasswordMail(String email, String pass, String lang) throws MailSendingException {
+    @Asynchronous
+    public void sendResetPassByAdminConfirmationMail(String email, String token, String lang) throws MailSendingException {
         Locale locale = new Locale(lang);
         ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
-        String subject = langBundle.getString(ACCOUNT_MAIL_GENERATED_PASSWORD_SUBJECT);
+        String subject = langBundle.getString(ACCOUNT_MAIL_PASSWORD_BY_ADMIN_CONFIRMATION_SUBJECT);
+        String activationLink = buildResetPassLink(getContextPath(), token);
         String messageText =
-                paragraph(langBundle.getString(ACCOUNT_MAIL_GENERATED_PASSWORD_TEXT))
-                        + pass;
+                paragraph(langBundle.getString(ACCOUNT_MAIL_PASSWORD_BY_ADMIN_CONFIRMATION_SUBJECT))
+                        + hyperlink(activationLink, langBundle.getString(ACCOUNT_MAIL_CHANGE_CONFIRM_BUTTON));
+
         try {
             mailManager.sendMail(email, subject, getFrom(), messageText, session);
         } catch (MessagingException e) {
-            throw MailSendingException.passwordResetMail();
+            throw MailSendingException.activationLink();
         }
     }
 
@@ -334,6 +341,29 @@ public class MailProvider {
         }
     }
 
+
+    /**
+     * Wysyła wiadomość informującą o odebranym poziomie dostępu dla konta.
+     *
+     * @param email Adres, na który zostanie wysłana wiadomość.
+     * @param level Poziom dostępu, który został odebrany
+     * @param lang język wiadomości email
+     * @throws MailSendingException Błąd wysyłania wiadomości.
+     */
+    public void sendAccountRevokeAccessLevelMail(String email, String level, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(ACCOUNT_MAIL_REVOKE_ACCESS_LEVEL_SUBJECT);
+        try {
+            String splittedLevel = level.split("\\.")[1];
+            String capitalizedLevel = splittedLevel.substring(0, 1).toUpperCase() + splittedLevel.substring(1);
+            String messageText = paragraph(langBundle.getString(ACCOUNT_MAIL_REVOKE_ACCESS_LEVEL_TEXT)) + capitalizedLevel;
+            mailManager.sendMail(email, subject, getFrom(), messageText, session);
+        } catch (MessagingException | ArrayIndexOutOfBoundsException e) {
+            throw MailSendingException.accountLock();
+        }
+    }
+
     private String paragraph(String text) {
         return "<p>" + text + "</p>";
     }
@@ -366,9 +396,10 @@ public class MailProvider {
         StringBuilder sb = new StringBuilder(getDefaultUrl());
 
         sb.append(defaultContext);
-        sb.append("/api/account/reset?token=");
+        sb.append("/new-password/");
         sb.append(token);
 
         return sb.toString();
     }
+
 }

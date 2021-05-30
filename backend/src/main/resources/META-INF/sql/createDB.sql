@@ -51,6 +51,7 @@ CREATE TABLE accounts
         CURRENT_TIMESTAMP,                                                 -- Data utworzenia konta
     created_by_ip                             VARCHAR(256),
     email_recall                              BOOL DEFAULT FALSE NOT NULL,
+    first_password_change                     BOOL DEFAULT FALSE NOT NULL,
     language                                  CHAR(2) NOT NULL
         CONSTRAINT acc_language CHECK
             (language in ('pl', 'PL', 'en', 'EN')),                        -- Język konta
