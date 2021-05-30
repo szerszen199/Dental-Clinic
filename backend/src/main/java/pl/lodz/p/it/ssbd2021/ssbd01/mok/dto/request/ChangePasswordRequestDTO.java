@@ -10,7 +10,6 @@ import javax.validation.constraints.Size;
  * Klasa NewPasswordDTO dla zmiany hasła.
  */
 public class ChangePasswordRequestDTO {
-    // TODO: 21.05.2021 Czy wersja ma być skoro porównujemy i tak czy hasło się zgadza poprzedniego? Narazie nei daję
 
     @Size(min = 8, message = I18n.PASSWORD_INVALID_SIZE)
     @NotNull(message = I18n.PASSWORD_NULL)

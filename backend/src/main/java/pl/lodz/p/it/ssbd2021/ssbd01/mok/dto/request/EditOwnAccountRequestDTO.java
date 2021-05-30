@@ -15,7 +15,6 @@ import java.util.Map;
 /**
  * Klasa Dto dla edytowanego konta.
  */
-// TODO: 21.05.2021 Poprawić zapytanie na froncie
 public class EditOwnAccountRequestDTO implements SignableEntity {
 
 

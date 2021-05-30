@@ -69,7 +69,6 @@ public abstract class JwtUtilsAbstract {
             return signedJWT.serialize();
         } catch (JOSEException e) {
             e.printStackTrace();
-            // TODO: 18.04.2021
             return "JWT error";
         }
     }
