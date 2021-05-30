@@ -55,6 +55,7 @@ import java.util.Set;
         @NamedQuery(name = "Account.findByModificationDate", query = "SELECT a FROM Account a WHERE a.modificationDateTime = :modificationDate"),
         @NamedQuery(name = "Account.findByCreationDate", query = "SELECT a FROM Account a WHERE a.creationDateTime = :creationDate"),
         @NamedQuery(name = "Account.findByEmailRecall", query = "SELECT a FROM Account a WHERE a.emailRecall = :emailrecall"),
+        @NamedQuery(name = "Account.findByFirstPasswordChange", query = "SELECT a FROM Account a WHERE a.firstPasswordChange = :firstPasswordChange"),
         @NamedQuery(name = "Account.findByLanguage", query = "SELECT a FROM Account a WHERE a.language = :language"),
         @NamedQuery(name = "Account.findByVersion", query = "SELECT a FROM Account a WHERE a.version = :version"),
         @NamedQuery(name = "Account.findByLoginOrEmailOrPesel", query = "SELECT a FROM Account a WHERE a.login = :login OR a.email = :email OR a.pesel = :pesel"),
@@ -139,22 +140,33 @@ public class Account extends AbstractEntity implements Serializable {
 
     @Column(name = "last_unsuccessful_login")
     private LocalDateTime lastUnsuccessfulLogin;
+
     @Column(name = "last_block_unlock_date_time")
     private LocalDateTime lastBlockUnlockDateTime;
+
     @Column(name = "last_unsuccessful_login_ip", length = 256)
     @Size(min = 7, max = 256)
     private String lastUnsuccessfulLoginIp;
+
     @Column(name = "unsuccessful_login_count_since_last_login")
     @Min(0)
     private Integer unsuccessfulLoginCounter = 0;
+
     @Column(name = "language", columnDefinition = "bpchar", length = 2, nullable = false)
     @Size(min = 2, max = 2)
     @NotNull
     private String language;
+
     @Basic(optional = false)
     @Column(name = "email_recall", nullable = false)
     @NotNull
     private Boolean emailRecall = false;
+
+    @Basic(optional = false)
+    @Column(name = "first_password_change", nullable = false)
+    @NotNull
+    private Boolean firstPasswordChange = false;
+
     @JoinColumn(name = "last_block_unlock_modified_by", referencedColumnName = "id")
     @ManyToOne
     private Account lastBlockUnlockModifiedBy;
@@ -405,6 +417,14 @@ public class Account extends AbstractEntity implements Serializable {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public Boolean getFirstPasswordChange() {
+        return firstPasswordChange;
+    }
+
+    public void setFirstPasswordChange(Boolean firstPasswordChange) {
+        this.firstPasswordChange = firstPasswordChange;
     }
 
     @Override
