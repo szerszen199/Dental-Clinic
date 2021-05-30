@@ -220,7 +220,7 @@
                         <configuration>
                             <executable>${npm.executable}</executable>
                             <arguments>
-                                <argument>install</argument>
+                                <argument>ci</argument>
                             </arguments>
                             <environmentVariables>
                                 <NPM_CONFIG_PREFIX>${project.build.directory}</NPM_CONFIG_PREFIX>
