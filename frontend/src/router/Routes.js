@@ -17,6 +17,9 @@ import HomeRoute from "./HomeRoute";
 import Cookies from "js-cookie";
 import OtherAccount from "../components/Account/OtherAccount/OtherAccount";
 import SetNewPassword from "../components/ResetPassword/SetNewPassword";
+import AccountActivationConfirm from "../components/Confirmation/AccountActivationConfirm";
+import MailChangeConfirm from "../components/Confirmation/MailChangeConfirm";
+import PasswordChangeConfirm from "../components/Confirmation/PasswordChangeConfirm";
 
 export default function Routes() {
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
@@ -68,6 +71,9 @@ export default function Routes() {
                           component={PlanAppointment}/>
             <PrivateRoute authed={isPatient() || isReceptionist() || isDoctor()} path='/list-doctors'
                           component={ListDoctors}/>
+            <Route authed={isLoggedIn()} path='/activation-confirm/:token' component={AccountActivationConfirm}/>
+            <Route authed={isLoggedIn()} path='/mail-change-confirm/:token' component={MailChangeConfirm}/>
+            <Route authed={isLoggedIn()} path='/password-change-confirm/:token' component={PasswordChangeConfirm}/>
             <Route path='/not-found' component={Error404}/>
             <Route>
                 <Error404/>
