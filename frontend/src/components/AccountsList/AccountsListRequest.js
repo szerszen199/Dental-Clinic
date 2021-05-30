@@ -2,8 +2,6 @@ import axios from "axios";
 import {Account} from "./Account";
 import Cookies from "js-cookie";
 
-// TODO usuwanie tego gdy minie określony czas czytaj przedawni się
-
 export async function makeAccountsListRequest() {
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
     let data = await getData(token);

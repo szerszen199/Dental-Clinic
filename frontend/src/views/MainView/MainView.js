@@ -108,11 +108,7 @@ class MainViewWithoutTranslation extends React.Component {
                     Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE), {expires: jwtCookieExpirationTime});
                 }
                 localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, response.data.refreshJwtToken.token);
-
-
-
             }).catch((response) => {
-                // todo cos z tym response?
                 console.log(response);
                 logout();
             })
