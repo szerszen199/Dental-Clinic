@@ -22,7 +22,7 @@ export default function SetNewPassword() {
             // We got errors!
             setErrors(newErrors);
         } else {
-             setNewPasswordRequest(token, password, repeatedPassword);
+             setNewPasswordRequest(token, password, repeatedPassword, t);
         }
 
 
