@@ -11,12 +11,12 @@ class ResetPasswordByAdminWithoutTranslation extends React.Component {
         super(props);
     }
 
-     handleSubmit(event, title, question) {
+     handleSubmit(event, title, question, t) {
         return function (event) {
             event.preventDefault();
             confirmationAlerts(title, question).then((confirmed) => {
                 if (confirmed) {
-                    makeResetPasswordByAdminRequest(this.props.account)
+                    makeResetPasswordByAdminRequest(this.props.account, t)
                 }
             })
         }.bind(this);
@@ -27,7 +27,7 @@ class ResetPasswordByAdminWithoutTranslation extends React.Component {
 
         return (
             <div className="ResetPasswordByAdmin">
-                <Form onSubmit={this.handleSubmit(this, t("Warning"), t("Question reset password by admin"))}>
+                <Form onSubmit={this.handleSubmit(this, t("Warning"), t("Question reset password by admin"), t)}>
                     <Button block size="lg" type="submit">
                         {t("ResetPassword")}
                     </Button>

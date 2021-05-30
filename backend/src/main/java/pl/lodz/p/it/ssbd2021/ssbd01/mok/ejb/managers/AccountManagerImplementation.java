@@ -512,7 +512,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (Exception e) {
             throw AccountException.noSuchAccount(e);
         }
-        // TODO: 21.05.2021 Dlugosc do zmiennej w pliku konfiguracyjnym
         String pass = passwordGenerator.generate(32);
         account.setPassword(hashGenerator.generateHash(pass));
         try {
@@ -520,7 +519,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (Exception e) {
             throw PasswordException.passwordResetFailed();
         }
-        mailProvider.sendGeneratedPasswordMail(account.getEmail(), pass, account.getLanguage());
     }
 
     @Override
@@ -540,7 +538,25 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (MailSendingException mailSendingException) {
             throw MailSendingException.editAccountMail();
         }
-        // TODO: send mail with new password
+    }
+
+    @Override
+    public void sendResetPasswordByAdminConfirmationEmail(String login) throws AppBaseException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
+        try {
+            mailProvider.sendResetPassByAdminConfirmationMail(
+                    account.getEmail(),
+                    jwtResetPasswordConfirmation.generateJwtTokenForUsername(
+                            login), account.getLanguage()
+            );
+        } catch (MailSendingException mailSendingException) {
+            throw MailSendingException.editAccountMail();
+        }
     }
 
     @Override
