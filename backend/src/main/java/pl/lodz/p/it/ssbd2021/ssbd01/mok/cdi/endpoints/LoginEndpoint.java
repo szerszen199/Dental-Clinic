@@ -3,7 +3,6 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 import pl.lodz.p.it.ssbd2021.ssbd01.auth.ejb.managers.AuthViewEntityManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.AuthenticationRequestDTO;
@@ -154,7 +153,7 @@ public class LoginEndpoint {
             account = accountManager.findByLogin(authenticationRequestDTO.getUsername());
         } catch (AccountException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_NOT_FOUND)).build();
-        } catch (AppBaseException e) {
+        } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.AUTHENTICATION_FAILURE)).build();
         }
         if (credentialValidationResult.getStatus() != CredentialValidationResult.Status.VALID) {
@@ -195,7 +194,7 @@ public class LoginEndpoint {
 
         try {
             if (credentialValidationResult.getStatus() == CredentialValidationResult.Status.VALID && credentialValidationResult.getCallerGroups().contains(I18n.ADMIN)) {
-                mailProvider.sendAdminLoginMail(accountManager.findByLogin(authenticationRequestDTO.getUsername()).getEmail(),account.getLanguage(),ip);
+                mailProvider.sendAdminLoginMail(accountManager.findByLogin(authenticationRequestDTO.getUsername()).getEmail(), account.getLanguage(), ip);
             }
         } catch (MailSendingException | AccountException accountException) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
@@ -212,6 +211,5 @@ public class LoginEndpoint {
                         jwtRefreshUtils.generateJwtTokenForUser(credentialValidationResult.getCallerPrincipal().getName()),
                         userInfoResponseDTO)).build();
     }
-
-
 }
+

@@ -80,6 +80,7 @@ class MainViewWithoutTranslation extends React.Component {
             languageRequest("pl")
         }
         i18n.changeLanguage("PL");
+        i18n.changeLanguage("PL");
     }
 
     makeRefreshRequest() {

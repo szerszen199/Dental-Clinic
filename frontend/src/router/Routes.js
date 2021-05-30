@@ -46,15 +46,11 @@ export default function Routes() {
                 <Redirect to="/home"/>
             </Route>
             <HomeRoute authed={isLoggedIn()} path='/home' component={Dashboard}/>
-            <Route exact path="/register">
-                <Registration/>
-            </Route>
+            <PrivateRoute authed={!isLoggedIn()}  path="/register" component={Registration}/>
             <Route exact path="/guest-home">
                 <Home/>
             </Route>
-            <Route exact path="/login">
-                <Login/>
-            </Route>
+            <PrivateRoute authed={!isLoggedIn()}  path="/login" component={Login}/>
             <Route exact path="/reset-password">
                 <Reset/>
             </Route>
