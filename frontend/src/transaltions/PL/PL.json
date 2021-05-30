@@ -68,6 +68,8 @@
   "Pesel length error": "Pesel musi składać się z dokładnie 11 znaków!",
   "Pesel control digit error": "Niepoprawny pesel!",
   "Language not selected error": "Wybierz język!",
+  "Activate role": "Aktywuj rolę",
+  "Activate/Deactivate role": "Aktywuj/Deaktywuj role",
   "Select language": "Wybierz język",
   "Polish": "Polski",
   "English": "Angielski",
