@@ -5,14 +5,15 @@ import "./Login.css";
 import {makeLoginRequest} from "./LoginRequest";
 import "../../commonStyles/common_style.css"
 import {useTranslation} from "react-i18next";
-import {Link} from "react-router-dom";
-import {registrationRequest} from "../Registration/RegistrationRequest";
+import {Link, Redirect, useHistory} from "react-router-dom";
 
 export default function Login() {
+
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
     const {t} = useTranslation()
     const loginRegex = new RegExp(/^[a-z0-9]+$/i);
+    const history = useHistory();
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -24,6 +25,9 @@ export default function Login() {
             setErrors(newErrors);
         } else {
             makeLoginRequest(login, password, t);
+            history.push("/home");
+            // useHistory().push("/home");
+            // return <Redirect to="/home"/>;
         }
 
 
