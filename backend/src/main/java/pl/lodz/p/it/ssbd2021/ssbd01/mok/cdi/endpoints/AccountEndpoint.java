@@ -302,7 +302,6 @@ public class AccountEndpoint {
         String username;
         try {
             username = jwtResetPasswordConfirmation.getUserNameFromJwtToken(setNewPasswordRequestDTO.getConfirmToken());
-            System.out.println(username);
             if (!jwtResetPasswordConfirmation.validateJwtToken(setNewPasswordRequestDTO.getConfirmToken())) {
                 throw AccountException.invalidConfirmationToken();
             }
@@ -835,6 +834,7 @@ public class AccountEndpoint {
             try {
                 exception = null;
                 accountManager.resetPassword(simpleUsernameRequestDTO.getLogin(), loggedInAccountUtil.getLoggedInAccountLogin());
+                accountManager.sendResetPasswordByAdminConfirmationEmail(simpleUsernameRequestDTO.getLogin());
                 rollbackTX = accountManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
                 rollbackTX = true;
