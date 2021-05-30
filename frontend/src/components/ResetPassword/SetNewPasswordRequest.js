@@ -1,6 +1,8 @@
 import axios from "axios";
+import errorAlerts from "../Alerts/ErrorAlerts/ErrorAlerts";
+import successAlerts from "../Alerts/SuccessAlerts/SuccessAlerts";
 
-export function setNewPasswordRequest(token, firstPassword, secondPassword){
+export function setNewPasswordRequest(token, firstPassword, secondPassword, t){
 
     let config = {
         method: 'put',
@@ -16,11 +18,14 @@ export function setNewPasswordRequest(token, firstPassword, secondPassword){
     };
 
     axios(config)
-        .then(function (response) {
-            console.log(JSON.stringify(response.data));
-            window.location = "/home";
+        .then((response) => {
+            successAlerts(t(response.data.message, response.status)).then(() => {
+                window.location = "/home";
+            })
         })
-        .catch(function (error) {
-            console.log(error);
+        .catch((response) => {
+            if (response.response) {
+                errorAlerts(t(response.response.data.message), response.response.status.toString(10));
+            }
         });
 }
