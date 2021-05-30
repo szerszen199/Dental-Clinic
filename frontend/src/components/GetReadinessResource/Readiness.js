@@ -1,7 +1,5 @@
 import React from 'react';
 
-
-// TODO: Można użyć tego do tego czy mamy połączenie do strony czytaj jesli tutaj się zwróci "ready" i okejka (200) to jest git
 export default class ReadinessComponent extends React.Component {
     constructor(props) {
         super(props);
