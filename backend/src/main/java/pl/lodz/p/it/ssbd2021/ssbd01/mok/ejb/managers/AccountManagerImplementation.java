@@ -264,7 +264,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         account.setLastBlockUnlockDateTime(LocalDateTime.now());
         account.setLastBlockUnlockIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         if (!loggedInAccountUtil.getLoggedInAccountLogin().equals(propertiesLoader.getAnonymousUserName())) {
-            // TODO: Zastanowić się i ustawić pole modifiedBy po zablokowaniu konta przez system po nieudanych logowaniach
             account.setLastBlockUnlockModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
         }
         try {
@@ -272,8 +271,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (Exception e) {
             throw AccountException.accountLockFailed();
         }
-        // TODO: Zastanowić się i ustawić pole modifiedBy po zablokowaniu konta przez system po nieudanych logowaniach
-        //account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
     }
 
     @Override
@@ -336,7 +333,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             account.setLastName(editAccountRequestDTO.getLastName());
         }
         if (editAccountRequestDTO.getEmail() != null && !account.getEmail().equals(editAccountRequestDTO.getEmail())) {
-            // TODO: 21.05.2021 Wysylac maila dopieo kiedy edit się powiódł?
             try {
                 mailProvider.sendEmailChangeConfirmationMail(
                         editAccountRequestDTO.getEmail(),

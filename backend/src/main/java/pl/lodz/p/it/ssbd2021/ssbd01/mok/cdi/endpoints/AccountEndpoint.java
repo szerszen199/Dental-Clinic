@@ -122,8 +122,6 @@ public class AccountEndpoint {
     @Path("create")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    // TODO: 22.05.2021 Co do validów na metodach zastanawia mnie wywołanie pustej metody na której będzie valid i łapanie wyjątków i coś robienie
-    //  Ale generalnie mamy obsłużyć tylko 403, 404 i 500 a to zwraca 400 więc :p
     public Response createAccount(@NotNull @Valid CreateAccountRequestDTO accountDto) {
         int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
@@ -663,7 +661,6 @@ public class AccountEndpoint {
     @Path("/revokeAccessLevel")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    //TODO: komunikat
     public Response revokeAccessLevel(@NotNull @Valid RevokeAndGrantAccessLevelDTO revokeAndGrantAccessLevelDTO) {
         if (revokeAndGrantAccessLevelDTO.getLogin().equals(loggedInAccountUtil.getLoggedInAccountLogin())) {
             return Response.status(Status.BAD_REQUEST).build();

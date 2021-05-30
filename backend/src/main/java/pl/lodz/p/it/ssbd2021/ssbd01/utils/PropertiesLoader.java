@@ -171,7 +171,6 @@ public class PropertiesLoader {
                 prop.load(inputStream);
             }
         } catch (IOException e) {
-            //TODO naprawić nie może byc checked exception
             e.printStackTrace();
         }
         confirmationJwtSecret = prop.getProperty("account.confirmation.jwt.secret");
