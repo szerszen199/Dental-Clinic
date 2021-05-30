@@ -68,6 +68,8 @@
   "Pesel length error": "Pesel must be 11 characters long!",
   "Pesel control digit error": "Pesel is invalid!",
   "Language not selected error": "Language must be selected!",
+  "Activate/Deactivate role": "Activate/Deactivate role",
+  "Activate role": "Activate role",
   "Select language": "Select language",
   "Polish": "Polish",
   "English": "English",
