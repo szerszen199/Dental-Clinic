@@ -5,6 +5,7 @@ import {Col, Container, FormControl, Row} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import {Label} from "semantic-ui-react";
 import {useParams} from "react-router-dom";
+import GiveRole from "../GiveRole/GiveRole";
 
 // TODO adding roles
 function OtherAccount(props) {
@@ -32,7 +33,9 @@ function OtherAccount(props) {
                     </Col>
                     <Col style={{maxWidth: "60px"}}/>
                     <Col>
-                        <Row>Adding Roles</Row>
+                        <Row>
+                            <GiveRole account={accId}/>
+                        </Row>
                         <Row>
                             <Button
                                 block size="lg"
@@ -45,6 +48,7 @@ function OtherAccount(props) {
             </Container>
         </div>
     );
+
 }
 
 export default OtherAccount;
