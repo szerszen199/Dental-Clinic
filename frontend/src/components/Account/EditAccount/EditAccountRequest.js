@@ -1,7 +1,9 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import successAlerts from "../../Alerts/SuccessAlerts/SuccessAlerts";
+import errorAlerts from "../../Alerts/ErrorAlerts/ErrorAlerts";
 
-export function editAccountRequest(email, firstName, lastName, phoneNumber, pesel,version, etag, login){
+export function editAccountRequest(email, firstName, lastName, phoneNumber, pesel, version, etag, login, t) {
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
 
     let configOwnAccount = {
@@ -49,10 +51,13 @@ export function editAccountRequest(email, firstName, lastName, phoneNumber, pese
     }
 
     axios(axiosConfig)
-        .then(function (response) {
-            console.log(JSON.stringify(response.data));
+        .then((response) => {
+            successAlerts(t(response.data.message, response.status)).then(() => {
+            })
         })
-        .catch(function (error) {
-            console.log(error);
+        .catch((response) => {
+            if (response.response) {
+                errorAlerts(t(response.response.data.message), response.response.status.toString(10));
+            }
         });
 }

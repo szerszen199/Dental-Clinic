@@ -8,4 +8,17 @@
         max-width: 520px;
     }
 
+    #containerForButtons{
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+
+    #rowForEditButton{
+        width: 100%;
+    }
+
+    #refreshColumn{
+        padding-left: 1px;
+        align-items: center;
+    }
 }
