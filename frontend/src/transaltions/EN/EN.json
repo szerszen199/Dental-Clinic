@@ -160,5 +160,7 @@
   "LockAccount": "Lock Account",
   "Active": "Active",
   "UnlockAccount": "Unlock Account",
-  "Question reset password by admin": "Do you want to send password reset link?"
+  "Question reset password by admin": "Do you want to send password reset link?",
+  "account_already_confirmed": "Account already confirmed",
+  "password_already_changed": "Password reset already"
 }
