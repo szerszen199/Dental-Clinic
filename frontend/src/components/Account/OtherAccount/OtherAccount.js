@@ -5,11 +5,11 @@ import {Col, Container, FormControl, Row} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import {Label} from "semantic-ui-react";
 import {useParams} from "react-router-dom";
+import GiveRole from "../GiveRole/GiveRole";
 import LockUnlockAccount from "../LockUnlockAccount/LockUnlockAccount"
 import {makeResetPasswordByAdminRequest} from "./ResetPasswordByAdmin/ResetPasswordByAdminRequest";
 import ResetPasswordByAdmin from "./ResetPasswordByAdmin/ResetPasswordByAdmin";
 
-// TODO adding roles
 function OtherAccount(props) {
     let {accId} = useParams();
     return (
@@ -35,7 +35,9 @@ function OtherAccount(props) {
                     </Col>
                     <Col style={{maxWidth: "60px"}}/>
                     <Col>
-                        <Row>Adding Roles</Row>
+                        <Row>
+                            <GiveRole account={accId}/>
+                        </Row>
                         <Row>
                             <ResetPasswordByAdmin className="ResetPasswordByAdmin" account={accId}/>
                         </Row>
@@ -45,6 +47,7 @@ function OtherAccount(props) {
             </Container>
         </div>
     );
+
 }
 
 export default OtherAccount;
