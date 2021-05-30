@@ -44,5 +44,15 @@ public class JwtResetPasswordConfirmation extends JwtUtilsAbstract {
         return propertiesLoader.getResetPasswordConfirmationJwtSecret();
     }
 
+    @Override
+    public String getVersionAndNameFromJwtToken(String token) throws ParseException {
+        return super.getVersionAndNameFromJwtToken(token);
+    }
+
+    @Override
+    public String generateJwtTokenForUsernameAndVersion(String username, long version) {
+        return super.generateJwtTokenForUsernameAndVersion(username, version);
+    }
+
 
 }

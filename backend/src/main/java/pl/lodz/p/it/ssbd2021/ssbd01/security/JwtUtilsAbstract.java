@@ -101,4 +101,38 @@ public abstract class JwtUtilsAbstract {
             return false;
         }
     }
+
+    /**
+     * Generuje token JWT na potrzeby weryfikacji resetu hasła.
+     *
+     * @param username username
+     * @return JWT token
+     */
+    protected String generateJwtTokenForUsernameAndVersion(String username, long version) {
+        try {
+            final JWSSigner signer = new MACSigner(getJwtSecret());
+            final JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+                    .subject(username + "/" + String.valueOf(version))
+                    .expirationTime(new Date(new Date().getTime() + getJwtExpiration()))
+                    .build();
+            final SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS384), claimsSet);
+            signedJWT.sign(signer);
+            return signedJWT.serialize();
+        } catch (JOSEException e) {
+            e.printStackTrace();
+            // TODO: 18.04.2021
+            return "JWT error";
+        }
+    }
+
+    /**
+     * Pobiera login użytkownika z tokenu JWT wydanego na potrzebę resetu hasła.
+     *
+     * @param token JWT token
+     * @return Login użytkownika o zadanym tokenie
+     * @throws ParseException ParseException
+     */
+    public String getVersionAndNameFromJwtToken(String token) throws ParseException {
+        return SignedJWT.parse(token).getJWTClaimsSet().getSubject();
+    }
 }

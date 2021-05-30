@@ -220,7 +220,7 @@ public class AccountEndpoint {
                 rollbackTX = true;
                 exception = e;
             } catch (Exception e) {
-                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CONFIRMATION_BY_TOKEN_FAILED)).build();
             }
 
         } while (rollbackTX && --retryTXCounter > 0);
@@ -249,10 +249,17 @@ public class AccountEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     public Response resetPassword(@NotNull @Valid ConfirmAccountRequestDTO confirmAccountRequestDTO) {
         String username;
+        Long version;
         try {
-            username = jwtResetPasswordConfirmation.getUserNameFromJwtToken(confirmAccountRequestDTO.getConfirmToken());
+            String[] tokenData = jwtResetPasswordConfirmation.getVersionAndNameFromJwtToken(confirmAccountRequestDTO.getConfirmToken()).split("/");
+            username = tokenData[0];
+            version = Long.valueOf(tokenData[1]);
             if (!jwtResetPasswordConfirmation.validateJwtToken(confirmAccountRequestDTO.getConfirmToken())) {
                 throw AccountException.invalidConfirmationToken();
+            }
+            Account account = accountManager.findByLogin(username);
+            if (!account.getVersion().equals(version)) {
+                throw AccountException.passwordAlreadyChanged();
             }
         } catch (AccountException accountException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
