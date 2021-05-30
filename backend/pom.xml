@@ -201,8 +201,8 @@
                 </executions>
                 <configuration>
                     <workingDirectory>${frontend.directory}</workingDirectory>
-                    <nodeVersion>v14.16.1</nodeVersion>
-                    <npmVersion>7.12.1</npmVersion>
+                    <nodeVersion>v14.17.0</nodeVersion>
+                    <npmVersion>7.15.0</npmVersion>
                 </configuration>
             </plugin>
             
