@@ -93,7 +93,7 @@ class EditAccountWithoutTranslation extends React.Component {
         function findPhoneNumberErrors() {
             if (t.state.phoneNumber === null || t.state.phoneNumber === '') {
                 t.setState({
-                    phoneNumber: "",
+                    phoneNumber: null,
                 });
                 return;
             }
@@ -116,7 +116,7 @@ class EditAccountWithoutTranslation extends React.Component {
         function findPeselErrors() {
             if (t.state.pesel === null || t.state.pesel === '') {
                 t.setState({
-                    pesel: "",
+                    pesel: null,
                 });
                 return;
             }
