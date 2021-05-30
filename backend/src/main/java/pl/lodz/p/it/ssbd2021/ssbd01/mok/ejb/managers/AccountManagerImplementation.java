@@ -27,6 +27,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.SessionSynchronization;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
@@ -43,6 +44,7 @@ import java.util.List;
  * Typ Account manager implementation.
  */
 @Stateful
+@PermitAll
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
 public class AccountManagerImplementation extends AbstractManager implements AccountManager, SessionSynchronization {
@@ -88,7 +90,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         account.setPassword(hashGenerator.generateHash(account.getPassword()));
         account.setCreatedByIp(requestIp);
 
-        // TODO: 21.05.2021  Przetestować czy dzialaja dobrze constructory przed wstawieniem
         AccessLevel patientData = new PatientData(account, true);
         patientData.setCreatedBy(account);
         account.getAccessLevels().add(patientData);
