@@ -2,12 +2,10 @@ import React from "react";
 import "./OtherAccount.css";
 import EditAccount from "../EditAccount/EditAccount";
 import {Col, Container, FormControl, Row} from "react-bootstrap";
-import Button from "react-bootstrap/Button";
 import {Label} from "semantic-ui-react";
 import {useParams} from "react-router-dom";
-import GiveRole from "../GiveRole/GiveRole";
+import GiveRole from "../Role/GiveRole";
 import LockUnlockAccount from "../LockUnlockAccount/LockUnlockAccount"
-import {makeResetPasswordByAdminRequest} from "./ResetPasswordByAdmin/ResetPasswordByAdminRequest";
 import ResetPasswordByAdmin from "./ResetPasswordByAdmin/ResetPasswordByAdmin";
 
 function OtherAccount(props) {
