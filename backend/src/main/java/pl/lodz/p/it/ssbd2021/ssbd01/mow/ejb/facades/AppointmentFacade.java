@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -14,6 +15,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
  * Typ Appointment facade.
  */
 @Stateless
+@PermitAll
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors(LogInterceptor.class)
 public class AppointmentFacade extends AbstractFacade<Appointment> {

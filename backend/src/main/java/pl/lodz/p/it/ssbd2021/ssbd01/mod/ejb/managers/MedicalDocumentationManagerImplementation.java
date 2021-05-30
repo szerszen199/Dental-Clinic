@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers;
 
 import java.util.List;
+import javax.annotation.security.PermitAll;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -22,6 +23,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
  * Klasa MedicalDocumentationManagerImplementation.
  */
 @Stateful
+@PermitAll
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
 public class MedicalDocumentationManagerImplementation extends AbstractManager implements MedicalDocumentationManager {
