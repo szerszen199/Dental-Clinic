@@ -218,7 +218,7 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>${npm.executable}</executable>
+<!--                            <executable>${npm.executable}</executable>-->
                             <arguments>
                                 <argument>ci</argument>
                             </arguments>
