@@ -11,6 +11,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.SessionSynchronization;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
  * Typ Access level manager implementation - implementacja AccessLevelManager.
  */
 @Stateful
+@PermitAll
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
 public class AccessLevelManagerImplementation extends AbstractManager implements AccessLevelManager, SessionSynchronization {
