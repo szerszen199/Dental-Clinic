@@ -162,5 +162,6 @@
   "UnlockAccount": "Unlock Account",
   "Question reset password by admin": "Do you want to send password reset link?",
   "account_already_confirmed": "Account already confirmed",
+  "email_already_changed": "Email changed already",
   "password_already_changed": "Password reset already"
 }
