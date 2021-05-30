@@ -74,6 +74,7 @@ public class LoginEndpoint {
      * @param jwtRefreshUtils       jwt refresh utils
      * @param mailProvider          mail provider
      * @param authViewEntityManager auth view entity manager
+     * @param jwtResetPasswordConfirmation  token do potwierdzenia resetu hasła
      */
     @Inject
     public LoginEndpoint(IdentityStoreHandler identityStoreHandler,
@@ -185,7 +186,7 @@ public class LoginEndpoint {
         }
         try {
             Account checkedAccount = accountManager.findByLogin(authenticationRequestDTO.getUsername());
-            if(!checkedAccount.getFirstPasswordChange()) {
+            if (!checkedAccount.getFirstPasswordChange()) {
                 String token = jwtResetPasswordConfirmation.generateJwtTokenForUsername(checkedAccount.getLogin());
                 return Response.status(210).entity(new JwtTokenResponseDto(token)).build();
             }
