@@ -78,12 +78,20 @@ public interface AccountManager {
     void resetPasswordByToken(String login) throws AccountException, MailSendingException, PasswordException;
 
     /**
-     * Potwierdzenie hasla konta.
+     * Wysłanie maila do resetowania hasła przez administratora.
      *
      * @param login          login
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     void sendResetPasswordConfirmationEmail(String login) throws AppBaseException;
+
+    /**
+     * Wysłanie maila do resetowania hasła przez administratora.
+     *
+     * @param login          login
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    void sendResetPasswordByAdminConfirmationEmail(String login) throws AppBaseException;
 
     /**
      * Metoda służąca do blokowania konta.
