@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
 import java.util.List;
 import java.util.Map;
+import javax.annotation.security.PermitAll;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -19,6 +20,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
  * Klasa AppointmentManagerImplementation.
  */
 @Stateful
+@PermitAll
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
 public class AppointmentManagerImplementation extends AbstractManager implements AppointmentManager {
