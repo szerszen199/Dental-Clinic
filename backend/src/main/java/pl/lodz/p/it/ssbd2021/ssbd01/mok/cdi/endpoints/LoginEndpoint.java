@@ -1,5 +1,25 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
+import javax.security.enterprise.identitystore.CredentialValidationResult;
+import javax.security.enterprise.identitystore.IdentityStoreHandler;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2021.ssbd01.auth.ejb.managers.AuthViewEntityManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
@@ -20,27 +40,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
-
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.security.enterprise.identitystore.CredentialValidationResult;
-import javax.security.enterprise.identitystore.IdentityStoreHandler;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_NOT_FOUND;
 
@@ -74,6 +73,7 @@ public class LoginEndpoint {
      * @param jwtRefreshUtils       jwt refresh utils
      * @param mailProvider          mail provider
      * @param authViewEntityManager auth view entity manager
+     * @param jwtResetPasswordConfirmation obiekt odpowiedzialny za token potwierdzenia resetu hasłą
      */
     @Inject
     public LoginEndpoint(IdentityStoreHandler identityStoreHandler,
@@ -185,7 +185,7 @@ public class LoginEndpoint {
         }
         try {
             Account checkedAccount = accountManager.findByLogin(authenticationRequestDTO.getUsername());
-            if(!checkedAccount.getFirstPasswordChange()) {
+            if (!checkedAccount.getFirstPasswordChange()) {
                 String token = jwtResetPasswordConfirmation.generateJwtTokenForUsername(checkedAccount.getLogin());
                 return Response.status(210).entity(new JwtTokenResponseDto(token)).build();
             }
