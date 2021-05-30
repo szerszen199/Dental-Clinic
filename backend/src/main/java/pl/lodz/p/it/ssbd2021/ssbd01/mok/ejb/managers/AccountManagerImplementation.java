@@ -208,13 +208,13 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Override
     public void confirmAccountByToken(String jwt) throws AccountException, MailSendingException {
-        if (!jwtEmailConfirmationUtils.validateJwtToken(jwt)) {
+        if (!jwtRegistrationConfirmationUtils.validateJwtToken(jwt)) {
             throw AccountException.invalidConfirmationToken();
         }
         String login;
         Account account;
         try {
-            login = jwtEmailConfirmationUtils.getUserNameFromJwtToken(jwt);
+            login = jwtRegistrationConfirmationUtils.getUserNameFromJwtToken(jwt);
         } catch (Exception e) {
             throw AccountException.invalidConfirmationToken();
         }
@@ -222,6 +222,9 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             account = accountFacade.findByLogin(login);
         } catch (Exception e) {
             throw AccountException.noSuchAccount(e);
+        }
+        if (account.getEnabled()) {
+            throw AccountException.accountAlreadyConfirmed();
         }
         account.setEnabled(true);
         try {
@@ -239,12 +242,23 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Override
     public void resetPasswordByToken(String jwt) throws AccountException, MailSendingException, PasswordException {
+        Account account;
         if (!jwtResetPasswordConfirmation.validateJwtToken(jwt)) {
             throw AccountException.invalidConfirmationToken();
         }
         try {
-            String input = jwtResetPasswordConfirmation.getUserNameFromJwtToken(jwt);
-            this.resetPassword(input, input);
+            String input = jwtResetPasswordConfirmation.getVersionAndNameFromJwtToken(jwt);
+            String name = input.split("/")[0];
+            String version = input.split("/")[1];
+            try {
+                account = accountFacade.findByLogin(name);
+            } catch (AppBaseException e) {
+                throw AccountException.noSuchAccount(e);
+            }
+            if (!String.valueOf(account.getVersion()).equals(version)) {
+                throw AccountException.passwordAlreadyChanged();
+            }
+            this.resetPassword(name, name);
         } catch (ParseException e) {
             throw AccountException.noSuchAccount(e);
         } catch (MailSendingException e) {
@@ -389,6 +403,9 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (Exception e) {
             throw AccountException.emailConfirmationFailed();
         }
+        if (account.getEmail().equals(newEmail)) {
+            throw AccountException.emailAlreadyChanged();
+        }
         account.setModifiedBy(account);
         account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         account.setEmail(newEmail);
@@ -532,8 +549,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         try {
             mailProvider.sendResetPassConfirmationMail(
                     account.getEmail(),
-                    jwtResetPasswordConfirmation.generateJwtTokenForUsername(
-                            login), account.getLanguage()
+                    jwtResetPasswordConfirmation.generateJwtTokenForUsernameAndVersion(
+                            login, account.getVersion()), account.getLanguage()
             );
         } catch (MailSendingException mailSendingException) {
             throw MailSendingException.editAccountMail();

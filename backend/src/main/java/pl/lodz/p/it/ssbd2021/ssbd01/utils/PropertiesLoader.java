@@ -17,6 +17,7 @@ public class PropertiesLoader {
     private String appMailUrl;
     private String appMailPassword;
     private String appDefaultUrl;
+    private String appFrontendUrl;
 
     private String confirmationJwtSecret;
     private String refreshJwtSecret;
@@ -160,6 +161,10 @@ public class PropertiesLoader {
         return unlockByMailConfirmationJwtSecret;
     }
 
+    public String getAppFrontendUrl() {
+        return appFrontendUrl;
+    }
+
     @PostConstruct
     private void loadProperties() {
         Properties prop = null;
@@ -199,5 +204,6 @@ public class PropertiesLoader {
         mailSmtpAuth = prop.getProperty("mail.smtp.auth");
         mailSmtpSSLTrust = prop.getProperty("mail.smtp.ssl.trust");
         unlockByMailConfirmationJwtSecret = prop.getProperty("unlock.by.mail.confirmation.jwt.secret");
+        appFrontendUrl = prop.getProperty("application.frontend.url");
     }
 }
