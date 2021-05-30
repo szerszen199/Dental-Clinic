@@ -475,6 +475,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         }
         account.setModifiedBy(findByLogin(login));
         account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        account.setFirstPasswordChange(true);
         if (account.getPassword().contentEquals(hashGenerator.generateHash(newPassword))) {
             throw PasswordException.passwordsNotDifferent();
         }
