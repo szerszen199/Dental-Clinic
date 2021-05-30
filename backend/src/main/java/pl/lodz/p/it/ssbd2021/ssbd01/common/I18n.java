@@ -29,6 +29,7 @@ public class I18n {
     public static final String ACCESS_LEVEL_ADD_FAILED = "access_level_add_failed";
     public static final String ACCESS_LEVEL_REVOKED_SUCCESSFULLY = "access_level_revoked_successfully";
     public static final String ACCESS_LEVEL_REVOKE_FAILED = "access_level_revoke_failed";
+    public static final String ACCESS_LEVEL_SELF_REVOKE = "access_level_self_revoke";
     public static final String PASSWORD_CHANGED_SUCCESSFULLY = "password_changed_successfully";
     public static final String PASSWORD_RESET_SUCCESSFULLY = "password_reset_successfully";
     public static final String PASSWORD_RESET_MAIL_SENT_SUCCESSFULLY = "password_reset_mail_sent_successfully";

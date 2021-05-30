@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import {ButtonGroup} from "@material-ui/core";
 import Button from "react-bootstrap/Button";
 import {giveRoleRequest} from "./GiveRoleRequest";
+import {removeRoleRequest} from "./RemoveRoleRequest";
 import confirmationAlerts from "../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
 import {withTranslation} from "react-i18next";
 
@@ -37,7 +38,16 @@ class GiveRoleWithoutTranslation extends React.Component {
         const {t} = this.props;
         confirmationAlerts(t("Warning"),t("Activate role")).then((confirmed) => {
             if (confirmed) {
-                giveRoleRequest(login, level, () => {this.makeAccessLevelRequest()}, () => {this.render()});
+                giveRoleRequest(login, level, () => {this.makeAccessLevelRequest()}, () => {this.render()}, t);
+            }
+        });
+    }
+
+    takeRoleRequestAndRefresh(login, level) {
+        const {t} = this.props;
+        confirmationAlerts(t("Warning"),t("Deactivate role")).then((confirmed) => {
+            if (confirmed) {
+                removeRoleRequest(login, level, () => {this.makeAccessLevelRequest()}, () => {this.render()},t);
             }
         });
     }
@@ -46,11 +56,11 @@ class GiveRoleWithoutTranslation extends React.Component {
         let allButtons = [];
         for (let i = 0; i < this.state.rolesList.length; i++) {
             if (this.state.rolesList[i].active === true) {
-                allButtons.push(<Button variant="success" onClick={() => {
-                    this.giveRoleRequestAndRefresh(this.props.account, this.state.rolesList[i].level)
+                allButtons.push(<Button variant="primary" onClick={() => {
+                    this.takeRoleRequestAndRefresh(this.props.account, this.state.rolesList[i].level)
                 }} type="submit">{this.state.rolesList[i].level}</Button>);
             } else {
-                allButtons.push(<Button variant="danger" onClick={() => {
+                allButtons.push(<Button variant="secondary" onClick={() => {
                     this.giveRoleRequestAndRefresh(this.props.account, this.state.rolesList[i].level)
                 }} type="submit">{this.state.rolesList[i].level}</Button>);
             }
