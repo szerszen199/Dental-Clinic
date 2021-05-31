@@ -152,48 +152,6 @@ public class AccountEndpoint {
     }
 
     /**
-     * Tworzy nowe konto przez admina.
-     *
-     * @param newAccountByAdminDto obiekt zawierający login, email i inne wymagane dane
-     * @return the response
-     */
-    @POST
-    @RolesAllowed({I18n.ADMIN})
-    @Path("admin/create")
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response createAccountByAdmin(NewAccountByAdminDto newAccountByAdminDto) {
-
-        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
-        boolean rollbackTX = false;
-        Exception exception;
-        do {
-            try {
-                exception = null;
-                this.accountManager.createAccountByAdministrator(
-                        AccountConverter.createAccountByAdminEntityFromDto(newAccountByAdminDto)
-                );
-                rollbackTX = accountManager.isLastTransactionRollback();
-            } catch (AppBaseException | EJBTransactionRolledbackException e) {
-                rollbackTX = true;
-                exception = e;
-            }
-        } while (rollbackTX && --retryTXCounter > 0);
-
-        if (rollbackTX) {
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
-        }
-        if (exception != null && (exception instanceof AccountException || exception instanceof MailSendingException)) {
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
-        } else if (exception != null && exception instanceof AppBaseException) {
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
-        }
-        return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CREATED_SUCCESSFULLY)).build();
-
-
-    }
-
-    /**
      * Confirm account.
      *
      * @param confirmAccountRequestDTO confirm account request dto
