@@ -21,21 +21,21 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Pattern(regexp = "[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*")
 public @interface Login {
     /**
-     * Message string.
+     * Wiadomość.
      *
      * @return string
      */
     String message() default "{validation.error.login}";
 
     /**
-     * Groups class [ ].
+     * Grupy [ ].
      *
      * @return class [ ]
      */
     Class<?>[] groups() default {};
 
     /**
-     * Payload class [ ].
+     * Payload klasa [ ].
      *
      * @return class [ ]
      */

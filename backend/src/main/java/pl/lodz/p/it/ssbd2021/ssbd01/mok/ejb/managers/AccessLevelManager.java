@@ -7,7 +7,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import javax.ejb.Local;
 
 /**
- * Interfejs Access level manager.
+ * Interfejs menadżera poziomów dostępu.
  */
 @Local
 public interface AccessLevelManager {

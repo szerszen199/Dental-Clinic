@@ -45,7 +45,7 @@ import java.util.logging.Logger;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_NOT_FOUND;
 
 /**
- * Typ Login endpoint.
+ * Typ Login endpoint do logowania.
  */
 @Path("auth")
 @PermitAll
@@ -66,15 +66,15 @@ public class LoginEndpoint {
     /**
      * Tworzy nową instancję klasy Login endpoint.
      *
-     * @param identityStoreHandler  identity store handler
-     * @param jwtLoginUtils         jwt utils
-     * @param httpServletRequest    http servlet request
-     * @param accountManager        account manager
-     * @param propertiesLoader      properties loader
-     * @param jwtRefreshUtils       jwt refresh utils
-     * @param mailProvider          mail provider
-     * @param authViewEntityManager auth view entity manager
-     * @param jwtResetPasswordConfirmation  token do potwierdzenia resetu hasła
+     * @param identityStoreHandler         identity store handler
+     * @param jwtLoginUtils                jwt utils
+     * @param httpServletRequest           http servlet request
+     * @param accountManager               account manager
+     * @param propertiesLoader             properties loader
+     * @param jwtRefreshUtils              jwt refresh utils
+     * @param mailProvider                 mail provider
+     * @param authViewEntityManager        auth view entity manager
+     * @param jwtResetPasswordConfirmation token do potwierdzenia resetu hasła
      */
     @Inject
     public LoginEndpoint(IdentityStoreHandler identityStoreHandler,

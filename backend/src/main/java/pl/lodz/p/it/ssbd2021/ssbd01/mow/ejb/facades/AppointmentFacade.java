@@ -12,7 +12,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 /**
- * Typ Appointment facade.
+ * Fasada wizyt.
  */
 @Stateless
 @PermitAll
