@@ -103,7 +103,6 @@ public class LoginEndpoint {
      * @param refreshTokenRequestDTO refresh token request dto
      * @return refresh token
      */
-    // TODO: 21.05.2021
     @RolesAllowed({I18n.ADMIN, I18n.RECEPTIONIST, I18n.DOCTOR, I18n.PATIENT})
     @POST
     @Path("refresh")

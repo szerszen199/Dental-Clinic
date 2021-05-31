@@ -48,7 +48,6 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_UNLOCK_BY_AD
 @Local
 public class MailProvider {
 
-    // TODO: 24.05.2021 To ma być pobierane z properties loader : )
     private Session session;
 
     // EJB nie bez powodu!
