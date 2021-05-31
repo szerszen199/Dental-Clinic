@@ -348,6 +348,7 @@
                             <cargo.glassfish.admin.port>${payara.adminPort}</cargo.glassfish.admin.port>
                             <cargo.hostname>${payara.hostname}</cargo.hostname>
                             <cargo.servlet.port>${servlet.port}</cargo.servlet.port>
+                            <cargo.runtime.args>force=true</cargo.runtime.args>
                         </properties>
                     </configuration>
                 </configuration>
