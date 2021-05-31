@@ -7,7 +7,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 
 /**
- * Interfejs AppointmentManager.
+ * Interfejs menadżera wizyt.
  */
 @Local
 public interface AppointmentManager {

@@ -6,6 +6,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+/**
+ * Typ Access level dto - dto dla poziomu dostępu.
+ */
 @NotNull
 public abstract class AccessLevelDto {
     @NotNull(message = I18n.ACCESS_LEVEL_NULL)
@@ -28,12 +31,12 @@ public abstract class AccessLevelDto {
         this.level = level;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
-    }
-
     public String getLevel() {
         return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
     }
 }
 

@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Typ Auth view entity.
+ * Typ Auth view entity - klasa widoku.
  */
 // Nie dziedzicy bo abstrakcyjnej bo nie posiada takich pól
 @Entity

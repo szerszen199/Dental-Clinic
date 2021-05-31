@@ -4,9 +4,11 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 
+/**
+ * Klasa Jwt potweirdzenia rejestracji narzędzia.
+ */
 @Stateless
 public class JWTRegistrationConfirmationUtils extends JwtUtilsAbstract {
 

@@ -1,19 +1,17 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
-
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Klasa dla AccountInfoResponseDTO.
+ * Klasa dla AccountInfoResponseDTO - dto odpowiedzi z informacja o uzytkowniku.
  */
 
 public class AccountInfoResponseDTO implements SignableEntity {
@@ -47,7 +45,7 @@ public class AccountInfoResponseDTO implements SignableEntity {
     /**
      * Tworzy nową instancję klasy AccountDto.
      *
-     * @param account klasa reprezentujacea konto użytkownika aplikacji
+     * @param account klasa reprezentujaca konto użytkownika aplikacji
      */
     public AccountInfoResponseDTO(Account account) {
         this.email = account.getEmail();
@@ -85,6 +83,15 @@ public class AccountInfoResponseDTO implements SignableEntity {
      */
     public String getFirstName() {
         return firstName;
+    }
+
+    /**
+     * Ustawia pole first name.
+     *
+     * @param firstName first name
+     */
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     /**
@@ -130,15 +137,6 @@ public class AccountInfoResponseDTO implements SignableEntity {
      */
     public String getPesel() {
         return pesel;
-    }
-
-    /**
-     * Ustawia pole first name.
-     *
-     * @param firstName first name
-     */
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
     }
 
     /**

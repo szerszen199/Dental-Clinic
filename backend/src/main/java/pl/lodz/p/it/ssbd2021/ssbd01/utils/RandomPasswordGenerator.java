@@ -1,8 +1,12 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
-import javax.annotation.ManagedBean;
 import org.apache.commons.lang3.RandomStringUtils;
 
+import javax.annotation.ManagedBean;
+
+/**
+ * Klasa generowania losowego hasła.
+ */
 @ManagedBean
 public class RandomPasswordGenerator {
 

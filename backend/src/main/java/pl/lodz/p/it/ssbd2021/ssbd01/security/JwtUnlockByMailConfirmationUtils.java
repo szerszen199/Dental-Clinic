@@ -6,6 +6,9 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.text.ParseException;
 
+/**
+ * Klasa Jwt odblokowanie kotna za pomocą maila potwierdzającego.
+ */
 @Stateless
 public class JwtUnlockByMailConfirmationUtils extends JwtUtilsAbstract {
 

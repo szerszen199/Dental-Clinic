@@ -4,6 +4,9 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.security.enterprise.SecurityContext;
 
+/**
+ * Klasa narzędzia zalogowanego kotna.
+ */
 @Stateless
 public class LoggedInAccountUtil {
     @Inject

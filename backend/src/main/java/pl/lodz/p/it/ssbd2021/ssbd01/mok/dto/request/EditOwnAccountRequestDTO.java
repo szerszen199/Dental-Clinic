@@ -177,7 +177,7 @@ public class EditOwnAccountRequestDTO implements SignableEntity {
     @Override
     @JsonbTransient
     public Map<String, String> getPayload() {
-        Map<String,String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         map.put("version", String.valueOf(getVersion()));
         return map;
     }

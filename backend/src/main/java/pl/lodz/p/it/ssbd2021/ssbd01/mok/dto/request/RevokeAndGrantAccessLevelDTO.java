@@ -7,7 +7,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 import javax.validation.constraints.NotNull;
 
 /**
- * Typ Revoke and grant access level dto.
+ * Typ Revoke and grant access level dto - dto przy odejmowaniu poziomu dostępu.
  */
 public class RevokeAndGrantAccessLevelDTO extends AccessLevelDto {
 
