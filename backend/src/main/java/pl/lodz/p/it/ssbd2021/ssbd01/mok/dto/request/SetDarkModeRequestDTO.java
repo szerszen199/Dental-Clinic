@@ -12,14 +12,6 @@ public class SetDarkModeRequestDTO {
     @NotNull(message = I18n.DARK_MODE_NULL)
     private boolean darkMode;
 
-    public boolean getDarkMode() {
-        return darkMode;
-    }
-
-    public void setDarkMode(boolean darkMode) {
-        this.darkMode = darkMode;
-    }
-
     /**
      * Tworzy nową instancję klasy DarkModeDto.
      *
@@ -33,5 +25,13 @@ public class SetDarkModeRequestDTO {
      * Tworzy nową instancję klasy DarkModeDto.
      */
     public SetDarkModeRequestDTO() {
+    }
+
+    public boolean getDarkMode() {
+        return darkMode;
+    }
+
+    public void setDarkMode(boolean darkMode) {
+        this.darkMode = darkMode;
     }
 }

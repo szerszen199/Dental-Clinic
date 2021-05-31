@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Interfejs Account manager.
+ * Interfejs menadżera konta.
  */
 @Local
 public interface AccountManager {

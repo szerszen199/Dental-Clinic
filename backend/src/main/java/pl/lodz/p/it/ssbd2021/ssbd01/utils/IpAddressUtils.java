@@ -3,7 +3,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Typ Ip address utils.
+ * Klasa narzędzi adresu ip.
  */
 public class IpAddressUtils {
 

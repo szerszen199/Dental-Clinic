@@ -151,7 +151,7 @@ public class AccountEndpoint {
     }
 
     /**
-     * Confirm account.
+     * Potwierdza konto.
      *
      * @param confirmAccountRequestDTO confirm account request dto
      * @return response
@@ -192,7 +192,7 @@ public class AccountEndpoint {
     }
 
     /**
-     * Reset password.
+     * Resetuje hasło.
      *
      * @param confirmAccountRequestDTO the confirm account request dto
      * @return response
@@ -249,7 +249,7 @@ public class AccountEndpoint {
     }
 
     /**
-     * Reset password.
+     * Ustawia nowe hasło.
      *
      * @param setNewPasswordRequestDTO the setNewPasswordRequestDTO
      * @return response
@@ -335,7 +335,7 @@ public class AccountEndpoint {
     }
 
     /**
-     * Edit account data.
+     * Edycja danych konta.
      *
      * @param accountDto DTO edytowanego konta
      * @param header     nagłówek If-Match

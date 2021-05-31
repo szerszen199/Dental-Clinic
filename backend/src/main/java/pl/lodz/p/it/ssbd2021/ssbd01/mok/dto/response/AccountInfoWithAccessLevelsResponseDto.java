@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Klasa dla AccountInfoResponseDTO.
+ * Klasa dla AccountInfoResponseDTO - dto odpowiedzi z loginem i poziomami dostępu.
  */
 public class AccountInfoWithAccessLevelsResponseDto extends AccountInfoResponseDTO {
 
@@ -103,6 +103,12 @@ public class AccountInfoWithAccessLevelsResponseDto extends AccountInfoResponseD
         }
 
         /**
+         * Tworzy nową instancję klasy Access level dto with active.
+         */
+        public AccessLevelDtoWithActive() {
+        }
+
+        /**
          * Pobiera pole active.
          *
          * @return active
@@ -118,12 +124,6 @@ public class AccountInfoWithAccessLevelsResponseDto extends AccountInfoResponseD
          */
         public void setActive(Boolean active) {
             this.active = active;
-        }
-
-        /**
-         * Tworzy nową instancję klasy Access level dto with active.
-         */
-        public AccessLevelDtoWithActive() {
         }
     }
 }

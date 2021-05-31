@@ -6,6 +6,9 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.text.ParseException;
 
+/**
+ * Klasa Jwt refresh narzędzia.
+ */
 @Stateless
 public class JwtRefreshUtils extends JwtUtilsAbstract {
 

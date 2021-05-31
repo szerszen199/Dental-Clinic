@@ -5,9 +5,9 @@ public abstract class AccessLevelWithActiveDto extends AccessLevelDto {
     private boolean isActive;
 
     /**
-     * Koonstruktor dla klasy AccessLevelWithActiveDto.
+     * Konstruktor dla klasy AccessLevelWithActiveDto.
      *
-     * @param level poziom dostępu
+     * @param level    poziom dostępu
      * @param isActive status aktywności
      */
     public AccessLevelWithActiveDto(String level, boolean isActive) {
@@ -15,6 +15,11 @@ public abstract class AccessLevelWithActiveDto extends AccessLevelDto {
         this.isActive = isActive;
     }
 
+    /**
+     * Zwraca wartość boolean, czy jest aktywne.
+     *
+     * @return boolean
+     */
     public boolean isActive() {
         return isActive;
     }

@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import java.text.ParseException;
 
 /**
- * Typ Jwt utils.
+ * KLasa Jwt narzędzia.
  */
 @Stateless
 public class JwtEmailConfirmationUtils extends JwtUtilsAbstract {

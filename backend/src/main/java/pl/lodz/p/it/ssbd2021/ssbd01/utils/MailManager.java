@@ -14,20 +14,20 @@ import javax.mail.internet.MimeMultipart;
 import java.io.Serializable;
 
 /**
- * Typ Mail manager.
+ * Klasa menadżera maili.
  */
 @Stateless
 public class MailManager implements Serializable {
 
     /**
-     * Send mail.
+     * Wyślij email.
      *
-     * @param to          to
-     * @param subject     subject
-     * @param from        from
-     * @param mailMessage mail message
-     * @param session     session
-     * @throws MessagingException messaging exception
+     * @param to          do
+     * @param subject     tytuł
+     * @param from        od
+     * @param mailMessage wiadomość
+     * @param session     sesja
+     * @throws MessagingException wyjątek wysyłania
      */
     @Asynchronous
     public void sendMail(String to, String subject, String from, String mailMessage, Session session) throws MessagingException {
@@ -43,7 +43,7 @@ public class MailManager implements Serializable {
         Multipart multipart = new MimeMultipart();
         multipart.addBodyPart(mimeBodyPart);
 
-        message.setContent(multipart,"text/html; charset=UTF-8");
+        message.setContent(multipart, "text/html; charset=UTF-8");
 
         Transport.send(message);
     }
