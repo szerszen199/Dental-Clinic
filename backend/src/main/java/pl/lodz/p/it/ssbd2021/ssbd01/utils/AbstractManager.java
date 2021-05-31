@@ -1,7 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
-
 import javax.ejb.AfterBegin;
 import javax.ejb.AfterCompletion;
 import javax.ejb.BeforeCompletion;
@@ -17,12 +15,11 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractManager {
 
+    protected static final Logger LOGGER = Logger.getGlobal();
     @Inject
     LoggedInAccountUtil loggedInAccountUtil;
-
-    protected static final Logger LOGGER = Logger.getGlobal();
-    private String transactionID;
     boolean lastTransactionRollback;
+    private String transactionID;
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public boolean isLastTransactionRollback() {

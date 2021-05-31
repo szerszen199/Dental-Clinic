@@ -7,6 +7,9 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_ACTIVATION_LINK_SEND
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_CONFIRMATION_PARSING_ERROR;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_RESET_MAIL_SENT_ERROR;
 
+/**
+ * Typ Mail sending exception - klasa wyjątków związanych z mailem.
+ */
 public class MailSendingException extends AppBaseException {
 
     /**
@@ -29,9 +32,7 @@ public class MailSendingException extends AppBaseException {
     }
 
     /**
-     * Metoda opakowująca wyjątek MailSendingException
-     * z dedykowaną wiadomością dołączoną do niego sygnalizującą
-     * powód wystąpienia wyjątku.
+     * Metoda opakowująca wyjątek MailSendingException z informacją, o błędzie wysyłania linku aktywacyjnego.
      *
      * @return obiekt wyjątku MailSendingException z wiadomością sygnalizującą niepowodzenie wysyłania wiadomości e-mail z linkiem aktywacyjnym do konta.
      */
@@ -40,9 +41,7 @@ public class MailSendingException extends AppBaseException {
     }
 
     /**
-     * Metoda opakowująca wyjątek MailSendingException
-     * z dedykowaną wiadomością dołączoną do niego sygnalizującą
-     * powód wystąpienia wyjątku.
+     * Metoda opakowująca wyjątek MailSendingException z informacją o błędzie wysyłania maila po resecie hasła.
      *
      * @return obiekt wyjątku MailSendingException z wiadomością sygnalizującą niepowodzenie wysyłania wiadomości e-mail podczas resetu hasła użytkownika.
      */
@@ -51,9 +50,7 @@ public class MailSendingException extends AppBaseException {
     }
 
     /**
-     * Metoda opakowująca wyjątek MailSendingException
-     * z dedykowaną wiadomością dołączoną do niego sygnalizującą
-     * powód wystąpienia wyjątku.
+     * Metoda opakowująca wyjątek MailSendingException z informacją o błędzie wysyłania maila po edycji konta.
      *
      * @return obiekt wyjątku MailSendingException z wiadomością sygnalizującą niepowodzenie wysyłania wiadomości e-mail podczas edycji konta.
      */
@@ -62,9 +59,7 @@ public class MailSendingException extends AppBaseException {
     }
 
     /**
-     * Metoda opakowująca wyjątek MailSendingException
-     * z dedykowaną wiadomością dołączoną do niego sygnalizującą
-     * powód wystąpienia wyjątku.
+     * Metoda opakowująca wyjątek MailSendingExceptionz informacją o błędzie wysyłania maila o blokadzie konta.
      *
      * @return obiekt wyjątku MailSendingException z wiadomością sygnalizującą niepowodzenie wysyłania wiadomości e-mail informacją o zablokowanym koncie.
      */
@@ -73,9 +68,7 @@ public class MailSendingException extends AppBaseException {
     }
 
     /**
-     * Metoda opakowująca wyjątek MailSendingException
-     * z dedykowaną wiadomością dołączoną do niego sygnalizującą
-     * powód wystąpienia wyjątku.
+     * Metoda opakowująca wyjątek MailSendingException z informacją o błędzie wysyłania maila potwierdzającego aktywację kotna.
      *
      * @return obiekt wyjątku MailSendingException z wiadomością sygnalizującą niepowodzenie wysyłania wiadomości e-mail informacją o aktywacji konta.
      */
@@ -84,9 +77,7 @@ public class MailSendingException extends AppBaseException {
     }
 
     /**
-     * Metoda opakowująca wyjątek MailSendingException
-     * z dedykowaną wiadomością dołączoną do niego sygnalizującą
-     * powód wystąpienia wyjątku.
+     * Metoda opakowująca wyjątek MailSendingException z informacją o błędzie wysyłania maila o potwierdzeniu parsowania maila potwierdzającego.
      *
      * @param cause przyczyna wystąpienia wyjątku
      * @return obiekt wyjątku MailSendingException z wiadomością sygnalizującą niepowodzenie wysyłania wiadomości e-mail informacją o aktywacji konta.

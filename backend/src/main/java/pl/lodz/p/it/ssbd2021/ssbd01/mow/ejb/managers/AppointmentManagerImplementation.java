@@ -17,7 +17,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 /**
- * Klasa AppointmentManagerImplementation.
+ * Klasa implementująca interfejs menadżera wizyt.
  */
 @Stateful
 @PermitAll

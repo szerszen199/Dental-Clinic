@@ -24,8 +24,6 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATION_C
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_CHANGE_CONFIRM_BUTTON;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_CHANGE_CONFIRM_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_CHANGE_CONFIRM_TEXT;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_GENERATED_PASSWORD_SUBJECT;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_GENERATED_PASSWORD_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_GRANT_ACCESS_LEVEL_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_GRANT_ACCESS_LEVEL_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_ADMIN_SUBJECT;
@@ -45,10 +43,12 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_SCHEDULER_LO
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_UNLOCK_BY_ADMIN_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_UNLOCK_BY_ADMIN_TEXT;
 
+/**
+ * Klasa Mail provider'a.
+ */
 @Local
 public class MailProvider {
 
-    // TODO: 24.05.2021 To ma być pobierane z properties loader : )
     private Session session;
 
     // EJB nie bez powodu!
@@ -71,6 +71,10 @@ public class MailProvider {
 
     private String getDefaultUrl() {
         return propertiesLoader.getAppDefaultUrl();
+    }
+
+    private String getFrontendUrl() {
+        return propertiesLoader.getAppFrontendUrl();
     }
 
 
@@ -106,7 +110,7 @@ public class MailProvider {
      *
      * @param email Adres, na który zostanie wysłana wiadomość.
      * @param token Login konta, którego link aktywacyjny wysyłamy.
-     * @param lang język wiadomości email
+     * @param lang  język wiadomości email
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
     public void sendActivationMail(String email, String token, String lang) throws MailSendingException {
@@ -129,7 +133,7 @@ public class MailProvider {
      * Wysyła wiadomość z potwierdzeniem aktywacji konta.
      *
      * @param email Adres, na który zostanie wysłana wiadomość.
-     * @param lang język wiadomości email
+     * @param lang  język wiadomości email
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
     public void sendActivationConfirmationMail(String email, String lang) throws MailSendingException {
@@ -148,7 +152,7 @@ public class MailProvider {
      * Wysyła wiadomość informującą o zablokowanym koncie przez administratora.
      *
      * @param email Adres, na który zostanie wysłana wiadomość.
-     * @param lang język wiadomości email
+     * @param lang  język wiadomości email
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
     public void sendAccountLockByAdminMail(String email, String lang) throws MailSendingException {
@@ -167,8 +171,8 @@ public class MailProvider {
      * Wysyła wiadomość informującą o logowaniu administratora.
      *
      * @param email Adres, na który zostanie wysłana wiadomość.
-     * @param lang język wiadomości email
-     * @param ip język wiadomości adres ip
+     * @param lang  język wiadomości email
+     * @param ip    język wiadomości adres ip
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
     @Asynchronous
@@ -189,7 +193,7 @@ public class MailProvider {
      * Wysyła wiadomość informującą o odblokowanym koncie przez administratora.
      *
      * @param email Adres, na który zostanie wysłana wiadomość.
-     * @param lang język wiadomości email
+     * @param lang  język wiadomości email
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
     public void sendAccountUnlockByAdminMail(String email, String lang) throws MailSendingException {
@@ -209,7 +213,7 @@ public class MailProvider {
      * Wysyła wiadomość informującą o zablokowanym koncie po nieudanych logowaniach.
      *
      * @param email Adres, na który zostanie wysłana wiadomość.
-     * @param lang język wiadomości email
+     * @param lang  język wiadomości email
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
     public void sendAccountLockByUnsuccessfulLoginMail(String email, String lang) throws MailSendingException {
@@ -230,7 +234,7 @@ public class MailProvider {
      *
      * @param email Adres, na który zostanie wysłana wiadomość.
      * @param token Login konta, którego link aktywacyjny wysyłamy.
-     * @param lang język wiadomości email
+     * @param lang  język wiadomości email
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
     public void sendEmailChangeConfirmationMail(String email, String token, String lang) throws MailSendingException {
@@ -254,7 +258,7 @@ public class MailProvider {
      *
      * @param email the email
      * @param token the token
-     * @param lang język wiadomości email
+     * @param lang  język wiadomości email
      * @throws MailSendingException the mail sending exception
      */
     @Asynchronous
@@ -279,7 +283,7 @@ public class MailProvider {
      *
      * @param email the email
      * @param token the token
-     * @param lang język wiadomości email
+     * @param lang  język wiadomości email
      * @throws MailSendingException the mail sending exception
      */
     @Asynchronous
@@ -300,7 +304,7 @@ public class MailProvider {
     }
 
     /**
-     * Wysyła wiadomość z linkiem do odblokowania konta po jego automatycznym zablokowaniu z powodu nie aktywności.
+     * Wysyła wiadomość z linkiem do odblokowania konta po jego automatycznym zablokowaniu z powodu nieaktywności.
      *
      * @param email the email
      * @param token the token
@@ -324,7 +328,7 @@ public class MailProvider {
      *
      * @param email Adres, na który zostanie wysłana wiadomość.
      * @param level Poziom dostępu, który został przyznany
-     * @param lang język wiadomości email
+     * @param lang  język wiadomości email
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
     public void sendAccountGrantAccessLevelMail(String email, String level, String lang) throws MailSendingException {
@@ -347,7 +351,7 @@ public class MailProvider {
      *
      * @param email Adres, na który zostanie wysłana wiadomość.
      * @param level Poziom dostępu, który został odebrany
-     * @param lang język wiadomości email
+     * @param lang  język wiadomości email
      * @throws MailSendingException Błąd wysyłania wiadomości.
      */
     public void sendAccountRevokeAccessLevelMail(String email, String level, String lang) throws MailSendingException {
@@ -373,30 +377,24 @@ public class MailProvider {
     }
 
     private String buildConfirmationLink(String defaultContext, String token) {
-        StringBuilder sb = new StringBuilder(getDefaultUrl());
-
-        sb.append(defaultContext);
-        sb.append("/api/account/confirm?token=");
+        StringBuilder sb = new StringBuilder(getFrontendUrl());
+        sb.append("/activation-confirm/");
         sb.append(token);
 
         return sb.toString();
     }
 
     private String buildMailConfirmationLink(String defaultContext, String token) {
-        StringBuilder sb = new StringBuilder(getDefaultUrl());
-
-        sb.append(defaultContext);
-        sb.append("/api/account/mailconfirm?token=");
+        StringBuilder sb = new StringBuilder(getFrontendUrl());
+        sb.append("/mail-change-confirm/");
         sb.append(token);
 
         return sb.toString();
     }
 
     private String buildResetPassLink(String defaultContext, String token) {
-        StringBuilder sb = new StringBuilder(getDefaultUrl());
-
-        sb.append(defaultContext);
-        sb.append("/new-password/");
+        StringBuilder sb = new StringBuilder(getFrontendUrl());
+        sb.append("/password-change-confirm/");
         sb.append(token);
 
         return sb.toString();

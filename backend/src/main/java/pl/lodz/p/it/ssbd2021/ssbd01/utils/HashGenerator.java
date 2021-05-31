@@ -7,5 +7,5 @@ public interface HashGenerator {
      * @param input dane wejściowe
      * @return string
      */
-    public String generateHash(String input);
+    String generateHash(String input);
 }

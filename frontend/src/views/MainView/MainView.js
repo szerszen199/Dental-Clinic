@@ -1,4 +1,4 @@
-import React, {Suspense, useState} from "react";
+import React, {Suspense} from "react";
 import Navbar from "react-bootstrap/Navbar";
 import {Col, Container, Row} from "react-bootstrap";
 import {DarkModeSwitch} from "react-toggle-dark-mode";
@@ -21,7 +21,6 @@ import './MainView.css';
 import {Link} from "react-router-dom";
 import findDefaultRole from "../../roles/findDefaultRole";
 import {darkModeRequest} from "../../components/DarkMode/DarkModeRequest"
-import {map} from "react-bootstrap/ElementChildren";
 import {languageRequest} from "../../components/Language/LanguageRequest";
 
 const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
@@ -108,11 +107,7 @@ class MainViewWithoutTranslation extends React.Component {
                     Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE), {expires: jwtCookieExpirationTime});
                 }
                 localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, response.data.refreshJwtToken.token);
-
-
-
             }).catch((response) => {
-                // todo cos z tym response?
                 console.log(response);
                 logout();
             })
@@ -133,8 +128,7 @@ class MainViewWithoutTranslation extends React.Component {
             accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode)
             if (Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE).toUpperCase() === "PL") {
                 this.setPL();
-            }
-            else {
+            } else {
                 this.setEN();
             }
         }

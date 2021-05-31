@@ -91,7 +91,7 @@ class EditAccountWithoutTranslation extends React.Component {
         }
 
         function findPhoneNumberErrors() {
-            if (t.state.phoneNumber === null || t.state.phoneNumber === '') {
+            if (t.state.phoneNumber === null || t.state.phoneNumber === '' || t.state.phoneNumber === undefined) {
                 t.setState({
                     phoneNumber: null,
                 });
@@ -114,7 +114,7 @@ class EditAccountWithoutTranslation extends React.Component {
         }
 
         function findPeselErrors() {
-            if (t.state.pesel === null || t.state.pesel === '') {
+            if (t.state.pesel === null || t.state.pesel === '' || t.state.pesel === undefined) {
                 t.setState({
                     pesel: null,
                 });
@@ -188,8 +188,6 @@ class EditAccountWithoutTranslation extends React.Component {
                 version: result.version,
             }))
     }
-
-    // Todo: prawdopodobnie wysyłać zapytanie do backendu tutaj, chciałbym zrobić tak jak w vue się da żeby jeśli odpalam w trybie debug front to łącze z localhostem, narazie nie ruszam.
 
     handleSubmit(title, question, t) {
         return function (event) {

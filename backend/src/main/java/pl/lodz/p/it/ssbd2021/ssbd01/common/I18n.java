@@ -136,4 +136,7 @@ public class I18n {
     public static final String ACCOUNT_MAIL_UNLOCK_BY_ADMIN_TEXT = "account_mail_unlock_by_admin_text";
     public static final String BAD_ETAG_VALUE = "bad_etag_value";
     public static final String TRANSACTION_FAILED_ERROR = "transaction_failed_error";
+    public static final String ACCOUNT_ALREADY_CONFIRMED = "account_already_confirmed";
+    public static final String EMAIL_ALREADY_CHANGED = "email_already_changed";
+    public static final String PASSWORD_ALREADY_CHANGED = "password_already_changed";
 }

@@ -56,8 +56,6 @@ class EditPasswordWithoutTranslation extends React.Component {
         this.setState({errors: array})
     }
 
-
-    // Todo: prawdopodobnie wysyłać zapytanie do backendu tutaj, chciałbym zrobić tak jak w vue się da żeby jeśli odpalam w trybie debug front to łącze z localhostem, narazie nie ruszam.
     handleSubmit(event, title, question, t) {
         return function (event) {
             event.preventDefault();
