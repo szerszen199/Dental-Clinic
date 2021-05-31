@@ -7,6 +7,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.SessionSynchronization;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
@@ -16,6 +17,7 @@ import javax.interceptor.Interceptors;
 import java.util.List;
 
 @Stateful
+@PermitAll
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
 public class AuthViewEntityManagerImpl extends AbstractManager implements AuthViewEntityManager, SessionSynchronization {
