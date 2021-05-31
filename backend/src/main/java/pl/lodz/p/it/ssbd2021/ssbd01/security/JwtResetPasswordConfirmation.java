@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 
 
+/**
+ * Klasa Jwt potwierdzenia resetowania hasła.
+ */
 @Stateless
 public class JwtResetPasswordConfirmation extends JwtUtilsAbstract {
 

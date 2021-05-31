@@ -16,7 +16,7 @@ import java.text.ParseException;
 import java.util.Date;
 
 /**
- * Typ Jwt utils abstract.
+ * Abstrakcyjna klasa Jwt utils.
  */
 public abstract class JwtUtilsAbstract {
 
@@ -111,7 +111,7 @@ public abstract class JwtUtilsAbstract {
         try {
             final JWSSigner signer = new MACSigner(getJwtSecret());
             final JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                    .subject(username + "/" + String.valueOf(version))
+                    .subject(username + "/" + version)
                     .expirationTime(new Date(new Date().getTime() + getJwtExpiration()))
                     .build();
             final SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS384), claimsSet);

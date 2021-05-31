@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * Typ Properties loader.
+ * Klasa loader właściwości.
  */
 @Startup
 @Singleton

@@ -5,7 +5,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import javax.validation.constraints.NotNull;
 
 /**
- * Typ Confirm mail change request dto.
+ * Typ Confirm mail change request dto - dto potwierdzające mail po zmianie.
  */
 public class ConfirmMailChangeRequestDTO {
 

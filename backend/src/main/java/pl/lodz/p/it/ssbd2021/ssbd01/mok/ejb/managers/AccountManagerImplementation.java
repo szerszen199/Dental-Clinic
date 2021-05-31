@@ -41,7 +41,7 @@ import java.util.List;
 
 
 /**
- * Typ Account manager implementation.
+ * Implementacja menadżera konta.
  */
 @Stateful
 @PermitAll

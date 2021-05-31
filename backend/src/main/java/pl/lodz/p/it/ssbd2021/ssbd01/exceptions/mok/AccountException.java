@@ -17,14 +17,14 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_SET_DARK_MODE_FAI
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_SET_LANGUAGE_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_UNLOCKED_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.EMAIL_ALREADY_CHANGED;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_ALREADY_CHANGED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.EMAIL_CONFIRMATION_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.INVALID_CONFIRMATION_TOKEN;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_ALREADY_CHANGED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.UPDATE_ACCOUNT_AFTER_SUCCESSFUL_LOGIN;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.UPDATE_ACCOUNT_AFTER_UNSUCCESSFUL_LOGIN;
 
 /**
- * Typ Account exception.
+ * Typ Account exception - wyjątki dla konta.
  */
 public class AccountException extends AppBaseException {
 
