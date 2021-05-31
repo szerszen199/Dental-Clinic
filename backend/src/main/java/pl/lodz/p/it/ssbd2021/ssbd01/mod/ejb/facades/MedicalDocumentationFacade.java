@@ -1,5 +1,9 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+
 import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -7,9 +11,6 @@ import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 /**
  * Klasa definiująca główne operacje wykonywane na encjach typu MedicalDocumentation.
