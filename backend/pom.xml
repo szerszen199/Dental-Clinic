@@ -350,13 +350,6 @@
                             <cargo.servlet.port>${servlet.port}</cargo.servlet.port>
                         </properties>
                     </configuration>
-                    <deployables>
-                        <deployable>
-                            <groupId>pl.lodz.p.it.ssbd2021</groupId>
-                            <artifactId>ssbd01</artifactId>
-                            <type>war</type>
-                        </deployable>
-                    </deployables>
                 </configuration>
                 <dependencies>
                 <dependency>
