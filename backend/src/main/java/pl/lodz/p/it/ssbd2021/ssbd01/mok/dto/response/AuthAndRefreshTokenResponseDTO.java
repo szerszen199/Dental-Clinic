@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
- * Typ Auth and refresh token response dto.
+ * Typ Auth and refresh token response dto - odpowiedź z loginem, rolami, tokenem i tokenem do odświeżania.
  */
 public class AuthAndRefreshTokenResponseDTO {
     @NotNull

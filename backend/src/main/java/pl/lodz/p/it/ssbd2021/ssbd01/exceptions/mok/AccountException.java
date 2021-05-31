@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_ALREADY_CONFIRMED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CONFIRMATION_BY_TOKEN_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CREATION_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EDIT_FAILED;
@@ -15,13 +16,15 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_NOT_FOUND;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_SET_DARK_MODE_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_SET_LANGUAGE_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_UNLOCKED_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.EMAIL_ALREADY_CHANGED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.EMAIL_CONFIRMATION_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.INVALID_CONFIRMATION_TOKEN;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_ALREADY_CHANGED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.UPDATE_ACCOUNT_AFTER_SUCCESSFUL_LOGIN;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.UPDATE_ACCOUNT_AFTER_UNSUCCESSFUL_LOGIN;
 
 /**
- * Typ Account exception.
+ * Typ Account exception - wyjątki dla konta.
  */
 public class AccountException extends AppBaseException {
 
@@ -206,5 +209,32 @@ public class AccountException extends AppBaseException {
      */
     public static AccountException updateAfterSuccessfulLogin() {
         return new AccountException(UPDATE_ACCOUNT_AFTER_SUCCESSFUL_LOGIN);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę potwierdzenia konta po poprawnym potwierdzeniu.
+     *
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException accountAlreadyConfirmed() {
+        return new AccountException(ACCOUNT_ALREADY_CONFIRMED);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę potwierdzenia zmiany emailu po zmianie emailu.
+     *
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException emailAlreadyChanged() {
+        return new AccountException(EMAIL_ALREADY_CHANGED);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę potwierdzenia zmiany emailu po zmianie emailu.
+     *
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException passwordAlreadyChanged() {
+        return new AccountException(PASSWORD_ALREADY_CHANGED);
     }
 }

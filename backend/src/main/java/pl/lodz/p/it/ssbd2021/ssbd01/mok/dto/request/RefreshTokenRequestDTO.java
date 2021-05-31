@@ -5,7 +5,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import javax.validation.constraints.NotNull;
 
 /**
- * Typ Refresh token request dto.
+ * Typ Refresh token request dto - dto przy zapytaniu odświeżającym token.
  */
 public class RefreshTokenRequestDTO {
 

@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 
 
+/**
+ * Klasa Jwt potwierdzenia resetowania hasła.
+ */
 @Stateless
 public class JwtResetPasswordConfirmation extends JwtUtilsAbstract {
 
@@ -42,6 +45,16 @@ public class JwtResetPasswordConfirmation extends JwtUtilsAbstract {
     @Override
     protected String getJwtSecret() {
         return propertiesLoader.getResetPasswordConfirmationJwtSecret();
+    }
+
+    @Override
+    public String getVersionAndNameFromJwtToken(String token) throws ParseException {
+        return super.getVersionAndNameFromJwtToken(token);
+    }
+
+    @Override
+    public String generateJwtTokenForUsernameAndVersion(String username, long version) {
+        return super.generateJwtTokenForUsernameAndVersion(username, version);
     }
 
 

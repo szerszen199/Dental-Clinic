@@ -1,28 +1,27 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.auth.ejb.facades;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AuthViewEntity;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
 /**
- * Typ Auth view entity facade.
+ * Auth view fasada encji implementująca abstrakcyjną fasadę.
  */
 
 @Stateless
+@PermitAll
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors(LogInterceptor.class)
 public class AuthViewEntityFacade extends AbstractFacade<AuthViewEntity> {
@@ -47,7 +46,7 @@ public class AuthViewEntityFacade extends AbstractFacade<AuthViewEntity> {
      *
      * @param login login
      * @return Lista kont
-     * @throws AppBaseException app base exception
+     * @throws AppBaseException app base wyjątek
      */
     public List<AuthViewEntity> findByLogin(String login) throws AppBaseException {
         try {

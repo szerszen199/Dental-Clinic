@@ -1,25 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.security.enterprise.identitystore.CredentialValidationResult;
-import javax.security.enterprise.identitystore.IdentityStoreHandler;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2021.ssbd01.auth.ejb.managers.AuthViewEntityManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
@@ -41,10 +21,31 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
+import javax.security.enterprise.identitystore.CredentialValidationResult;
+import javax.security.enterprise.identitystore.IdentityStoreHandler;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_NOT_FOUND;
 
 /**
- * Typ Login endpoint.
+ * Typ Login endpoint do logowania.
  */
 @Path("auth")
 @PermitAll
@@ -65,15 +66,15 @@ public class LoginEndpoint {
     /**
      * Tworzy nową instancję klasy Login endpoint.
      *
-     * @param identityStoreHandler  identity store handler
-     * @param jwtLoginUtils         jwt utils
-     * @param httpServletRequest    http servlet request
-     * @param accountManager        account manager
-     * @param propertiesLoader      properties loader
-     * @param jwtRefreshUtils       jwt refresh utils
-     * @param mailProvider          mail provider
-     * @param authViewEntityManager auth view entity manager
-     * @param jwtResetPasswordConfirmation obiekt odpowiedzialny za token potwierdzenia resetu hasłą
+     * @param identityStoreHandler         identity store handler
+     * @param jwtLoginUtils                jwt utils
+     * @param httpServletRequest           http servlet request
+     * @param accountManager               account manager
+     * @param propertiesLoader             properties loader
+     * @param jwtRefreshUtils              jwt refresh utils
+     * @param mailProvider                 mail provider
+     * @param authViewEntityManager        auth view entity manager
+     * @param jwtResetPasswordConfirmation token do potwierdzenia resetu hasła
      */
     @Inject
     public LoginEndpoint(IdentityStoreHandler identityStoreHandler,
@@ -102,7 +103,6 @@ public class LoginEndpoint {
      * @param refreshTokenRequestDTO refresh token request dto
      * @return refresh token
      */
-    // TODO: 21.05.2021
     @RolesAllowed({I18n.ADMIN, I18n.RECEPTIONIST, I18n.DOCTOR, I18n.PATIENT})
     @POST
     @Path("refresh")

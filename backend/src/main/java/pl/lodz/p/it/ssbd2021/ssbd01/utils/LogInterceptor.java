@@ -7,6 +7,9 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Klasa interceptora logów.
+ */
 public class LogInterceptor {
     private static final Logger LOGGER = Logger.getLogger(LogInterceptor.class.getName());
 
@@ -28,13 +31,13 @@ public class LogInterceptor {
         try {
             Object result = context.proceed();
             if (result != null) {
-                returnedValue = "Zwrócono: " + result.toString();
+                returnedValue = "Zwrócono: " + result;
             } else {
                 returnedValue = "Nie zwrócono żadnej wartości";
             }
             return result;
         } catch (Exception e) {
-            returnedValue = "Zgłoszono wyjątek: " + e.toString() + " Przyczyna: " + e.getCause();
+            returnedValue = "Zgłoszono wyjątek: " + e + " Przyczyna: " + e.getCause();
             logLevel = Level.WARNING;
             throw e;
         } finally {

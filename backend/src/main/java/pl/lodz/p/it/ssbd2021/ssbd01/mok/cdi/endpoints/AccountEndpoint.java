@@ -8,7 +8,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountByAdminDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmMailChangeRequestDTO;
@@ -79,7 +78,7 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_CHANGE_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_RESET_FAILED;
 
 /**
- * Typ Account endpoint.
+ * Typ Account endpoint - dal konta.
  */
 @Path("account")
 @Stateful
@@ -121,8 +120,6 @@ public class AccountEndpoint {
     @Path("create")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    // TODO: 22.05.2021 Co do validów na metodach zastanawia mnie wywołanie pustej metody na której będzie valid i łapanie wyjątków i coś robienie
-    //  Ale generalnie mamy obsłużyć tylko 403, 404 i 500 a to zwraca 400 więc :p
     public Response createAccount(@NotNull @Valid CreateAccountRequestDTO accountDto) {
         int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
@@ -154,49 +151,7 @@ public class AccountEndpoint {
     }
 
     /**
-     * Tworzy nowe konto przez admina.
-     *
-     * @param newAccountByAdminDto obiekt zawierający login, email i inne wymagane dane
-     * @return the response
-     */
-    @POST
-    @RolesAllowed({I18n.ADMIN})
-    @Path("admin/create")
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response createAccountByAdmin(NewAccountByAdminDto newAccountByAdminDto) {
-
-        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
-        boolean rollbackTX = false;
-        Exception exception;
-        do {
-            try {
-                exception = null;
-                this.accountManager.createAccountByAdministrator(
-                        AccountConverter.createAccountByAdminEntityFromDto(newAccountByAdminDto)
-                );
-                rollbackTX = accountManager.isLastTransactionRollback();
-            } catch (AppBaseException | EJBTransactionRolledbackException e) {
-                rollbackTX = true;
-                exception = e;
-            }
-        } while (rollbackTX && --retryTXCounter > 0);
-
-        if (rollbackTX) {
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
-        }
-        if (exception != null && (exception instanceof AccountException || exception instanceof MailSendingException)) {
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
-        } else if (exception != null && exception instanceof AppBaseException) {
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
-        }
-        return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CREATED_SUCCESSFULLY)).build();
-
-
-    }
-
-    /**
-     * Confirm account.
+     * Potwierdza konto.
      *
      * @param confirmAccountRequestDTO confirm account request dto
      * @return response
@@ -220,7 +175,7 @@ public class AccountEndpoint {
                 rollbackTX = true;
                 exception = e;
             } catch (Exception e) {
-                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CONFIRMATION_BY_TOKEN_FAILED)).build();
             }
 
         } while (rollbackTX && --retryTXCounter > 0);
@@ -237,7 +192,7 @@ public class AccountEndpoint {
     }
 
     /**
-     * Reset password.
+     * Resetuje hasło.
      *
      * @param confirmAccountRequestDTO the confirm account request dto
      * @return response
@@ -249,10 +204,17 @@ public class AccountEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     public Response resetPassword(@NotNull @Valid ConfirmAccountRequestDTO confirmAccountRequestDTO) {
         String username;
+        Long version;
         try {
-            username = jwtResetPasswordConfirmation.getUserNameFromJwtToken(confirmAccountRequestDTO.getConfirmToken());
+            String[] tokenData = jwtResetPasswordConfirmation.getVersionAndNameFromJwtToken(confirmAccountRequestDTO.getConfirmToken()).split("/");
+            username = tokenData[0];
+            version = Long.valueOf(tokenData[1]);
             if (!jwtResetPasswordConfirmation.validateJwtToken(confirmAccountRequestDTO.getConfirmToken())) {
                 throw AccountException.invalidConfirmationToken();
+            }
+            Account account = accountManager.findByLogin(username);
+            if (!account.getVersion().equals(version)) {
+                throw AccountException.passwordAlreadyChanged();
             }
         } catch (AccountException accountException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
@@ -287,7 +249,7 @@ public class AccountEndpoint {
     }
 
     /**
-     * Reset password.
+     * Ustawia nowe hasło.
      *
      * @param setNewPasswordRequestDTO the setNewPasswordRequestDTO
      * @return response
@@ -373,7 +335,7 @@ public class AccountEndpoint {
     }
 
     /**
-     * Edit account data.
+     * Edycja danych konta.
      *
      * @param accountDto DTO edytowanego konta
      * @param header     nagłówek If-Match
@@ -662,7 +624,6 @@ public class AccountEndpoint {
     @Path("/revokeAccessLevel")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    //TODO: komunikat
     public Response revokeAccessLevel(@NotNull @Valid RevokeAndGrantAccessLevelDTO revokeAndGrantAccessLevelDTO) {
         if (revokeAndGrantAccessLevelDTO.getLogin().equals(loggedInAccountUtil.getLoggedInAccountLogin())) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.ACCESS_LEVEL_SELF_REVOKE)).build();

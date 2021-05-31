@@ -5,7 +5,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EDIT_VALIDATION_ERROR;
 
 /**
- * Wyjątek.
+ * Wyjątek błędnej walidacji danych.
  */
 public class DataValidationException extends AppBaseException {
 

@@ -1,5 +1,11 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+
 import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -10,12 +16,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
-
-import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 
 /**
  * Klasa definiująca główne operacje wykonywane na encjach typu AccessLevel.

@@ -15,7 +15,6 @@ import java.util.Map;
 /**
  * Klasa Dto dla edytowanego konta.
  */
-// TODO: 21.05.2021 Poprawić zapytanie na froncie
 public class EditOwnAccountRequestDTO implements SignableEntity {
 
 
@@ -178,7 +177,7 @@ public class EditOwnAccountRequestDTO implements SignableEntity {
     @Override
     @JsonbTransient
     public Map<String, String> getPayload() {
-        Map<String,String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         map.put("version", String.valueOf(getVersion()));
         return map;
     }

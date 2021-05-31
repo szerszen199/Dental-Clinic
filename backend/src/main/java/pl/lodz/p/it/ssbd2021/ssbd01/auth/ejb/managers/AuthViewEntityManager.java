@@ -8,7 +8,7 @@ import javax.ejb.Local;
 import java.util.List;
 
 /**
- * Interfejs Auth view entity manager.
+ * Interfejs Auth view menadżera encji.
  */
 @Local
 public interface AuthViewEntityManager {

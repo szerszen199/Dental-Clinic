@@ -1,42 +1,21 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.AccessLevelWithActiveDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Typ Edit another account request dto.
+ * Typ Edit another account request dto - dto edycji konta.
  */
 public class EditAnotherAccountRequestDTO extends EditOwnAccountRequestDTO {
 
     @NotNull(message = I18n.LOGIN_NULL)
     @Login
     private String login;
-
-    /**
-     * Ustawia pole login.
-     *
-     * @param login login
-     */
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    /**
-     * Pobiera pole login.
-     *
-     * @return login
-     */
-    public String getLogin() {
-        return login;
-    }
 
     /**
      * Tworzy nową instancję klasy Edit another account request dto.
@@ -60,7 +39,23 @@ public class EditAnotherAccountRequestDTO extends EditOwnAccountRequestDTO {
         this.login = login;
     }
 
+    /**
+     * Pobiera pole login.
+     *
+     * @return login
+     */
+    public String getLogin() {
+        return login;
+    }
 
+    /**
+     * Ustawia pole login.
+     *
+     * @param login login
+     */
+    public void setLogin(String login) {
+        this.login = login;
+    }
 
     @Override
     @JsonbTransient

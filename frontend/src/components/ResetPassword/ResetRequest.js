@@ -16,6 +16,5 @@ export function makeResetPasswordRequest(login, t) {
                 errorAlerts(t(response.response.data.message), response.response.status.toString(10));
             }
         });
-    // window.location = "/home";
 }
 
