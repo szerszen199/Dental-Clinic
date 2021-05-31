@@ -12,7 +12,7 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.LOAD_PROPERTIES_ERROR;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.VERSION_MISMATCH;
 
 /**
- * The type Base exception.
+ * The type Base exception - bazowa apliakcyjna klasa wyjątku.
  */
 @ApplicationException(rollback = true)
 public class AppBaseException extends Exception {

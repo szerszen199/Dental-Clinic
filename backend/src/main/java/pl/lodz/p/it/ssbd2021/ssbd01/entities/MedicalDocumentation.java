@@ -1,9 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -20,10 +15,13 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 
 
 /**
- * Typ Medical documentation.
+ * Typ Medical documentation - klasa encyjna dla dokumentacji medycznej.
  */
 @Entity
 @Table(name = "medical_documentations")
@@ -60,7 +58,7 @@ public class MedicalDocumentation extends AbstractEntity implements Serializable
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
     @JoinColumn(name = "documentation_id", nullable = false)
-    private Collection<DocumentationEntry> documentationEntryCollection = new ArrayList<DocumentationEntry>();
+    private final Collection<DocumentationEntry> documentationEntryCollection = new ArrayList<DocumentationEntry>();
 
     /**
      * Tworzy nową instancję klasy MedicalDocumentation.

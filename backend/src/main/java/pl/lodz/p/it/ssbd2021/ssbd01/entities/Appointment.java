@@ -20,6 +20,10 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 
+
+/**
+ * Typ Appointment - klasa encyjna dla wizyt.
+ */
 @Entity
 @Table(name = "appointments")
 @NamedQueries({

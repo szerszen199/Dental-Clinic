@@ -8,7 +8,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.NewAccountByAdminDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmMailChangeRequestDTO;
@@ -79,7 +78,7 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_CHANGE_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_RESET_FAILED;
 
 /**
- * Typ Account endpoint.
+ * Typ Account endpoint - dal konta.
  */
 @Path("account")
 @Stateful
