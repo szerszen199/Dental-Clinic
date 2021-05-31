@@ -131,61 +131,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void createAccountByAdministrator(Account account) throws AppBaseException {
-
-        Account adminAccount = this.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
-        String requestIp = IpAddressUtils.getClientIpAddressFromHttpServletRequest(request);
-        account.setPassword(hashGenerator.generateHash(account.getPassword()));
-        account.setCreatedByIp(requestIp);
-
-        AccessLevel patientData = new PatientData(account, true);
-        patientData.setCreatedBy(adminAccount);
-        account.getAccessLevels().add(patientData);
-
-        AccessLevel receptionistData = new ReceptionistData(account, false);
-        receptionistData.setCreatedBy(adminAccount);
-        account.getAccessLevels().add(receptionistData);
-
-        AccessLevel doctorData = new DoctorData(account, false);
-        doctorData.setCreatedBy(adminAccount);
-        account.getAccessLevels().add(doctorData);
-
-        AccessLevel adminData = new AdminData(account, false);
-        adminData.setCreatedBy(adminAccount);
-        account.getAccessLevels().add(adminData);
-
-
-        try {
-            accountFacade.findByLoginOrEmailOrPesel(account.getLogin(), account.getEmail(), account.getPesel());
-        } catch (AccountException accountException) {
-            account.setCreatedBy(adminAccount);
-            try {
-                accountFacade.create(account);
-            } catch (Exception e) {
-                throw AccountException.accountCreationFailed();
-            }
-            try {
-                mailProvider.sendActivationMail(
-                        account.getEmail(),
-                        jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(account.getLogin()), account.getLanguage()
-                );
-            } catch (Exception e) {
-                throw MailSendingException.activationLink();
-            }
-            try {
-                this.sendResetPasswordConfirmationEmail(account.getLogin());
-            } catch (Exception e) {
-                throw MailSendingException.editAccountMail();
-            }
-            return;
-        } catch (AppBaseException e) {
-            throw AccountException.accountCreationFailed();
-        }
-        throw AccountException.accountLoginEmailPeselExists();
-
-    }
-
-    @Override
     public void removeAccount(Long id) throws AppBaseException {
         Account account = accountFacade.find(id);
         accountFacade.remove(account);
@@ -358,12 +303,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
                 throw MailSendingException.editAccountMail();
             }
         }
-        if (editAccountRequestDTO.getPhoneNumber() != null) {
-            account.setPhoneNumber(editAccountRequestDTO.getPhoneNumber());
-        }
-        if (editAccountRequestDTO.getPesel() != null) {
-            account.setPesel(editAccountRequestDTO.getPesel());
-        }
+        account.setPhoneNumber(editAccountRequestDTO.getPhoneNumber());
+        account.setPesel(editAccountRequestDTO.getPesel());
         try {
             account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
         } catch (AccountException e) {
