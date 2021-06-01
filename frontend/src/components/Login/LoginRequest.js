@@ -4,7 +4,6 @@ import findDefaultRole from "../../roles/findDefaultRole";
 import {jwtCookieExpirationTime} from "../../views/MainView/MainView";
 import "../Alerts/ErrorAlerts/ErrorAlerts";
 import errorAlerts from "../Alerts/ErrorAlerts/ErrorAlerts";
-import {Redirect} from "react-router-dom";
 import React from "react";
 
 // TODO usuwanie tego gdy minie określony czas czytaj przedawni się
@@ -25,13 +24,12 @@ export function makeLoginRequest(login, password, t) {
             Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, findDefaultRole(response.data.roles), {expires: jwtCookieExpirationTime});
         }
         localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, response.data.refreshJwtToken.token);
-        // TODO: To redirect po poprawnym zalogowaniu, nie podoba mi się, nie korzysta z routera ale inaczej mi nie chce narazie pojsc.
-        // window.location = "/#/home";
+        window.location.hash = "#/home";
+        window.location.reload();
     }).catch((response) => {
         if (response.response) {
             errorAlerts(t(response.response.data.message), response.response.status.toString(10));
         }
-
         // todo Wyświetlić odpowiedni komunikat
     })
 }

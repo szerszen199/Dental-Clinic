@@ -6,7 +6,6 @@ import Routes from "../../router/Routes";
 import BreadCrumbs from "../../components/Breadcrumbs/Breadcrumbs";
 import ReadinessComponent from "../../components/GetReadinessResource/Readiness"
 import Doctor from "../Users/Doctor/Doctor";
-
 import {withTranslation} from "react-i18next";
 import i18n from "../../transaltions/i18n";
 import Admin from "../Users/Admin/Admin";
@@ -21,7 +20,6 @@ import './MainView.css';
 import {Link} from "react-router-dom";
 import findDefaultRole from "../../roles/findDefaultRole";
 import {darkModeRequest} from "../../components/DarkMode/DarkModeRequest"
-import {map} from "react-bootstrap/ElementChildren";
 import {languageRequest} from "../../components/Language/LanguageRequest";
 
 const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
@@ -41,6 +39,18 @@ let loginColor = "grey"
 export const jwtCookieExpirationTime = process.env.REACT_APP_JWT_EXPIRATION_MS / (24 * 60 * 60 * 100)
 const actualAccessLevel = Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) !== undefined ? Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) : roleGuestName;
 
+function isLoggedIn() {
+    let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
+    console.log(("token is logged in" + token));
+    return token !== undefined;
+}
+
+function isPatient() {
+    console.log("is patient" + Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME));
+    console.log("is patient 2" + process.env.REACT_APP_ROLE_PATIENT);
+    return isLoggedIn() && Cookies !== undefined && Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) === process.env.REACT_APP_ROLE_PATIENT;
+}
+
 class MainViewWithoutTranslation extends React.Component {
     urlPL = "https://img.icons8.com/color/96/000000/poland-circular.png";
     urlEN = "https://img.icons8.com/color/48/000000/great-britain-circular.png";
@@ -58,9 +68,9 @@ class MainViewWithoutTranslation extends React.Component {
 
     handleOnClick() {
         if (this.state.language === "EN") {
-            this.setPL()
+            this.setPL();
         } else {
-            this.setEN()
+            this.setEN();
         }
     }
 
@@ -71,6 +81,7 @@ class MainViewWithoutTranslation extends React.Component {
             languageRequest("en")
         }
         i18n.changeLanguage("EN");
+        isPatient();
     }
 
     setPL() {
@@ -109,8 +120,6 @@ class MainViewWithoutTranslation extends React.Component {
                 }
                 localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, response.data.refreshJwtToken.token);
 
-
-
             }).catch((response) => {
                 // todo cos z tym response?
                 console.log(response);
@@ -139,7 +148,6 @@ class MainViewWithoutTranslation extends React.Component {
             }
         }
     }
-
 
     render() {
         const {t} = this.props;
