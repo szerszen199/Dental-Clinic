@@ -10,5 +10,6 @@ export function logout() {
     Cookies.remove(process.env.REACT_APP_LANGUAGE_COOKIE)
     localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, null);
     // TODO: To redirect po wylogowaniu zalogowaniu, nie podoba mi się, nie korzysta z routera ale inaczej mi nie chce narazie pojsc.
-    window.location = "/login";
+    window.location.hash = "#/guest-home";
+    window.location.reload();
 }
