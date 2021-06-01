@@ -56,9 +56,7 @@ class EditPasswordWithoutTranslation extends React.Component {
         this.setState({errors: array})
     }
 
-
-    // Todo: prawdopodobnie wysyłać zapytanie do backendu tutaj, chciałbym zrobić tak jak w vue się da żeby jeśli odpalam w trybie debug front to łącze z localhostem, narazie nie ruszam.
-    handleSubmit(event, title, question) {
+    handleSubmit(event, title, question, t) {
         return function (event) {
             event.preventDefault();
             if (this.state.isDisabled === true) {
@@ -72,7 +70,7 @@ class EditPasswordWithoutTranslation extends React.Component {
                     confirmationAlerts(title, question).then((confirmed) => {
                         if (confirmed) {
                             this.setNotEditable(this);
-                            editPasswordRequest(this.state.currentPassword, this.state.password, this.state.repeatedPassword)
+                            editPasswordRequest(this.state.currentPassword, this.state.password, this.state.repeatedPassword, t)
                         }
                     })
                 }
@@ -99,7 +97,7 @@ class EditPasswordWithoutTranslation extends React.Component {
 
         return (
             <div className="EditPassword">
-                <Form onSubmit={this.handleSubmit(this, t("Warning"), t("Question edit password"))}>
+                <Form onSubmit={this.handleSubmit(this, t("Warning"), t("Question edit password"), t)}>
                     <Form.Group size="lg" controlId="currentPassword">
                         <Form.Label className="required">{t("Current password")}</Form.Label>
                         <Form.Control

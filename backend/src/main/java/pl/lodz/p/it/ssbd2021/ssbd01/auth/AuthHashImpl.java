@@ -7,6 +7,9 @@ import javax.security.enterprise.identitystore.PasswordHash;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Typ Auth hash implementacja hash generatora do generowania hashu hasła podanego w postaci String.
+ */
 public class AuthHashImpl implements PasswordHash {
     @Inject
     private HashGenerator hashGenerator;

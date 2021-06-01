@@ -204,7 +204,7 @@ export default function Registration() {
             // We got errors!
             setErrors(newErrors);
         } else {
-            registrationRequest(login, email, password, firstName, lastName, phoneNumber, pesel, selectedLanguage);
+            registrationRequest(login, email, password, firstName, lastName, phoneNumber, pesel, selectedLanguage, t);
         }
     }
 

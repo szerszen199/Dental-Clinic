@@ -1,14 +1,11 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.config;
 
-import java.sql.Connection;
 import javax.annotation.sql.DataSourceDefinition;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.sql.Connection;
 
 
 //@DataSourceDefinition(
-//
 //        name = "java:app/jdbc/ssbd01admin",
 //        className = "org.postgresql.ds.PGSimpleDataSource",
 //        user = "ssbd01admin",
@@ -22,6 +19,9 @@ import javax.persistence.PersistenceContext;
 //        maxIdleTime = 10)
 
 
+/**
+ * Typ Jdbc config klasa konfiguracji JDBC.
+ */
 @DataSourceDefinition(
         name = "java:app/jdbc/ssbd01mok",
         className = "org.postgresql.ds.PGSimpleDataSource",
@@ -84,8 +84,6 @@ import javax.persistence.PersistenceContext;
 
 @Stateless
 public class JDBCConfig {
-
-
 //    @PersistenceContext(unitName = "ssbd01adminPU")
 //    private EntityManager em;
 }

@@ -30,35 +30,35 @@ public class UserInfoResponseDTO {
         this.language = language;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setDarkMode(boolean darkMode) {
-        isDarkMode = darkMode;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
     public String getFirstName() {
         return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
         return lastName;
     }
 
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public boolean isDarkMode() {
         return isDarkMode;
     }
 
+    public void setDarkMode(boolean darkMode) {
+        isDarkMode = darkMode;
+    }
+
     public String getLanguage() {
         return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

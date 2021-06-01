@@ -29,6 +29,7 @@ public class I18n {
     public static final String ACCESS_LEVEL_ADD_FAILED = "access_level_add_failed";
     public static final String ACCESS_LEVEL_REVOKED_SUCCESSFULLY = "access_level_revoked_successfully";
     public static final String ACCESS_LEVEL_REVOKE_FAILED = "access_level_revoke_failed";
+    public static final String ACCESS_LEVEL_SELF_REVOKE = "access_level_self_revoke";
     public static final String PASSWORD_CHANGED_SUCCESSFULLY = "password_changed_successfully";
     public static final String PASSWORD_RESET_SUCCESSFULLY = "password_reset_successfully";
     public static final String PASSWORD_RESET_MAIL_SENT_SUCCESSFULLY = "password_reset_mail_sent_successfully";
@@ -124,9 +125,18 @@ public class I18n {
     public static final String PASSWORD_RESET_MAIL_SENT_ERROR = "password_reset_mail_sent_error";
     public static final String ACCOUNT_MAIL_PASSWORD_CONFIRMATION_SUBJECT = "account_mail_pass_confirmation_subject";
     public static final String ACCOUNT_MAIL_PASSWORD_CONFIRMATION_TEXT = "account_mail_pass_confirmation_text";
+    public static final String ACCOUNT_MAIL_PASSWORD_BY_ADMIN_CONFIRMATION_SUBJECT = "account_mail_pass_by_admin_confirmation_subject";
+    public static final String ACCOUNT_MAIL_PASSWORD_BY_ADMIN_CONFIRMATION_TEXT = "account_mail_pass_by_admin_confirmation_text";
+    public static final String ACCOUNT_MAIL_GRANT_ACCESS_LEVEL_SUBJECT = "account_mail_grant_access_level_subject";
+    public static final String ACCOUNT_MAIL_GRANT_ACCESS_LEVEL_TEXT = "account_mail_grant_access_level_text";
+    public static final String ACCOUNT_MAIL_REVOKE_ACCESS_LEVEL_SUBJECT = "account_mail_revoke_access_level_subject";
+    public static final String ACCOUNT_MAIL_REVOKE_ACCESS_LEVEL_TEXT = "account_mail_revoke_access_level_text";
 
     public static final String ACCOUNT_MAIL_UNLOCK_BY_ADMIN_SUBJECT = "account_mail_unlock_by_admin_subject";
     public static final String ACCOUNT_MAIL_UNLOCK_BY_ADMIN_TEXT = "account_mail_unlock_by_admin_text";
     public static final String BAD_ETAG_VALUE = "bad_etag_value";
     public static final String TRANSACTION_FAILED_ERROR = "transaction_failed_error";
+    public static final String ACCOUNT_ALREADY_CONFIRMED = "account_already_confirmed";
+    public static final String EMAIL_ALREADY_CHANGED = "email_already_changed";
+    public static final String PASSWORD_ALREADY_CHANGED = "password_already_changed";
 }

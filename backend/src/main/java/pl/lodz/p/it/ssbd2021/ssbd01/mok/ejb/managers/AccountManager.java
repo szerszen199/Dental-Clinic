@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Interfejs Account manager.
+ * Interfejs menadżera konta.
  */
 @Local
 public interface AccountManager {
@@ -21,19 +21,11 @@ public interface AccountManager {
     /**
      * Utworzenie konta przy rejestracji.
      *
-     * @param account        nowe konto
-     * @throws AccountException wyjątek typu AccountException
+     * @param account nowe konto
+     * @throws AccountException     wyjątek typu AccountException
      * @throws MailSendingException wyjątek typu MailSendingException
      */
     void createAccount(Account account) throws AccountException, MailSendingException;
-
-    /**
-     * Utworzenie konta przez administratora.
-     *
-     * @param account        nowe konto
-     * @throws AppBaseException wyjątek typu AppBaseException
-     */
-    void createAccountByAdministrator(Account account) throws AppBaseException;
 
     /**
      * usun konto.
@@ -71,19 +63,27 @@ public interface AccountManager {
      * reset hasla konta.
      *
      * @param login login
-     * @throws AccountException wyjątek typu AccountException
+     * @throws AccountException     wyjątek typu AccountException
      * @throws MailSendingException wyjątek typu MailSendingException
-     * @throws PasswordException wyjątek typu PasswordException
+     * @throws PasswordException    wyjątek typu PasswordException
      */
     void resetPasswordByToken(String login) throws AccountException, MailSendingException, PasswordException;
 
     /**
-     * Potwierdzenie hasla konta.
+     * Wysłanie maila do resetowania hasła przez administratora.
      *
-     * @param login          login
+     * @param login login
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     void sendResetPasswordConfirmationEmail(String login) throws AppBaseException;
+
+    /**
+     * Wysłanie maila do resetowania hasła przez administratora.
+     *
+     * @param login login
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    void sendResetPasswordByAdminConfirmationEmail(String login) throws AppBaseException;
 
     /**
      * Metoda służąca do blokowania konta.
@@ -105,7 +105,7 @@ public interface AccountManager {
      * Edytuje wlasne konto.
      *
      * @param editOwnAccountRequestDTO edit own account request dto
-     * @throws AccountException wyjątek typu AccountException
+     * @throws AccountException     wyjątek typu AccountException
      * @throws MailSendingException wyjątek typu MailSendingException
      */
     void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO) throws MailSendingException, AccountException;
@@ -154,6 +154,14 @@ public interface AccountManager {
      */
     void changePassword(String login, String oldPassword, String newPassword) throws AppBaseException;
 
+    /**
+     * Zmienia hasło {@param newPassword} wskazanego konta {@param account}.
+     *
+     * @param login       login konta, którego hasło jest edytowane
+     * @param newPassword nowe hasło
+     * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                          nie powiedzie się.
+     */
+    void setNewPassword(String login, String newPassword) throws AppBaseException;
 
     /**
      * Wyszukuje konto na podstawie loginu.

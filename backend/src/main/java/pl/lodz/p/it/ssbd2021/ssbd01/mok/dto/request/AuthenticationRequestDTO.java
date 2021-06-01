@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Typ Login request dto.
+ * Typ Login request dto - dto przy tworzeniu zapytania logowania.
  */
 public class AuthenticationRequestDTO {
     @NotNull(message = I18n.LOGIN_NULL)
@@ -23,6 +23,17 @@ public class AuthenticationRequestDTO {
      * Tworzy nową instancję klasy Login request dto.
      */
     public AuthenticationRequestDTO() {
+    }
+
+    /**
+     * Tworzy nową instancję klasy Login request dto.
+     *
+     * @param username username
+     * @param password password
+     */
+    public AuthenticationRequestDTO(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     /**
@@ -58,17 +69,6 @@ public class AuthenticationRequestDTO {
      * @param password password
      */
     public void setPassword(String password) {
-        this.password = password;
-    }
-
-    /**
-     * Tworzy nową instancję klasy Login request dto.
-     *
-     * @param username username
-     * @param password password
-     */
-    public AuthenticationRequestDTO(String username, String password) {
-        this.username = username;
         this.password = password;
     }
 

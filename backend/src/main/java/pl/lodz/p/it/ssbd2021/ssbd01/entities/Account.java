@@ -29,7 +29,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Typ Account.
+ * Typ Account - klasa reprezentująca encję konta.
  */
 @Entity
 @Table(name = "accounts", uniqueConstraints = {
@@ -55,6 +55,7 @@ import java.util.Set;
         @NamedQuery(name = "Account.findByModificationDate", query = "SELECT a FROM Account a WHERE a.modificationDateTime = :modificationDate"),
         @NamedQuery(name = "Account.findByCreationDate", query = "SELECT a FROM Account a WHERE a.creationDateTime = :creationDate"),
         @NamedQuery(name = "Account.findByEmailRecall", query = "SELECT a FROM Account a WHERE a.emailRecall = :emailrecall"),
+        @NamedQuery(name = "Account.findByFirstPasswordChange", query = "SELECT a FROM Account a WHERE a.firstPasswordChange = :firstPasswordChange"),
         @NamedQuery(name = "Account.findByLanguage", query = "SELECT a FROM Account a WHERE a.language = :language"),
         @NamedQuery(name = "Account.findByVersion", query = "SELECT a FROM Account a WHERE a.version = :version"),
         @NamedQuery(name = "Account.findByLoginOrEmailOrPesel", query = "SELECT a FROM Account a WHERE a.login = :login OR a.email = :email OR a.pesel = :pesel"),
@@ -139,22 +140,33 @@ public class Account extends AbstractEntity implements Serializable {
 
     @Column(name = "last_unsuccessful_login")
     private LocalDateTime lastUnsuccessfulLogin;
+
     @Column(name = "last_block_unlock_date_time")
     private LocalDateTime lastBlockUnlockDateTime;
+
     @Column(name = "last_unsuccessful_login_ip", length = 256)
     @Size(min = 7, max = 256)
     private String lastUnsuccessfulLoginIp;
+
     @Column(name = "unsuccessful_login_count_since_last_login")
     @Min(0)
     private Integer unsuccessfulLoginCounter = 0;
+
     @Column(name = "language", columnDefinition = "bpchar", length = 2, nullable = false)
     @Size(min = 2, max = 2)
     @NotNull
     private String language;
+
     @Basic(optional = false)
     @Column(name = "email_recall", nullable = false)
     @NotNull
     private Boolean emailRecall = false;
+
+    @Basic(optional = false)
+    @Column(name = "first_password_change", nullable = false)
+    @NotNull
+    private Boolean firstPasswordChange = false;
+
     @JoinColumn(name = "last_block_unlock_modified_by", referencedColumnName = "id")
     @ManyToOne
     private Account lastBlockUnlockModifiedBy;
@@ -234,26 +246,56 @@ public class Account extends AbstractEntity implements Serializable {
         this.language = language;
     }
 
+    /**
+     * Pobiera pole last block unlock date time.
+     *
+     * @return last block unlock date time
+     */
     public LocalDateTime getLastBlockUnlockDateTime() {
         return lastBlockUnlockDateTime;
     }
 
+    /**
+     * Ustawia pole last block unlock date time.
+     *
+     * @param lastBlockUnlockDateTime last block unlock date time
+     */
     public void setLastBlockUnlockDateTime(LocalDateTime lastBlockUnlockDateTime) {
         this.lastBlockUnlockDateTime = lastBlockUnlockDateTime;
     }
 
+    /**
+     * Pobiera pole last block unlock modified by.
+     *
+     * @return last block unlock modified by
+     */
     public Account getLastBlockUnlockModifiedBy() {
         return lastBlockUnlockModifiedBy;
     }
 
+    /**
+     * Ustawia pole last block unlock modified by.
+     *
+     * @param lastBlockUnlockModifiedBy last block unlock modified by
+     */
     public void setLastBlockUnlockModifiedBy(Account lastBlockUnlockModifiedBy) {
         this.lastBlockUnlockModifiedBy = lastBlockUnlockModifiedBy;
     }
 
+    /**
+     * Pobiera pole last block unlock ip.
+     *
+     * @return last block unlock ip
+     */
     public String getLastBlockUnlockIp() {
         return lastBlockUnlockIp;
     }
 
+    /**
+     * Ustawia pole last block unlock ip.
+     *
+     * @param lastBlockUnlockIp last block unlock ip
+     */
     public void setLastBlockUnlockIp(String lastBlockUnlockIp) {
         this.lastBlockUnlockIp = lastBlockUnlockIp;
     }
@@ -271,140 +313,328 @@ public class Account extends AbstractEntity implements Serializable {
         return id;
     }
 
+    /**
+     * Pobiera pole login.
+     *
+     * @return login
+     */
     public String getLogin() {
         return login;
     }
 
+    /**
+     * Pobiera pole email.
+     *
+     * @return email
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Ustawia pole email.
+     *
+     * @param email email
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * Zwraca prawdę gdy ustawiony był ciemny motyw, fałsz gdy był ustawiony jasny motyw.
+     *
+     * @return boolean
+     */
     public boolean isDarkMode() {
         return isDarkMode;
     }
 
+    /**
+     * Ustawia pole dark mode.
+     *
+     * @param darkMode dark mode - ciemny motyw
+     */
     public void setDarkMode(boolean darkMode) {
         isDarkMode = darkMode;
     }
 
+    /**
+     * Pobiera pole password.
+     *
+     * @return password hasło
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Ustawia pole password.
+     *
+     * @param password password hasło
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     * Pobiera pole access levels.
+     *
+     * @return access levels poziomy dostępu
+     */
     public Set<AccessLevel> getAccessLevels() {
         return accessLevels;
     }
 
+    /**
+     * Pobiera pole first name.
+     *
+     * @return first name imie
+     */
     public String getFirstName() {
         return firstName;
     }
 
+    /**
+     * Ustawia pole first name.
+     *
+     * @param firstName first name imie
+     */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
+    /**
+     * Pobiera pole last name.
+     *
+     * @return last name nazwisko
+     */
     public String getLastName() {
         return lastName;
     }
 
+    /**
+     * Ustawia pole last name.
+     *
+     * @param lastName last name nazwisko
+     */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
+    /**
+     * Pobiera pole phone number.
+     *
+     * @return phone number nuemr telefonu
+     */
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
+    /**
+     * Ustawia pole phone number.
+     *
+     * @param phoneNumber phone number numer telefonu
+     */
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
+    /**
+     * Pobiera pole pesel.
+     *
+     * @return pesel
+     */
     public String getPesel() {
         return pesel;
     }
 
+    /**
+     * Ustawia pole pesel.
+     *
+     * @param pesel pesel
+     */
     public void setPesel(String pesel) {
         this.pesel = pesel;
     }
 
+    /**
+     * Pobiera pole active.
+     *
+     * @return active czy jest aktywne konto
+     */
     public Boolean getActive() {
         return active;
     }
 
+    /**
+     * Ustawia pole active.
+     *
+     * @param active active czy jest aktywne konto
+     */
     public void setActive(Boolean active) {
         this.active = active;
     }
 
+    /**
+     * Pobiera pole enabled.
+     *
+     * @return enabled czy konto jest włączone
+     */
     public Boolean getEnabled() {
         return enabled;
     }
 
+    /**
+     * Ustawia pole enabled.
+     *
+     * @param enabled enabled czy konto jest włączone
+     */
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 
+    /**
+     * Pobiera pole last successful login.
+     *
+     * @return last successful login data ostatniego poprawneog logowania
+     */
     public LocalDateTime getLastSuccessfulLogin() {
         return lastSuccessfulLogin;
     }
 
+    /**
+     * Ustawia pole last successful login.
+     *
+     * @param lastSuccessfulLogin last successful login data ostatniego poprawneog logowania
+     */
     public void setLastSuccessfulLogin(LocalDateTime lastSuccessfulLogin) {
         this.lastSuccessfulLogin = lastSuccessfulLogin;
     }
 
+    /**
+     * Pobiera pole last successful login ip.
+     *
+     * @return last successful login ip adres ip ostantiego poprawnego logowania
+     */
     public String getLastSuccessfulLoginIp() {
         return lastSuccessfulLoginIp;
     }
 
+    /**
+     * Ustawia pole last successful login ip.
+     *
+     * @param lastSuccessfulLoginIp last successful login ip adres ip ostantiego poprawnego logowania
+     */
     public void setLastSuccessfulLoginIp(String lastSuccessfulLoginIp) {
         this.lastSuccessfulLoginIp = lastSuccessfulLoginIp;
     }
 
+    /**
+     * Pobiera pole last unsuccessful login.
+     *
+     * @return last unsuccessful login  data ostatniego niepoprawnego logowania
+     */
     public LocalDateTime getLastUnsuccessfulLogin() {
         return lastUnsuccessfulLogin;
     }
 
+    /**
+     * Ustawia pole last unsuccessful login.
+     *
+     * @param lastUnsuccessfulLogin last unsuccessful login  data ostatniego niepoprawnego logowania
+     */
     public void setLastUnsuccessfulLogin(LocalDateTime lastUnsuccessfulLogin) {
         this.lastUnsuccessfulLogin = lastUnsuccessfulLogin;
     }
 
+    /**
+     * Pobiera pole last unsuccessful login ip.
+     *
+     * @return last unsuccessful login ip adres ip ostantiego niepoprawnego logowania
+     */
     public String getLastUnsuccessfulLoginIp() {
         return lastUnsuccessfulLoginIp;
     }
 
+    /**
+     * Ustawia pole last unsuccessful login ip.
+     *
+     * @param lastUnsuccessfulLoginIp last unsuccessful login ip adres ip ostantiego niepoprawnego logowania
+     */
     public void setLastUnsuccessfulLoginIp(String lastUnsuccessfulLoginIp) {
         this.lastUnsuccessfulLoginIp = lastUnsuccessfulLoginIp;
     }
 
+    /**
+     * Pobiera pole unsuccessful login counter.
+     *
+     * @return unsuccessful login counter licznik niepoprawnych logowań
+     */
     public Integer getUnsuccessfulLoginCounter() {
         return unsuccessfulLoginCounter;
     }
 
+    /**
+     * Ustawia pole unsuccessful login counter.
+     *
+     * @param unsuccessfulLoginCounter unsuccessful login counter licznik niepoprawnych logowań
+     */
     public void setUnsuccessfulLoginCounter(Integer unsuccessfulLoginCounter) {
         this.unsuccessfulLoginCounter = unsuccessfulLoginCounter;
     }
 
+    /**
+     * Pobiera pole email recall.
+     *
+     * @return email recall
+     */
     public Boolean getEmailRecall() {
         return emailRecall;
     }
 
+    /**
+     * Ustawia pole email recall.
+     *
+     * @param emailrecall emailrecall
+     */
     public void setEmailRecall(Boolean emailrecall) {
         this.emailRecall = emailrecall;
     }
 
+    /**
+     * Pobiera pole language - aktualnie wybrany język.
+     *
+     * @return language
+     */
     public String getLanguage() {
         return language;
     }
 
+    /**
+     * Ustawia pole language - aktualnie wybrany język.
+     *
+     * @param language language
+     */
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    /**
+     * Pobiera pole first password change.
+     *
+     * @return first password change
+     */
+    public Boolean getFirstPasswordChange() {
+        return firstPasswordChange;
+    }
+
+    /**
+     * Ustawia pole first password change.
+     *
+     * @param firstPasswordChange first password change
+     */
+    public void setFirstPasswordChange(Boolean firstPasswordChange) {
+        this.firstPasswordChange = firstPasswordChange;
     }
 
     @Override

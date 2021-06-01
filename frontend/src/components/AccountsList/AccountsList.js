@@ -3,10 +3,12 @@ import "./AccountsList.css";
 import {makeAccountsListRequest} from "./AccountsListRequest";
 import {withTranslation} from "react-i18next";
 import BootstrapTable from 'react-bootstrap-table-next';
-import { Button } from "react-bootstrap";
-import filterFactory, {textFilter} from 'react-bootstrap-table2-filter';
+import {Button} from "react-bootstrap";
 import {Link} from "react-router-dom";
-import edit from "../../assets/edit.png"
+import {FiRefreshCw} from "react-icons/fi";
+import edit from "../../assets/edit.png";
+import {Input} from "semantic-ui-react";
+import {Fragment} from "react";
 
 class AccountsListWithoutTranslation extends React.Component {
 
@@ -16,12 +18,38 @@ class AccountsListWithoutTranslation extends React.Component {
         this.state = {
             accountsList: []
         };
+        this.unFilteredList = []
     }
 
     componentDidMount() {
+        this.makeGetAccountsRequest();
+    }
+
+    makeGetAccountsRequest() {
         makeAccountsListRequest().then((response) => {
-            this.setState({accountsList: response})
+            this.unFilteredList = response
+            this.setState({accountsList: this.unFilteredList})
         })
+    }
+
+    filterList(input) {
+        let tempList = []
+        for (let i in this.unFilteredList) {
+            if (this.unFilteredList[i].name.toUpperCase().includes(input.toUpperCase())) {
+                tempList.push(this.unFilteredList[i])
+            }
+        }
+        this.setState({accountsList: tempList})
+    }
+
+    getHintList(list){
+        let tempList = [];
+        let uniqueList = [...new Set(this.state.accountsList.map(a =>a.name))];
+        for(let i in uniqueList){
+            tempList.push(<option key={i} value={uniqueList[i]}>{uniqueList[i]}</option>);
+        }
+        return tempList;
+
     }
 
     renderAccounts() {
@@ -32,28 +60,16 @@ class AccountsListWithoutTranslation extends React.Component {
             {
                 dataField: 'login',
                 text: t('UserLogin'),
-                filter: textFilter({
-                    placeholder: t("Filter"),
-                    style: {marginLeft: "10px"}
-                }),
                 style: {verticalAlign: "middle"}
             },
             {
                 dataField: 'name',
                 text: t('Name and Surname'),
-                filter: textFilter({
-                    placeholder: t("Filter"),
-                    style: {marginLeft: "10px"}
-                }),
                 style: {verticalAlign: "middle"}
             },
             {
                 dataField: 'email',
                 text: t('Email'),
-                filter: textFilter({
-                    placeholder: t("Filter"),
-                    style: {marginLeft: "10px"}
-                }),
                 style: {verticalAlign: "middle"}
             },
             {
@@ -64,14 +80,13 @@ class AccountsListWithoutTranslation extends React.Component {
                 formatter: this.linkEdit
             }
         ]
-        return <BootstrapTable striped keyField='login' columns={columns} data={this.state.accountsList} filter={filterFactory()}/>;
+        return <BootstrapTable striped keyField='login' columns={columns} data={this.state.accountsList} />;
     }
 
     linkEdit = (cell, row, rowIndex, formatExtraData) => {
-        const {t} = this.props;
         return (
             <Link to={"/other-account/" + this.state.accountsList[rowIndex].login}>
-                <Button variant="outline-secondary" >
+                <Button variant="outline-secondary">
                     <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}/>
                 </Button>
             </Link>
@@ -84,10 +99,29 @@ class AccountsListWithoutTranslation extends React.Component {
 
     }
 
+    renderButton() {
+        let self = this;
+        return <Button variant={"secondary"} onClick={() => {
+            this.makeGetAccountsRequest(self)
+        }}>
+            <FiRefreshCw />
+        </Button>
+    }
+
     render() {
-        return <div className="AccountListGroup">
-            {!this.state.accountsList.length ? this.renderNull() : this.renderAccounts()}
-        </div>
+        const {t} = this.props;
+        return <Fragment>
+            <div className="account-refresh-button-div">
+                {this.renderButton()}
+            </div>
+            <datalist id='options'>
+                {this.state.accountsList.length !== this.unFilteredList.length?this.getHintList():[]}
+            </datalist>
+            <div className="AccountListGroup">
+                <Input list='options' id="ListFilter" onChange={e => this.filterList(e.target.value)} placeholder={t("Filter")}/>
+                {!this.state.accountsList.length ? this.renderNull() : this.renderAccounts()}
+            </div>
+        </Fragment>
     }
 }
 

@@ -7,13 +7,16 @@ import axios from "axios";
 import {editAccountRequest} from "./EditAccountRequest";
 import Cookies from "js-cookie";
 import confirmationAlerts from "../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
-
+import {makeAccountsListRequest} from "../../AccountsList/AccountsListRequest";
+import {FiRefreshCw} from "react-icons/fi";
+import {Col, Container, Row, Table} from "react-bootstrap";
 
 const emailRegex = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
 const phoneNumberRegex = new RegExp(/^\d+$/);
 
 const peselRegex = new RegExp(/^\d+$/);
+
 
 class EditAccountWithoutTranslation extends React.Component {
     constructor(props) {
@@ -88,9 +91,9 @@ class EditAccountWithoutTranslation extends React.Component {
         }
 
         function findPhoneNumberErrors() {
-            if (t.state.phoneNumber === null || t.state.phoneNumber === '') {
+            if (t.state.phoneNumber === null || t.state.phoneNumber === '' || t.state.phoneNumber === undefined) {
                 t.setState({
-                    phoneNumber: "",
+                    phoneNumber: null,
                 });
                 return;
             }
@@ -111,9 +114,9 @@ class EditAccountWithoutTranslation extends React.Component {
         }
 
         function findPeselErrors() {
-            if (t.state.pesel === null || t.state.pesel === '') {
+            if (t.state.pesel === null || t.state.pesel === '' || t.state.pesel === undefined) {
                 t.setState({
-                    pesel: "",
+                    pesel: null,
                 });
                 return;
             }
@@ -154,6 +157,10 @@ class EditAccountWithoutTranslation extends React.Component {
 
 
     componentDidMount() {
+        this.makeGetAccountRequest()
+    }
+
+    makeGetAccountRequest() {
         let requestPath
         if (this.props.account === undefined) {
             requestPath = process.env.REACT_APP_BACKEND_URL + "account/info"
@@ -182,9 +189,7 @@ class EditAccountWithoutTranslation extends React.Component {
             }))
     }
 
-    // Todo: prawdopodobnie wysyłać zapytanie do backendu tutaj, chciałbym zrobić tak jak w vue się da żeby jeśli odpalam w trybie debug front to łącze z localhostem, narazie nie ruszam.
-
-    handleSubmit(title, question) {
+    handleSubmit(title, question, t) {
         return function (event) {
             event.preventDefault()
             console.log(this.state.errors)
@@ -207,7 +212,7 @@ class EditAccountWithoutTranslation extends React.Component {
                             if (this.state.pesel === "") {
                                 pesel = null;
                             }
-                            editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, phoneNumber, pesel, this.state.version, this.state.etag, this.props.account);
+                            editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, phoneNumber, pesel, this.state.version, this.state.etag, this.props.account, t);
                             this.setNotEditable(this)
                         }
 
@@ -230,12 +235,26 @@ class EditAccountWithoutTranslation extends React.Component {
         });
     }
 
+    refreshList(self) {
+        makeAccountsListRequest().then((response) => {
+            self.setState({accountsList: response});
+        })
+    }
+
+    renderButton() {
+        return <Button variant={"secondary"} size="lg" onClick={() => {
+            this.makeGetAccountRequest()
+        }}>
+            <FiRefreshCw />
+        </Button>
+    }
+
     render() {
         const {t} = this.props;
 
         return (
             <div className="EditAccount">
-                <Form onSubmit={this.handleSubmit(t("Warning"), t("Question edit account"))}>
+                <Form onSubmit={this.handleSubmit(t("Warning"), t("Question edit account"), t)}>
                     <Form.Group size="lg" controlId="email">
                         <Form.Label className="required">{t("Email")}</Form.Label>
                         <Form.Control
@@ -318,9 +337,22 @@ class EditAccountWithoutTranslation extends React.Component {
                             {t(this.state.errors.pesel)}
                         </Form.Control.Feedback>
                     </Form.Group>
-                    <Button block size="lg" type="submit">
-                        {this.state.isDisabled ? t("Edit") : t("Save")}
-                    </Button>
+                    <Form.Row>
+                        <Container id="containerForButtons">
+                            <Row id="rowForEditButton">
+                                <Col sm={11}>
+                                    <Button block size="lg" type="submit">
+                                        {this.state.isDisabled ? t("Edit") : t("Save")}
+                                    </Button>
+                                </Col >
+                                <Col sm={1} id="refreshColumn">
+                                    <div className="edit-account-refresh-button-div" >
+                                        {this.renderButton()}
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Form.Row>
                 </Form>
             </div>
         );

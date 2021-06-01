@@ -1,10 +1,11 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
-import java.io.Serializable;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import java.io.Serializable;
 
 
 /**

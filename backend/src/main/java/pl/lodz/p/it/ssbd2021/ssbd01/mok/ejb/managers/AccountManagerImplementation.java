@@ -27,6 +27,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.RandomPasswordGenerator;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.SessionSynchronization;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
@@ -40,9 +41,10 @@ import java.util.List;
 
 
 /**
- * Typ Account manager implementation.
+ * Implementacja menadżera konta.
  */
 @Stateful
+@PermitAll
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
 public class AccountManagerImplementation extends AbstractManager implements AccountManager, SessionSynchronization {
@@ -88,7 +90,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         account.setPassword(hashGenerator.generateHash(account.getPassword()));
         account.setCreatedByIp(requestIp);
 
-        // TODO: 21.05.2021  Przetestować czy dzialaja dobrze constructory przed wstawieniem
         AccessLevel patientData = new PatientData(account, true);
         patientData.setCreatedBy(account);
         account.getAccessLevels().add(patientData);
@@ -130,61 +131,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void createAccountByAdministrator(Account account) throws AppBaseException {
-
-        Account adminAccount = this.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
-        String requestIp = IpAddressUtils.getClientIpAddressFromHttpServletRequest(request);
-        account.setPassword(hashGenerator.generateHash(account.getPassword()));
-        account.setCreatedByIp(requestIp);
-
-        AccessLevel patientData = new PatientData(account, true);
-        patientData.setCreatedBy(adminAccount);
-        account.getAccessLevels().add(patientData);
-
-        AccessLevel receptionistData = new ReceptionistData(account, false);
-        receptionistData.setCreatedBy(adminAccount);
-        account.getAccessLevels().add(receptionistData);
-
-        AccessLevel doctorData = new DoctorData(account, false);
-        doctorData.setCreatedBy(adminAccount);
-        account.getAccessLevels().add(doctorData);
-
-        AccessLevel adminData = new AdminData(account, false);
-        adminData.setCreatedBy(adminAccount);
-        account.getAccessLevels().add(adminData);
-
-
-        try {
-            accountFacade.findByLoginOrEmailOrPesel(account.getLogin(), account.getEmail(), account.getPesel());
-        } catch (AccountException accountException) {
-            account.setCreatedBy(adminAccount);
-            try {
-                accountFacade.create(account);
-            } catch (Exception e) {
-                throw AccountException.accountCreationFailed();
-            }
-            try {
-                mailProvider.sendActivationMail(
-                        account.getEmail(),
-                        jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(account.getLogin()), account.getLanguage()
-                );
-            } catch (Exception e) {
-                throw MailSendingException.activationLink();
-            }
-            try {
-                this.sendResetPasswordConfirmationEmail(account.getLogin());
-            } catch (Exception e) {
-                throw MailSendingException.editAccountMail();
-            }
-            return;
-        } catch (AppBaseException e) {
-            throw AccountException.accountCreationFailed();
-        }
-        throw AccountException.accountLoginEmailPeselExists();
-
-    }
-
-    @Override
     public void removeAccount(Long id) throws AppBaseException {
         Account account = accountFacade.find(id);
         accountFacade.remove(account);
@@ -207,13 +153,13 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Override
     public void confirmAccountByToken(String jwt) throws AccountException, MailSendingException {
-        if (!jwtEmailConfirmationUtils.validateJwtToken(jwt)) {
+        if (!jwtRegistrationConfirmationUtils.validateJwtToken(jwt)) {
             throw AccountException.invalidConfirmationToken();
         }
         String login;
         Account account;
         try {
-            login = jwtEmailConfirmationUtils.getUserNameFromJwtToken(jwt);
+            login = jwtRegistrationConfirmationUtils.getUserNameFromJwtToken(jwt);
         } catch (Exception e) {
             throw AccountException.invalidConfirmationToken();
         }
@@ -221,6 +167,9 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             account = accountFacade.findByLogin(login);
         } catch (Exception e) {
             throw AccountException.noSuchAccount(e);
+        }
+        if (account.getEnabled()) {
+            throw AccountException.accountAlreadyConfirmed();
         }
         account.setEnabled(true);
         try {
@@ -238,12 +187,23 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Override
     public void resetPasswordByToken(String jwt) throws AccountException, MailSendingException, PasswordException {
+        Account account;
         if (!jwtResetPasswordConfirmation.validateJwtToken(jwt)) {
             throw AccountException.invalidConfirmationToken();
         }
         try {
-            String input = jwtResetPasswordConfirmation.getUserNameFromJwtToken(jwt);
-            this.resetPassword(input, input);
+            String input = jwtResetPasswordConfirmation.getVersionAndNameFromJwtToken(jwt);
+            String name = input.split("/")[0];
+            String version = input.split("/")[1];
+            try {
+                account = accountFacade.findByLogin(name);
+            } catch (AppBaseException e) {
+                throw AccountException.noSuchAccount(e);
+            }
+            if (!String.valueOf(account.getVersion()).equals(version)) {
+                throw AccountException.passwordAlreadyChanged();
+            }
+            this.resetPassword(name, name);
         } catch (ParseException e) {
             throw AccountException.noSuchAccount(e);
         } catch (MailSendingException e) {
@@ -263,7 +223,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         account.setLastBlockUnlockDateTime(LocalDateTime.now());
         account.setLastBlockUnlockIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         if (!loggedInAccountUtil.getLoggedInAccountLogin().equals(propertiesLoader.getAnonymousUserName())) {
-            // TODO: Zastanowić się i ustawić pole modifiedBy po zablokowaniu konta przez system po nieudanych logowaniach
             account.setLastBlockUnlockModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
         }
         try {
@@ -271,8 +230,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (Exception e) {
             throw AccountException.accountLockFailed();
         }
-        // TODO: Zastanowić się i ustawić pole modifiedBy po zablokowaniu konta przez system po nieudanych logowaniach
-        //account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
     }
 
     @Override
@@ -335,7 +292,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             account.setLastName(editAccountRequestDTO.getLastName());
         }
         if (editAccountRequestDTO.getEmail() != null && !account.getEmail().equals(editAccountRequestDTO.getEmail())) {
-            // TODO: 21.05.2021 Wysylac maila dopieo kiedy edit się powiódł?
             try {
                 mailProvider.sendEmailChangeConfirmationMail(
                         editAccountRequestDTO.getEmail(),
@@ -347,12 +303,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
                 throw MailSendingException.editAccountMail();
             }
         }
-        if (editAccountRequestDTO.getPhoneNumber() != null) {
-            account.setPhoneNumber(editAccountRequestDTO.getPhoneNumber());
-        }
-        if (editAccountRequestDTO.getPesel() != null) {
-            account.setPesel(editAccountRequestDTO.getPesel());
-        }
+        account.setPhoneNumber(editAccountRequestDTO.getPhoneNumber());
+        account.setPesel(editAccountRequestDTO.getPesel());
         try {
             account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
         } catch (AccountException e) {
@@ -387,6 +339,9 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
             throw AccountException.noSuchAccount(e.getCause());
         } catch (Exception e) {
             throw AccountException.emailConfirmationFailed();
+        }
+        if (account.getEmail().equals(newEmail)) {
+            throw AccountException.emailAlreadyChanged();
         }
         account.setModifiedBy(account);
         account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
@@ -463,6 +418,30 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
+    public void setNewPassword(String login, String newPassword) throws AppBaseException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (AccountException e) {
+            throw AccountException.noSuchAccount(e.getCause());
+        } catch (AppBaseException e) {
+            throw PasswordException.passwordChangeFailed();
+        }
+        account.setModifiedBy(findByLogin(login));
+        account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        account.setFirstPasswordChange(true);
+        if (account.getPassword().contentEquals(hashGenerator.generateHash(newPassword))) {
+            throw PasswordException.passwordsNotDifferent();
+        }
+        account.setPassword(hashGenerator.generateHash(newPassword));
+        try {
+            accountFacade.edit(account);
+        } catch (Exception e) {
+            throw PasswordException.passwordChangeFailed();
+        }
+    }
+
+    @Override
     public Account findByLogin(String login) throws AppBaseException {
         return accountFacade.findByLogin(login);
     }
@@ -487,7 +466,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (Exception e) {
             throw AccountException.noSuchAccount(e);
         }
-        // TODO: 21.05.2021 Dlugosc do zmiennej w pliku konfiguracyjnym
         String pass = passwordGenerator.generate(32);
         account.setPassword(hashGenerator.generateHash(pass));
         try {
@@ -495,7 +473,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (Exception e) {
             throw PasswordException.passwordResetFailed();
         }
-        mailProvider.sendGeneratedPasswordMail(account.getEmail(), pass, account.getLanguage());
     }
 
     @Override
@@ -509,13 +486,31 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         try {
             mailProvider.sendResetPassConfirmationMail(
                     account.getEmail(),
+                    jwtResetPasswordConfirmation.generateJwtTokenForUsernameAndVersion(
+                            login, account.getVersion()), account.getLanguage()
+            );
+        } catch (MailSendingException mailSendingException) {
+            throw MailSendingException.editAccountMail();
+        }
+    }
+
+    @Override
+    public void sendResetPasswordByAdminConfirmationEmail(String login) throws AppBaseException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
+        try {
+            mailProvider.sendResetPassByAdminConfirmationMail(
+                    account.getEmail(),
                     jwtResetPasswordConfirmation.generateJwtTokenForUsername(
                             login), account.getLanguage()
             );
         } catch (MailSendingException mailSendingException) {
             throw MailSendingException.editAccountMail();
         }
-        // TODO: send mail with new password
     }
 
     @Override

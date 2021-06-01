@@ -23,7 +23,7 @@ export default function Login() {
             // We got errors!
             setErrors(newErrors);
         } else {
-            makeLoginRequest(login, password);
+            makeLoginRequest(login, password, t);
         }
 
 
