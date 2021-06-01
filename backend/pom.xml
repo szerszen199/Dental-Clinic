@@ -60,7 +60,7 @@
 
         <frontend.directory>../frontend</frontend.directory>
         <frontend.directory.output>${frontend.directory}/build</frontend.directory.output>
-        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+        <npm.executable>node/npm</npm.executable>
     </properties>
 
     <dependencies>
@@ -187,6 +187,43 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.9.1</version>
+                <executions>
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                    </execution>
+                    <execution>
+                        <id>npm-install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm-build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <workingDirectory>${frontend.directory}</workingDirectory>
+                    <nodeVersion>v14.17.0</nodeVersion>
+                    <npmVersion>7.15.0</npmVersion>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.0</version>
@@ -198,46 +235,6 @@
                         </resource>
                     </webResources>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>exec-maven-plugin</artifactId>
-                <groupId>org.codehaus.mojo</groupId>
-                <version>1.6.0</version>
-                <executions>
-                    <execution>
-                        <id>Install dependencies</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>npm</executable>
-                            <arguments>
-                                <argument>install</argument>
-                            </arguments>
-                            <environmentVariables>
-                                <NPM_CONFIG_PREFIX>${project.build.directory}</NPM_CONFIG_PREFIX>
-                                <NPM_CONFIG_CACHE>/tmp/ssbd01/</NPM_CONFIG_CACHE>
-                            </environmentVariables>
-                            <workingDirectory>${frontend.directory}</workingDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>Build frontend</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>npm</executable>
-                            <arguments>
-                                <argument>run</argument>
-                                <argument>build</argument>
-                            </arguments>
-                            <workingDirectory>${frontend.directory}</workingDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -351,6 +348,7 @@
                             <cargo.glassfish.admin.port>${payara.adminPort}</cargo.glassfish.admin.port>
                             <cargo.hostname>${payara.hostname}</cargo.hostname>
                             <cargo.servlet.port>${servlet.port}</cargo.servlet.port>
+                            <cargo.runtime.args>force=true</cargo.runtime.args>
                         </properties>
                     </configuration>
                 </configuration>
