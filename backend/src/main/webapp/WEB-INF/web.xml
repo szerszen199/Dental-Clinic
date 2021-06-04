@@ -4,6 +4,24 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
+    <security-role>
+        <role-name>level.patient</role-name>
+    </security-role>
+
+    <security-role>
+        <role-name>level.administrator</role-name>
+    </security-role>
+
+    <security-role>
+        <role-name>level.receptionist</role-name>
+    </security-role>
+
+    <security-role>
+        <role-name>level.doctor</role-name>
+    </security-role>
+
+
+
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>SecureUrls</web-resource-name>

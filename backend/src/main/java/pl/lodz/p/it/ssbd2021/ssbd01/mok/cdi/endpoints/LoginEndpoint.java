@@ -33,15 +33,18 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.security.enterprise.SecurityContext;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_NOT_FOUND;
 
 /**
@@ -61,6 +64,7 @@ public class LoginEndpoint {
     private final JwtRefreshUtils jwtRefreshUtils;
     private final MailProvider mailProvider;
     private final JwtResetPasswordConfirmation jwtResetPasswordConfirmation;
+    private final SecurityContext securityContext;
 
 
     /**
@@ -75,6 +79,7 @@ public class LoginEndpoint {
      * @param mailProvider                 mail provider
      * @param authViewEntityManager        auth view entity manager
      * @param jwtResetPasswordConfirmation token do potwierdzenia resetu hasła
+     * @param securityContext              security context
      */
     @Inject
     public LoginEndpoint(IdentityStoreHandler identityStoreHandler,
@@ -85,7 +90,8 @@ public class LoginEndpoint {
                          JwtRefreshUtils jwtRefreshUtils,
                          MailProvider mailProvider,
                          AuthViewEntityManager authViewEntityManager,
-                         JwtResetPasswordConfirmation jwtResetPasswordConfirmation) {
+                         JwtResetPasswordConfirmation jwtResetPasswordConfirmation,
+                         SecurityContext securityContext) {
         this.identityStoreHandler = identityStoreHandler;
         this.jwtLoginUtils = jwtLoginUtils;
         this.request = httpServletRequest;
@@ -95,6 +101,7 @@ public class LoginEndpoint {
         this.mailProvider = mailProvider;
         this.authViewEntityManager = authViewEntityManager;
         this.jwtResetPasswordConfirmation = jwtResetPasswordConfirmation;
+        this.securityContext = securityContext;
     }
 
     /**
@@ -228,5 +235,27 @@ public class LoginEndpoint {
                         jwtRefreshUtils.generateJwtTokenForUser(credentialValidationResult.getCallerPrincipal().getName()),
                         userInfoResponseDTO)).build();
     }
+
+
+    /**
+     * Endpoint sprawdzający, czy zmiana poziomu dostępu jest możliwa.
+     * @param level pożądany poziom dostępu
+     *              
+     * @return Odpowiedź http 200 gdy zmiana jest możliwa, 401 gdy nie
+     */
+    @POST
+    @Path("/change-level/{level}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({I18n.ADMIN, I18n.RECEPTIONIST, I18n.DOCTOR, I18n.PATIENT})
+    public Response changeRole(@PathParam("level") String level) {
+        if (securityContext.isCallerInRole(level)) {
+            Logger.getGlobal().log(Level.INFO, "Użytkownik o loginie {0} zmienił poziom dostępu na {1}",new Object[]{securityContext.getCallerPrincipal().getName(),level});
+            return Response.ok().build();
+        } else {
+            Logger.getGlobal().log(Level.WARNING, "Użytkownik o loginie {0} próbował zmienić poziom dostępu na {1}",new Object[]{securityContext.getCallerPrincipal().getName(),level});
+            return Response.status(UNAUTHORIZED).build();
+        }
+    }
+
 }
 
