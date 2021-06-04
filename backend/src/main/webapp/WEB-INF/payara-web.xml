@@ -2,4 +2,27 @@
 <!DOCTYPE payara-web-app PUBLIC "-//Payara.fish//DTD Payara Server 4 Servlet 3.0//EN" "https://raw.githubusercontent.com/payara/Payara-Server-Documentation/master/schemas/payara-web-app_4.dtd">
 <payara-web-app>
     <context-root>/</context-root>
+
+
+    <security-role-mapping>
+        <role-name>level.patient</role-name>
+        <group-name>level.patient</group-name>
+    </security-role-mapping>
+
+    <security-role-mapping>
+        <role-name>level.administrator</role-name>
+        <group-name>level.administrator</group-name>
+    </security-role-mapping>
+
+    <security-role-mapping>
+        <role-name>level.receptionist</role-name>
+        <group-name>level.receptionist</group-name>
+    </security-role-mapping>
+
+    <security-role-mapping>
+        <role-name>level.doctor</role-name>
+        <group-name>level.doctor</group-name>
+    </security-role-mapping>
+
+
 </payara-web-app>
