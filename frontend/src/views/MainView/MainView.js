@@ -21,7 +21,7 @@ import './MainView.css';
 import {Link} from "react-router-dom";
 import findDefaultRole from "../../roles/findDefaultRole";
 import {darkModeRequest} from "../../components/DarkMode/DarkModeRequest"
-import {languageRequest} from "../../components/Language/LanguageRequest";
+import {getBrowserLanguage, languageRequest} from "../../components/Language/LanguageRequest";
 
 const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
 const roleDoctorName = process.env.REACT_APP_ROLE_DOCTOR
@@ -41,45 +41,42 @@ export const jwtCookieExpirationTime = process.env.REACT_APP_JWT_EXPIRATION_MS /
 const actualAccessLevel = Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) !== undefined ? Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) : roleGuestName;
 
 class MainViewWithoutTranslation extends React.Component {
-    urlPL = "https://img.icons8.com/color/96/000000/poland-circular.png";
-    urlEN = "https://img.icons8.com/color/48/000000/great-britain-circular.png";
 
+    flags = {
+        "PL": "https://img.icons8.com/color/96/000000/poland-circular.png",
+        "EN": "https://img.icons8.com/color/48/000000/great-britain-circular.png"};
 
     constructor(props) {
         super(props);
         this.state = {
-            language: "EN",
             isDarkMode: false,
-            flag: this.urlPL,
             login: "",
         }
+        if (Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE) !== undefined) {
+            this.state.language = Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE);
+        } else {
+            this.state.language = getBrowserLanguage();
+        }
+
+        this.state.flag = this.state.language === "PL" ? this.flags["EN"] : this.flags["PL"];
+        i18n.changeLanguage(this.state.language);
     }
 
     handleOnClick() {
         if (this.state.language === "EN") {
-            this.setPL()
+            this.setInterfaceLanguage("PL")
         } else {
-            this.setEN()
+            this.setInterfaceLanguage("EN")
         }
     }
 
-    setEN() {
-        this.setState({language: "EN", flag: this.urlPL})
-        Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, "EN", {expires: process.env.jwtCookieExpirationTime})
-        if (this.state.login) {
-            languageRequest("en")
-        }
-        i18n.changeLanguage("EN");
-    }
+    setInterfaceLanguage(language) {
+        this.state.language = language;
 
-    setPL() {
-        this.setState({language: "PL", flag: this.urlEN})
-        Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, "PL", {expires: process.env.jwtCookieExpirationTime})
-        if (this.state.login) {
-            languageRequest("pl")
-        }
-        i18n.changeLanguage("PL");
-        i18n.changeLanguage("PL");
+        this.state.flag = this.state.language === "PL" ? this.flags["EN"] : this.flags["PL"];
+
+        Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, language);
+        i18n.changeLanguage(language);
     }
 
     makeRefreshRequest() {
@@ -103,9 +100,6 @@ class MainViewWithoutTranslation extends React.Component {
                 if (Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE) != null) {
                     Cookies.set(process.env.REACT_APP_DARK_MODE_COOKIE, Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE), {expires: jwtCookieExpirationTime});
                 }
-                if (Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE) != null) {
-                    Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE), {expires: jwtCookieExpirationTime});
-                }
                 localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, response.data.refreshJwtToken.token);
             }).catch((response) => {
                 console.log(response);
@@ -122,15 +116,9 @@ class MainViewWithoutTranslation extends React.Component {
         if (typeof token !== 'undefined' && token !== null && token !== "null" && token !== undefined) {
             this.setState({
                 login: Cookies.get(process.env.REACT_APP_LOGIN_COOKIE),
-                isDarkMode: Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE),
-                language: Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE)
+                isDarkMode: Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE)
             })
             accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode)
-            if (Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE).toUpperCase() === "PL") {
-                this.setPL();
-            } else {
-                this.setEN();
-            }
         }
     }
 
