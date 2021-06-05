@@ -176,9 +176,9 @@ class MainViewWithoutTranslation extends React.Component {
                 </Navbar>
                 <Routes/>
                 <ReadinessComponent/>
-                <MDBFooter color="blue" className="font-small pt-4 mt-4" id="footer">
+                <MDBFooter color="blue" className="font-small pt-4 mt-4 fixed-bottom" id="footer">
                     <div className="footer-copyright text-right py-3">
-                        <MDBContainer fluid>
+                        <MDBContainer>
                             {t("Dental Clinic")}, &copy; {new Date().getFullYear()} Copyright by 2021SSBD01
                         </MDBContainer>
                     </div>
