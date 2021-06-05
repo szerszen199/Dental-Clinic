@@ -8,7 +8,7 @@ export default function Home() {
         <div className="Home">
             <div className="lander">
                 <h1>{t("Dental Clinic")}</h1>
-                <p className="text-muted">{t()} System informatyczny dla kliniki stomatologicznej.</p>
+                <p className="text-muted">{t("IT system home")}</p>
             </div>
         </div>
     );

@@ -167,5 +167,6 @@
   "Question reset password by admin": "Czy na pewno chcesz wysłać link do resetowania hasła?",
   "account_already_confirmed": "Konto zostało już potwierdzone",
   "email_already_changed": "Zmiana adresu email została już potwierdzona",
-  "password_already_changed": "Hasło zostało już zresetowane"
+  "password_already_changed": "Hasło zostało już zresetowane",
+  "IT system home": "System informatyczny dla kliniki stomatologicznej."
 }
