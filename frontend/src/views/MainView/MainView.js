@@ -6,7 +6,6 @@ import Routes from "../../router/Routes";
 import BreadCrumbs from "../../components/Breadcrumbs/Breadcrumbs";
 import ReadinessComponent from "../../components/GetReadinessResource/Readiness"
 import Doctor from "../Users/Doctor/Doctor";
-
 import {withTranslation} from "react-i18next";
 import i18n from "../../transaltions/i18n";
 import Admin from "../Users/Admin/Admin";
@@ -21,6 +20,7 @@ import './MainView.css';
 import {Link} from "react-router-dom";
 import findDefaultRole from "../../roles/findDefaultRole";
 import {darkModeRequest} from "../../components/DarkMode/DarkModeRequest"
+import {languageRequest} from "../../components/Language/LanguageRequest";
 import {getBrowserLanguage, languageRequest} from "../../components/Language/LanguageRequest";
 
 const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
@@ -121,7 +121,6 @@ class MainViewWithoutTranslation extends React.Component {
             accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode)
         }
     }
-
 
     render() {
         const {t} = this.props;

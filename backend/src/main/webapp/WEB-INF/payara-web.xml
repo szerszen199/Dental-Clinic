@@ -3,7 +3,6 @@
 <payara-web-app>
     <context-root>/</context-root>
 
-
     <security-role-mapping>
         <role-name>level.patient</role-name>
         <group-name>level.patient</group-name>

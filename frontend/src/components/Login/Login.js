@@ -6,9 +6,9 @@ import {makeLoginRequest} from "./LoginRequest";
 import "../../commonStyles/common_style.css"
 import {useTranslation} from "react-i18next";
 import {Link} from "react-router-dom";
-import {registrationRequest} from "../Registration/RegistrationRequest";
 
 export default function Login() {
+
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
     const {t} = useTranslation()
@@ -25,8 +25,6 @@ export default function Login() {
         } else {
             makeLoginRequest(login, password, t);
         }
-
-
     }
 
     const [errors, setErrors] = useState({})
@@ -69,15 +67,12 @@ export default function Login() {
                 newErrors.password = "Password too short error";
 
             }
-
         }
-
 
         findLoginErrors();
         findPasswordErrors();
         return newErrors;
     }
-
 
     return (
         <div className="Login">

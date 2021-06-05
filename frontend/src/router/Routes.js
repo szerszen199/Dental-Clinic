@@ -22,26 +22,26 @@ import MailChangeConfirm from "../components/Confirmation/MailChangeConfirm";
 import PasswordChangeConfirm from "../components/Confirmation/PasswordChangeConfirm";
 
 export default function Routes() {
-    let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
+    let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
 
     function isLoggedIn() {
         return token !== undefined;
     }
 
     function isPatient() {
-        return isLoggedIn() && Cookies !== undefined && Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) === process.env.REACT_APP_ROLE_PATIENT
+        return isLoggedIn() && Cookies !== undefined && Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) === process.env.REACT_APP_ROLE_PATIENT;
     }
 
     function isAdministrator() {
-        return isLoggedIn() && Cookies !== undefined && Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) === process.env.REACT_APP_ROLE_ADMINISTRATOR
+        return isLoggedIn() && Cookies !== undefined && Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) === process.env.REACT_APP_ROLE_ADMINISTRATOR;
     }
 
     function isReceptionist() {
-        return isLoggedIn() && Cookies !== undefined && Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) === process.env.REACT_APP_ROLE_RECEPTIONIST
+        return isLoggedIn() && Cookies !== undefined && Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) === process.env.REACT_APP_ROLE_RECEPTIONIST;
     }
 
     function isDoctor() {
-        return isLoggedIn() && Cookies !== undefined && Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) === process.env.REACT_APP_ROLE_DOCTOR
+        return isLoggedIn() && Cookies !== undefined && Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) === process.env.REACT_APP_ROLE_DOCTOR;
     }
 
     return (
@@ -51,19 +51,18 @@ export default function Routes() {
             </Route>
             <HomeRoute authed={isLoggedIn()} path='/home' component={Dashboard}/>
             <PrivateRoute authed={!isLoggedIn()}  path="/register" component={Registration}/>
-            <Route exact path="/guest-home">
-                <Home/>
-            </Route>
+            <GuestHomeRoute authed={!isLoggedIn()} path="/guest-home" component={Home}/>
             <PrivateRoute authed={!isLoggedIn()}  path="/login" component={Login}/>
             <Route exact path="/reset-password">
                 <Reset/>
             </Route>
+            <PrivateRoute authed={isPatient() || isDoctor()} path='/prescriptions' component={Prescription}/>
             <Route exact path="/new-password/:token">
                 <SetNewPassword/>
             </Route>
             <PrivateRoute authed={isPatient()} path='/prescriptions' component={Prescription}/>
             <PrivateRoute authed={isLoggedIn()} path='/account' component={Account}/>
-            <PrivateRoute authed={isAdministrator()} path='/accounts' component={AccountsList}/>
+            <PrivateRoute authed={isAdministrator() || isReceptionist()} path='/accounts' component={AccountsList}/>
             <PrivateRoute authed={isAdministrator()} path='/other-account/:accId' component={OtherAccount} />
             <PrivateRoute authed={isPatient() || isReceptionist() || isDoctor()} path='/my-appointments'
                           component={MyAppointment}/>
