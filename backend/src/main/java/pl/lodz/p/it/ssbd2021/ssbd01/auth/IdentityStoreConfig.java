@@ -16,7 +16,7 @@ import javax.security.enterprise.identitystore.DatabaseIdentityStoreDefinition;
         hashAlgorithm = AuthHashImpl.class
 )
 
-@DeclareRoles({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
+//@DeclareRoles({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.ADMIN, I18n.PATIENT})
 @ApplicationScoped
 public class IdentityStoreConfig {
 }
