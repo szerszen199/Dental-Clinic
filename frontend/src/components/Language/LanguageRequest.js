@@ -23,3 +23,8 @@ export function languageRequest(language){
             console.log(error);
         });
 }
+
+export function getBrowserLanguage() {
+    let language = window.navigator.language.split('-')[0];
+    return String(language.toUpperCase());
+}
