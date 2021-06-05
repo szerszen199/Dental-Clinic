@@ -7,7 +7,7 @@ export function makeResetPasswordRequest(login, t) {
         login: login,
     }).then((response) => {
         successAlerts(t(response.data.message, response.status)).then(() => {
-            window.location = "/home";
+            window.location.hash = "#/login";
         })
 
     })
