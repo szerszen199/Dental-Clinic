@@ -17,7 +17,8 @@ import ListDoctors from "../components/Appointment/ListDoctors/ListDoctors";
 import HomeRoute from "./HomeRoute";
 import Cookies from "js-cookie";
 import OtherAccount from "../components/Account/OtherAccount/OtherAccount";
-import SetNewPassword from "../components/ResetPassword/SetNewPassword";
+import SetNewPassword from "../components/ResetPassword/setNewPassword/SetNewPassword";
+import SetNewPasswordAdmin from "../components/ResetPassword/setNewPasswordAdmin/SetNewPasswordAdmin";
 import AccountActivationConfirm from "../components/Confirmation/AccountActivationConfirm";
 import MailChangeConfirm from "../components/Confirmation/MailChangeConfirm";
 import PasswordChangeConfirm from "../components/Confirmation/PasswordChangeConfirm";
@@ -58,6 +59,9 @@ export default function Routes() {
                 <Reset/>
             </Route>
             <PrivateRoute authed={isPatient() || isDoctor()} path='/prescriptions' component={Prescription}/>
+            <Route exact path="/new-password-admin/:token">
+                <SetNewPasswordAdmin/>
+            </Route>
             <Route exact path="/new-password/:token">
                 <SetNewPassword/>
             </Route>

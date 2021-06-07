@@ -10,12 +10,13 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import Form from "react-bootstrap/Form";
 import {withTranslation} from "react-i18next";
+import errorAlerts from "../../Alerts/ErrorAlerts/ErrorAlerts";
 
 class OtherAccountWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            accId: this.props.accId,
+            accId: "",
             isActivated: "",
             accessLevelDtoList: "",
             account: {
@@ -39,8 +40,9 @@ class OtherAccountWithoutTranslation extends React.Component {
     }
 
     makeGetAccountRequest121() {
+        const {t} = this.props;
         console.log(this.state.accId);
-        let requestPath = process.env.REACT_APP_BACKEND_URL + "account/other-account-info/" + this.state.accId;
+        let requestPath = process.env.REACT_APP_BACKEND_URL + "account/other-account-info/" + this.props.accId;
 
         axios
             .get(requestPath, {
@@ -50,6 +52,7 @@ class OtherAccountWithoutTranslation extends React.Component {
             })
             .then(result => {
                 this.setState({
+                    accId: result.data.login,
                     isActivated: result.data.active,
                     accessLevelDtoList: result.data.accessLevelDtoList,
                     account: {
@@ -67,7 +70,15 @@ class OtherAccountWithoutTranslation extends React.Component {
                     },
                     enabled: result.data.enabled,
                 })
-            })
+                console.log("result: " + result);
+            }).catch((response) => {
+                console.log(response);
+            if (response.response) {
+                errorAlerts(t(response.response.data.message), response.response.status.toString(10)).then(() => {
+                    window.location.hash = "#/accounts";
+                });
+            }
+        })
     }
 
     render() {
