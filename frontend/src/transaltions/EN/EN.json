@@ -145,7 +145,7 @@
   "access_level_already_assigned": "Access level is already assigned",
   "account_login_already_exists": "Login already exists",
   "account_email_already_exists": "Email already exists",
-  "account_login_email_pesel_already_exists": "Account login email pesel combination already exists",
+  "account_login_email_pesel_already_exists": "Account with these credentials already exists",
   "account_is_blocked": "Account is blocked",
   "account_confirmation_by_token_failed": "Account confirmation by email token failed",
   "password_reset_failed": "Password reset failed",
