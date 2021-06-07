@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -51,8 +53,9 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
     @ManyToOne(optional = false)
     @NotNull
     private Account doctor;
-    @JoinColumn(name = "documentation_id", referencedColumnName = "id", nullable = false, updatable = true)
-    @ManyToOne(fetch = FetchType.EAGER)
+
+    @JoinColumn(name = "documentation_id", referencedColumnName = "id", nullable = false, updatable = false, insertable = false)
+    @ManyToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
     @NotNull
     private MedicalDocumentation medicalDocumentation;
 
