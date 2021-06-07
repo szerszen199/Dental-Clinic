@@ -139,4 +139,5 @@ public class I18n {
     public static final String ACCOUNT_ALREADY_CONFIRMED = "account_already_confirmed";
     public static final String EMAIL_ALREADY_CHANGED = "email_already_changed";
     public static final String PASSWORD_ALREADY_CHANGED = "password_already_changed";
+    public static final String ETAG_INVALID = "etag_invalid";
 }

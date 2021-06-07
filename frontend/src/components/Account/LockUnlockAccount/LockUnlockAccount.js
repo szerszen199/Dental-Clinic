@@ -14,7 +14,7 @@ class LockAccountWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isActivated: this.props.isActive,
+            isActivated: "",
         };
     }
 
@@ -95,13 +95,31 @@ class LockAccountWithoutTranslation extends React.Component {
         let requestPath = process.env.REACT_APP_BACKEND_URL + "account/unlock"
 
         this.makeLockUnlockRequest(requestPath, t);
-
     }
+
+    makeGetAccountRequest() {
+        console.log(this.props)
+        let requestPath = process.env.REACT_APP_BACKEND_URL + "account/other-account-info/" + this.props.login
+
+        axios
+            .get(requestPath, {
+                headers: {
+                    Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
+                }
+            })
+            .then(res => {
+                return res.data
+            })
+            .then(result => this.setState({
+                isActivated: result.active
+            }))
+    }
+
 
     makeLockUnlockRequest(requestPath, t) {
         axios
             .put(requestPath, {
-                login: this.props.userLogin
+                login: this.props.login
             }, {
                 headers: {
                     Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
@@ -124,7 +142,7 @@ const LockAccountTr = withTranslation()(LockAccountWithoutTranslation)
 export default function LockUnlockAccount(props) {
     return (
         <Suspense fallback="loading">
-            <LockAccountTr isActive={props.isActive}/>
+            <LockAccountTr isActive={props.isActive} login={props.login}/>
         </Suspense>
     );
 }

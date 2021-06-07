@@ -168,5 +168,6 @@
   "account_already_confirmed": "Konto zostało już potwierdzone",
   "email_already_changed": "Zmiana adresu email została już potwierdzona",
   "password_already_changed": "Hasło zostało już zresetowane",
-  "IT system home": "System informatyczny dla kliniki stomatologicznej."
+  "IT system home": "System informatyczny dla kliniki stomatologicznej.",
+  "etag_invalid": "Niepoprawna wartość nagłówka etag"
 }
