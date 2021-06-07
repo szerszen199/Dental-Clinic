@@ -168,6 +168,6 @@
   "account_already_confirmed": "Account already confirmed",
   "email_already_changed": "Email changed already",
   "password_already_changed": "Password reset already",
-  "IT system home": "IT system for a dental clinic."
-
+  "IT system home": "IT system for a dental clinic.",
+  "etag_invalid": "Invalid etag value"
 }

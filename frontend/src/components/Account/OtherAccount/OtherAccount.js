@@ -15,8 +15,16 @@ export default class OtherAccount extends React.Component {
         this.state = {
             accId: this.props.match.params.accId,
             isActivated: "",
-            version: "",
-            accessLevelDtoList: ""
+            accessLevelDtoList: "",
+            account: {
+                email: "",
+                firstName: "",
+                lastName: "",
+                phoneNumber: "",
+                pesel: "",
+                version: "",
+                etag: "",
+            },
         };
     }
 
@@ -34,16 +42,21 @@ export default class OtherAccount extends React.Component {
                     Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
                 }
             })
-            .then(res => {
-                return res.data
-            })
-            .then(result =>
+            .then(result => {
                 this.setState({
-                    isActivated: result.active,
-                    version: result.version,
-                    accessLevelDtoList: result.accessLevelDtoList
+                    isActivated: result.data.active,
+                    accessLevelDtoList: result.data.accessLevelDtoList,
+                    account: {
+                        email: result.data.email,
+                        firstName: result.data.firstName,
+                        lastName: result.data.lastName,
+                        phoneNumber: result.data.phoneNumber,
+                        pesel: result.data.pesel,
+                        version: result.data.version,
+                        etag: result.headers['etag']
+                    },
                 })
-            )
+            })
     }
 
     render() {
@@ -66,7 +79,7 @@ export default class OtherAccount extends React.Component {
                     </Row>
                     <Row>
                         <Col>
-                            <EditAccount className="EditAccount" account={this.state.accId}/>
+                            <EditAccount className="EditAccount" id={this.state.accId} account={this.state.account}/>
                         </Col>
                         <Col style={{maxWidth: "60px"}}/>
                         <Col>
@@ -77,7 +90,7 @@ export default class OtherAccount extends React.Component {
                             <Row>
                                 <ResetPasswordByAdmin className="ResetPasswordByAdmin" account={this.state.accId}/>
                             </Row>
-                            <LockUnlockAccount isActive={this.state.isActivated}/>
+                            <LockUnlockAccount login={this.state.accId} isActive={this.state.isActivated}/>
                         </Col>
                     </Row>
                 </Container>
