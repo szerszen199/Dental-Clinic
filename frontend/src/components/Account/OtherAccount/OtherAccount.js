@@ -16,7 +16,7 @@ class OtherAccountWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            accId: "",
+            accId: this.props.accId,
             isActivated: "",
             accessLevelDtoList: "",
             account: {
@@ -42,7 +42,7 @@ class OtherAccountWithoutTranslation extends React.Component {
     makeGetAccountRequest121() {
         const {t} = this.props;
         console.log(this.state.accId);
-        let requestPath = process.env.REACT_APP_BACKEND_URL + "account/other-account-info/" + this.props.accId;
+        let requestPath = process.env.REACT_APP_BACKEND_URL + "account/other-account-info/" + this.state.accId;
 
         axios
             .get(requestPath, {
