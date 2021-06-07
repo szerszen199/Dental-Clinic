@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.exceptions;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+
 import javax.ejb.ApplicationException;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
@@ -54,6 +56,16 @@ public class AppBaseException extends Exception {
     public static AppBaseException optimisticLockError() {
         return new AppBaseException(DATABASE_OPTIMISTIC_LOCK_ERROR);
     }
+
+    /**
+     * Tworzy wyjątek reprezentujący wystąpienie konfliktu związanego z mechanizmem ponawiania transakcji.
+     *
+     * @return wyjątek typu AppBaseException
+     */
+    public static AppBaseException transactionRepeatFailure() {
+        return new AppBaseException(I18n.TRANSACTION_REPEAT_FAILED_ERROR);
+    }
+
 
     /**
      * Tworzy wyjątek reprezentujący wystąpienie problemu z bazą danych.
