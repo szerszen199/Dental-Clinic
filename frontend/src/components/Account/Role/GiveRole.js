@@ -10,7 +10,6 @@ import {withTranslation} from "react-i18next";
 import axios from "axios";
 
 class GiveRoleWithoutTranslation extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -91,13 +90,13 @@ class GiveRoleWithoutTranslation extends React.Component {
     render() {
         const {t} = this.props;
         let Buttons;
-        if (this.state.rolesList && this.state.rolesList.length !== 0) {
-            Buttons = <ButtonGroup>
-                {this.buttonsFunc()}
-            </ButtonGroup>
-        } else {
-            Buttons = "Trwa wczytywanie";
-        }
+        // if (this.state.rolesList && this.state.rolesList.length !== 0) {
+        Buttons = <ButtonGroup>
+            {this.buttonsFunc()}
+        </ButtonGroup>
+        // } else {
+        //     Buttons = "Trwa wczytywanie";
+        // }
 
         return (
             <Nav>
@@ -113,7 +112,7 @@ const GiveRoleTr = withTranslation()(GiveRoleWithoutTranslation)
 export default function GiveRole(props) {
     return (
         <Suspense fallback="loading">
-            <GiveRoleTr account={props.account}/>
+            <GiveRoleTr accessLevelDtoList={props.accessLevelDtoList} account={props.account}/>
         </Suspense>
     );
 }
