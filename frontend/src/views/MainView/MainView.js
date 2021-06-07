@@ -20,7 +20,7 @@ import './MainView.css';
 import {Link} from "react-router-dom";
 import findDefaultRole from "../../roles/findDefaultRole";
 import {darkModeRequest} from "../../components/DarkMode/DarkModeRequest"
-import {getBrowserLanguage, languageRequest} from "../../components/Language/LanguageRequest";
+import {getBrowserLanguage} from "../../components/Language/LanguageRequest";
 
 const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
 const roleDoctorName = process.env.REACT_APP_ROLE_DOCTOR
@@ -52,14 +52,6 @@ class MainViewWithoutTranslation extends React.Component {
             isDarkMode: false,
             login: "",
         }
-        if (Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE) !== undefined) {
-            this.state.language = Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE);
-        } else {
-            this.state.language = getBrowserLanguage();
-        }
-
-        this.state.flag = this.state.language === "PL" ? this.flags["PL"] : this.flags["EN"];
-        i18n.changeLanguage(this.state.language);
     }
 
     handleOnClick() {
@@ -119,8 +111,21 @@ class MainViewWithoutTranslation extends React.Component {
                 login: Cookies.get(process.env.REACT_APP_LOGIN_COOKIE),
                 isDarkMode: Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE)
             })
-            accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode)
+            if (Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE) !== undefined) {
+                this.setState({
+                    language: Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE)
+                })
+            } else {
+                this.setState({
+                    language: getBrowserLanguage()
+                })
+            }
+            accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode);
         }
+        this.setState({
+            flag: this.state.language === "PL" ? this.flags["PL"] : this.flags["EN"]
+        })
+        i18n.changeLanguage(this.state.language);
     }
 
     render() {
