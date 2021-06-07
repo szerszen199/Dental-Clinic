@@ -105,7 +105,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         AccessLevel adminData = new AdminData(account, false);
         adminData.setCreatedBy(account);
         account.getAccessLevels().add(adminData);
-
         try {
             accountFacade.findByLoginOrEmailOrPesel(account.getLogin(), account.getEmail(), account.getPesel());
         } catch (AccountException accountException) {
