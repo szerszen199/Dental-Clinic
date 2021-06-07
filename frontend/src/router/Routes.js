@@ -7,6 +7,7 @@ import Login from "../components/Login/Login";
 import Reset from "../components/ResetPassword/Reset";
 import Dashboard from "../components/Dashboard/Dashboard"
 import PrivateRoute from "./PrivateRoute";
+import GuestHomeRoute from "./GuestHomeRoute";
 import Account from "../components/Account/OwnAccount/Account"
 import AccountsList from "../components/AccountsList/AccountsList";
 import Prescription from "../components/Prescription/Prescription"
