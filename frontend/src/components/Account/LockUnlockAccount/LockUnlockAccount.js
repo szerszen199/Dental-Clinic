@@ -14,32 +14,22 @@ class LockAccountWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isActivated: "",
+            isActivated: this.props.isActive,
         };
     }
 
     componentDidMount() {
-        this.makeGetAccountRequest()
+        this.setState({
+            isActivated: this.props.isActive
+        })
     }
 
-
-    makeGetAccountRequest() {
-
-        console.log(this.props)
-        let requestPath = process.env.REACT_APP_BACKEND_URL + "account/other-account-info/" + this.props.userLogin
-
-        axios
-            .get(requestPath, {
-                headers: {
-                    Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
-                }
+    componentDidUpdate(prevProps) {
+        if (prevProps.isActive !== this.props.isActive) {
+            this.setState({
+                isActivated: this.props.isActive
             })
-            .then(res => {
-                return res.data
-            })
-            .then(result => this.setState({
-                isActivated: result.active
-            }))
+        }
     }
 
     renderLockButton(t) {
@@ -68,11 +58,11 @@ class LockAccountWithoutTranslation extends React.Component {
                     <Form style={{width: "100%"}}>
                         <Form.Group size="lg" controlId="isLocked">
                             <Form.Label>{t("Active")}</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    value={this.state.isActivated}
-                                    disabled={true}
-                                />
+                            <Form.Control
+                                type="text"
+                                value={this.state.isActivated}
+                                disabled={true}
+                            />
                         </Form.Group>
                     </Form>
                 </Row>
@@ -134,7 +124,7 @@ const LockAccountTr = withTranslation()(LockAccountWithoutTranslation)
 export default function LockUnlockAccount(props) {
     return (
         <Suspense fallback="loading">
-            <LockAccountTr userLogin={props.userLogin}/>
+            <LockAccountTr isActive={props.isActive}/>
         </Suspense>
     );
 }
