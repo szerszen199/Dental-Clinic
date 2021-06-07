@@ -43,7 +43,6 @@ class EditAccountWithoutTranslation extends React.Component {
     }
 
     findFormErrors(t) {
-
         const newErrors = {}
 
         function findEmailErrors() {
