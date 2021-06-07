@@ -40,6 +40,8 @@ public class AccountInfoResponseDTO implements SignableEntity {
     private String language;
 
     @NotNull
+    private Boolean enabled;
+    @NotNull
     private Long version;
 
     /**
@@ -56,6 +58,15 @@ public class AccountInfoResponseDTO implements SignableEntity {
         this.active = account.getActive();
         this.language = account.getLanguage();
         this.version = account.getVersion();
+        this.enabled = account.getEnabled();
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     /**

@@ -163,6 +163,7 @@
   "password_reset_mail_sent_error": "Unable to send password reset email",
   "LockAccount": "Lock Account",
   "Active": "Active",
+  "Enabled": "Confirmed",
   "UnlockAccount": "Unlock Account",
   "Question reset password by admin": "Do you want to send password reset link?",
   "account_already_confirmed": "Account already confirmed",

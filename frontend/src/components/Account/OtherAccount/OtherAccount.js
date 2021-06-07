@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Suspense} from "react";
 import "./OtherAccount.css";
 import EditAccount from "../EditAccount/EditAccount";
 import {Col, Container, FormControl, Row} from "react-bootstrap";
@@ -8,12 +8,14 @@ import LockUnlockAccount from "../LockUnlockAccount/LockUnlockAccount"
 import ResetPasswordByAdmin from "./ResetPasswordByAdmin/ResetPasswordByAdmin";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Form from "react-bootstrap/Form";
+import {withTranslation} from "react-i18next";
 
-export default class OtherAccount extends React.Component {
+class OtherAccountWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            accId: this.props.match.params.accId,
+            accId: this.props.accId,
             isActivated: "",
             accessLevelDtoList: "",
             account: {
@@ -55,11 +57,13 @@ export default class OtherAccount extends React.Component {
                         version: result.data.version,
                         etag: result.headers['etag']
                     },
+                    enabled: result.data.enabled,
                 })
             })
     }
 
     render() {
+        const {t} = this.props;
         return (
             <div className="OtherAccount">
                 <Container>
@@ -87,10 +91,27 @@ export default class OtherAccount extends React.Component {
                                 <GiveRole accessLevelDtoList={this.state.accessLevelDtoList}
                                           account={this.state.accId}/>
                             </Row>
+                            <hr/>
                             <Row>
                                 <ResetPasswordByAdmin className="ResetPasswordByAdmin" account={this.state.accId}/>
                             </Row>
+                            <hr/>
                             <LockUnlockAccount login={this.state.accId} isActive={this.state.isActivated}/>
+                            <hr/>
+                            <div className="enabled">
+                                <Row>
+                                    <Form style={{width: "100%"}}>
+                                        <Form.Group size="lg" controlId="isEnabled">
+                                            <Form.Label>{t("Enabled")}</Form.Label>
+                                            <Form.Control
+                                                type="text"
+                                                value={this.state.enabled}
+                                                disabled={true}
+                                            />
+                                        </Form.Group>
+                                    </Form>
+                                </Row>
+                            </div>
                         </Col>
                     </Row>
                 </Container>
@@ -98,4 +119,14 @@ export default class OtherAccount extends React.Component {
         );
     }
 
+}
+
+const OtherAccountTr = withTranslation()(OtherAccountWithoutTranslation)
+
+export default function OtherAccount(props) {
+    return (
+        <Suspense fallback="loading">
+            <OtherAccountTr accId={props.match.params.accId}/>
+        </Suspense>
+    );
 }
