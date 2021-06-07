@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -32,8 +33,9 @@ public interface MedicalDocumentationManager {
      * Usuwa wpis z dokumentacji medycznej pacjenta.
      *
      * @param id klucz główny dokumentacji medycznej
+     * @throws AppBaseException wyjątek typu {@link AppBaseException} w przypadku niepowodzenia
      */
-    void removeDocumentationEntry(Long id);
+    void removeDocumentationEntry(Long id) throws AppBaseException;
 
     /**
      * Pobiera dokumentację medyczną.
@@ -88,4 +90,11 @@ public interface MedicalDocumentationManager {
      * @return lista recept pacjenta
      */
     List<Prescription> getPrescriptionsByPatient(Long patientId);
+
+    /**
+     * Sprawdza czy ostatnia transakcja się powiodła.
+     *
+     * @return true jeśli ostatnia transakcja się nie powiodła, false w przeciwnym wypadku.
+     */
+    boolean isLastTransactionRollback();
 }

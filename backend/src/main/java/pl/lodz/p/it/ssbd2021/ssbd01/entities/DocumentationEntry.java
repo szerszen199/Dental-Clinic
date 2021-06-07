@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -50,11 +51,23 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
     @ManyToOne(optional = false)
     @NotNull
     private Account doctor;
+    @JoinColumn(name = "documentation_id", referencedColumnName = "id", nullable = false, updatable = true)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @NotNull
+    private MedicalDocumentation medicalDocumentation;
 
     /**
      * Tworzy nową instancję klasy DocumentationEntry.
      */
     public DocumentationEntry() {
+    }
+
+    public MedicalDocumentation getMedicalDocumentation() {
+        return medicalDocumentation;
+    }
+
+    public void setMedicalDocumentation(MedicalDocumentation medicalDocumentation) {
+        this.medicalDocumentation = medicalDocumentation;
     }
 
     @Override
