@@ -20,7 +20,6 @@ import './MainView.css';
 import {Link} from "react-router-dom";
 import findDefaultRole from "../../roles/findDefaultRole";
 import {darkModeRequest} from "../../components/DarkMode/DarkModeRequest"
-import {languageRequest} from "../../components/Language/LanguageRequest";
 import {getBrowserLanguage, languageRequest} from "../../components/Language/LanguageRequest";
 
 const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
@@ -44,7 +43,8 @@ class MainViewWithoutTranslation extends React.Component {
 
     flags = {
         "PL": "https://img.icons8.com/color/96/000000/poland-circular.png",
-        "EN": "https://img.icons8.com/color/48/000000/great-britain-circular.png"};
+        "EN": "https://img.icons8.com/color/48/000000/great-britain-circular.png"
+    };
 
     constructor(props) {
         super(props);
@@ -71,9 +71,10 @@ class MainViewWithoutTranslation extends React.Component {
     }
 
     setInterfaceLanguage(language) {
-        this.state.language = language;
-
-        this.state.flag = this.state.language === "PL" ? this.flags["EN"] : this.flags["PL"];
+        this.setState({
+            language: language,
+            flag: language === "PL" ? this.flags["EN"] : this.flags["PL"]
+        });
 
         Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, language);
         i18n.changeLanguage(language);
@@ -175,7 +176,7 @@ class MainViewWithoutTranslation extends React.Component {
                 </Navbar>
                 <Routes/>
                 <ReadinessComponent/>
-                <MDBFooter color="blue" className="font-small pt-4 mt-4 fixed-bottom" id="footer">
+                <MDBFooter color="blue" className="font-small pt-4 mt-4 bottom" id="footer">
                     <div className="footer-copyright text-right py-3">
                         <MDBContainer>
                             {t("Dental Clinic")}, &copy; {new Date().getFullYear()} Copyright by 2021SSBD01
