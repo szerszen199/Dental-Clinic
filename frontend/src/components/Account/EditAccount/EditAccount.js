@@ -9,7 +9,7 @@ import Cookies from "js-cookie";
 import confirmationAlerts from "../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
 import {makeAccountsListRequest} from "../../AccountsList/AccountsListRequest";
 import {FiRefreshCw} from "react-icons/fi";
-import {Col, Container, FormControl, Row} from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
 import {Label} from "semantic-ui-react";
 import * as moment from "moment";
 
@@ -385,7 +385,7 @@ class EditAccountWithoutTranslation extends React.Component {
                     <Form.Row className="lastLoginDateAndIp">
                         <Col>
                             <Label>{t("lastSuccessfulLogin")}</Label>
-                            <FormControl
+                            <Form.Control
                                 type="text"
                                 disabled={true}
                                 value={lastSuccessfulLogin}
@@ -393,7 +393,7 @@ class EditAccountWithoutTranslation extends React.Component {
                         </Col>
                         <Col>
                             <Label>{t("lastSuccessfulLoginIp")}</Label>
-                            <FormControl
+                            <Form.Control
                                 type="text"
                                 disabled={true}
                                 value={this.state.lastSuccessfulLoginIp}
@@ -403,7 +403,7 @@ class EditAccountWithoutTranslation extends React.Component {
                     <Form.Row className="lastLoginDateAndIp">
                         <Col>
                             <Label>{t("lastUnsuccessfulLogin")}</Label>
-                            <FormControl
+                            <Form.Control
                                 type="text"
                                 disabled={true}
                                 value={lastUnsuccessfulLogin}
@@ -411,7 +411,7 @@ class EditAccountWithoutTranslation extends React.Component {
                         </Col>
                         <Col>
                             <Label>{t("lastUnsuccessfulLoginIp")}</Label>
-                            <FormControl
+                            <Form.Control
                                 type="text"
                                 disabled={true}
                                 value={this.state.lastUnsuccessfulLoginIp}
