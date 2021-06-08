@@ -56,6 +56,8 @@ class OwnAccountWithoutTranslation extends React.Component {
     }
 
     render() {
+        const {t} = this.props;
+        document.title = t("Dental Clinic") + " - " + t("Edit My Account");
         return (
             <div className="Account">
                 <Container>

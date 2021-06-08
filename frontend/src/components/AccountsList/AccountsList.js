@@ -54,7 +54,6 @@ class AccountsListWithoutTranslation extends React.Component {
 
     renderAccounts() {
         const {t} = this.props;
-
         const columns = [
 
             {
@@ -110,6 +109,7 @@ class AccountsListWithoutTranslation extends React.Component {
 
     render() {
         const {t} = this.props;
+        document.title = t("Dental Clinic") + " - " + t("Users Accounts");
         return <Fragment>
             <div className="account-refresh-button-div">
                 {this.renderButton()}

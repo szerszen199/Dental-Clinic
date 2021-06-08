@@ -10,7 +10,7 @@ import {Link} from "react-router-dom";
 
 function Receptionist() {
     const {t} = useTranslation();
-
+    document.title = t("Dental Clinic");
     return (
         <Nav activeKey={window.location.pathname}>
             <NavDropdown title={t("Appointments")} id="navbarScrollingDropdown">
