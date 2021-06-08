@@ -22,6 +22,7 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.INVALID_CONFIRMATION_TOKE
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_ALREADY_CHANGED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.UPDATE_ACCOUNT_AFTER_SUCCESSFUL_LOGIN;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.UPDATE_ACCOUNT_AFTER_UNSUCCESSFUL_LOGIN;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.VERSION_MISMATCH;
 
 /**
  * Typ Account exception - wyjątki dla konta.
@@ -236,5 +237,13 @@ public class AccountException extends AppBaseException {
      */
     public static AccountException passwordAlreadyChanged() {
         return new AccountException(PASSWORD_ALREADY_CHANGED);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący różne wartości wersji dla encji.
+     * @return wyjątek typu AccountException
+     */
+    public static AccountException versionMismatchException() {
+        return new AccountException(VERSION_MISMATCH);
     }
 }
