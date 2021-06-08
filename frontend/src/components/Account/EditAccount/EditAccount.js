@@ -22,6 +22,7 @@ class EditAccountWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            accId: this.props.accId,
             isDisabled: true,
             email: "",
             firstName: "",
@@ -183,10 +184,10 @@ class EditAccountWithoutTranslation extends React.Component {
 
     makeGetAccountRequest() {
         let requestPath
-        if (this.props.id === undefined) {
+        if (this.state.accId === undefined) {
             requestPath = process.env.REACT_APP_BACKEND_URL + "account/info"
         } else {
-            requestPath = process.env.REACT_APP_BACKEND_URL + "account/other-account-info/" + this.props.account
+            requestPath = process.env.REACT_APP_BACKEND_URL + "account/other-account-info/" + this.state.accId;
         }
         axios
             .get(requestPath, {
@@ -230,7 +231,7 @@ class EditAccountWithoutTranslation extends React.Component {
                             if (this.state.pesel === "") {
                                 pesel = null;
                             }
-                            editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, phoneNumber, pesel, this.state.version, this.state.etag, this.props.id, t);
+                            editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, phoneNumber, pesel, this.state.version, this.state.etag, this.state.accId, t);
                             this.setNotEditable(this)
                         }
 
