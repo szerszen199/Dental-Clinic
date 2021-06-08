@@ -21,4 +21,8 @@
         padding-left: 1px;
         align-items: center;
     }
+
+    .lastLoginDateAndIp {
+        margin-bottom: 1rem;
+    }
 }
