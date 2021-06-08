@@ -394,7 +394,7 @@ public class MailProvider {
 
     private String buildResetPassLink(String defaultContext, String token) {
         StringBuilder sb = new StringBuilder(getFrontendUrl());
-        sb.append("/password-change-confirm/");
+        sb.append("/#/new-password/");
         sb.append(token);
 
         return sb.toString();
