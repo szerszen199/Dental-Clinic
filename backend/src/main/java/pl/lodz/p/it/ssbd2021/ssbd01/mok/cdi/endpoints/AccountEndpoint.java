@@ -261,10 +261,17 @@ public class AccountEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     public Response setNewPassword(@NotNull @Valid SetNewPasswordRequestDTO setNewPasswordRequestDTO) {
         String username;
+        Long version;
         try {
-            username = jwtResetPasswordConfirmation.getUserNameFromJwtToken(setNewPasswordRequestDTO.getConfirmToken());
+            String[] tokenData = jwtResetPasswordConfirmation.getUserNameFromJwtToken(setNewPasswordRequestDTO.getConfirmToken()).split("/");
+            username = tokenData[0];
+            version = Long.valueOf(tokenData[1]);
             if (!jwtResetPasswordConfirmation.validateJwtToken(setNewPasswordRequestDTO.getConfirmToken())) {
                 throw AccountException.invalidConfirmationToken();
+            }
+            Account account = accountManager.findByLogin(username);
+            if (!account.getVersion().equals(version)) {
+                throw AccountException.passwordAlreadyChanged();
             }
         } catch (AccountException accountException) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
