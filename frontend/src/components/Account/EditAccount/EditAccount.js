@@ -11,6 +11,7 @@ import {makeAccountsListRequest} from "../../AccountsList/AccountsListRequest";
 import {FiRefreshCw} from "react-icons/fi";
 import {Col, Container, FormControl, Row} from "react-bootstrap";
 import {Label} from "semantic-ui-react";
+import * as moment from "moment";
 
 const emailRegex = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
@@ -162,8 +163,6 @@ class EditAccountWithoutTranslation extends React.Component {
 
 
     componentDidMount() {
-        console.log("Mount");
-        console.log(this.props.account);
         this.setState({
             email: this.props.account.email,
             firstName: this.props.account.firstName,
@@ -181,8 +180,6 @@ class EditAccountWithoutTranslation extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (prevProps.account !== this.props.account) {
-            console.log("Update");
-            console.log(this.props.account);
             this.setState({
                 email: this.props.account.email,
                 firstName: this.props.account.firstName,
@@ -213,7 +210,6 @@ class EditAccountWithoutTranslation extends React.Component {
                 }
             })
             .then(result => {
-                console.log("ttt" + result.data);
                 this.setState({
                     email: result.data.email,
                     firstName: result.data.firstName,
@@ -292,6 +288,14 @@ class EditAccountWithoutTranslation extends React.Component {
 
     render() {
         const {t} = this.props;
+        let lastSuccessfulLogin = "";
+        let lastUnsuccessfulLogin = "";
+        if(this.state.lastSuccessfulLogin !== "" && this.state.lastSuccessfulLogin !== undefined){
+            lastSuccessfulLogin = moment(this.state.lastSuccessfulLogin).format('DD.MM.YYYY HH:mm:ss');
+        }
+        if(this.state.lastUnsuccessfulLogin !== "" && this.state.lastUnsuccessfulLogin !== undefined){
+            lastUnsuccessfulLogin = moment(this.state.lastUnsuccessfulLogin).format('DD.MM.YYYY HH:mm:ss');
+        }
 
         return (
             <div className="EditAccount">
@@ -384,7 +388,7 @@ class EditAccountWithoutTranslation extends React.Component {
                             <FormControl
                                 type="text"
                                 disabled={true}
-                                value={this.state.lastSuccessfulLogin}
+                                value={lastSuccessfulLogin}
                             />
                         </Col>
                         <Col>
@@ -402,7 +406,7 @@ class EditAccountWithoutTranslation extends React.Component {
                             <FormControl
                                 type="text"
                                 disabled={true}
-                                value={this.state.lastUnsuccessfulLogin}
+                                value={lastUnsuccessfulLogin}
                             />
                         </Col>
                         <Col>
