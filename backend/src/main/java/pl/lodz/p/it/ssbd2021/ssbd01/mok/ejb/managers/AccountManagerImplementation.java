@@ -284,7 +284,10 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    private void commonEditAccount(EditOwnAccountRequestDTO editAccountRequestDTO, Account account) throws MailSendingException, AccountException {
+    private void commonEditAccount(EditOwnAccountRequestDTO editAccountRequestDTO, Account account) throws AccountException, MailSendingException {
+        if (!editAccountRequestDTO.getVersion().equals(account.getVersion())) {
+            throw AccountException.versionMismatchException();
+        }
         if (editAccountRequestDTO.getFirstName() != null) {
             account.setFirstName(editAccountRequestDTO.getFirstName());
         }
