@@ -21,11 +21,9 @@ public class ValidationExceptionMapper implements ExceptionMapper<ValidationExce
 
     @Override
     public Response toResponse(ValidationException exception) {
-        System.out.println(exception.getMessage() + " TUTAJ");
         var message = exception.getMessage();
         var arg0 = Arrays.stream(message.strip().split(":|,")).filter(s -> !s.contains("arg0")).findFirst();
         if (arg0.isPresent()) {
-
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(arg0.get().strip())).build();
         }
         return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.BEAN_VALIDATION_ERROR)).build();
