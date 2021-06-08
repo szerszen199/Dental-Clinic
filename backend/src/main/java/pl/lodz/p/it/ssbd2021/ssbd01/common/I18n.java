@@ -140,4 +140,7 @@ public class I18n {
     public static final String EMAIL_ALREADY_CHANGED = "email_already_changed";
     public static final String PASSWORD_ALREADY_CHANGED = "password_already_changed";
     public static final String ETAG_INVALID = "etag_invalid";
+    public static final String LOGIN_NOT_IN_PATTERN = "login_not_in_pattern";
+    public static final String LOGIN_INVALID_SIZE = "login_invalid_size";
+    public static final String BEAN_VALIDATION_ERROR = "bean_validation_error";
 }
