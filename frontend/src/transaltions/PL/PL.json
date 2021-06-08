@@ -163,10 +163,12 @@
   "password_reset_mail_sent_error": "Nie udało sie wysłać maila resetowania hasła",
   "LockAccount": "Zablokuj Konto",
   "Active": "Aktywne",
+  "Enabled": "Potwierdzone",
   "UnlockAccount": "Odblokuj Konto",
   "Question reset password by admin": "Czy na pewno chcesz wysłać link do resetowania hasła?",
   "account_already_confirmed": "Konto zostało już potwierdzone",
   "email_already_changed": "Zmiana adresu email została już potwierdzona",
   "password_already_changed": "Hasło zostało już zresetowane",
-  "IT system home": "System informatyczny dla kliniki stomatologicznej."
+  "IT system home": "System informatyczny dla kliniki stomatologicznej.",
+  "etag_invalid": "Niepoprawna wartość nagłówka etag"
 }
