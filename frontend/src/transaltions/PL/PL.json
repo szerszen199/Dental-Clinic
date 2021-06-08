@@ -145,7 +145,7 @@
   "access_level_already_assigned": "Poziom dostępu jest już przyznany",
   "account_login_already_exists": "Login już istnieje",
   "account_email_already_exists": "Email już jest zajęty",
-  "account_login_email_pesel_already_exists": "Kombinajca Login Email Pesel już istnieje",
+  "account_login_email_pesel_already_exists": "Konto o podanych danych już istnieje",
   "account_is_blocked": "Konto jest zablokowane",
   "account_confirmation_by_token_failed": "Nie udało się potwierdzić konta",
   "password_reset_failed": "Nie udało się zresetować hasła",
