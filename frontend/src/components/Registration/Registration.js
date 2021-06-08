@@ -17,6 +17,7 @@ export default function Registration() {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const {t} = useTranslation();
+    document.title = t("Dental Clinic") + " - " + t("Register");
     const [phoneNumber, setPhoneNumber] = useState(null);
     const [pesel, setPesel] = useState(null);
     const [selectedLanguage, setSelectedLanguage] = useState("");

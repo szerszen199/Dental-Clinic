@@ -2,19 +2,21 @@ import React from "react";
 import {Card, CardDeck} from "react-bootstrap";
 import tooth from "../../assets/tooth.png"
 import "./Dashboard.css";
+import {useTranslation} from "react-i18next";
 
 
 export default function Dashboard() {
+    const {t} = useTranslation();
+    document.title = t("Dental Clinic");
     return (
         <div className="Dashboard">
             <CardDeck>
                 <Card>
                     <Card.Img variant="top" src={tooth} style={{width: "30px"}}/>
                     <Card.Body>
-                        <Card.Title>Nearest appointments</Card.Title>
+                        <Card.Title>{t("Nearest appointments")}</Card.Title>
                         <Card.Text>
-                            This is a wider card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.
+                            {t("Sample Text")}
                         </Card.Text>
                     </Card.Body>
                     <Card.Footer>
@@ -24,10 +26,9 @@ export default function Dashboard() {
                 <Card>
                     <Card.Img variant="top" src={tooth} style={{width: "30px"}}/>
                     <Card.Body>
-                        <Card.Title>Prescriptions</Card.Title>
+                        <Card.Title>{t("Prescriptions")}</Card.Title>
                         <Card.Text>
-                            This card has supporting text below as a natural lead-in to additional
-                            content.{' '}
+                            {t("Sample Text")}
                         </Card.Text>
                     </Card.Body>
                     <Card.Footer>
@@ -37,11 +38,9 @@ export default function Dashboard() {
                 <Card>
                     <Card.Img variant="top" src={tooth} style={{width: "30px"}}/>
                     <Card.Body>
-                        <Card.Title>Account</Card.Title>
+                        <Card.Title>{t("Account")}</Card.Title>
                         <Card.Text>
-                            This is a wider card with supporting text below as a natural lead-in to
-                            additional content. This card has even longer content than the first to
-                            show that equal height action.
+                            {t("Sample Text")}
                         </Card.Text>
                     </Card.Body>
                     <Card.Footer>

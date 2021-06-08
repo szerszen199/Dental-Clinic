@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 
 export default function Home() {
     const {t} = useTranslation()
-
+    document.title = t("Dental Clinic");
     return (
         <div className="Home">
             <div className="lander">
