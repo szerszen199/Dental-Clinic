@@ -84,12 +84,4 @@ public class AppBaseException extends Exception {
     public static AppBaseException mismatchedPersistenceArguments(IllegalArgumentException e) {
         return new AppBaseException(DATABASE_ERROR, e);
     }
-
-    /**
-     * Tworzy wyjątek reprezentujący różne wartości wersji dla encji.
-     * @return wyjątek typu AppBaseException
-     */
-    public static AppBaseException versionMismatchException() {
-        return new AppBaseException(VERSION_MISMATCH);
-    }
 }

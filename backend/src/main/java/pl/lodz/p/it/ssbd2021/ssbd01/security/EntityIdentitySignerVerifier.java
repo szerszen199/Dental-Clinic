@@ -88,7 +88,7 @@ public class EntityIdentitySignerVerifier extends JwtUtilsAbstract implements Se
 
     @Override
     protected Long getJwtExpiration() {
-        return null;
+        return propertiesLoader.getJwtExpiration();
     }
 
     @Override

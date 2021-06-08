@@ -104,20 +104,22 @@ public interface AccountManager {
     /**
      * Edytuje wlasne konto.
      *
-     * @param editOwnAccountRequestDTO edit own account request dto
+     * @param editOwnAccountRequestDTO dto edycji danych własengo konta
      * @throws AccountException     wyjątek typu AccountException
      * @throws MailSendingException wyjątek typu MailSendingException
      */
-    void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO) throws MailSendingException, AccountException;
+    void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO) throws
+            AccountException,MailSendingException;
 
 
     /**
      * Edytuje konto innego użytkownika.
      *
-     * @param editAnotherAccountRequestDTO edit another account request dto
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @param editAnotherAccountRequestDTO dto edycji danych innego konta
+     * @throws AccountException     wyjątek typu AccountException
+     * @throws MailSendingException wyjątek typu MailSendingException
      */
-    void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO) throws AppBaseException;
+    void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO) throws AccountException,MailSendingException;
 
     /**
      * Potwierdzenie zmiany maila.
