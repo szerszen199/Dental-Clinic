@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.security;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
 
 import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -23,10 +24,10 @@ public class SignatureFilter implements ContainerRequestFilter {
         String header = requestContext.getHeaderString("If-Match");
         if (header == null || header.isEmpty()) {
             requestContext.abortWith(Response.status(Response.Status.BAD_REQUEST)
-                    .entity(I18n.BAD_ETAG_VALUE)
+                    .entity(new MessageResponseDto(I18n.BAD_ETAG_VALUE))
                     .build());
         } else if (!signerVerifier.validateEntitySignature(header)) {
-            requestContext.abortWith(Response.status(Response.Status.PRECONDITION_FAILED).build());
+            requestContext.abortWith(Response.status(Response.Status.PRECONDITION_FAILED).entity(new MessageResponseDto(I18n.ETAG_INVALID)).build());
         }
     }
 }
