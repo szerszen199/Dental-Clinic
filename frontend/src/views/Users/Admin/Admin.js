@@ -8,7 +8,7 @@ import {Link} from "react-router-dom";
 
 function Admin() {
     const {t} = useTranslation();
-
+    document.title = t("Dental Clinic");
     return (
         <Nav activeKey={window.location.pathname}>
             <Nav.Link as={Link} to="/accounts">{t("Users Accounts")}</Nav.Link>

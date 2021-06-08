@@ -12,6 +12,7 @@ export default function Login() {
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
     const {t} = useTranslation()
+    document.title = t("Dental Clinic") + " - " + t("Login");
     const loginRegex = new RegExp(/^[a-z0-9]+$/i);
 
     function handleSubmit(event) {

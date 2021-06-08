@@ -3,8 +3,11 @@ import "./Account.css";
 import EditAccount from "../EditAccount/EditAccount";
 import EditPassword from "./EditPassword/EditPassword";
 import {Col, Container, Row} from "react-bootstrap";
+import {useTranslation} from "react-i18next";
 
 function Account() {
+    const {t} = useTranslation();
+    document.title = t("Dental Clinic") + " - " + t("Edit My Account");
     return (
         <div className="Account">
             <Container>

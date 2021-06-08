@@ -64,6 +64,7 @@ class OtherAccountWithoutTranslation extends React.Component {
 
     render() {
         const {t} = this.props;
+        document.title = t("Dental Clinic") + " - " + t("Edit Other Account");
         return (
             <div className="OtherAccount">
                 <Container>

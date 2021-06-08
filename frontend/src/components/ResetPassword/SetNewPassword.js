@@ -12,6 +12,7 @@ export default function SetNewPassword() {
     const [password, setPassword] = useState("");
     const [repeatedPassword, setRepeatedPassword] = useState("");
     const {t} = useTranslation()
+    document.title = t("Dental Clinic") + " - " + t("SetNewPassword");
 
     function handleSubmit(event) {
         event.preventDefault();
