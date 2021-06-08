@@ -8,7 +8,7 @@ import {useTranslation} from "react-i18next";
 export default function Reset() {
     const [login, setLogin] = useState("");
     const {t} = useTranslation()
-
+    document.title = t("Dental Clinic") + " - " + t("ResetPassword");
     function validateFormResetPassword() {
         return login.length > 0 && login.length <= 60;
     }
