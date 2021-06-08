@@ -175,5 +175,7 @@
   "email_already_changed": "Email changed already",
   "password_already_changed": "Password reset already",
   "IT system home": "IT system for a dental clinic.",
-  "etag_invalid": "Invalid etag value"
+  "etag_invalid": "Invalid etag value",
+  "login_invalid_size": "Invalid size of username, should be between 3 and 60 characters",
+  "login_not_in_pattern": "Username contains invalid characters"
 }
