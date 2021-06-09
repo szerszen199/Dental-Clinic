@@ -134,4 +134,7 @@ public class I18n {
     public static final String LOGIN_NOT_IN_PATTERN = "login_not_in_pattern";
     public static final String LOGIN_INVALID_SIZE = "login_invalid_size";
     public static final String BEAN_VALIDATION_ERROR = "bean_validation_error";
+    public static final String FORBIDDEN = "forbidden";
+    public static final String INTERNAL_SERVER_ERROR = "internal_server_error";
+    public static final String NOT_FOUND = "not_found";
 }

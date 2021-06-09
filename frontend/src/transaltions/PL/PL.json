@@ -181,5 +181,8 @@
   "IT system home": "System informatyczny dla kliniki stomatologicznej.",
   "etag_invalid": "Niepoprawna wartość nagłówka etag",
   "login_invalid_size": "Niepoprawny rozmiar loginu użytkownika, powinien być pomiędzy 3 i 60 znakami",
-  "login_not_in_pattern": "W loginie użytkownika występują nieprawidłowe znaki"
+  "login_not_in_pattern": "W loginie użytkownika występują nieprawidłowe znaki",
+  "forbidden": "Zakazane",
+  "internal_server_error": "Błąd Serwera",
+  "not_found":  "Zasób Nieznaleziony"
 }

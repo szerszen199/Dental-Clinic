@@ -161,12 +161,12 @@
   "mail_confirmation_parsing_error": "Unable to parse confiramtion email",
   "database_error": "Database error",
   "database_optimistic_lock_error": "Optimistic lock error",
-  "account_edit_validation_error": "Account edit data is not valid" ,
-  "account_edit_failed":  "Account data edit failed",
+  "account_edit_validation_error": "Account edit data is not valid",
+  "account_edit_failed": "Account data edit failed",
   "load_properties_error": "Unable to load properties",
-  "invalid_registration_confirmation_token":  "Invalid registration email token",
-  "mail_activation_link_send_error":  "Unable to send activation email",
-  "mail_account_lock_send_error":  "Unable to send account lock email",
+  "invalid_registration_confirmation_token": "Invalid registration email token",
+  "mail_activation_link_send_error": "Unable to send activation email",
+  "mail_account_lock_send_error": "Unable to send account lock email",
   "mail_activation_confirmation_send_error": "Unable to send confirmation email",
   "edit_account_mail": "Unable to send email",
   "password_reset_mail_sent_error": "Unable to send password reset email",
@@ -181,5 +181,8 @@
   "IT system home": "IT system for a dental clinic.",
   "etag_invalid": "Invalid etag value",
   "login_invalid_size": "Invalid size of username, should be between 3 and 60 characters",
-  "login_not_in_pattern": "Username contains invalid characters"
+  "login_not_in_pattern": "Username contains invalid characters",
+  "forbidden": "Forbidden access",
+  "internal_server_error": "Server Error",
+  "not_found": "Resource not found"
 }
