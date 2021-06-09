@@ -23,9 +23,9 @@ class AccountActivationConfirm extends React.Component {
             this.setState({
                 message: response.data.message
             })
-            successAlertsWithRedirect(this.t(response.data.message), response.status.toString(), "/home");
+            successAlertsWithRedirect(this.t(response.data.message), response.status.toString(), "#/home");
         }).catch(reason => {
-            errorAlertsWithRedirect(t(reason.response.data.message), reason.response.status.toString(), "/home");
+            errorAlertsWithRedirect(t(reason.response.data.message), reason.response.status.toString(), "#/home");
 
         })
     }

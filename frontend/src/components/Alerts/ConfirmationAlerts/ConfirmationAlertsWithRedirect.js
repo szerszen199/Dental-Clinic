@@ -11,6 +11,6 @@ export default function confirmationAlertsWithRedirect(title, message, path) {
         dangerMode: true,
         buttons: true,
     }).then(() => {
-        window.location = path;
+        window.location.hash = path;
     });
 }
