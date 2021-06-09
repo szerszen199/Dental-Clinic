@@ -66,7 +66,9 @@ public class InactivatedAccountScheduler {
                 Long time = Duration.between(activeAccount.getLastSuccessfulLogin(), LocalDateTime.now()).toMillis();
                 if (time >= propertiesLoader.getDeactivateInactiveAccountTimeDelay()) {
                     accountManager.setActiveFalse(activeAccount.getLogin());
-                    mailProvider.sendAccountLockedByScheduler(activeAccount.getEmail(), jwtUnlockByMailConfirmationUtils.generateJwtTokenForUsername(activeAccount.getLogin()), activeAccount.getLanguage());
+                    mailProvider.sendAccountLockedByScheduler(activeAccount.getEmail(),
+                            jwtUnlockByMailConfirmationUtils.generateJwtTokenForUsername(activeAccount.getLogin()),
+                            activeAccount.getLanguage());
                 }
             }
         }

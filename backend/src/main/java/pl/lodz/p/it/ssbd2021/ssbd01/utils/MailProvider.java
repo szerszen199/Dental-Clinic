@@ -254,12 +254,12 @@ public class MailProvider {
     }
 
     /**
-     * Send reset pass confirmation mail.
+     * Wysyła mail potwierdzający reset hasła.
      *
-     * @param email the email
-     * @param token the token
+     * @param email adres email
+     * @param token token
      * @param lang  język wiadomości email
-     * @throws MailSendingException the mail sending exception
+     * @throws MailSendingException wyjątek wysyłania maila
      */
     @Asynchronous
     public void sendResetPassConfirmationMail(String email, String token, String lang) throws MailSendingException {
@@ -281,10 +281,10 @@ public class MailProvider {
     /**
      * Wysyła wiadomość z linkiem do zresetowania hasła po zmianie hasła przez administratora.
      *
-     * @param email the email
-     * @param token the token
+     * @param email adres email
+     * @param token token
      * @param lang  język wiadomości email
-     * @throws MailSendingException the mail sending exception
+     * @throws MailSendingException wyjątek wysyłania maila
      */
     @Asynchronous
     public void sendResetPassByAdminConfirmationMail(String email, String token, String lang) throws MailSendingException {
@@ -306,9 +306,10 @@ public class MailProvider {
     /**
      * Wysyła wiadomość z linkiem do odblokowania konta po jego automatycznym zablokowaniu z powodu nieaktywności.
      *
-     * @param email the email
-     * @param token the token
-     * @throws MailSendingException the mail sending exception
+     * @param email adres email
+     * @param token token
+     * @param lang język maila
+     * @throws MailSendingException wyjątek wysyłania maila
      */
     public void sendAccountLockedByScheduler(String email, String token, String lang) throws MailSendingException {
         Locale locale = new Locale(lang);
@@ -409,7 +410,7 @@ public class MailProvider {
         return sb.toString();
     }
 
-    private String UnlockByScheduler(String defaultContext, String token) {
+    private String unlockByScheduler(String defaultContext, String token) {
         StringBuilder sb = new StringBuilder(getFrontendUrl());
         sb.append("/unlock-by-scheduler/");
         sb.append(token);
