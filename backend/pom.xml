@@ -54,8 +54,8 @@
         <payara.adminPort>4801</payara.adminPort>
         <payara.username>admin</payara.username>
         <payara.password>GenWydvam0</payara.password>
-        <payara.hostname>172.16.0.84</payara.hostname>
-<!--        <payara.hostname>studapp.it.p.lodz.pl</payara.hostname>-->
+<!--        <payara.hostname>172.16.0.84</payara.hostname>-->
+        <payara.hostname>studapp.it.p.lodz.pl</payara.hostname>
         <servlet.port>8401</servlet.port>
 
         <frontend.directory>../frontend</frontend.directory>

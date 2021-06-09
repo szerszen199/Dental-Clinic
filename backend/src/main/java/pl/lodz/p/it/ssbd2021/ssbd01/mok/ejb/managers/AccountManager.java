@@ -151,9 +151,7 @@ public interface AccountManager {
     /**
      * Zmienia hasło {@param newPassword} wskazanego konta {@param account}.
      *
-     * @param login       login konta, którego hasło jest edytowane
-     * @param oldPassword stare hasło podane przez użytkownika
-     * @param newPassword nowe hasło
+     * @param changePasswordDto  dto z danymi do zmiany hasła
      * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                          nie powiedzie się.
      */
     void changePassword(ChangePasswordDto changePasswordDto) throws AppBaseException;
@@ -161,8 +159,7 @@ public interface AccountManager {
     /**
      * Zmienia hasło {@param newPassword} wskazanego konta {@param account}.
      *
-     * @param login       login konta, którego hasło jest edytowane
-     * @param newPassword nowe hasło
+     * @param setNewPasswordDto  dto z danymi do ustawienia nowego hasła
      * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                          nie powiedzie się.
      */
     void setNewPassword(SetNewPasswordDto setNewPasswordDto) throws AppBaseException;

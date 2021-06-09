@@ -394,7 +394,7 @@ public class MailProvider {
 
     private String buildResetPassLink(String defaultContext, String token) {
         StringBuilder sb = new StringBuilder(getFrontendUrl());
-        sb.append("/#/new-password/");
+        sb.append("/new-password/");
         sb.append(token);
 
         return sb.toString();
@@ -402,7 +402,7 @@ public class MailProvider {
 
     private String buildResetPassLinkByAdmin(String defaultContext, String token) {
         StringBuilder sb = new StringBuilder(getFrontendUrl());
-        sb.append("/#/new-password-admin/");
+        sb.append("/new-password-admin/");
         sb.append(token);
 
         return sb.toString();
