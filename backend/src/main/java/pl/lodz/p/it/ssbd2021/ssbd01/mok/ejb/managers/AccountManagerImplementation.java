@@ -242,6 +242,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         }
         account.setLastBlockUnlockDateTime(LocalDateTime.now());
         account.setLastBlockUnlockIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        account.setUnsuccessfulLoginCounter(0);
         account.setActive(true);
         try {
             account.setLastBlockUnlockModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
