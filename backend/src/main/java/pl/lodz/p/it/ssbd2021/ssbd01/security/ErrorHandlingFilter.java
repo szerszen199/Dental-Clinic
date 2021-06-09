@@ -20,7 +20,6 @@ public class ErrorHandlingFilter implements ContainerResponseFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
-        System.out.println("XDDD");
         Response.Status status = Response.Status.fromStatusCode(responseContext.getStatus());
         switch (status) {
             case INTERNAL_SERVER_ERROR:
