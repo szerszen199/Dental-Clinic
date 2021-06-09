@@ -1,10 +1,8 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.security;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.BardziejForbiddenException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
 
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
@@ -31,6 +29,7 @@ public class ErrorHandlingFilter implements ContainerResponseFilter {
             case FORBIDDEN:
                 responseContext.setEntity(new MessageResponseDto(I18n.FORBIDDEN), new Annotation[]{}, MediaType.valueOf(MediaType.APPLICATION_JSON));
                 break;
+            default:
         }
     }
 }
