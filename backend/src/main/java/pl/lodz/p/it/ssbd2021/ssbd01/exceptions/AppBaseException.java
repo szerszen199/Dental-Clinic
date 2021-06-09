@@ -4,12 +4,8 @@ import javax.ejb.ApplicationException;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 
-import java.io.IOException;
-
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_ERROR;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_OPTIMISTIC_LOCK_ERROR;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.LOAD_PROPERTIES_ERROR;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.VERSION_MISMATCH;
 
 /**
  * The type Base exception - bazowa apliakcyjna klasa wyjątku.
@@ -47,15 +43,6 @@ public class AppBaseException extends Exception {
     }
 
     /**
-     * Tworzy wyjątek reprezentujący wystąpienie konfliktu związanego z mechanizmem blokady optymistycznej.
-     *
-     * @return wyjątek typu AppBaseException
-     */
-    public static AppBaseException optimisticLockError() {
-        return new AppBaseException(DATABASE_OPTIMISTIC_LOCK_ERROR);
-    }
-
-    /**
      * Tworzy wyjątek reprezentujący wystąpienie problemu z bazą danych.
      *
      * @param e wyjątek PersistenceException powodujący problem
@@ -66,16 +53,6 @@ public class AppBaseException extends Exception {
     }
 
     /**
-     * Tworzy wyjątek reprezentujący wystąpienie problemu z ładowaniem pliku properties.
-     *
-     * @param e wyjątek IOException powodujący problem
-     * @return wyjątek typu AppBaseException
-     */
-    public static AppBaseException propertiesError(IOException e) {
-        return new AppBaseException(LOAD_PROPERTIES_ERROR, e);
-    }
-
-    /**
      * Tworzy wyjątek reprezentujący wystąpienie problemu z bazą danych.
      *
      * @param e wyjątek PersistenceException powodujący problem
@@ -83,13 +60,5 @@ public class AppBaseException extends Exception {
      */
     public static AppBaseException mismatchedPersistenceArguments(IllegalArgumentException e) {
         return new AppBaseException(DATABASE_ERROR, e);
-    }
-
-    /**
-     * Tworzy wyjątek reprezentujący różne wartości wersji dla encji.
-     * @return wyjątek typu AppBaseException
-     */
-    public static AppBaseException versionMismatchException() {
-        return new AppBaseException(VERSION_MISMATCH);
     }
 }

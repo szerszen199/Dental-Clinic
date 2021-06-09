@@ -5,6 +5,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.ChangePasswordDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.SetNewPasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 
@@ -104,20 +106,22 @@ public interface AccountManager {
     /**
      * Edytuje wlasne konto.
      *
-     * @param editOwnAccountRequestDTO edit own account request dto
+     * @param editOwnAccountRequestDTO dto edycji danych własengo konta
      * @throws AccountException     wyjątek typu AccountException
      * @throws MailSendingException wyjątek typu MailSendingException
      */
-    void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO) throws MailSendingException, AccountException;
+    void editOwnAccount(EditOwnAccountRequestDTO editOwnAccountRequestDTO) throws
+            AccountException,MailSendingException;
 
 
     /**
      * Edytuje konto innego użytkownika.
      *
-     * @param editAnotherAccountRequestDTO edit another account request dto
-     * @throws AppBaseException wyjątek typu AppBaseException
+     * @param editAnotherAccountRequestDTO dto edycji danych innego konta
+     * @throws AccountException     wyjątek typu AccountException
+     * @throws MailSendingException wyjątek typu MailSendingException
      */
-    void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO) throws AppBaseException;
+    void editOtherAccount(EditAnotherAccountRequestDTO editAnotherAccountRequestDTO) throws AccountException,MailSendingException;
 
     /**
      * Potwierdzenie zmiany maila.
@@ -147,21 +151,18 @@ public interface AccountManager {
     /**
      * Zmienia hasło {@param newPassword} wskazanego konta {@param account}.
      *
-     * @param login       login konta, którego hasło jest edytowane
-     * @param oldPassword stare hasło podane przez użytkownika
-     * @param newPassword nowe hasło
+     * @param changePasswordDto  dto z danymi do zmiany hasła
      * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                          nie powiedzie się.
      */
-    void changePassword(String login, String oldPassword, String newPassword) throws AppBaseException;
+    void changePassword(ChangePasswordDto changePasswordDto) throws AppBaseException;
 
     /**
      * Zmienia hasło {@param newPassword} wskazanego konta {@param account}.
      *
-     * @param login       login konta, którego hasło jest edytowane
-     * @param newPassword nowe hasło
+     * @param setNewPasswordDto  dto z danymi do ustawienia nowego hasła
      * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                          nie powiedzie się.
      */
-    void setNewPassword(String login, String newPassword) throws AppBaseException;
+    void setNewPassword(SetNewPasswordDto setNewPasswordDto) throws AppBaseException;
 
     /**
      * Wyszukuje konto na podstawie loginu.

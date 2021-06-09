@@ -20,10 +20,11 @@ public class JwtEmailConfirmationUtils extends JwtUtilsAbstract {
      *
      * @param username username
      * @param email email
+     * @param changedUser login użytkownika, dla którego zmieniany jest email
      * @return JWT token
      */
-    public String generateEmailChangeConfirmationJwtTokenForUser(String username, String email) {
-        return super.generateJwtTokenForUsername(username + "/" + email);
+    public String generateEmailChangeConfirmationJwtTokenForUser(String username, String email, String changedUser) {
+        return super.generateJwtTokenForUsername(username + "/" + email + "/" + changedUser);
     }
 
     @Override
@@ -77,5 +78,14 @@ public class JwtEmailConfirmationUtils extends JwtUtilsAbstract {
         return super.getUserNameFromJwtToken(token).split("/")[1];
     }
 
+    /**
+     * Pobiera Login użytkownika z JWT wydanego na potrzebę potwierdzenia zmiany adresu email.
+     * @param token JWT token
+     * @return Login użytkownika o zadanym tokenie
+     * @throws ParseException ParseException
+     */
+    public String getChangedUserLogin(String token) throws ParseException {
+        return super.getUserNameFromJwtToken(token).split("/")[2];
+    }
 
 }

@@ -6,7 +6,7 @@
 
     <groupId>pl.lodz.p.it.ssbd2021</groupId>
     <artifactId>ssbd01</artifactId>
-    <version>0.0.55-SNAPSHOT</version>
+    <version>0.0.60-SNAPSHOT</version>
     <name>ssbd01</name>
     <packaging>war</packaging>
 
@@ -54,9 +54,9 @@
         <payara.adminPort>4801</payara.adminPort>
         <payara.username>admin</payara.username>
         <payara.password>GenWydvam0</payara.password>
-        <payara.hostname>172.16.0.84</payara.hostname>
-<!--        <payara.hostname>studapp.it.p.lodz.pl</payara.hostname>-->
-        <servlet.port>8001</servlet.port>
+<!--        <payara.hostname>172.16.0.84</payara.hostname>-->
+        <payara.hostname>studapp.it.p.lodz.pl</payara.hostname>
+        <servlet.port>8401</servlet.port>
 
         <frontend.directory>../frontend</frontend.directory>
         <frontend.directory.output>${frontend.directory}/build</frontend.directory.output>

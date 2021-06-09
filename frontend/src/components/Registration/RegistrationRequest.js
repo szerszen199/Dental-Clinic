@@ -16,9 +16,8 @@ export function registrationRequest(login, email, password, firstName, lastName,
         }
     ).then((response) => {
         successAlerts(t(response.data.message, response.status)).then(() => {
-            window.location = "/login";
+            window.location.hash = "#/login";
         })
-
     })
         .catch((response) => {
             if (response.response) {

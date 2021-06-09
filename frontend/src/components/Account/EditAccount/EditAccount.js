@@ -1,4 +1,4 @@
-import React, {Suspense, useState} from 'react';
+import React, {Suspense} from 'react';
 import {withTranslation} from 'react-i18next';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -9,7 +9,9 @@ import Cookies from "js-cookie";
 import confirmationAlerts from "../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
 import {makeAccountsListRequest} from "../../AccountsList/AccountsListRequest";
 import {FiRefreshCw} from "react-icons/fi";
-import {Col, Container, Row, Table} from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
+import {Label} from "semantic-ui-react";
+import * as moment from "moment";
 
 const emailRegex = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
@@ -22,12 +24,17 @@ class EditAccountWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            accId: this.props.id,
             isDisabled: true,
             email: "",
             firstName: "",
             lastName: "",
             phoneNumber: "",
             pesel: "",
+            lastSuccessfulLogin: "",
+            lastSuccessfulLoginIp: "",
+            lastUnsuccessfulLogin: "",
+            lastUnsuccessfulLoginIp: "",
             version: 0,
             etag: "",
             errors: {}
@@ -43,7 +50,6 @@ class EditAccountWithoutTranslation extends React.Component {
     }
 
     findFormErrors(t) {
-
         const newErrors = {}
 
         function findEmailErrors() {
@@ -157,15 +163,45 @@ class EditAccountWithoutTranslation extends React.Component {
 
 
     componentDidMount() {
-        this.makeGetAccountRequest()
+        this.setState({
+            email: this.props.account.email,
+            firstName: this.props.account.firstName,
+            lastName: this.props.account.lastName,
+            phoneNumber: this.props.account.phoneNumber,
+            pesel: this.props.account.pesel,
+            lastSuccessfulLogin: this.props.account.lastSuccessfulLogin,
+            lastSuccessfulLoginIp: this.props.account.lastSuccessfulLoginIp,
+            lastUnsuccessfulLogin: this.props.account.lastUnsuccessfulLogin,
+            lastUnsuccessfulLoginIp: this.props.account.lastUnsuccessfulLoginIp,
+            version: this.props.account.version,
+            etag: this.props.account.etag,
+        })
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.account !== this.props.account) {
+            this.setState({
+                email: this.props.account.email,
+                firstName: this.props.account.firstName,
+                lastName: this.props.account.lastName,
+                phoneNumber: this.props.account.phoneNumber,
+                pesel: this.props.account.pesel,
+                lastSuccessfulLogin: this.props.account.lastSuccessfulLogin,
+                lastSuccessfulLoginIp: this.props.account.lastSuccessfulLoginIp,
+                lastUnsuccessfulLogin: this.props.account.lastUnsuccessfulLogin,
+                lastUnsuccessfulLoginIp: this.props.account.lastUnsuccessfulLoginIp,
+                version: this.props.account.version,
+                etag: this.props.account.etag,
+            })
+        }
     }
 
     makeGetAccountRequest() {
         let requestPath
-        if (this.props.account === undefined) {
-            requestPath = process.env.REACT_APP_BACKEND_URL + "account/info"
+        if (this.state.accId === undefined) {
+            requestPath = process.env.REACT_APP_BACKEND_URL + "account/info";
         } else {
-            requestPath = process.env.REACT_APP_BACKEND_URL + "account/other-account-info/" + this.props.account
+            requestPath = process.env.REACT_APP_BACKEND_URL + "account/other-account-info/" + this.state.accId;
         }
         axios
             .get(requestPath, {
@@ -173,20 +209,21 @@ class EditAccountWithoutTranslation extends React.Component {
                     Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
                 }
             })
-            .then(res => {
+            .then(result => {
                 this.setState({
-                    etag: res.headers['etag']
+                    email: result.data.email,
+                    firstName: result.data.firstName,
+                    lastName: result.data.lastName,
+                    phoneNumber: result.data.phoneNumber,
+                    pesel: result.data.pesel,
+                    lastSuccessfulLogin: result.data.lastSuccessfulLogin,
+                    lastSuccessfulLoginIp: result.data.lastSuccessfulLoginIp,
+                    lastUnsuccessfulLogin: result.data.lastUnsuccessfulLogin,
+                    lastUnsuccessfulLoginIp: result.data.lastUnsuccessfulLoginIp,
+                    version: result.data.version,
+                    etag: result.headers['etag']
                 })
-                return res.data
             })
-            .then(result => this.setState({
-                email: result.email,
-                firstName: result.firstName,
-                lastName: result.lastName,
-                phoneNumber: result.phoneNumber,
-                pesel: result.pesel,
-                version: result.version,
-            }))
     }
 
     handleSubmit(title, question, t) {
@@ -212,7 +249,7 @@ class EditAccountWithoutTranslation extends React.Component {
                             if (this.state.pesel === "") {
                                 pesel = null;
                             }
-                            editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, phoneNumber, pesel, this.state.version, this.state.etag, this.props.account, t);
+                            editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, phoneNumber, pesel, this.state.version, this.state.etag, this.state.accId, t);
                             this.setNotEditable(this)
                         }
 
@@ -245,12 +282,20 @@ class EditAccountWithoutTranslation extends React.Component {
         return <Button variant={"secondary"} size="lg" onClick={() => {
             this.makeGetAccountRequest()
         }}>
-            <FiRefreshCw />
+            <FiRefreshCw/>
         </Button>
     }
 
     render() {
         const {t} = this.props;
+        let lastSuccessfulLogin = "";
+        let lastUnsuccessfulLogin = "";
+        if(this.state.lastSuccessfulLogin !== "" && this.state.lastSuccessfulLogin !== undefined){
+            lastSuccessfulLogin = moment(this.state.lastSuccessfulLogin).format('DD.MM.YYYY HH:mm:ss');
+        }
+        if(this.state.lastUnsuccessfulLogin !== "" && this.state.lastUnsuccessfulLogin !== undefined){
+            lastUnsuccessfulLogin = moment(this.state.lastUnsuccessfulLogin).format('DD.MM.YYYY HH:mm:ss');
+        }
 
         return (
             <div className="EditAccount">
@@ -337,6 +382,42 @@ class EditAccountWithoutTranslation extends React.Component {
                             {t(this.state.errors.pesel)}
                         </Form.Control.Feedback>
                     </Form.Group>
+                    <Form.Row className="lastLoginDateAndIp">
+                        <Col>
+                            <Label>{t("lastSuccessfulLogin")}</Label>
+                            <Form.Control
+                                type="text"
+                                disabled={true}
+                                value={lastSuccessfulLogin}
+                            />
+                        </Col>
+                        <Col>
+                            <Label>{t("lastSuccessfulLoginIp")}</Label>
+                            <Form.Control
+                                type="text"
+                                disabled={true}
+                                value={this.state.lastSuccessfulLoginIp}
+                            />
+                        </Col>
+                    </Form.Row>
+                    <Form.Row className="lastLoginDateAndIp">
+                        <Col>
+                            <Label>{t("lastUnsuccessfulLogin")}</Label>
+                            <Form.Control
+                                type="text"
+                                disabled={true}
+                                value={lastUnsuccessfulLogin}
+                            />
+                        </Col>
+                        <Col>
+                            <Label>{t("lastUnsuccessfulLoginIp")}</Label>
+                            <Form.Control
+                                type="text"
+                                disabled={true}
+                                value={this.state.lastUnsuccessfulLoginIp}
+                            />
+                        </Col>
+                    </Form.Row>
                     <Form.Row>
                         <Container id="containerForButtons">
                             <Row id="rowForEditButton">
@@ -344,9 +425,9 @@ class EditAccountWithoutTranslation extends React.Component {
                                     <Button block size="lg" type="submit">
                                         {this.state.isDisabled ? t("Edit") : t("Save")}
                                     </Button>
-                                </Col >
+                                </Col>
                                 <Col sm={1} id="refreshColumn">
-                                    <div className="edit-account-refresh-button-div" >
+                                    <div className="edit-account-refresh-button-div">
                                         {this.renderButton()}
                                     </div>
                                 </Col>
@@ -365,7 +446,7 @@ const EditAccountTr = withTranslation()(EditAccountWithoutTranslation)
 export default function EditAccount(props) {
     return (
         <Suspense fallback="loading">
-            <EditAccountTr account={props.account}/>
+            <EditAccountTr account={props.account} id={props.id}/>
         </Suspense>
     );
 }

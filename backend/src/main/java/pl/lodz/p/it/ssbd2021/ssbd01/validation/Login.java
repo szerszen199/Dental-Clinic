@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.validation;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import javax.validation.constraints.Pattern;
@@ -17,8 +19,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Constraint(validatedBy = {})
 @Retention(RUNTIME)
-@Size(min = 3, max = 60)
-@Pattern(regexp = "[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*")
+@Size(min = 3, max = 60, message = I18n.LOGIN_INVALID_SIZE)
+@Pattern(regexp = "[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*", message = I18n.LOGIN_NOT_IN_PATTERN)
 public @interface Login {
     /**
      * Wiadomość.

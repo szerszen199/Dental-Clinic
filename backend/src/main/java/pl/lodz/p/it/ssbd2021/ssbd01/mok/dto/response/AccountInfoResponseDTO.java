@@ -7,6 +7,7 @@ import javax.json.bind.annotation.JsonbTransient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +41,19 @@ public class AccountInfoResponseDTO implements SignableEntity {
     private String language;
 
     @NotNull
+    private Boolean enabled;
+
+    private LocalDateTime lastSuccessfulLogin;
+
+    @Size(min = 0, max = 256)
+    private String lastSuccessfulLoginIp;
+
+    private LocalDateTime lastUnsuccessfulLogin;
+
+    @Size(min = 7, max = 256)
+    private String lastUnsuccessfulLoginIp;
+
+    @NotNull
     private Long version;
 
     /**
@@ -56,6 +70,51 @@ public class AccountInfoResponseDTO implements SignableEntity {
         this.active = account.getActive();
         this.language = account.getLanguage();
         this.version = account.getVersion();
+        this.enabled = account.getEnabled();
+        this.lastSuccessfulLogin = account.getLastSuccessfulLogin();
+        this.lastSuccessfulLoginIp = account.getLastSuccessfulLoginIp();
+        this.lastUnsuccessfulLogin = account.getLastUnsuccessfulLogin();
+        this.lastUnsuccessfulLoginIp = account.getLastUnsuccessfulLoginIp();
+    }
+
+    public void setLastSuccessfulLogin(LocalDateTime lastSuccessfulLogin) {
+        this.lastSuccessfulLogin = lastSuccessfulLogin;
+    }
+
+    public void setLastSuccessfulLoginIp(String lastSuccessfulLoginIp) {
+        this.lastSuccessfulLoginIp = lastSuccessfulLoginIp;
+    }
+
+    public void setLastUnsuccessfulLogin(LocalDateTime lastUnsuccessfulLogin) {
+        this.lastUnsuccessfulLogin = lastUnsuccessfulLogin;
+    }
+
+    public void setLastUnsuccessfulLoginIp(String lastUnsuccessfulLoginIp) {
+        this.lastUnsuccessfulLoginIp = lastUnsuccessfulLoginIp;
+    }
+
+    public LocalDateTime getLastSuccessfulLogin() {
+        return lastSuccessfulLogin;
+    }
+
+    public String getLastSuccessfulLoginIp() {
+        return lastSuccessfulLoginIp;
+    }
+
+    public LocalDateTime getLastUnsuccessfulLogin() {
+        return lastUnsuccessfulLogin;
+    }
+
+    public String getLastUnsuccessfulLoginIp() {
+        return lastUnsuccessfulLoginIp;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     /**

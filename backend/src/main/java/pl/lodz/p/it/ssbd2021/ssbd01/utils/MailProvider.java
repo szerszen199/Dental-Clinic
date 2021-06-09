@@ -254,12 +254,12 @@ public class MailProvider {
     }
 
     /**
-     * Send reset pass confirmation mail.
+     * Wysyła mail potwierdzający reset hasła.
      *
-     * @param email the email
-     * @param token the token
+     * @param email adres email
+     * @param token token
      * @param lang  język wiadomości email
-     * @throws MailSendingException the mail sending exception
+     * @throws MailSendingException wyjątek wysyłania maila
      */
     @Asynchronous
     public void sendResetPassConfirmationMail(String email, String token, String lang) throws MailSendingException {
@@ -281,17 +281,17 @@ public class MailProvider {
     /**
      * Wysyła wiadomość z linkiem do zresetowania hasła po zmianie hasła przez administratora.
      *
-     * @param email the email
-     * @param token the token
+     * @param email adres email
+     * @param token token
      * @param lang  język wiadomości email
-     * @throws MailSendingException the mail sending exception
+     * @throws MailSendingException wyjątek wysyłania maila
      */
     @Asynchronous
     public void sendResetPassByAdminConfirmationMail(String email, String token, String lang) throws MailSendingException {
         Locale locale = new Locale(lang);
         ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
         String subject = langBundle.getString(ACCOUNT_MAIL_PASSWORD_BY_ADMIN_CONFIRMATION_SUBJECT);
-        String activationLink = buildResetPassLink(getContextPath(), token);
+        String activationLink = buildResetPassLinkByAdmin(getContextPath(), token);
         String messageText =
                 paragraph(langBundle.getString(ACCOUNT_MAIL_PASSWORD_BY_ADMIN_CONFIRMATION_SUBJECT))
                         + hyperlink(activationLink, langBundle.getString(ACCOUNT_MAIL_CHANGE_CONFIRM_BUTTON));
@@ -306,16 +306,18 @@ public class MailProvider {
     /**
      * Wysyła wiadomość z linkiem do odblokowania konta po jego automatycznym zablokowaniu z powodu nieaktywności.
      *
-     * @param email the email
-     * @param token the token
-     * @throws MailSendingException the mail sending exception
+     * @param email adres email
+     * @param token token
+     * @param lang język maila
+     * @throws MailSendingException wyjątek wysyłania maila
      */
-    public void sendAccountLockedByScheduler(String email, String token) throws MailSendingException {
-        String subject = ACCOUNT_MAIL_SCHEDULER_LOCK_SUBJECT;
+    public void sendAccountLockedByScheduler(String email, String token, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(ACCOUNT_MAIL_SCHEDULER_LOCK_SUBJECT);
         String activationLink = buildMailConfirmationLink(getContextPath(), token);
-        String messageText = paragraph(ACCOUNT_MAIL_SCHEDULER_LOCK_TEXT)
-                + hyperlink(activationLink, ACCOUNT_MAIL_SCHEDULER_LOCK_BUTTON)
-                + token;
+        String messageText = paragraph(langBundle.getString(ACCOUNT_MAIL_SCHEDULER_LOCK_TEXT))
+                + hyperlink(activationLink, langBundle.getString(ACCOUNT_MAIL_SCHEDULER_LOCK_BUTTON));
         try {
             mailManager.sendMail(email, subject, getFrom(), messageText, session);
         } catch (MessagingException e) {
@@ -386,7 +388,7 @@ public class MailProvider {
 
     private String buildMailConfirmationLink(String defaultContext, String token) {
         StringBuilder sb = new StringBuilder(getFrontendUrl());
-        sb.append("/mail-change-confirm/");
+        sb.append("/unlock-account/");
         sb.append(token);
 
         return sb.toString();
@@ -394,7 +396,15 @@ public class MailProvider {
 
     private String buildResetPassLink(String defaultContext, String token) {
         StringBuilder sb = new StringBuilder(getFrontendUrl());
-        sb.append("/password-change-confirm/");
+        sb.append("/new-password/");
+        sb.append(token);
+
+        return sb.toString();
+    }
+
+    private String buildResetPassLinkByAdmin(String defaultContext, String token) {
+        StringBuilder sb = new StringBuilder(getFrontendUrl());
+        sb.append("/new-password-admin/");
         sb.append(token);
 
         return sb.toString();

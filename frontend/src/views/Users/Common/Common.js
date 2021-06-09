@@ -7,6 +7,7 @@ import {useTranslation} from "react-i18next";
 import "./Common.css"
 import Cookies from "js-cookie";
 import {jwtCookieExpirationTime} from "../../MainView/MainView";
+import {changeRoleRequest} from "../../../components/Account/Role/ChangeRoleRequest";
 
 export default function MyAccount() {
     const {t} = useTranslation();
@@ -18,7 +19,9 @@ export default function MyAccount() {
             style={{color: "rgb(127, 127, 127)"}}
             key={i}
             onClick={() => {
-                updateAccessLevel(accessLevels[i])
+                if (changeRoleRequest(accessLevels[i])) {
+                    updateAccessLevel(accessLevels[i])
+                }
             }}> {t(accessLevels[i])}</Dropdown.Item>);
     }
     return (
@@ -40,7 +43,8 @@ export default function MyAccount() {
 
 function updateAccessLevel(access_level) {
     Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, access_level, {expires: jwtCookieExpirationTime});
-    window.location = "/home";
+    window.location.hash = "#/home";
+    window.location.reload();
 }
 
 

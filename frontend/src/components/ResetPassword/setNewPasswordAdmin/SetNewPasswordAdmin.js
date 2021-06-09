@@ -1,28 +1,29 @@
 import React, {useState} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import "./SetNewPassword.css";
-import "../../commonStyles/common_style.css"
+import "../setNewPasswordAdmin/SetNewPasswordAdmin.css";
+import "../../../commonStyles/common_style.css"
 import {useTranslation} from "react-i18next";
-import {Link, useParams} from "react-router-dom";
-import {setNewPasswordRequest} from "./SetNewPasswordRequest";
+import {useParams} from "react-router-dom";
+import {setNewPasswordRequest} from "../SetNewPasswordRequest";
 
-export default function SetNewPassword() {
+export default function SetNewPasswordAdmin() {
     let {token} = useParams();
     const [password, setPassword] = useState("");
     const [repeatedPassword, setRepeatedPassword] = useState("");
     const {t} = useTranslation()
+    document.title = t("Dental Clinic") + " - " + t("SetNewPassword");
 
     function handleSubmit(event) {
         event.preventDefault();
 
-         const newErrors = findFormErrors();
+        const newErrors = findFormErrors();
 
-         if (Object.keys(newErrors).length > 0) {
+        if (Object.keys(newErrors).length > 0) {
             // We got errors!
             setErrors(newErrors);
         } else {
-             setNewPasswordRequest(token, password, repeatedPassword, t);
+            setNewPasswordRequest(token, password, repeatedPassword, t,"account/set-new-password-admin");
         }
 
 
