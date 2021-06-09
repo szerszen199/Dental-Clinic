@@ -410,12 +410,4 @@ public class MailProvider {
         return sb.toString();
     }
 
-    private String unlockByScheduler(String defaultContext, String token) {
-        StringBuilder sb = new StringBuilder(getFrontendUrl());
-        sb.append("/unlock-by-scheduler/");
-        sb.append(token);
-
-        return sb.toString();
-    }
-
 }
