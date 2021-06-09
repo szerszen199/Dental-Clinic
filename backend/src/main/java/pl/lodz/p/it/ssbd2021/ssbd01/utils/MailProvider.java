@@ -315,7 +315,7 @@ public class MailProvider {
         Locale locale = new Locale(lang);
         ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
         String subject = langBundle.getString(ACCOUNT_MAIL_SCHEDULER_LOCK_SUBJECT);
-        String activationLink = buildMailConfirmationLink(getContextPath(), token);
+        String activationLink = buildMailUnlockAccount(getContextPath(), token);
         String messageText = paragraph(langBundle.getString(ACCOUNT_MAIL_SCHEDULER_LOCK_TEXT))
                 + hyperlink(activationLink, langBundle.getString(ACCOUNT_MAIL_SCHEDULER_LOCK_BUTTON));
         try {
@@ -387,6 +387,14 @@ public class MailProvider {
     }
 
     private String buildMailConfirmationLink(String defaultContext, String token) {
+        StringBuilder sb = new StringBuilder(getFrontendUrl());
+        sb.append("/mail-change-confirm/");
+        sb.append(token);
+
+        return sb.toString();
+    }
+
+    private String buildMailUnlockAccount(String defaultContext, String token) {
         StringBuilder sb = new StringBuilder(getFrontendUrl());
         sb.append("/unlock-account/");
         sb.append(token);
