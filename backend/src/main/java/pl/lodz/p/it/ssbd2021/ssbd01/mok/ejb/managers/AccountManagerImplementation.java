@@ -10,6 +10,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.ChangePasswordDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.SetNewPasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
@@ -399,10 +401,10 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void changePassword(String login, String oldPassword, String newPassword) throws AppBaseException {
+    public void changePassword(ChangePasswordDto changePasswordDto) throws AppBaseException {
         Account account;
         try {
-            account = accountFacade.findByLogin(login);
+            account = accountFacade.findByLogin(changePasswordDto.getLogin());
         } catch (AccountException e) {
             throw AccountException.noSuchAccount(e.getCause());
         } catch (AppBaseException e) {
@@ -410,13 +412,13 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         }
         account.setModifiedBy(findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
         account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
-        if (!account.getPassword().contentEquals(hashGenerator.generateHash(oldPassword))) {
+        if (!account.getPassword().contentEquals(hashGenerator.generateHash(changePasswordDto.getOldPassword()))) {
             throw PasswordException.currentPasswordNotMatch();
         }
-        if (account.getPassword().contentEquals(hashGenerator.generateHash(newPassword))) {
+        if (account.getPassword().contentEquals(hashGenerator.generateHash(changePasswordDto.getNewPassword()))) {
             throw PasswordException.passwordsNotDifferent();
         }
-        account.setPassword(hashGenerator.generateHash(newPassword));
+        account.setPassword(hashGenerator.generateHash(changePasswordDto.getNewPassword()));
         try {
             accountFacade.edit(account);
         } catch (Exception e) {
@@ -425,22 +427,22 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
-    public void setNewPassword(String login, String newPassword) throws AppBaseException {
+    public void setNewPassword(SetNewPasswordDto setNewPasswordDto) throws AppBaseException {
         Account account;
         try {
-            account = accountFacade.findByLogin(login);
+            account = accountFacade.findByLogin(setNewPasswordDto.getLogin());
         } catch (AccountException e) {
             throw AccountException.noSuchAccount(e.getCause());
         } catch (AppBaseException e) {
             throw PasswordException.passwordChangeFailed();
         }
-        account.setModifiedBy(findByLogin(login));
+        account.setModifiedBy(findByLogin(setNewPasswordDto.getLogin()));
         account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         account.setFirstPasswordChange(true);
-        if (account.getPassword().contentEquals(hashGenerator.generateHash(newPassword))) {
+        if (account.getPassword().contentEquals(hashGenerator.generateHash(setNewPasswordDto.getNewPassword()))) {
             throw PasswordException.passwordsNotDifferent();
         }
-        account.setPassword(hashGenerator.generateHash(newPassword));
+        account.setPassword(hashGenerator.generateHash(setNewPasswordDto.getNewPassword()));
         try {
             accountFacade.edit(account);
         } catch (Exception e) {

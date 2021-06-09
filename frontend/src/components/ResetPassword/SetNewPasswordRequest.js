@@ -2,11 +2,11 @@ import axios from "axios";
 import errorAlerts from "../Alerts/ErrorAlerts/ErrorAlerts";
 import successAlerts from "../Alerts/SuccessAlerts/SuccessAlerts";
 
-export function setNewPasswordRequest(token, firstPassword, secondPassword, t){
+export function setNewPasswordRequest(token, firstPassword, secondPassword, t, path){
 
     let config = {
         method: 'put',
-        url: process.env.REACT_APP_BACKEND_URL + "account/set-new-password",
+        url: process.env.REACT_APP_BACKEND_URL + path,
         headers: {
             'Content-Type': 'application/json'
         },
