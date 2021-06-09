@@ -43,4 +43,6 @@ public class AppointmentFacade extends AbstractFacade<Appointment> {
     protected EntityManager getEntityManager() {
         return null;
     }
+    
+    
 }
