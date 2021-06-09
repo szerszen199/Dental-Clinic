@@ -12,7 +12,7 @@ export function makeLoginRequest(login, password, t) {
         password: password
     }).then((response) => {
         if(response.status === 210){
-            window.location = "#/new-password/" + response.data.token;
+            window.location = "#/new-password-admin/" + response.data.token;
             window.location.reload();
         } else {
             Cookies.set(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME, response.data.authJwtToken.token, {expires: jwtCookieExpirationTime});

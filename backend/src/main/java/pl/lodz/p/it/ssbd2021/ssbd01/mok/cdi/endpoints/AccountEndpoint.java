@@ -32,6 +32,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.ChangePasswordDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.SetNewPasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmMailChangeRequestDTO;
@@ -256,6 +258,59 @@ public class AccountEndpoint {
      * @return response
      */
     @PUT
+    @Path("set-new-password-admin")
+    @PermitAll
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response setNewPasswordAdmin(@NotNull @Valid SetNewPasswordRequestDTO setNewPasswordRequestDTO) {
+        String username;
+        try {
+            username = jwtResetPasswordConfirmation.getUserNameFromJwtToken(setNewPasswordRequestDTO.getConfirmToken());
+            if (!jwtResetPasswordConfirmation.validateJwtToken(setNewPasswordRequestDTO.getConfirmToken())) {
+                throw AccountException.invalidConfirmationToken();
+            }
+        } catch (AccountException accountException) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(accountException.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(PASSWORD_RESET_FAILED)).build();
+        }
+        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
+        boolean rollbackTX = false;
+        Exception exception;
+        do {
+            try {
+                exception = null;
+                SetNewPasswordDto setNewPasswordDto = new SetNewPasswordDto(
+                        username,
+                        setNewPasswordRequestDTO.getFirstPassword());
+                this.accountManager.setNewPassword(setNewPasswordDto);
+                rollbackTX = accountManager.isLastTransactionRollback();
+            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+                rollbackTX = true;
+                exception = e;
+            } catch (Exception e) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (exception != null) {
+            if (exception instanceof AccountException || exception instanceof MailSendingException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
+            } else if (exception instanceof AppBaseException) {
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_EDIT_FAILED)).build();
+            }
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+        }
+        return Response.ok().entity(new MessageResponseDto(I18n.PASSWORD_RESET_SUCCESSFULLY)).build();
+    }
+
+    /**
+     * Ustawia nowe hasło.
+     *
+     * @param setNewPasswordRequestDTO the setNewPasswordRequestDTO
+     * @return response
+     */
+    @PUT
     @Path("set-new-password")
     @PermitAll
     @Consumes({MediaType.APPLICATION_JSON})
@@ -285,7 +340,10 @@ public class AccountEndpoint {
         do {
             try {
                 exception = null;
-                this.accountManager.setNewPassword(username, setNewPasswordRequestDTO.getFirstPassword());
+                SetNewPasswordDto setNewPasswordDto = new SetNewPasswordDto(
+                        username,
+                        setNewPasswordRequestDTO.getFirstPassword());
+                this.accountManager.setNewPassword(setNewPasswordDto);
                 rollbackTX = accountManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
                 rollbackTX = true;
@@ -758,11 +816,11 @@ public class AccountEndpoint {
         do {
             try {
                 exception = null;
-                accountManager.changePassword(
+                ChangePasswordDto changePasswordDto = new ChangePasswordDto(
                         loggedInAccountUtil.getLoggedInAccountLogin(),
                         newPassword.getOldPassword(),
-                        newPassword.getFirstPassword()
-                );
+                        newPassword.getFirstPassword());
+                accountManager.changePassword(changePasswordDto);
                 rollbackTX = accountManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
                 rollbackTX = true;
