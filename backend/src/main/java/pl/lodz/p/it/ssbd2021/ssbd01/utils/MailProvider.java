@@ -310,12 +310,13 @@ public class MailProvider {
      * @param token the token
      * @throws MailSendingException the mail sending exception
      */
-    public void sendAccountLockedByScheduler(String email, String token) throws MailSendingException {
-        String subject = ACCOUNT_MAIL_SCHEDULER_LOCK_SUBJECT;
+    public void sendAccountLockedByScheduler(String email, String token, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(ACCOUNT_MAIL_SCHEDULER_LOCK_SUBJECT);
         String activationLink = buildMailConfirmationLink(getContextPath(), token);
-        String messageText = paragraph(ACCOUNT_MAIL_SCHEDULER_LOCK_TEXT)
-                + hyperlink(activationLink, ACCOUNT_MAIL_SCHEDULER_LOCK_BUTTON)
-                + token;
+        String messageText = paragraph(langBundle.getString(ACCOUNT_MAIL_SCHEDULER_LOCK_TEXT))
+                + hyperlink(activationLink, langBundle.getString(ACCOUNT_MAIL_SCHEDULER_LOCK_BUTTON));
         try {
             mailManager.sendMail(email, subject, getFrom(), messageText, session);
         } catch (MessagingException e) {
@@ -386,7 +387,7 @@ public class MailProvider {
 
     private String buildMailConfirmationLink(String defaultContext, String token) {
         StringBuilder sb = new StringBuilder(getFrontendUrl());
-        sb.append("/mail-change-confirm/");
+        sb.append("/unlock-account/");
         sb.append(token);
 
         return sb.toString();
@@ -408,5 +409,12 @@ public class MailProvider {
         return sb.toString();
     }
 
+    private String UnlockByScheduler(String defaultContext, String token) {
+        StringBuilder sb = new StringBuilder(getFrontendUrl());
+        sb.append("/unlock-by-scheduler/");
+        sb.append(token);
+
+        return sb.toString();
+    }
 
 }
