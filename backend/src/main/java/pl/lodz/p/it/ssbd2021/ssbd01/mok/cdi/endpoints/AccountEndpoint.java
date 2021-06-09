@@ -1,6 +1,30 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.EJBTransactionRolledbackException;
+import javax.ejb.Stateful;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
@@ -33,36 +57,12 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.EJBTransactionRolledbackException;
-import javax.ejb.Stateful;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
-
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCESS_LEVEL_ADD_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCESS_LEVEL_REVOKED_SUCCESSFULLY;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCESS_LEVEL_REVOKE_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CONFIRMATION_BY_TOKEN_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CREATION_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_DARK_MODE_SET_SUCCESSFULLY;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EDIT_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_GET_ALL_ACCOUNTS_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_GET_LOGGED_IN_FAILED;
@@ -76,6 +76,7 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_OPTIMISTIC_LOCK_
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.EMAIL_CONFIRMATION_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_CHANGE_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_RESET_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.TRANSACTION_FAILED_ERROR;
 
 /**
  * Typ Account endpoint - dal konta.
@@ -145,7 +146,7 @@ public class AccountEndpoint {
             if (exception instanceof AppBaseException) {
                 return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CREATION_FAILED)).build();
             }
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CREATED_SUCCESSFULLY)).build();
     }
@@ -186,7 +187,7 @@ public class AccountEndpoint {
             } else if (exception instanceof AppBaseException) {
                 return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_CONFIRMATION_BY_TOKEN_FAILED)).build();
             }
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_CONFIRMED_SUCCESSFULLY)).build();
     }
@@ -243,7 +244,7 @@ public class AccountEndpoint {
             } else if (exception instanceof AppBaseException) {
                 return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_EDIT_FAILED)).build();
             }
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.PASSWORD_RESET_SUCCESSFULLY)).build();
     }
@@ -300,7 +301,7 @@ public class AccountEndpoint {
             } else if (exception instanceof AppBaseException) {
                 return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_EDIT_FAILED)).build();
             }
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.PASSWORD_RESET_SUCCESSFULLY)).build();
     }
@@ -331,7 +332,7 @@ public class AccountEndpoint {
             }
         } while (rollbackTX && --retryTXCounter > 0);
         if (rollbackTX) {
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
         if (exception != null && (exception instanceof AccountException || exception instanceof MailSendingException)) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
@@ -381,7 +382,7 @@ public class AccountEndpoint {
             } else if (exception instanceof AppBaseException) {
                 return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_EDIT_FAILED)).build();
             }
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
     }
@@ -427,7 +428,7 @@ public class AccountEndpoint {
             } else if (exception instanceof AppBaseException) {
                 return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_EDIT_FAILED)).build();
             }
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
     }
@@ -467,7 +468,7 @@ public class AccountEndpoint {
             } else if (exception instanceof AppBaseException) {
                 return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(EMAIL_CONFIRMATION_FAILED)).build();
             }
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.EMAIL_CONFIRMED_SUCCESSFULLY)).build();
     }
@@ -507,7 +508,7 @@ public class AccountEndpoint {
             } else if (exception instanceof AppBaseException) {
                 return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_LOCKED_FAILED)).build();
             }
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
         try {
             Account account = accountManager.findByLogin(simpleUsernameRequestDTO.getLogin());
@@ -555,7 +556,7 @@ public class AccountEndpoint {
             } else if (exception instanceof AppBaseException) {
                 return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_UNLOCKED_FAILED)).build();
             }
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
 
         }
         try {
@@ -573,7 +574,7 @@ public class AccountEndpoint {
      * Dodanie poziomu dostępu {@param level} dla użytkownika o {@param login}.
      *
      * @param revokeAndGrantAccessLevelDTO revoke and grant access level dto
-     * @return @return odpowiedź 400 gdy administrator próbuje sam sobie dodać poziom dostępu, 200 gdy dodanie poprawne
+     * @return odpowiedź 400 gdy administrator próbuje sam sobie dodać poziom dostępu, 200 gdy dodanie poprawne
      */
     @PUT
     @RolesAllowed({I18n.ADMIN})
@@ -606,7 +607,7 @@ public class AccountEndpoint {
             } else if (exception instanceof AppBaseException) {
                 return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCESS_LEVEL_ADD_FAILED)).build();
             }
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
         try {
             Account account = accountManager.findByLogin(revokeAndGrantAccessLevelDTO.getLogin());
@@ -656,7 +657,7 @@ public class AccountEndpoint {
             } else if (exception instanceof AppBaseException) {
                 return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCESS_LEVEL_REVOKE_FAILED)).build();
             }
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
 
         try {
@@ -773,11 +774,11 @@ public class AccountEndpoint {
 
         if (exception != null) {
             if (exception instanceof AccountException || exception instanceof PasswordException) {
-                return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
             } else if (exception instanceof AppBaseException) {
-                return Response.status(Status.BAD_REQUEST).entity(PASSWORD_CHANGE_FAILED).build();
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(PASSWORD_CHANGE_FAILED)).build();
             }
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_CHANGED_SUCCESSFULLY)).build();
     }
@@ -813,11 +814,11 @@ public class AccountEndpoint {
 
         if (exception != null) {
             if (exception instanceof AccountException || exception instanceof MailSendingException || exception instanceof PasswordException) {
-                return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
             } else if (exception instanceof AppBaseException) {
-                return Response.status(Status.BAD_REQUEST).entity(PASSWORD_RESET_FAILED).build();
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(PASSWORD_RESET_FAILED)).build();
             }
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_RESET_MAIL_SENT_SUCCESSFULLY)).build();
     }
@@ -852,11 +853,11 @@ public class AccountEndpoint {
 
         if (exception != null) {
             if (exception instanceof AccountException || exception instanceof MailSendingException) {
-                return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
             } else if (exception instanceof AppBaseException) {
-                return Response.status(Status.BAD_REQUEST).entity(PASSWORD_RESET_FAILED).build();
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(PASSWORD_RESET_FAILED)).build();
             }
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_RESET_MAIL_SENT_SUCCESSFULLY)).build();
     }
@@ -893,13 +894,13 @@ public class AccountEndpoint {
 
         if (exception != null) {
             if (exception instanceof AccountException) {
-                return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
             } else if (exception instanceof AppBaseException) {
-                return Response.status(Status.BAD_REQUEST).entity(ACCOUNT_SET_DARK_MODE_FAILED).build();
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_SET_DARK_MODE_FAILED)).build();
             }
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
-        return Response.status(Status.OK).entity(I18n.ACCOUNT_DARK_MODE_SET_SUCCESSFULLY).build();
+        return Response.status(Status.OK).entity(new MessageResponseDto(ACCOUNT_DARK_MODE_SET_SUCCESSFULLY)).build();
     }
 
 
@@ -934,11 +935,11 @@ public class AccountEndpoint {
 
         if (exception != null) {
             if (exception instanceof AccountException) {
-                return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
             } else if (exception instanceof AppBaseException) {
-                return Response.status(Status.BAD_REQUEST).entity(ACCOUNT_SET_LANGUAGE_FAILED).build();
+                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_SET_LANGUAGE_FAILED)).build();
             }
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.TRANSACTION_FAILED_ERROR)).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.LANGUAGE_SET_SUCCESSFULLY)).build();
     }
