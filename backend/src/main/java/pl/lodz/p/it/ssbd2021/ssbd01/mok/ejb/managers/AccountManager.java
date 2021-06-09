@@ -5,6 +5,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.ChangePasswordDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.SetNewPasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 
@@ -154,7 +156,7 @@ public interface AccountManager {
      * @param newPassword nowe hasło
      * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                          nie powiedzie się.
      */
-    void changePassword(String login, String oldPassword, String newPassword) throws AppBaseException;
+    void changePassword(ChangePasswordDto changePasswordDto) throws AppBaseException;
 
     /**
      * Zmienia hasło {@param newPassword} wskazanego konta {@param account}.
@@ -163,7 +165,7 @@ public interface AccountManager {
      * @param newPassword nowe hasło
      * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                          nie powiedzie się.
      */
-    void setNewPassword(String login, String newPassword) throws AppBaseException;
+    void setNewPassword(SetNewPasswordDto setNewPasswordDto) throws AppBaseException;
 
     /**
      * Wyszukuje konto na podstawie loginu.

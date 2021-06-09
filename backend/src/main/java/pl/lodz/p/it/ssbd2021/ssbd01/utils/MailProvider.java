@@ -291,7 +291,7 @@ public class MailProvider {
         Locale locale = new Locale(lang);
         ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
         String subject = langBundle.getString(ACCOUNT_MAIL_PASSWORD_BY_ADMIN_CONFIRMATION_SUBJECT);
-        String activationLink = buildResetPassLink(getContextPath(), token);
+        String activationLink = buildResetPassLinkByAdmin(getContextPath(), token);
         String messageText =
                 paragraph(langBundle.getString(ACCOUNT_MAIL_PASSWORD_BY_ADMIN_CONFIRMATION_SUBJECT))
                         + hyperlink(activationLink, langBundle.getString(ACCOUNT_MAIL_CHANGE_CONFIRM_BUTTON));
@@ -399,5 +399,14 @@ public class MailProvider {
 
         return sb.toString();
     }
+
+    private String buildResetPassLinkByAdmin(String defaultContext, String token) {
+        StringBuilder sb = new StringBuilder(getFrontendUrl());
+        sb.append("/#/new-password-admin/");
+        sb.append(token);
+
+        return sb.toString();
+    }
+
 
 }
