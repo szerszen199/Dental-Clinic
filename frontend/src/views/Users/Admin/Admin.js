@@ -10,7 +10,7 @@ function Admin() {
     const {t} = useTranslation();
     document.title = t("Dental Clinic");
     return (
-        <Nav activeKey={window.location.pathname}>
+        <Nav activeKey={window.location.hash}>
             <Nav.Link as={Link} to="/accounts">{t("Users Accounts")}</Nav.Link>
             <MyAccount/>
         </Nav>

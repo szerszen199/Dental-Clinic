@@ -20,7 +20,7 @@ export function setNewPasswordRequest(token, firstPassword, secondPassword, t){
     axios(config)
         .then((response) => {
             successAlerts(t(response.data.message, response.status)).then(() => {
-                window.location = "/home";
+                window.location.hash = "#/home";
             })
         })
         .catch((response) => {
