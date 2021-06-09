@@ -20,6 +20,7 @@ public class JwtEmailConfirmationUtils extends JwtUtilsAbstract {
      *
      * @param username username
      * @param email email
+     * @param changedUser login użytkownika, dla którego zmieniany jest email
      * @return JWT token
      */
     public String generateEmailChangeConfirmationJwtTokenForUser(String username, String email, String changedUser) {

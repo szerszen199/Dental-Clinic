@@ -1,7 +1,7 @@
 import swal from "sweetalert";
 import "../Alerts.css"
 
-export default function confirmationAlertsWithRedirect(title, message,path) {
+export default function confirmationAlertsWithRedirect(title, message, path) {
     return swal({
         title: title,
         text: message,
@@ -11,6 +11,6 @@ export default function confirmationAlertsWithRedirect(title, message,path) {
         dangerMode: true,
         buttons: true,
     }).then(() => {
-        window.location = path;
+        window.location.hash = path;
     });
 }
