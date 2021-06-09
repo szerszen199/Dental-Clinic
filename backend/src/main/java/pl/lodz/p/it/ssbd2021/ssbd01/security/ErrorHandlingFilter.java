@@ -19,6 +19,9 @@ public class ErrorHandlingFilter implements ContainerResponseFilter {
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
         Response.Status status = Response.Status.fromStatusCode(responseContext.getStatus());
+        if (status == null) {
+            return;
+        }
         switch (status) {
             case INTERNAL_SERVER_ERROR:
                 responseContext.setEntity(new MessageResponseDto(I18n.INTERNAL_SERVER_ERROR), new Annotation[]{}, MediaType.valueOf(MediaType.APPLICATION_JSON));
