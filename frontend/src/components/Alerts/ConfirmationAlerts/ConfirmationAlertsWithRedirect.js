@@ -1,7 +1,7 @@
 import swal from "sweetalert";
 import "../Alerts.css"
 
-export default function confirmationAlertsWithRedirect(title, message,path) {
+export default function confirmationAlertsWithRedirect(title, message, path) {
     return swal({
         title: title,
         text: message,
