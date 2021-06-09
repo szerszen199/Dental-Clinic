@@ -49,8 +49,10 @@ class MainViewWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isDarkMode: false,
+            isDarkMode: "",
             login: "",
+            flag: "",
+            language: "",
         }
     }
 
@@ -85,6 +87,9 @@ class MainViewWithoutTranslation extends React.Component {
                 Cookies.set(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME, response.data.authJwtToken.token, {expires: jwtCookieExpirationTime});
                 Cookies.set(process.env.REACT_APP_ROLES_COOKIE_NAME, response.data.roles, {expires: jwtCookieExpirationTime});
                 Cookies.set(process.env.REACT_APP_LOGIN_COOKIE, response.data.username, {expires: jwtCookieExpirationTime});
+                if (Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE) != null) {
+                    Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE), {expires: jwtCookieExpirationTime});
+                }
                 if (Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) == null) {
                     Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, findDefaultRole(response.data.roles), {expires: jwtCookieExpirationTime});
                 } else {
@@ -110,18 +115,22 @@ class MainViewWithoutTranslation extends React.Component {
             this.setState({
                 login: Cookies.get(process.env.REACT_APP_LOGIN_COOKIE),
                 isDarkMode: Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE),
-                language: Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE)
+                language: Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE),
+                flag: Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE) === "PL" ? this.flags["PL"] : this.flags["EN"]
+            }, function () {
+                i18n.changeLanguage(this.state.language);
+                accessLevelDictionary = darkModeStyleChange(Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE));
+                console.log()
             })
-            accessLevelDictionary = darkModeStyleChange(this.state.isDarkMode);
         } else {
+            let tmp = getBrowserLanguage();
             this.setState({
-                language: getBrowserLanguage()
+                language: tmp,
+                flag: tmp === "PL" ? this.flags["PL"] : this.flags["EN"]
+            }, function () {
+                i18n.changeLanguage(this.state.language)
             });
         }
-        this.setState({
-            flag: this.state.language === "PL" ? this.flags["PL"] : this.flags["EN"]
-        })
-        i18n.changeLanguage(this.state.language);
     }
 
     render() {
@@ -190,7 +199,9 @@ class MainViewWithoutTranslation extends React.Component {
 }
 
 function darkModeStyleChange(isDarkMode) {
-    if (isDarkMode) {
+    console.log(isDarkMode)
+    if (isDarkMode === true) {
+        console.log(isDarkMode)
         document.getElementById("root").style.backgroundColor = "#a8b4ae";
         loginColor = "black"
         return {
