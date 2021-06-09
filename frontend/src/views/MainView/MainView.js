@@ -58,7 +58,7 @@ class MainViewWithoutTranslation extends React.Component {
             this.state.language = getBrowserLanguage();
         }
 
-        this.state.flag = this.state.language === "PL" ? this.flags["EN"] : this.flags["PL"];
+        this.state.flag = this.state.language === "PL" ? this.flags["PL"] : this.flags["EN"];
         i18n.changeLanguage(this.state.language);
     }
 
@@ -73,7 +73,7 @@ class MainViewWithoutTranslation extends React.Component {
     setInterfaceLanguage(language) {
         this.setState({
             language: language,
-            flag: language === "PL" ? this.flags["EN"] : this.flags["PL"]
+            flag: language === "PL" ? this.flags["PL"] : this.flags["EN"]
         });
 
         Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, language);
