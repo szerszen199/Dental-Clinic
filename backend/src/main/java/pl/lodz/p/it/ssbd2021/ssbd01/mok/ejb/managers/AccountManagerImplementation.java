@@ -299,7 +299,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
                 mailProvider.sendEmailChangeConfirmationMail(
                         editAccountRequestDTO.getEmail(),
                         jwtEmailConfirmationUtils.generateEmailChangeConfirmationJwtTokenForUser(
-                                loggedInAccountUtil.getLoggedInAccountLogin(), editAccountRequestDTO.getEmail()),
+                                loggedInAccountUtil.getLoggedInAccountLogin(), editAccountRequestDTO.getEmail(), account.getLogin()),
                         account.getLanguage()
                 );
             } catch (MailSendingException mailSendingException) {
@@ -329,15 +329,19 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         }
         String login;
         String newEmail;
+        String userChangedLogin;
         try {
             login = jwtEmailConfirmationUtils.getUsernameFromToken(jwt);
             newEmail = jwtEmailConfirmationUtils.getEmailFromToken(jwt);
+            userChangedLogin = jwtEmailConfirmationUtils.getChangedUserLogin(jwt);
         } catch (ParseException e) {
             throw AccountException.invalidConfirmationToken();
         }
         Account account;
+        Account accountChanged;
         try {
             account = accountFacade.findByLogin(login);
+            accountChanged = accountFacade.findByLogin(userChangedLogin);
         } catch (AccountException e) {
             throw AccountException.noSuchAccount(e.getCause());
         } catch (Exception e) {
@@ -346,11 +350,11 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         if (account.getEmail().equals(newEmail)) {
             throw AccountException.emailAlreadyChanged();
         }
-        account.setModifiedBy(account);
-        account.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
-        account.setEmail(newEmail);
+        accountChanged.setModifiedBy(account);
+        accountChanged.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        accountChanged.setEmail(newEmail);
         try {
-            accountFacade.edit(account);
+            accountFacade.edit(accountChanged);
         } catch (Exception e) {
             throw AccountException.emailConfirmationFailed();
         }
