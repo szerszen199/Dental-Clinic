@@ -37,6 +37,7 @@ public class I18n {
     public static final String LANGUAGE_SET_SUCCESSFULLY = "language_set_successfully";
 
     public static final String ACCESS_LEVEL_NULL = "access_level_null";
+    public static final String DOCUMENTATION_ID_NULL = "documentation_id_null";
     public static final String ACCESS_LEVEL_INVALID_SIZE = "access_level_invalid_size";
     public static final String ACCESS_LEVEL_INVALID_LEVEL = "access_level_invalid_level";
 
@@ -127,6 +128,7 @@ public class I18n {
     public static final String ACCOUNT_MAIL_UNLOCK_BY_ADMIN_TEXT = "account_mail_unlock_by_admin_text";
     public static final String BAD_ETAG_VALUE = "bad_etag_value";
     public static final String TRANSACTION_FAILED_ERROR = "transaction_failed_error";
+    public static final String TRANSACTION_REPEAT_FAILED_ERROR = "transaction_repeat_failed_error";
     public static final String ACCOUNT_ALREADY_CONFIRMED = "account_already_confirmed";
     public static final String EMAIL_ALREADY_CHANGED = "email_already_changed";
     public static final String PASSWORD_ALREADY_CHANGED = "password_already_changed";
@@ -137,4 +139,10 @@ public class I18n {
     public static final String FORBIDDEN = "forbidden";
     public static final String INTERNAL_SERVER_ERROR = "internal_server_error";
     public static final String NOT_FOUND = "not_found";
+
+    public static final String DOCUMENTATION_ENTRY_DELETED_SUCCESSFULLY = "documentation_entry_deleted_successfully";
+    public static final String DOCUMENTATION_ENTRY_NOT_FOUND = "documentation_entry_not_found";
+    public static final String INVALID_DOCTOR_DOCUMENTATION_ENTRY = "invalid_doctor_documentation_entry";
+    public static final String REMOVAL_FAILURE_ERROR = "removal_failure_error";
+    public static final String DOCUMENTATION_ENTRY_DELETION_UNSUCCESSFUL = "documentation_entry_deletion_unsuccessful";
 }

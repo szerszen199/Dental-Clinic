@@ -67,7 +67,6 @@ public class AccountFacade extends AbstractFacade<Account> {
         } catch (PersistenceException e) {
             throw AppBaseException.databaseError(e);
         }
-
     }
 
     /**

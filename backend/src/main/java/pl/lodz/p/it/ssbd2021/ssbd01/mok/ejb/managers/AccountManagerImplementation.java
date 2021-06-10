@@ -1,9 +1,11 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AdminData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorData;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
@@ -107,6 +109,21 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         AccessLevel adminData = new AdminData(account, false);
         adminData.setCreatedBy(account);
         account.getAccessLevels().add(adminData);
+
+        account.getAccessLevels().forEach(accessLevel -> {
+            if (accessLevel.getActive() && accessLevel.getLevel().equals(I18n.PATIENT)) {
+                MedicalDocumentation medicalDocumentation = new MedicalDocumentation();
+                medicalDocumentation.setCreatedBy(account);
+                medicalDocumentation.setCreatedByIp(requestIp);
+
+                // TODO: 07.06.2021 Co z alegriami i lekarstwami?
+                medicalDocumentation.setAllergies("");
+                medicalDocumentation.setMedicationsTaken("");
+
+                medicalDocumentation.setPatient(account);
+
+            }
+        });
 
         try {
             accountFacade.findByLoginOrEmailOrPesel(account.getLogin(), account.getEmail(), account.getPesel());
