@@ -3,10 +3,6 @@ package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
-import javax.persistence.OptimisticLockException;
-
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_OPTIMISTIC_LOCK_ERROR;
-
 /**
  * Typ Documentation entry exception.
  */
@@ -55,6 +51,10 @@ public class DocumentationEntryException extends AppBaseException {
      */
     public static DocumentationEntryException removalFailedError() {
         return new DocumentationEntryException(I18n.REMOVAL_FAILURE_ERROR);
+    }
+
+    public static DocumentationEntryException documentationEntryCreationFailed(){
+        return new DocumentationEntryException(I18n.DOCUMENTATION_ENTRY_CREATION_FAILED);
     }
 
 }
