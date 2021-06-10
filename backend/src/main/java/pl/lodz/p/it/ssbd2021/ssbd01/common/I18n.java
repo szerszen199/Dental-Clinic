@@ -146,4 +146,8 @@ public class I18n {
     public static final String REMOVAL_FAILURE_ERROR = "removal_failure_error";
     public static final String DOCUMENTATION_ENTRY_DELETION_UNSUCCESSFUL = "documentation_entry_deletion_unsuccessful";
     public static final String DOCTOR_ID_NULL = "doctor_id_null";
+    public static final String DOCUMENTATION_ENTRY_CREATED_SUCCESSFULLY = "documentation_entry_created_successfully";
+    public static final String PATIENT_ID_NULL = "patient_id_null";
+    public static final String MEDICAL_DOCUMENTATION_NOT_FOUND = "medical_documentation_not_found";
+    public static final String DOCUMENTATION_ENTRY_CREATION_FAILED = "documentation_entry_creation_failed";
 }

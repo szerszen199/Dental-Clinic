@@ -2,11 +2,13 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mod.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.DocumentationEntryException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.AddDocumentationEntryRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.DeleteDocumentationEntryRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.MedicalDocumentationManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.utils.MedicalDocumentationTransactionRepeater;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
@@ -17,6 +19,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -55,6 +58,20 @@ public class DocumentationEndpoint {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_DELETION_UNSUCCESSFUL)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_DELETED_SUCCESSFULLY)).build();
+    }
+
+    @PUT
+    @Path("create")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON})
+    @RolesAllowed({I18n.DOCTOR})
+    public Response addDocumentationEntry(@NotNull @Valid AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO){
+        try{
+//            this.medicalDocumentationTransactionRepeater.repeatTransaction();
+        } catch (Exception e){
+
+        }
+        return Response.ok().entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_CREATED_SUCCESSFULLY)).build();
     }
 
 

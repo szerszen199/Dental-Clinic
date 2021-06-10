@@ -7,6 +7,9 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.DocumentationEntryException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.AddDocumentationEntryRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades.DocumentationEntryFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades.MedicalDocumentationFacade;
@@ -48,7 +51,28 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
     private AccountFacade accountFacade;
 
     @Override
-    public void addDocumentationEntry(Long patientId, DocumentationEntry entry) {
+    public void addDocumentationEntry(AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO) throws DocumentationEntryException, AccountException {
+        Account doctor;
+        MedicalDocumentation medicalDocumentation;
+        try {
+            doctor = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
+        try {
+            medicalDocumentation = documentationFacade.getMedicalDocumentationByPatientLogin(addDocumentationEntryRequestDTO.getPatient());
+        } catch (AppBaseException e) {
+            throw MedicalDocumentationException.noSuchMedicalDocumentation(e);
+        }
+        DocumentationEntry documentationEntry = new DocumentationEntry(doctor,
+                addDocumentationEntryRequestDTO.getWasDone(),
+                addDocumentationEntryRequestDTO.getToBeDone(),
+                medicalDocumentation);
+        try {
+            documentationEntryFacade.create(documentationEntry);
+        } catch (Exception e) {
+            throw DocumentationEntryException.documentationEntryCreationFailed();
+        }
         throw new NotImplementedException();
     }
 

@@ -4,6 +4,9 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.DocumentationEntryException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.AddDocumentationEntryRequestDTO;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -14,13 +17,7 @@ import java.util.List;
 @Local
 public interface MedicalDocumentationManager {
 
-    /**
-     * Dodaje wpis w dokumentacji medycznej pacjenta.
-     *
-     * @param patientId klucz główny pacjenta
-     * @param entry     dodawany wpis
-     */
-    void addDocumentationEntry(Long patientId, DocumentationEntry entry);
+    void addDocumentationEntry(AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO) throws DocumentationEntryException, AccountException;
 
     /**
      * Edytuje wpis w dokumentacji medycznej pacjenta.
