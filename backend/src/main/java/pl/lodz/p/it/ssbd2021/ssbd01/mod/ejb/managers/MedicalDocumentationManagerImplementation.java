@@ -1,15 +1,19 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers;
 
 import org.apache.commons.lang3.NotImplementedException;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.DocumentationEntryException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades.DocumentationEntryFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades.MedicalDocumentationFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades.PrescriptionFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 
 import javax.annotation.security.PermitAll;
 import javax.ejb.Stateful;
@@ -38,6 +42,9 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
     private PrescriptionFacade prescriptionFacade;
 
     @Inject
+    private LoggedInAccountUtil loggedInAccountUtil;
+
+    @Inject
     private AccountFacade accountFacade;
 
     @Override
@@ -51,8 +58,28 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
     }
 
     @Override
-    public void removeDocumentationEntry(Long id) {
-        throw new NotImplementedException();
+    public void removeDocumentationEntry(Long id) throws AppBaseException {
+        DocumentationEntry documentationEntry;
+        Account loggedInDoctor;
+        try {
+            loggedInDoctor = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        } catch (Exception e) {
+            // TODO: 07.06.2021 Coś musiało ostro pojsc nie tak, aplikacja wybucha
+            throw e;
+        }
+        try {
+            documentationEntry = documentationEntryFacade.find(id);
+        } catch (AppBaseException e) {
+            throw DocumentationEntryException.entryNotFoundError();
+        }
+        if (!documentationEntry.getDoctor().equals(loggedInDoctor) || documentationEntry.getMedicalDocumentation().getPatient().equals(loggedInDoctor)) {
+            throw DocumentationEntryException.invalidDoctorException();
+        }
+        try {
+            documentationEntryFacade.remove(documentationEntry);
+        } catch (Exception e) {
+            throw DocumentationEntryException.removalFailedError();
+        }
     }
 
     @Override
