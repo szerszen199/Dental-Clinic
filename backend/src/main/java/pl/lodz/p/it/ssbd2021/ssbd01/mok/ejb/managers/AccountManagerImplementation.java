@@ -151,14 +151,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Override
     public void removeAccount(Long id) throws AppBaseException {
-        var x = accessLevelFacade.findByAccountId(id);
-        x.forEach(new Consumer<AccessLevel>() {
-            @Override
-            public void accept(AccessLevel accessLevel) {
-                accessLevelFacade.remove(accessLevel);
-            }
-        });
-
         Account account = accountFacade.find(id);
         accountFacade.remove(account);
     }
