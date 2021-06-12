@@ -184,5 +184,11 @@
   "login_not_in_pattern": "Username contains invalid characters",
   "forbidden": "Forbidden access",
   "internal_server_error": "Server Error",
-  "not_found": "Resource not found"
+  "not_found": "Resource not found",
+  "Select doctor": "Select doctor",
+  "Add new appointment": "Add New Appointment",
+  "Date and Time": "Select date and time",
+  "DateTime blank error": "Date and Time cannot be blank!",
+  "DateTime past error": "Date and Time must be from the future!",
+  "Doctor blank error": "You have to select doctor!"
 }

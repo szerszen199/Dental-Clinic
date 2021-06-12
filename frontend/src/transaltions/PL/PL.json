@@ -184,5 +184,11 @@
   "login_not_in_pattern": "W loginie użytkownika występują nieprawidłowe znaki",
   "forbidden": "Zakazane",
   "internal_server_error": "Błąd Serwera",
-  "not_found":  "Zasób Nieznaleziony"
+  "not_found":  "Zasób Nieznaleziony",
+  "Select doctor": "Wybierz lekarza",
+  "Add new appointment": "Dodaj nową wizytę",
+  "Date and Time": "Wybierz termin wizyty",
+  "DateTime blank error": "Termin nie może być pusty!",
+  "DateTime past error": "Termin musi być z przyszłości!",
+  "Doctor blank error": "Musisz wybrać lekarza!"
 }
