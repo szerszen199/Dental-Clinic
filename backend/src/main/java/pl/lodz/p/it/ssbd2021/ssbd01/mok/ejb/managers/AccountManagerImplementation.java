@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Consumer;
 
 
 /**
@@ -151,10 +152,15 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     @Override
     public void removeAccount(Long id) throws AppBaseException {
         var x = accessLevelFacade.findByAccountId(id);
-        x.forEach(accessLevel -> accessLevelFacade.remove(accessLevel));
-//        Account account = accountFacade.find(id);
-//
-//        accountFacade.remove(account);
+        x.forEach(new Consumer<AccessLevel>() {
+            @Override
+            public void accept(AccessLevel accessLevel) {
+                accessLevelFacade.remove(accessLevel);
+            }
+        });
+
+        Account account = accountFacade.find(id);
+        accountFacade.remove(account);
     }
 
     @Override
