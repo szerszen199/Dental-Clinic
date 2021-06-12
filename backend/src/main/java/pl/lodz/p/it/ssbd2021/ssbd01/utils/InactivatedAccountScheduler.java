@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JWTRegistrationConfirmationUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtUnlockByMailConfirmationUtils;
@@ -24,6 +25,8 @@ public class InactivatedAccountScheduler {
     @Inject
     private AccountManager accountManager;
     @Inject
+    private AccessLevelManager accessLevelManager;
+    @Inject
     private PropertiesLoader propertiesLoader;
     @Inject
     private MailProvider mailProvider;
@@ -44,6 +47,7 @@ public class InactivatedAccountScheduler {
             Long time = Duration.between(notEnabledAccount.getCreationDateTime(), LocalDateTime.now()).toMillis();
             if (time >= propertiesLoader.getDeleteInactiveAccountTimeDelay()) {
                 mailProvider.sendAccountDeletedByScheduler(notEnabledAccount.getEmail(), notEnabledAccount.getLanguage());
+                accessLevelManager.deleteAccessLevelsByAccountId(notEnabledAccount.getId());
                 accountManager.removeAccount(notEnabledAccount.getId());
             } else if (time >= (propertiesLoader.getDeleteInactiveAccountTimeDelay() / 2) && !notEnabledAccount.getEmailRecall()) {
                 accountManager.setEmailRecallTrue(notEnabledAccount.getLogin());

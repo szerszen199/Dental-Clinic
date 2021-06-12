@@ -40,4 +40,6 @@ public interface AccessLevelManager {
      * @return true jeśli ostatnia transakcja się nie powiodła, false w przeciwnym wypadku.
      */
     boolean isLastTransactionRollback();
+
+    void deleteAccessLevelsByAccountId(Long id) throws AppBaseException;
 }
