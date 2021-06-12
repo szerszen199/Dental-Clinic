@@ -77,6 +77,7 @@ public class AccessLevelFacade extends AbstractFacade<AccessLevel> {
      * Znajduje poziom dostępu konta o loginie {@param login} na podstawie nazwy
      * poziomu dostępu.
      *
+     * @param id the id
      * @return zadany poziom dostępu dla zadanego użytkownika
      * @throws AppBaseException wyjątek typu AppBaseException
      */
