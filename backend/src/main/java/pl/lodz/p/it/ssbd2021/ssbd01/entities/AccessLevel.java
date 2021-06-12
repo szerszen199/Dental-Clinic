@@ -65,7 +65,7 @@ public class AccessLevel extends AbstractEntity implements Serializable {
     @Size(min = 7, max = 32)
     private String level;
 
-    @ManyToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
+    @ManyToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "account_id", referencedColumnName = "id", updatable = false)
     @NotNull
     private Account accountId;
