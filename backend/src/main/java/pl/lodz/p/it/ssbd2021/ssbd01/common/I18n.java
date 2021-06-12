@@ -72,6 +72,9 @@ public class I18n {
 
     public static final String DARK_MODE_NULL = "dark_mode_null";
 
+    public static final String DOCTOR_ID_NULL = "doctor_id_null";
+    public static final String APPOINTMENT_DATE_NULL = "appointment_date_null";
+
     public static final String INVALID_REFRESH_TOKEN = "invalid_refresh_token";
     public static final String PASSWORDS_NOT_DIFFER = "both_passwords_are_same";
     public static final String AUTHENTICATION_FAILURE = "invalid_login_password_combination";

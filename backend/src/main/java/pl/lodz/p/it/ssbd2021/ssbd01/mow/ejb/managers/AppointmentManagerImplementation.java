@@ -8,13 +8,18 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.NotImplementedException;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AppointmentFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 
 /**
  * Klasa implementująca interfejs menadżera wizyt.
@@ -30,6 +35,12 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     
     @Inject
     private AccountFacade accountFacade;
+
+    @Inject
+    private HttpServletRequest request;
+
+    @Inject
+    private LoggedInAccountUtil loggedInAccountUtil;
 
     @Override
     public void bookAppointment(Long appointmentId, String login) {
@@ -72,8 +83,39 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
-    public void addAppointmentSlot(Appointment appointment) {
-        throw new NotImplementedException();
+    public void addAppointmentSlot(Appointment appointment) throws AppointmentException {
+        String requestIp = IpAddressUtils.getClientIpAddressFromHttpServletRequest(request);
+        appointment.setCreatedByIp(requestIp);
+
+        try {
+            appointmentFacade.create(appointment);
+        } catch (Exception e) {
+            throw AppointmentException.appointmentCreationFailed();
+        }
+
+
+//        try {
+//            appointmentFacade.findByLoginOrEmailOrPesel(account.getLogin(), account.getEmail(), account.getPesel());
+//        } catch (AccountException accountException) {
+//            account.setCreatedBy(account);
+//            try {
+//                accountFacade.create(account);
+//            } catch (Exception e) {
+//                throw AccountException.accountCreationFailed();
+//            }
+//            try {
+//                mailProvider.sendActivationMail(
+//                        account.getEmail(),
+//                        jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(account.getLogin()), account.getLanguage()
+//                );
+//            } catch (Exception e) {
+//                throw MailSendingException.activationLink();
+//            }
+//            return;
+//        } catch (AppBaseException e) {
+//            throw AccountException.accountCreationFailed();
+//        }
+//        throw AccountException.accountLoginEmailPeselExists();
     }
 
     @Override
