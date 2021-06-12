@@ -37,7 +37,7 @@ public class InactivatedAccountScheduler {
      *
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    @Schedule(hour = "*", minute = "1", second = "1", info = "Every hour timer")
+    @Schedule(hour = "*", minute = "*", second = "1", info = "Every hour timer")
     public void automaticallyScheduleInactivatedAccounts() throws AppBaseException {
         List<Account> notEnabledAccounts = accountManager.findByEnabled(false);
         for (Account notEnabledAccount : notEnabledAccounts) {

@@ -90,7 +90,7 @@ CREATE TABLE access_levels
         CONSTRAINT acc_lvl_level CHECK
             (level in
              ('level.patient', 'level.receptionist', 'level.doctor', 'level.administrator')), -- Poziom dostępu,
-    account_id             BIGINT,                                                            -- Konto przypisane do poziomu dostepu
+    account_id             BIGINT      NOT NULL,                                              -- Konto przypisane do poziomu dostepu
     active                 BOOL        NOT NULL DEFAULT TRUE,                                 -- Czy przypisany poziom dostępu jest aktywny, domyślnie prawda (jest aktywny). Pole pozwala na wyłączanie użytkownikom poziomów dostepu bez usuwania wiersza tabeli.
     CONSTRAINT acc_lvl_level_account_pair_unique UNIQUE (level, account_id),                  -- Para poziom dostepu i konta użytkownika jest unikalna
     version                BIGINT                                                             -- Wersja
