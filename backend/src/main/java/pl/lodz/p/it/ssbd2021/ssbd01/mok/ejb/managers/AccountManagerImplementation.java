@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AdminData;
@@ -111,7 +110,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         account.getAccessLevels().add(adminData);
 
         account.getAccessLevels().forEach(accessLevel -> {
-            if (accessLevel.getActive() && accessLevel.getLevel().equals(I18n.PATIENT)) {
+            if (accessLevel.getActive() && accessLevel instanceof PatientData) {
                 MedicalDocumentation medicalDocumentation = new MedicalDocumentation();
                 medicalDocumentation.setCreatedBy(account);
                 medicalDocumentation.setCreatedByIp(requestIp);
