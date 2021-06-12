@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.ejb.Local;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 
 /**
  * Interfejs menadżera wizyt.
@@ -75,7 +76,7 @@ public interface AppointmentManager {
      *
      * @param appointment wolna wizyta
      */
-    void addAppointmentSlot(Appointment appointment);
+    void addAppointmentSlot(Appointment appointment) throws AppointmentException;
 
     /**
      * Modyfikuje slot wizyty.
@@ -104,4 +105,11 @@ public interface AppointmentManager {
      * @return lista wszystkich pacjentów
      */
     List<Account> getAllPatients();
+
+    /**
+     * Sprawdza czy ostatnia transakcja się powiodła.
+     *
+     * @return true jeśli ostatnia transakcja się nie powiodła, false w przeciwnym wypadku.
+     */
+    boolean isLastTransactionRollback();
 }
