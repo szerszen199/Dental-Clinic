@@ -52,7 +52,7 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
     @NotNull
     private Account doctor;
 
-    @JoinColumn(name = "documentation_id", referencedColumnName = "id", nullable = false, updatable = false, insertable = false)
+    @JoinColumn(name = "documentation_id", referencedColumnName = "id", nullable = false, updatable = false, insertable = true)
     @ManyToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
     @NotNull
     private MedicalDocumentation medicalDocumentation;

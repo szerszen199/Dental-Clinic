@@ -122,12 +122,14 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
                 wasDoneEncrypted,
                 toBeDoneEncrypted,
                 medicalDocumentation);
+        String requestIp = IpAddressUtils.getClientIpAddressFromHttpServletRequest(request);
+        documentationEntry.setCreatedByIp(requestIp);
+        documentationEntry.setCreatedBy(doctor);
         try {
             documentationEntryFacade.create(documentationEntry);
         } catch (Exception e) {
             throw DocumentationEntryException.documentationEntryCreationFailed();
         }
-        throw new NotImplementedException();
     }
 
     @Override
