@@ -11,11 +11,9 @@ import javax.validation.constraints.NotNull;
 public class AddDocumentationEntryRequestDTO {
     @NotNull(message = I18n.PATIENT_ID_NULL)
     @Login
-    private final String patient;
-
-    private final String wasDone;
-
-    private final String toBeDone;
+    private String patient;
+    private String wasDone;
+    private String toBeDone;
 
     /**
      * Tworzy nową instancję klasy AddDocumentationEntryRequestDTO.
@@ -30,15 +28,30 @@ public class AddDocumentationEntryRequestDTO {
         this.toBeDone = toBeDone;
     }
 
+    public AddDocumentationEntryRequestDTO() {
+    }
+
     public String getPatient() {
         return patient;
+    }
+
+    public void setPatient(String patient) {
+        this.patient = patient;
     }
 
     public String getWasDone() {
         return wasDone;
     }
 
+    public void setWasDone(String wasDone) {
+        this.wasDone = wasDone;
+    }
+
     public String getToBeDone() {
         return toBeDone;
+    }
+
+    public void setToBeDone(String toBeDone) {
+        this.toBeDone = toBeDone;
     }
 }

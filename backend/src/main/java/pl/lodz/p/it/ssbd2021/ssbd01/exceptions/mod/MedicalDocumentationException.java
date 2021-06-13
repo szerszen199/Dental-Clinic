@@ -31,8 +31,8 @@ public class MedicalDocumentationException extends AppBaseException {
      *
      * @return wyjątek typu DocumentationEntryException
      */
-    public static DocumentationEntryException noSuchMedicalDocumentation() {
-        return new DocumentationEntryException(I18n.MEDICAL_DOCUMENTATION_NOT_FOUND);
+    public static MedicalDocumentationException noSuchMedicalDocumentation() {
+        return new MedicalDocumentationException(I18n.MEDICAL_DOCUMENTATION_NOT_FOUND);
     }
 
     /**
@@ -41,8 +41,12 @@ public class MedicalDocumentationException extends AppBaseException {
      * @param cause powód rzucenia wyjątku
      * @return wyjątek typu DocumentationEntryException
      */
-    public static DocumentationEntryException noSuchMedicalDocumentation(Throwable cause) {
-        return new DocumentationEntryException(I18n.MEDICAL_DOCUMENTATION_NOT_FOUND, cause);
+    public static MedicalDocumentationException noSuchMedicalDocumentation(Throwable cause) {
+        return new MedicalDocumentationException(I18n.MEDICAL_DOCUMENTATION_NOT_FOUND, cause);
+    }
+
+    public static MedicalDocumentationException medicalDocumentationCreationFailed(){
+        return new MedicalDocumentationException(I18n.MEDICAL_DOCUMENTATION_CREATION_FAILED);
     }
 
 }

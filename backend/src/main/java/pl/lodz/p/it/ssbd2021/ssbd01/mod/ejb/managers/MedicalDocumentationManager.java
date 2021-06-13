@@ -1,11 +1,13 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.DocumentationEntryException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.AddDocumentationEntryRequestDTO;
 
@@ -18,6 +20,8 @@ import java.util.List;
 @Local
 public interface MedicalDocumentationManager {
 
+    void createMedicalDocumentation(String login) throws MedicalDocumentationException, AccountException;
+
     /**
      * Dodaje wpis w dokumentacji medycznej pacjenta.
      *
@@ -26,7 +30,7 @@ public interface MedicalDocumentationManager {
      * @throws AccountException            wyjątek typu AccountException
      * @throws EncryptionException         wyjątek typu EncryptionException
      */
-    void addDocumentationEntry(AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO) throws DocumentationEntryException, AccountException, EncryptionException;
+    void addDocumentationEntry(AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO) throws DocumentationEntryException, AccountException, EncryptionException, MedicalDocumentationException;
 
     /**
      * Edytuje wpis w dokumentacji medycznej pacjenta.

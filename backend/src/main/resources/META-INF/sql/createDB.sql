@@ -52,7 +52,7 @@ CREATE TABLE accounts
     created_by_ip                             VARCHAR(256),
     email_recall                              BOOL DEFAULT FALSE NOT NULL,
     first_password_change                     BOOL DEFAULT FALSE NOT NULL,
-    language                                  CHAR(2) NOT NULL
+    language                                  CHAR(2)            NOT NULL
         CONSTRAINT acc_language CHECK
             (language in ('pl', 'PL', 'en', 'EN')),                        -- Język konta
     version                                   BIGINT                       -- Wersja
@@ -205,7 +205,8 @@ CREATE SEQUENCE appointments_seq -- Sekwencja wykorzystywana do tworzenia kluczy
 CREATE TABLE medical_documentations
 (
     id                     BIGINT PRIMARY KEY,                             -- Klucz głowny tabeli
-    patient_id             BIGINT      NOT NULL,                           -- ID pacjenta którego dotyczy dokumentacja
+    patient_id             BIGINT      NOT NULL                            -- ID pacjenta którego dotyczy dokumentacja
+        CONSTRAINT med_documentation_patient_id_unique UNIQUE,
     allergies              TEXT,                                           -- Tekstowy opis alergii pacjenta
     medications_taken      TEXT,                                           -- Tekstowy opis przyjmowanych lekarstw uzytkownika
     version                BIGINT                                          -- Wersja

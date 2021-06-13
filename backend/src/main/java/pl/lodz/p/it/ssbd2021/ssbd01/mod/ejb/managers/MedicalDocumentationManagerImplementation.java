@@ -1,9 +1,12 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers;
 
 import org.apache.commons.lang3.NotImplementedException;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
@@ -17,8 +20,10 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades.MedicalDocumentationFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades.PrescriptionFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.Encryptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
 import javax.annotation.security.PermitAll;
 import javax.ejb.Stateful;
@@ -26,11 +31,14 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
  * Klasa MedicalDocumentationManagerImplementation.
  */
+
 @Stateful
 @PermitAll
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -41,10 +49,19 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
     private DocumentationEntryFacade documentationEntryFacade;
 
     @Inject
+    private MedicalDocumentationFacade medicalDocumentationFacade;
+
+    @Inject
+    private HttpServletRequest request;
+
+    @Inject
     private MedicalDocumentationFacade documentationFacade;
 
     @Inject
     private PrescriptionFacade prescriptionFacade;
+
+    @Inject
+    private PropertiesLoader propertiesLoader;
 
     @Inject
     private LoggedInAccountUtil loggedInAccountUtil;
@@ -52,8 +69,33 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
     @Inject
     private AccountFacade accountFacade;
 
+
     @Override
-    public void addDocumentationEntry(AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO) throws DocumentationEntryException, AccountException, EncryptionException {
+    public void createMedicalDocumentation(String login) throws MedicalDocumentationException, AccountException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(login);
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
+        try {
+            MedicalDocumentation medicalDocumentation = new MedicalDocumentation();
+            medicalDocumentation.setCreatedBy(account);
+            medicalDocumentation.setCreatedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+
+            // TODO: 07.06.2021 Co z alegriami i lekarstwami?
+            medicalDocumentation.setAllergies("");
+            medicalDocumentation.setMedicationsTaken("");
+
+            medicalDocumentation.setPatient(account);
+            medicalDocumentationFacade.create(medicalDocumentation);
+        } catch (Exception e) {
+            throw MedicalDocumentationException.medicalDocumentationCreationFailed();
+        }
+    }
+
+    @Override
+    public void addDocumentationEntry(AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO) throws MedicalDocumentationException, AccountException, EncryptionException, DocumentationEntryException {
         Account doctor;
         MedicalDocumentation medicalDocumentation;
         try {
@@ -66,7 +108,7 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
         } catch (AppBaseException e) {
             throw MedicalDocumentationException.noSuchMedicalDocumentation(e);
         }
-        Encryptor encryptor = new Encryptor();
+        Encryptor encryptor = new Encryptor(propertiesLoader);
         String wasDoneEncrypted;
         String toBeDoneEncrypted;
         try {
