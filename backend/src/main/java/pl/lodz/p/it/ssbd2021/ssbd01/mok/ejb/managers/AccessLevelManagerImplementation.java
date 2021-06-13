@@ -19,6 +19,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
+import java.util.function.Consumer;
 
 /**
  * Typ Access level manager implementation - implementacja AccessLevelManager.
@@ -82,6 +83,12 @@ public class AccessLevelManagerImplementation extends AbstractManager implements
             }
         }
 
+    }
+
+    @Override
+    public void deleteAccessLevelsByAccountId(Long id) throws AppBaseException {
+        var x = accessLevelFacade.findByAccountId(id);
+        x.forEach(accessLevel -> accessLevelFacade.remove(accessLevel));
     }
 
 }
