@@ -6,6 +6,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.DocumentationEntryException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
@@ -15,6 +16,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades.DocumentationEntryFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades.MedicalDocumentationFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades.PrescriptionFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.Encryptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 
@@ -51,7 +53,7 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
     private AccountFacade accountFacade;
 
     @Override
-    public void addDocumentationEntry(AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO) throws DocumentationEntryException, AccountException {
+    public void addDocumentationEntry(AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO) throws DocumentationEntryException, AccountException, EncryptionException {
         Account doctor;
         MedicalDocumentation medicalDocumentation;
         try {
@@ -64,9 +66,19 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
         } catch (AppBaseException e) {
             throw MedicalDocumentationException.noSuchMedicalDocumentation(e);
         }
+        Encryptor encryptor = new Encryptor();
+        String wasDoneEncrypted;
+        String toBeDoneEncrypted;
+        try {
+            wasDoneEncrypted = encryptor.encryptMessage(addDocumentationEntryRequestDTO.getWasDone());
+            toBeDoneEncrypted = encryptor.encryptMessage(addDocumentationEntryRequestDTO.getToBeDone());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw EncryptionException.encryptingFailed();
+        }
         DocumentationEntry documentationEntry = new DocumentationEntry(doctor,
-                addDocumentationEntryRequestDTO.getWasDone(),
-                addDocumentationEntryRequestDTO.getToBeDone(),
+                wasDoneEncrypted,
+                toBeDoneEncrypted,
                 medicalDocumentation);
         try {
             documentationEntryFacade.create(documentationEntry);
