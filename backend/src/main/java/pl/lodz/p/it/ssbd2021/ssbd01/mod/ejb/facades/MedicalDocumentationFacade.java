@@ -45,6 +45,13 @@ public class MedicalDocumentationFacade extends AbstractFacade<MedicalDocumentat
         super(entityClass);
     }
 
+    /**
+     * Pobiera pole dokumentacja medyczna na podstawie loginu pacjenta.
+     *
+     * @param login login pacjenta
+     * @return dokumentacja medyczna na podstawie loginu pacjenta
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
     public MedicalDocumentation getMedicalDocumentationByPatientLogin(String login) throws AppBaseException {
         try {
             TypedQuery<MedicalDocumentation> tq = em.createNamedQuery("MedicalDocumentation.findByPatientLogin", MedicalDocumentation.class);

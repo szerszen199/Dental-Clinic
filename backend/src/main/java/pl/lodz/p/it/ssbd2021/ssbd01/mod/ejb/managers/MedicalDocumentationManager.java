@@ -18,6 +18,14 @@ import java.util.List;
 @Local
 public interface MedicalDocumentationManager {
 
+    /**
+     * Dodaje wpis w dokumentacji medycznej pacjenta.
+     *
+     * @param addDocumentationEntryRequestDTO DTO dla tworzenia wpisu dokumentacji
+     * @throws DocumentationEntryException wyjątek typu DocumentationEntryException
+     * @throws AccountException            wyjątek typu AccountException
+     * @throws EncryptionException         wyjątek typu EncryptionException
+     */
     void addDocumentationEntry(AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO) throws DocumentationEntryException, AccountException, EncryptionException;
 
     /**
