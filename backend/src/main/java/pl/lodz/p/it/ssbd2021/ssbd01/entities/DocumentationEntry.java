@@ -63,6 +63,14 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
     public DocumentationEntry() {
     }
 
+    /**
+     * Tworzy nową instancję klasy Documentation entry.
+     *
+     * @param doctor               doktor tworzący wpis dokumentacji
+     * @param wasDone              co zostało zrobione
+     * @param toBeDone             co ma zostać zrobione wprzyszłości
+     * @param medicalDocumentation medyczna dokumentacja, dla której został dodany wpis
+     */
     public DocumentationEntry(Account doctor, String wasDone, String toBeDone, MedicalDocumentation medicalDocumentation) {
         this.doctor = doctor;
         this.wasDone = wasDone;

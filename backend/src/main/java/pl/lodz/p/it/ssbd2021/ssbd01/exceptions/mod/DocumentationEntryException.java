@@ -53,7 +53,12 @@ public class DocumentationEntryException extends AppBaseException {
         return new DocumentationEntryException(I18n.REMOVAL_FAILURE_ERROR);
     }
 
-    public static DocumentationEntryException documentationEntryCreationFailed(){
+    /**
+     * Zwraca wyjątek z komunikatem {@link I18n#DOCUMENTATION_ENTRY_CREATION_FAILED}.
+     *
+     * @return {@link DocumentationEntryException}
+     */
+    public static DocumentationEntryException documentationEntryCreationFailed() {
         return new DocumentationEntryException(I18n.DOCUMENTATION_ENTRY_CREATION_FAILED);
     }
 

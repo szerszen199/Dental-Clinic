@@ -11,12 +11,27 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
+/**
+ * Klasa do enkrypcji i deskrypcji tekstu za pomocą klucza symetrycznego.
+ */
 public class Encryptor {
 
     @Inject
     private PropertiesLoader propertiesLoader;
 
-    public String encryptMessage(String message) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+    /**
+     * Szyfrowanie wiadomości.
+     *
+     * @param message wiadomość do zaszyfrowania
+     * @return Zaszyfrowana wiadomość
+     * @throws NoSuchPaddingException    wyjątek typu NoSuchPaddingException
+     * @throws NoSuchAlgorithmException  wyjątek typu NoSuchAlgorithmException
+     * @throws IllegalBlockSizeException wyjątek typu IllegalBlockSizeException
+     * @throws BadPaddingException       wyjątek typu BadPaddingException
+     * @throws InvalidKeyException       wyjątek typu InvalidKeyException
+     */
+    public String encryptMessage(String message) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException,
+            BadPaddingException, InvalidKeyException {
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         byte[] decodedKey = Base64.getDecoder().decode(propertiesLoader.getCipherKey());
         SecretKey secretKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
@@ -25,12 +40,24 @@ public class Encryptor {
         return Base64.getEncoder().encodeToString(cipher.doFinal(messageBytes));
     }
 
-    public byte[] decryptMessage(String encryptedMessage) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    /**
+     * Odszyfrowanie wiadomości.
+     *
+     * @param encryptedMessage wiadomość do odszyfrowania
+     * @return Odszyfrowana wiadomość
+     * @throws NoSuchPaddingException    wyjątek typu NoSuchPaddingException
+     * @throws NoSuchAlgorithmException  wyjątek typu NoSuchAlgorithmException
+     * @throws IllegalBlockSizeException wyjątek typu IllegalBlockSizeException
+     * @throws BadPaddingException       wyjątek typu BadPaddingException
+     * @throws InvalidKeyException       wyjątek typu InvalidKeyException
+     */
+    public String decryptMessage(String encryptedMessage) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException,
+            BadPaddingException, InvalidKeyException {
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         byte[] decodedKey = Base64.getDecoder().decode(propertiesLoader.getCipherKey());
         SecretKey secretKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        return cipher.doFinal(encryptedMessage.getBytes());
+        return Base64.getEncoder().encodeToString(cipher.doFinal(encryptedMessage.getBytes()));
     }
 
 }

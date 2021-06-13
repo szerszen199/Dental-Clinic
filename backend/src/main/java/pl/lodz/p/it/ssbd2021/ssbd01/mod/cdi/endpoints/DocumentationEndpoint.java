@@ -61,6 +61,12 @@ public class DocumentationEndpoint {
         return Response.ok().entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_DELETED_SUCCESSFULLY)).build();
     }
 
+    /**
+     * Dodanie wpisu w dokumentacji medycznej pacjenta.
+     *
+     * @param addDocumentationEntryRequestDTO DTO zawierające niezbędne informacje do utworzenia wpisu dokumentacji medycznej.
+     * @return {@link Response.Status#OK} przy powodzeniu, inaczej {@link Response.Status#BAD_REQUEST}
+     */
     @PUT
     @Path("create")
     @Consumes(MediaType.APPLICATION_JSON)
