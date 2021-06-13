@@ -28,6 +28,7 @@ public class PropertiesLoader {
     private Long deactivateInactiveAccountTimeDelay;
     private String anonymousUserName;
     private String etagSecret;
+    private String cipherKey;
 
 
     private String jwtSecret;
@@ -165,6 +166,10 @@ public class PropertiesLoader {
         return appFrontendUrl;
     }
 
+    public String getCipherKey() {
+        return cipherKey;
+    }
+
     @PostConstruct
     private void loadProperties() {
         Properties prop = null;
@@ -193,6 +198,7 @@ public class PropertiesLoader {
         resetPasswordConfirmationJwtSecret = prop.getProperty("reset.password.confirmation.jwt.secret");
         resetPasswordConfirmationJwtExpiration = Long.valueOf(prop.getProperty("reset.password.confirmation.jwt.expirationMs"));
         etagSecret = prop.getProperty("etag.secret");
+        cipherKey = prop.getProperty("cipher.key");
         transactionRetryCount = Integer.parseInt(prop.getProperty("transaction.retry.count"));
         appDefaultUrl = prop.getProperty("application.default.url");
         appMailUrl = prop.getProperty("application.email_url");
