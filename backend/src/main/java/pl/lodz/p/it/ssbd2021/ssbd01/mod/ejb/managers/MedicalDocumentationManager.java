@@ -20,17 +20,26 @@ import java.util.List;
 @Local
 public interface MedicalDocumentationManager {
 
+    /**
+     * Tworzy dokumentację medyczną.
+     *
+     * @param login login użytkownika, dla którego tworzona jest dokumentacja
+     * @throws MedicalDocumentationException wyjątek typu MedicalDocumentationException
+     * @throws AccountException              wyjątek typu AccountException
+     */
     void createMedicalDocumentation(String login) throws MedicalDocumentationException, AccountException;
 
     /**
      * Dodaje wpis w dokumentacji medycznej pacjenta.
      *
      * @param addDocumentationEntryRequestDTO DTO dla tworzenia wpisu dokumentacji
-     * @throws DocumentationEntryException wyjątek typu DocumentationEntryException
-     * @throws AccountException            wyjątek typu AccountException
-     * @throws EncryptionException         wyjątek typu EncryptionException
+     * @throws DocumentationEntryException   wyjątek typu DocumentationEntryException
+     * @throws AccountException              wyjątek typu AccountException
+     * @throws EncryptionException           wyjątek typu EncryptionException
+     * @throws MedicalDocumentationException wyjątek typu MedicalDocumentationException
      */
-    void addDocumentationEntry(AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO) throws DocumentationEntryException, AccountException, EncryptionException, MedicalDocumentationException;
+    void addDocumentationEntry(AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO)
+            throws DocumentationEntryException, AccountException, EncryptionException, MedicalDocumentationException;
 
     /**
      * Edytuje wpis w dokumentacji medycznej pacjenta.
