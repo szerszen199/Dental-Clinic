@@ -16,6 +16,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
+import java.util.List;
 
 /**
  * Klasa definiująca główne operacje wykonywane na encjach typu AccessLevel.
@@ -65,6 +66,26 @@ public class AccessLevelFacade extends AbstractFacade<AccessLevel> {
         tq.setParameter("level", level);
         try {
             return tq.getSingleResult();
+        } catch (NoResultException e) {
+            throw AccountException.noSuchAccount(e);
+        } catch (PersistenceException e) {
+            throw AppBaseException.databaseError(e);
+        }
+    }
+
+    /**
+     * Znajduje poziom dostępu konta o loginie {@param login} na podstawie nazwy
+     * poziomu dostępu.
+     *
+     * @param id the id
+     * @return zadany poziom dostępu dla zadanego użytkownika
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    public List<AccessLevel> findByAccountId(Long id) throws AppBaseException {
+        TypedQuery<AccessLevel> tq = em.createNamedQuery("AccessLevel.findByAccountId", AccessLevel.class);
+        tq.setParameter("accountId", id);
+        try {
+            return  tq.getResultList();
         } catch (NoResultException e) {
             throw AccountException.noSuchAccount(e);
         } catch (PersistenceException e) {
