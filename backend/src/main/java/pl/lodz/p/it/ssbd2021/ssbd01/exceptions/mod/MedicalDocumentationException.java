@@ -45,7 +45,12 @@ public class MedicalDocumentationException extends AppBaseException {
         return new MedicalDocumentationException(I18n.MEDICAL_DOCUMENTATION_NOT_FOUND, cause);
     }
 
-    public static MedicalDocumentationException medicalDocumentationCreationFailed(){
+    /**
+     * Wyjątek gdy wskazana dokumentacja medyczna nie istnieje.
+     *
+     * @return wyjątek typu DocumentationEntryException
+     */
+    public static MedicalDocumentationException medicalDocumentationCreationFailed() {
         return new MedicalDocumentationException(I18n.MEDICAL_DOCUMENTATION_CREATION_FAILED);
     }
 

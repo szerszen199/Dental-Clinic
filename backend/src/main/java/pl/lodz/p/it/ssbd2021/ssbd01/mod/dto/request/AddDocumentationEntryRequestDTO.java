@@ -28,6 +28,9 @@ public class AddDocumentationEntryRequestDTO {
         this.toBeDone = toBeDone;
     }
 
+    /**
+     * Tworzy nową instancję klasy AddDocumentationEntryRequestDTO.
+     */
     public AddDocumentationEntryRequestDTO() {
     }
 

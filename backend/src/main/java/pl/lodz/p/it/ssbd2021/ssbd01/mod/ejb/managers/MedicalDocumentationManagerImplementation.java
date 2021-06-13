@@ -95,7 +95,8 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
     }
 
     @Override
-    public void addDocumentationEntry(AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO) throws MedicalDocumentationException, AccountException, EncryptionException, DocumentationEntryException {
+    public void addDocumentationEntry(AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO)
+            throws MedicalDocumentationException, AccountException, EncryptionException, DocumentationEntryException {
         Account doctor;
         MedicalDocumentation medicalDocumentation;
         try {
@@ -109,8 +110,8 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
             throw MedicalDocumentationException.noSuchMedicalDocumentation(e);
         }
         Encryptor encryptor = new Encryptor(propertiesLoader);
-        String wasDoneEncrypted;
-        String toBeDoneEncrypted;
+        byte[] wasDoneEncrypted;
+        byte[] toBeDoneEncrypted;
         try {
             wasDoneEncrypted = encryptor.encryptMessage(addDocumentationEntryRequestDTO.getWasDone());
             toBeDoneEncrypted = encryptor.encryptMessage(addDocumentationEntryRequestDTO.getToBeDone());

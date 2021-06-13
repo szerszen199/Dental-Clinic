@@ -6,12 +6,9 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
 /**
  * Klasa do enkrypcji i deskrypcji tekstu za pomocą klucza symetrycznego.
@@ -19,9 +16,16 @@ import java.util.Base64;
 public class Encryptor {
 
     private final PropertiesLoader propertiesLoader;
+    private SecretKey secretKey;
 
+    /**
+     * Tworzy nową instancję klasy Encryptor.
+     *
+     * @param propertiesLoader properties loader
+     */
     public Encryptor(PropertiesLoader propertiesLoader) {
         this.propertiesLoader = propertiesLoader;
+        this.generateSecretKey();
     }
 
     /**
@@ -35,14 +39,11 @@ public class Encryptor {
      * @throws BadPaddingException       wyjątek typu BadPaddingException
      * @throws InvalidKeyException       wyjątek typu InvalidKeyException
      */
-    public String encryptMessage(String message) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException,
+    public byte[] encryptMessage(String message) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException,
             BadPaddingException, InvalidKeyException {
-        Cipher cipher = Cipher.getInstance("AES");
-        byte[] decodedKey = propertiesLoader.getCipherKey().getBytes(StandardCharsets.UTF_8);
-        SecretKey secretKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-        byte[] messageBytes = message.getBytes(StandardCharsets.UTF_8);
-        return new String(cipher.doFinal(messageBytes), StandardCharsets.UTF_8);
+        Cipher cipher = Cipher.getInstance(propertiesLoader.getCipherType());
+        cipher.init(Cipher.ENCRYPT_MODE, this.secretKey);
+        return cipher.doFinal(message.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -56,13 +57,19 @@ public class Encryptor {
      * @throws BadPaddingException       wyjątek typu BadPaddingException
      * @throws InvalidKeyException       wyjątek typu InvalidKeyException
      */
-    public String decryptMessage(String encryptedMessage) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException,
+    public String decryptMessage(byte[] encryptedMessage) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException,
             BadPaddingException, InvalidKeyException {
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        byte[] decodedKey = Base64.getDecoder().decode(propertiesLoader.getCipherKey());
-        SecretKey secretKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        return Base64.getEncoder().encodeToString(cipher.doFinal(encryptedMessage.getBytes()));
+        Cipher cipher = Cipher.getInstance(propertiesLoader.getCipherType());
+        cipher.init(Cipher.DECRYPT_MODE, this.secretKey);
+        return new String(cipher.doFinal(encryptedMessage), StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Inicjalizuje klucz do szyfrowania i odszyfrowywania.
+     */
+    private void generateSecretKey() {
+        byte[] decodedKey = propertiesLoader.getCipherKey().getBytes(StandardCharsets.UTF_8);
+        this.secretKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, propertiesLoader.getCipherType());
     }
 
 }

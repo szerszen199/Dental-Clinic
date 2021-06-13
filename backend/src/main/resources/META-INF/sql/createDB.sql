@@ -250,8 +250,8 @@ CREATE TABLE documentation_entries
     id                     BIGINT PRIMARY KEY,                             -- Klucz głowny tabeli
     documentation_id       BIGINT      NOT NULL,                           -- Dokumentacja medyczna, do której odnosi się wpis
     doctor_id              BIGINT      NOT NULL,                           -- Lekarz, który tworzy wpis w dokumentacji
-    was_done               TEXT,                                           -- Tekst informujący co zostało wykonane na wizycie reprezentowanej przez wpis w dokumentacji
-    to_be_done             TEXT,                                           -- Tekst informujący co ma zostać wykonane na nastepnej wizycie
+    was_done               bytea,                                           -- Tekst informujący co zostało wykonane na wizycie reprezentowanej przez wpis w dokumentacji
+    to_be_done             bytea,                                           -- Tekst informujący co ma zostać wykonane na nastepnej wizycie
     version                BIGINT                                          -- Wersja
         CONSTRAINT version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Data utworzenia wiersza tabeli

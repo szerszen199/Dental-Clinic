@@ -42,10 +42,10 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
     private Long id;
 
     @Column(name = "was_done")
-    private String wasDone;
+    private byte[] wasDone;
 
     @Column(name = "to_be_done")
-    private String toBeDone;
+    private byte[] toBeDone;
 
     @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
@@ -71,7 +71,7 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
      * @param toBeDone             co ma zostać zrobione wprzyszłości
      * @param medicalDocumentation medyczna dokumentacja, dla której został dodany wpis
      */
-    public DocumentationEntry(Account doctor, String wasDone, String toBeDone, MedicalDocumentation medicalDocumentation) {
+    public DocumentationEntry(Account doctor, byte[] wasDone, byte[] toBeDone, MedicalDocumentation medicalDocumentation) {
         this.doctor = doctor;
         this.wasDone = wasDone;
         this.toBeDone = toBeDone;
@@ -91,19 +91,19 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
         return id;
     }
 
-    public String getWasDone() {
+    public byte[] getWasDone() {
         return wasDone;
     }
 
-    public void setWasDone(String wasDone) {
+    public void setWasDone(byte[] wasDone) {
         this.wasDone = wasDone;
     }
 
-    public String getToBeDone() {
+    public byte [] getToBeDone() {
         return toBeDone;
     }
 
-    public void setToBeDone(String toBeDone) {
+    public void setToBeDone(byte [] toBeDone) {
         this.toBeDone = toBeDone;
     }
 

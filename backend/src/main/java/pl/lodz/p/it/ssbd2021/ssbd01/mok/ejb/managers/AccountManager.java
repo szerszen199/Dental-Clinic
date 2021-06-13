@@ -25,8 +25,9 @@ public interface AccountManager {
      * Utworzenie konta przy rejestracji.
      *
      * @param account nowe konto
-     * @throws AccountException     wyjątek typu AccountException
-     * @throws MailSendingException wyjątek typu MailSendingException
+     * @throws AccountException              wyjątek typu AccountException
+     * @throws MailSendingException          wyjątek typu MailSendingException
+     * @throws MedicalDocumentationException wyjątek typu MedicalDocumentationException
      */
     void createAccount(Account account) throws AccountException, MailSendingException, MedicalDocumentationException;
 
