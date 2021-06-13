@@ -10,8 +10,10 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades.MedicalDocumentationFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.SetNewPasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
@@ -57,6 +59,9 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     private AccountFacade accountFacade;
 
     @Inject
+    private MedicalDocumentationFacade medicalDocumentationFacade;
+
+    @Inject
     private LoggedInAccountUtil loggedInAccountUtil;
 
     @Inject
@@ -89,7 +94,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     private PropertiesLoader propertiesLoader;
 
     @Override
-    public void createAccount(Account account) throws AccountException, MailSendingException {
+    public void createAccount(Account account) throws AccountException, MailSendingException, MedicalDocumentationException {
         String requestIp = IpAddressUtils.getClientIpAddressFromHttpServletRequest(request);
         account.setPassword(hashGenerator.generateHash(account.getPassword()));
         account.setCreatedByIp(requestIp);
@@ -109,21 +114,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         AccessLevel adminData = new AdminData(account, false);
         adminData.setCreatedBy(account);
         account.getAccessLevels().add(adminData);
-
-        account.getAccessLevels().forEach(accessLevel -> {
-            if (accessLevel.getActive() && accessLevel.getLevel().equals(I18n.PATIENT)) {
-                MedicalDocumentation medicalDocumentation = new MedicalDocumentation();
-                medicalDocumentation.setCreatedBy(account);
-                medicalDocumentation.setCreatedByIp(requestIp);
-
-                // TODO: 07.06.2021 Co z alegriami i lekarstwami?
-                medicalDocumentation.setAllergies("");
-                medicalDocumentation.setMedicationsTaken("");
-
-                medicalDocumentation.setPatient(account);
-
-            }
-        });
 
         try {
             accountFacade.findByLoginOrEmailOrPesel(account.getLogin(), account.getEmail(), account.getPesel());

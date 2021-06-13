@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mod.cdi.endpoints;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.DocumentationEntryException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.AddDocumentationEntryRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.DeleteDocumentationEntryRequestDTO;
@@ -76,7 +77,7 @@ public class DocumentationEndpoint {
         try {
             medicalDocumentationTransactionRepeater.repeatTransaction(
                     () -> medicalDocumentationManager.addDocumentationEntry(addDocumentationEntryRequestDTO), medicalDocumentationManager);
-        } catch (DocumentationEntryException | AccountException | EncryptionException e) {
+        } catch (DocumentationEntryException | AccountException | EncryptionException | MedicalDocumentationException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_CREATED_UNSUCCESSFULLY)).build();

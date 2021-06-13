@@ -1,9 +1,12 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
+import org.hibernate.validator.constraints.UniqueElements;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,8 +54,8 @@ public class MedicalDocumentation extends AbstractEntity implements Serializable
     private String allergies;
     @Column(name = "medications_taken")
     private String medicationsTaken;
-    @JoinColumn(name = "patient_id", referencedColumnName = "id", nullable = false, updatable = false)
-    @OneToOne(optional = false)
+    @JoinColumn(name = "patient_id", unique = true, referencedColumnName = "id", nullable = false, updatable = false)
+    @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @NotNull
     private Account patient;
 
@@ -60,6 +63,15 @@ public class MedicalDocumentation extends AbstractEntity implements Serializable
      * Tworzy nową instancję klasy MedicalDocumentation.
      */
     public MedicalDocumentation() {
+    }
+
+    /**
+     * Tworzy nową instancję klasy MedicalDocumentation dla pacjenta.
+     *
+     * @param patient patient
+     */
+    public MedicalDocumentation(Account patient) {
+        this.patient = patient;
     }
 
     @Override

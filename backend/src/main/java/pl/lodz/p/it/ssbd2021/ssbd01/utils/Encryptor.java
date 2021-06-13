@@ -6,6 +6,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -16,8 +17,11 @@ import java.util.Base64;
  */
 public class Encryptor {
 
-    @Inject
-    private PropertiesLoader propertiesLoader;
+    private final PropertiesLoader propertiesLoader;
+
+    public Encryptor(PropertiesLoader propertiesLoader) {
+        this.propertiesLoader = propertiesLoader;
+    }
 
     /**
      * Szyfrowanie wiadomości.

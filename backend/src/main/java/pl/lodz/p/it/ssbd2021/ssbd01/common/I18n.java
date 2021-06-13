@@ -152,4 +152,5 @@ public class I18n {
     public static final String DOCUMENTATION_ENTRY_CREATION_FAILED = "documentation_entry_creation_failed";
     public static final String DOCUMENTATION_ENTRY_CREATED_UNSUCCESSFULLY = "documentation_entry_created_failed";
     public static final String ENCRYPTING_FAILED = "encrypting_failed";
+    public static final String MEDICAL_DOCUMENTATION_CREATION_FAILED = "medical_documentation_creation_failed";
 }
