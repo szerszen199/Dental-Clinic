@@ -80,6 +80,7 @@ public class DocumentationEndpoint {
         } catch (DocumentationEntryException | AccountException | EncryptionException | MedicalDocumentationException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         } catch (Exception e) {
+            e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_CREATED_UNSUCCESSFULLY)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_CREATED_SUCCESSFULLY)).build();
