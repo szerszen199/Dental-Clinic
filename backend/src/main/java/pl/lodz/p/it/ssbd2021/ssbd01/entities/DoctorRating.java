@@ -17,6 +17,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 
 /**
  * Typ DoctorRating - klasa reprezentująca encję ocen doktora.
@@ -29,6 +30,9 @@ import javax.validation.constraints.NotNull;
         @NamedQuery(name = "DoctorRating.findById", query = "SELECT d FROM DoctorRating d WHERE d.id = :id"),
         @NamedQuery(name = "DoctorRating.findByDoctorId", query = "SELECT d FROM DoctorRating d WHERE d.doctor.id = :doctorId"),
         @NamedQuery(name = "DoctorRating.findByDoctorLogin", query = "SELECT d FROM DoctorRating d WHERE d.doctor.login = :doctorLogin"),
+        @NamedQuery(name = "DoctorRating.findActiveDoctors", 
+                query = "SELECT d FROM DoctorRating d WHERE d.doctor.id = (SELECT accountId.id FROM AccessLevel al WHERE al.active AND al.level = 'level.doctor')"),
+        @NamedQuery(name = "DoctorRating.findByActive", query = "SELECT d FROM DoctorRating d WHERE d.active = :active"),
         @NamedQuery(name = "DoctorRating.findByVersion", query = "SELECT d FROM DoctorRating d WHERE d.version = :version"),
         @NamedQuery(name = "DoctorRating.findByRatesSum", query = "SELECT d FROM DoctorRating d WHERE d.ratesSum = :ratesSum"),
         @NamedQuery(name = "DoctorRating.findByRatesCounter", query = "SELECT d FROM DoctorRating d WHERE d.ratesCounter = :ratesCounter")})
@@ -57,6 +61,11 @@ public class DoctorRating extends AbstractEntity implements Serializable {
     @Min(0)
     private Integer ratesCounter = 0;
 
+    @Basic(optional = false)
+    @Column(name = "active", nullable = false)
+    @NotNull
+    private Boolean active;
+
     /**
      * Tworzy nową instancję klasy DoctorRating.
      */
@@ -70,12 +79,14 @@ public class DoctorRating extends AbstractEntity implements Serializable {
      */
     public DoctorRating(@NotNull Account doctor) {
         this.doctor = doctor;
+        this.active = doctor.getActive() 
+                && doctor.getAccessLevels().stream().anyMatch(al -> al.getLevel().equals(I18n.DOCTOR) && al.getActive());
     }
 
     /**
      * Pobiera pole doctor.
      *
-     * @return lekarz
+     * @return lekarz doctor
      */
     public Account getDoctor() {
         return doctor;
@@ -117,9 +128,31 @@ public class DoctorRating extends AbstractEntity implements Serializable {
         this.ratesCounter = ratesCounter;
     }
 
+    /**
+     * Pobiera pole active.
+     *
+     * @return wartość active
+     */
+    public Boolean getActive() {
+        return active;
+    }
+
+    /**
+     * Ustawia pole active.
+     *
+     * @param active wartość acrive
+     */
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     @Override
     public Long getId() {
         return null;
+    }
+    
+    public double getAverage() {
+        return ratesSum / ratesCounter;
     }
 
     @Override
