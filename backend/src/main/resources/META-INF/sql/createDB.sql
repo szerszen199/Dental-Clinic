@@ -409,7 +409,8 @@ GRANT SELECT ON accounts_seq TO ssbd01mow;
 GRANT
     SELECT,
     INSERT,
-    UPDATE
+    UPDATE,
+    DELETE
     ON access_levels TO ssbd01mok;
 
 GRANT SELECT ON access_levels TO ssbd01mok, ssbd01mow, ssbd01mod;
