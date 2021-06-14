@@ -83,7 +83,8 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     private MailProvider mailProvider;
 
     @Inject
-        private JwtResetPasswordConfirmation jwtResetPasswordConfirmation;
+    private JwtResetPasswordConfirmation jwtResetPasswordConfirmation;
+    
     @Inject
     private PropertiesLoader propertiesLoader;
 
@@ -110,7 +111,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         account.getAccessLevels().add(adminData);
 
         account.getAccessLevels().forEach(accessLevel -> {
-            if (accessLevel.getActive() && accessLevel.getLevel().equals(I18n.PATIENT)) {
+            if (accessLevel.getActive() && accessLevel instanceof PatientData) {
                 MedicalDocumentation medicalDocumentation = new MedicalDocumentation();
                 medicalDocumentation.setCreatedBy(account);
                 medicalDocumentation.setCreatedByIp(requestIp);
