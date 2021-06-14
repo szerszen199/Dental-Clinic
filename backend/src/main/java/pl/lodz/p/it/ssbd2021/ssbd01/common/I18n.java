@@ -145,4 +145,6 @@ public class I18n {
     public static final String INVALID_DOCTOR_DOCUMENTATION_ENTRY = "invalid_doctor_documentation_entry";
     public static final String REMOVAL_FAILURE_ERROR = "removal_failure_error";
     public static final String DOCUMENTATION_ENTRY_DELETION_UNSUCCESSFUL = "documentation_entry_deletion_unsuccessful";
+    
+    public static final String GET_DOCTORS_AND_RATES_FAILED = "get_doctors_and_rates_failed";
 }

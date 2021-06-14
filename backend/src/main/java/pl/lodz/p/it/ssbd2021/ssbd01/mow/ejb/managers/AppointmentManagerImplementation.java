@@ -1,7 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 import javax.annotation.security.PermitAll;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
@@ -11,8 +11,13 @@ import javax.interceptor.Interceptors;
 import org.apache.commons.lang3.NotImplementedException;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorRating;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AppointmentFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.DoctorRatingFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
@@ -30,6 +35,9 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     
     @Inject
     private AccountFacade accountFacade;
+    
+    @Inject
+    private DoctorRatingFacade doctorRatingFacade;
 
     @Override
     public void bookAppointment(Long appointmentId, String login) {
@@ -67,8 +75,19 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
-    public Map<Account, Double> getAllDoctorsAndRates() {
-        throw new NotImplementedException();
+    public List<DoctorAndRateResponseDTO> getAllDoctorsAndRates() throws DoctorRatingException {
+        try {
+            List<DoctorRating> doctors = doctorRatingFacade.getActiveDoctorsAndRates();
+            return doctors
+                    .stream()
+                    .map(doctor -> 
+                            new DoctorAndRateResponseDTO(doctor.getDoctor().getFirstName(), 
+                                    doctor.getDoctor().getLastName(), 
+                                    doctor.getAverage()))
+                    .collect(Collectors.toList());
+        } catch (AppBaseException e) {
+            throw DoctorRatingException.getDoctorsAndRatesFailed();
+        }
     }
 
     @Override
