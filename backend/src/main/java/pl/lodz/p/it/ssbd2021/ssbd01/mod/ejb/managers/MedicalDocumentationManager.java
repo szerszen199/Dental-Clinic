@@ -1,9 +1,15 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.DocumentationEntryException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.AddDocumentationEntryRequestDTO;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -15,12 +21,25 @@ import java.util.List;
 public interface MedicalDocumentationManager {
 
     /**
+     * Tworzy dokumentację medyczną.
+     *
+     * @param login login użytkownika, dla którego tworzona jest dokumentacja
+     * @throws MedicalDocumentationException wyjątek typu MedicalDocumentationException
+     * @throws AccountException              wyjątek typu AccountException
+     */
+    void createMedicalDocumentation(String login) throws MedicalDocumentationException, AccountException;
+
+    /**
      * Dodaje wpis w dokumentacji medycznej pacjenta.
      *
-     * @param patientId klucz główny pacjenta
-     * @param entry     dodawany wpis
+     * @param addDocumentationEntryRequestDTO DTO dla tworzenia wpisu dokumentacji
+     * @throws DocumentationEntryException   wyjątek typu DocumentationEntryException
+     * @throws AccountException              wyjątek typu AccountException
+     * @throws EncryptionException           wyjątek typu EncryptionException
+     * @throws MedicalDocumentationException wyjątek typu MedicalDocumentationException
      */
-    void addDocumentationEntry(Long patientId, DocumentationEntry entry);
+    void addDocumentationEntry(AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO)
+            throws DocumentationEntryException, AccountException, EncryptionException, MedicalDocumentationException;
 
     /**
      * Edytuje wpis w dokumentacji medycznej pacjenta.

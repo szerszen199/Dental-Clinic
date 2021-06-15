@@ -196,7 +196,7 @@
                         <goals>
                             <goal>install-node-and-npm</goal>
                         </goals>
-<!--                        <phase>generate-sources</phase>-->
+                        <phase>generate-sources</phase>
                     </execution>
                     <execution>
                         <id>npm-install</id>
