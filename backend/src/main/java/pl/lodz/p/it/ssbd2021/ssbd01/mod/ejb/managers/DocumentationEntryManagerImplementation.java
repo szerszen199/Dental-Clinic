@@ -6,6 +6,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.DocumentationEntryException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.EditDocumentationEntryRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades.DocumentationEntryFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.Encryptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
@@ -21,7 +22,7 @@ import javax.interceptor.Interceptors;
 @PermitAll
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
-public class DocumentationEntryManagerImplementation implements DocumentationEntryManager {
+public class DocumentationEntryManagerImplementation extends AbstractManager implements DocumentationEntryManager {
 
     @Inject
     private DocumentationEntryFacade documentationEntryFacade;
