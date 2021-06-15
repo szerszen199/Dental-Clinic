@@ -6,7 +6,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 import javax.validation.constraints.NotNull;
 
 /**
- * Klasa DTO podczas tworzenia wpisu w dokumentacji medycznej .
+ * Klasa DTO podczas tworzenia wpisu w dokumentacji medycznej.
  */
 public class AddDocumentationEntryRequestDTO {
     @NotNull(message = I18n.PATIENT_ID_NULL)
