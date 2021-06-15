@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS medical_documentations;
 DROP TABLE IF EXISTS appointments;
 DROP VIEW IF EXISTS glassfish_auth_view;
 DROP TABLE IF EXISTS access_levels;
+DROP TABLE IF EXISTS doctors_ratings;
 DROP TABLE IF EXISTS accounts;
 DROP TABLE IF EXISTS doctors_ratings;
 
@@ -54,7 +55,7 @@ CREATE TABLE accounts
     created_by_ip                             VARCHAR(256),
     email_recall                              BOOL DEFAULT FALSE NOT NULL,
     first_password_change                     BOOL DEFAULT FALSE NOT NULL,
-    language                                  CHAR(2) NOT NULL
+    language                                  CHAR(2)            NOT NULL
         CONSTRAINT acc_language CHECK
             (language in ('pl', 'PL', 'en', 'EN')),                        -- Język konta
     version                                   BIGINT                       -- Wersja
@@ -207,7 +208,8 @@ CREATE SEQUENCE appointments_seq -- Sekwencja wykorzystywana do tworzenia kluczy
 CREATE TABLE medical_documentations
 (
     id                     BIGINT PRIMARY KEY,                             -- Klucz głowny tabeli
-    patient_id             BIGINT      NOT NULL,                           -- ID pacjenta którego dotyczy dokumentacja
+    patient_id             BIGINT      NOT NULL                            -- ID pacjenta którego dotyczy dokumentacja
+        CONSTRAINT med_documentation_patient_id_unique UNIQUE,
     allergies              TEXT,                                           -- Tekstowy opis alergii pacjenta
     medications_taken      TEXT,                                           -- Tekstowy opis przyjmowanych lekarstw uzytkownika
     version                BIGINT                                          -- Wersja
@@ -251,8 +253,8 @@ CREATE TABLE documentation_entries
     id                     BIGINT PRIMARY KEY,                             -- Klucz głowny tabeli
     documentation_id       BIGINT      NOT NULL,                           -- Dokumentacja medyczna, do której odnosi się wpis
     doctor_id              BIGINT      NOT NULL,                           -- Lekarz, który tworzy wpis w dokumentacji
-    was_done               TEXT,                                           -- Tekst informujący co zostało wykonane na wizycie reprezentowanej przez wpis w dokumentacji
-    to_be_done             TEXT,                                           -- Tekst informujący co ma zostać wykonane na nastepnej wizycie
+    was_done               bytea,                                           -- Tekst informujący co zostało wykonane na wizycie reprezentowanej przez wpis w dokumentacji
+    to_be_done             bytea,                                           -- Tekst informujący co ma zostać wykonane na nastepnej wizycie
     version                BIGINT                                          -- Wersja
         CONSTRAINT version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Data utworzenia wiersza tabeli
