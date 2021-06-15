@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS medical_documentations;
 DROP TABLE IF EXISTS appointments;
 DROP VIEW IF EXISTS glassfish_auth_view;
 DROP TABLE IF EXISTS access_levels;
+DROP TABLE IF EXISTS doctors_ratings;
 DROP TABLE IF EXISTS accounts;
 
 
