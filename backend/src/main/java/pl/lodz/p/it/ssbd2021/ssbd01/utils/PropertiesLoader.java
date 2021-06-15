@@ -28,8 +28,8 @@ public class PropertiesLoader {
     private Long deactivateInactiveAccountTimeDelay;
     private String anonymousUserName;
     private String etagSecret;
-
-
+    private String cipherKey;
+    private String cipherType;
     private String jwtSecret;
     private Long invalidLoginCountBlock;
     private Long jwtExpiration;
@@ -38,13 +38,15 @@ public class PropertiesLoader {
     private String resetPasswordConfirmationJwtSecret;
     private Long resetPasswordConfirmationJwtExpiration;
     private int transactionRetryCount;
-
     private String mailSmtpHost;
     private String mailSmtpPort;
     private String mailSmtpSSLEnable;
     private String mailSmtpAuth;
     private String mailSmtpSSLTrust;
 
+    public String getCipherType() {
+        return cipherType;
+    }
 
     public String getResetPasswordConfirmationJwtSecret() {
         return resetPasswordConfirmationJwtSecret;
@@ -165,6 +167,10 @@ public class PropertiesLoader {
         return appFrontendUrl;
     }
 
+    public String getCipherKey() {
+        return cipherKey;
+    }
+
     @PostConstruct
     private void loadProperties() {
         Properties prop = null;
@@ -193,6 +199,8 @@ public class PropertiesLoader {
         resetPasswordConfirmationJwtSecret = prop.getProperty("reset.password.confirmation.jwt.secret");
         resetPasswordConfirmationJwtExpiration = Long.valueOf(prop.getProperty("reset.password.confirmation.jwt.expirationMs"));
         etagSecret = prop.getProperty("etag.secret");
+        cipherKey = prop.getProperty("cipher.key");
+        cipherType = prop.getProperty("cipher.type");
         transactionRetryCount = Integer.parseInt(prop.getProperty("transaction.retry.count"));
         appDefaultUrl = prop.getProperty("application.default.url");
         appMailUrl = prop.getProperty("application.email_url");

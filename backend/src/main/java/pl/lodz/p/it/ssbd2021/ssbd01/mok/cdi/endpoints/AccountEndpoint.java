@@ -29,9 +29,11 @@ import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.MedicalDocumentationManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.SetNewPasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
@@ -95,6 +97,9 @@ public class AccountEndpoint {
     private AccountManager accountManager;
 
     @Inject
+    private MedicalDocumentationManager medicalDocumentationManager;
+
+    @Inject
     private LoggedInAccountUtil loggedInAccountUtil;
 
     @Inject
@@ -133,6 +138,7 @@ public class AccountEndpoint {
                 this.accountManager.createAccount(
                         AccountConverter.createAccountEntityFromDto(accountDto)
                 );
+                this.medicalDocumentationManager.createMedicalDocumentation(accountDto.getLogin());
                 rollbackTX = accountManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
                 rollbackTX = true;
