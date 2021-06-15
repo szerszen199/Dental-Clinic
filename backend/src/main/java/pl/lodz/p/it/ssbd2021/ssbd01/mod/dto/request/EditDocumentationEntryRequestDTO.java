@@ -14,17 +14,26 @@ public class EditDocumentationEntryRequestDTO {
     private final String wasDone;
     private final String toBeDone;
 
+    @NotNull(message = I18n.DOCUMENTATION_ENTRY_ID_NULL)
+    private final Long id;
+
     /**
      * Tworzy nową instancję klasy EditDocumentationEntryRequestDTO.
      *
      * @param version  version
      * @param wasDone  was done
      * @param toBeDone to be done
+     * @param id       id
      */
-    public EditDocumentationEntryRequestDTO(Long version, String wasDone, String toBeDone) {
+    public EditDocumentationEntryRequestDTO(Long version, String wasDone, String toBeDone, Long id) {
         this.version = version;
         this.wasDone = wasDone;
         this.toBeDone = toBeDone;
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     /**

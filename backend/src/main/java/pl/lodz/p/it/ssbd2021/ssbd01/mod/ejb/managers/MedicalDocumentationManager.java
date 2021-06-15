@@ -41,12 +41,6 @@ public interface MedicalDocumentationManager {
     void addDocumentationEntry(AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO)
             throws DocumentationEntryException, AccountException, EncryptionException, MedicalDocumentationException;
 
-    /**
-     * Edytuje wpis w dokumentacji medycznej pacjenta.
-     *
-     * @param entry edytowany wpis
-     */
-    void editDocumentationEntry(DocumentationEntry entry);
 
     /**
      * Usuwa wpis z dokumentacji medycznej pacjenta.
