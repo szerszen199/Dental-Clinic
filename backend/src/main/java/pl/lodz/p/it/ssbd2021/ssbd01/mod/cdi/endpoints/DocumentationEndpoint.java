@@ -13,6 +13,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.DocumentationEntryManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.MedicalDocumentationManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.utils.DocumentationEntryTransactionRepeater;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.utils.MedicalDocumentationTransactionRepeater;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.SignatureFilterBinding;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 import javax.annotation.security.DenyAll;
@@ -23,12 +25,15 @@ import javax.interceptor.Interceptors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_OPTIMISTIC_LOCK_ERROR;
 
 @Path("documentation")
 @Stateful
@@ -47,6 +52,9 @@ public class DocumentationEndpoint {
 
     @Inject
     private DocumentationEntryManager documentationEntryManager;
+
+    @Inject
+    private EntityIdentitySignerVerifier signer;
 
     /**
      * Usuwanie wpisu w dokumentacji medycznej pacjenta.
@@ -106,7 +114,11 @@ public class DocumentationEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON})
     @RolesAllowed({I18n.DOCTOR})
-    public Response editDocumentationEntry(@NotNull @Valid EditDocumentationEntryRequestDTO editDocumentationEntryRequestDTO) {
+    @SignatureFilterBinding
+    public Response editDocumentationEntry(@NotNull @Valid EditDocumentationEntryRequestDTO editDocumentationEntryRequestDTO, @HeaderParam("If-Match") String header) {
+        if (!signer.verifyEntityIntegrity(header, editDocumentationEntryRequestDTO)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(DATABASE_OPTIMISTIC_LOCK_ERROR)).build();
+        }
         try {
             documentationEntryTransactionRepeater.repeatTransaction(
                     () -> documentationEntryManager.editDocumentationEntry(editDocumentationEntryRequestDTO), documentationEntryManager);

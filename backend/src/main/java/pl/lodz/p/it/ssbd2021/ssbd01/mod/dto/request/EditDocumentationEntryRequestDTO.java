@@ -1,21 +1,25 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Klasa DTO podczas edycji wpisu w dokumentacji medycznej.
  */
-public class EditDocumentationEntryRequestDTO {
+public class EditDocumentationEntryRequestDTO implements SignableEntity {
 
     @NotNull(message = I18n.VERSION_NULL)
-    private final Long version;
-    private final String wasDone;
-    private final String toBeDone;
+    private Long version;
+    private String wasDone;
+    private String toBeDone;
 
     @NotNull(message = I18n.DOCUMENTATION_ENTRY_ID_NULL)
-    private final Long id;
+    private Long id;
 
     /**
      * Tworzy nową instancję klasy EditDocumentationEntryRequestDTO.
@@ -32,8 +36,15 @@ public class EditDocumentationEntryRequestDTO {
         this.id = id;
     }
 
+    public EditDocumentationEntryRequestDTO() {
+    }
+
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     /**
@@ -45,6 +56,10 @@ public class EditDocumentationEntryRequestDTO {
         return version;
     }
 
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     /**
      * Pobiera pole co zostało zrobione.
      *
@@ -54,6 +69,10 @@ public class EditDocumentationEntryRequestDTO {
         return wasDone;
     }
 
+    public void setWasDone(String wasDone) {
+        this.wasDone = wasDone;
+    }
+
     /**
      * Pobiera pole co ma zostać zrobione.
      *
@@ -61,5 +80,17 @@ public class EditDocumentationEntryRequestDTO {
      */
     public String getToBeDone() {
         return toBeDone;
+    }
+
+    public void setToBeDone(String toBeDone) {
+        this.toBeDone = toBeDone;
+    }
+
+    @Override
+    @JsonbTransient
+    public Map<String, String> getPayload() {
+        Map<String, String> map = new HashMap<>();
+        map.put("version", String.valueOf(getVersion()));
+        return map;
     }
 }

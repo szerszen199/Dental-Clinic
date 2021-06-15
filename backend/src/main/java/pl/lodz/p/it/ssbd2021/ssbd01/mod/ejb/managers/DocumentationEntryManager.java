@@ -10,6 +10,15 @@ import javax.ejb.Local;
 @Local
 public interface DocumentationEntryManager {
 
+
+    /**
+     * Edytuje wpis w dokumentacji medycznej.
+     *
+     * @param editDocumentationEntryRequestDTO DTO z danymi do edycji
+     * @throws AccountException            wyjątek AccountException
+     * @throws EncryptionException         wyjątek EncryptionException
+     * @throws DocumentationEntryException wyjątek DocumentationEntryException
+     */
     void editDocumentationEntry(EditDocumentationEntryRequestDTO editDocumentationEntryRequestDTO) throws AccountException, EncryptionException, DocumentationEntryException;
 
     /**
