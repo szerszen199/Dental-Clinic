@@ -130,10 +130,6 @@ public class Account extends AbstractEntity implements Serializable {
     @Size(min = 0, max = 256)
     private String lastSuccessfulLoginIp;
 
-    @Column(name = "modified_by_ip", length = 256)
-    @Size(min = 0, max = 256)
-    private String modifiedByIp;
-
     @Column(name = "last_block_unlock_ip", length = 256)
     @Size(min = 0, max = 256)
     private String lastBlockUnlockIp;
@@ -298,14 +294,6 @@ public class Account extends AbstractEntity implements Serializable {
      */
     public void setLastBlockUnlockIp(String lastBlockUnlockIp) {
         this.lastBlockUnlockIp = lastBlockUnlockIp;
-    }
-
-    public String getModifiedByIp() {
-        return modifiedByIp;
-    }
-
-    public void setModifiedByIp(String modifiedByIp) {
-        this.modifiedByIp = modifiedByIp;
     }
 
     @Override
