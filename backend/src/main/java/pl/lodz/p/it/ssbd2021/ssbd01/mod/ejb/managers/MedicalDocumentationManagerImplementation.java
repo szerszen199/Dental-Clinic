@@ -134,11 +134,6 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
     }
 
     @Override
-    public void editDocumentationEntry(DocumentationEntry entry) {
-        throw new NotImplementedException();
-    }
-
-    @Override
     public void removeDocumentationEntry(Long id) throws AppBaseException {
         DocumentationEntry documentationEntry;
         Account loggedInDoctor;
