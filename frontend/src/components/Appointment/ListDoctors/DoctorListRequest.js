@@ -6,7 +6,6 @@ export async function makeDoctorsListRequest() {
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
     let data = await getData(token);
     let doctors = []
-    console.log(data);
     for (const i in data) {
         doctors.push(new Doctor(data[i].firstName + " " + data[i].lastName, data[i].avgRate));
     }
