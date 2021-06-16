@@ -29,8 +29,6 @@ import javax.validation.constraints.NotNull;
         @NamedQuery(name = "DoctorRating.findById", query = "SELECT d FROM DoctorRating d WHERE d.id = :id"),
         @NamedQuery(name = "DoctorRating.findByDoctorId", query = "SELECT d FROM DoctorRating d WHERE d.doctor.id = :doctorId"),
         @NamedQuery(name = "DoctorRating.findByDoctorLogin", query = "SELECT d FROM DoctorRating d WHERE d.doctor.login = :doctorLogin"),
-//        @NamedQuery(name = "DoctorRating.findActiveDoctors", 
-//                query = "SELECT d FROM DoctorRating d WHERE d.doctor.id = (SELECT accountId.id FROM AccessLevel al WHERE al.active = true AND al.level = 'level.doctor')"),
         @NamedQuery(name = "DoctorRating.findActiveDoctors",
                 query = "SELECT d FROM DoctorRating d INNER JOIN AccessLevel al ON d.doctor.id = al.accountId.id WHERE al.active = true AND al.level = 'level.doctor'"),
         @NamedQuery(name = "DoctorRating.findByVersion", query = "SELECT d FROM DoctorRating d WHERE d.version = :version"),
