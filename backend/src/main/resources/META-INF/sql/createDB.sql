@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS access_levels;
 DROP TABLE IF EXISTS doctors_ratings;
 DROP TABLE IF EXISTS accounts;
 DROP TABLE IF EXISTS doctors_ratings;
+DROP TABLE IF EXISTS accounts;
 
 
 DROP SEQUENCE IF EXISTS accounts_seq;
@@ -342,10 +343,11 @@ CREATE TABLE doctors_ratings
 (
     id                     BIGINT PRIMARY KEY,                             -- Klucz główny tabeli
     doctor_id              BIGINT      NOT NULL,                           -- Id lekarza, którego dotyczą statystyki ocen
-    rates_sum              NUMERIC(2, 1) NOT NULL  DEFAULT 0.              -- Suma wszystkich ocen wystawionych lekarzowi
+    rates_sum              DOUBLE PRECISION NOT NULL  DEFAULT 0.              -- Suma wszystkich ocen wystawionych lekarzowi
         CONSTRAINT rates_sum_gr0 CHECK (rates_sum >= 0),
     rates_counter          INT NOT NULL  DEFAULT 0                         -- Ilość wszystkich wystawionych lekarzowi ocen
         CONSTRAINT rates_counter_gr0 CHECK (rates_counter >= 0),           -- Większe-równe 0
+    active                 BOOL DEFAULT TRUE  NOT NULL,
     version                BIGINT                                          -- Wersja
         CONSTRAINT version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Czas utworzenia wiersza w tabeli
@@ -455,6 +457,11 @@ GRANT
     SELECT,
     USAGE
     ON doctors_ratings_seq TO ssbd01mow;
+
+GRANT
+    SELECT,
+    USAGE
+    ON doctors_ratings_seq TO ssbd01mok;
 
 -- UPRAWNIENIA dla MOD
 

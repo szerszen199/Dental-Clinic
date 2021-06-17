@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades;
 
 import java.util.List;
 import javax.annotation.security.PermitAll;
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -62,6 +63,8 @@ public class DoctorRatingFacade extends AbstractFacade<DoctorRating> {
             throw AppBaseException.databaseError(e);
         } catch (IllegalArgumentException e) {
             throw AppBaseException.mismatchedPersistenceArguments(e);
+        } catch (EJBTransactionRolledbackException e) {
+            throw AppBaseException.transactionRepeatFailure();
         }
     }
 }
