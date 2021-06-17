@@ -2,10 +2,10 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mow.cdi.endpoints;
 
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -36,17 +36,16 @@ public class AppointmentEndpoint {
      */
     @GET
     @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.PATIENT})
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("doctors")
     public Response getDoctorsAndRates() {
         List<DoctorAndRateResponseDTO> doctors;
         try {
             doctors = appointmentManager.getAllDoctorsAndRates();
-            return Response.ok().entity(doctors).build();
-        } catch (DoctorRatingException e) {
+        } catch (DoctorRatingException | EJBTransactionRolledbackException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
+        return Response.ok().entity(doctors).build();
     }
     
 }

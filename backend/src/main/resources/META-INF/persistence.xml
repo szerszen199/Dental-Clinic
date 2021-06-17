@@ -25,6 +25,7 @@
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData</class>
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.AdminData</class>
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.Account</class>
+        <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorRating</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>

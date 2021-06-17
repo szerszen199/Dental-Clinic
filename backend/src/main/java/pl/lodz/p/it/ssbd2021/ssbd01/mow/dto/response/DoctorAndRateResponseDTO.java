@@ -21,4 +21,31 @@ public class DoctorAndRateResponseDTO {
         this.lastName = lastName;
         this.avgRate = avgRate;
     }
+
+    /**
+     * Pobiera pole firstName.
+     *
+     * @return imię
+     */
+    public String getFirstName() {
+        return firstName;
+    }
+
+    /**
+     * Pobiera pole lastName.
+     *
+     * @return nazwisko
+     */
+    public String getLastName() {
+        return lastName;
+    }
+
+    /**
+     * Pobiera pole avgRate.
+     *
+     * @return średnia ocen
+     */
+    public double getAvgRate() {
+        return avgRate;
+    }
 }
