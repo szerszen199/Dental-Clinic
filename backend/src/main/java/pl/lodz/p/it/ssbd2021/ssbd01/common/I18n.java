@@ -159,4 +159,5 @@ public class I18n {
     public static final String DOCUMENTATION_ENTRY_EDITION_FAILED = "documentation_entry_edition_failed";
     public static final String DOCUMENTATION_ENTRY_EDITED_SUCCESSFULLY = "documentation_entry_edited_successfully";
     public static final String DOCUMENTATION_ENTRY_EDITED_UNSUCCESSFULLY = "documentation_entry_edited_unsuccessfully";
+    public static final String MEDICAL_DOCUMENTATION_FETCH_FAILED = "medical_documentation_fetch_failed";
 }
