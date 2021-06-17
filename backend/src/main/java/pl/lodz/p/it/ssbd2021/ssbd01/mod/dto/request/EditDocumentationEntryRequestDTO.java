@@ -1,12 +1,11 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
-
-import javax.json.bind.annotation.JsonbTransient;
-import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
+import javax.json.bind.annotation.JsonbTransient;
+import javax.validation.constraints.NotNull;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
 
 /**
  * Klasa DTO podczas edycji wpisu w dokumentacji medycznej.
@@ -36,13 +35,26 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
         this.id = id;
     }
 
+    /**
+     * Tworzy nową instancję klasy EditDocumentationEntryRequestDTO.
+     */
     public EditDocumentationEntryRequestDTO() {
     }
 
+    /**
+     * Pobiera wartość pola id.
+     *
+     * @return wartość pola id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Ustawia wartość pola id.
+     *
+     * @param id wartość pola id.
+     */
     public void setId(Long id) {
         this.id = id;
     }
@@ -56,6 +68,11 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
         return version;
     }
 
+    /**
+     * Ustawia wartość pola version.
+     *
+     * @param version wartość pola version
+     */
     public void setVersion(Long version) {
         this.version = version;
     }
@@ -69,6 +86,11 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
         return wasDone;
     }
 
+    /**
+     * Ustawia wartość pola wasDone.
+     *
+     * @param wasDone wartość pola wasDone
+     */
     public void setWasDone(String wasDone) {
         this.wasDone = wasDone;
     }
@@ -82,6 +104,11 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
         return toBeDone;
     }
 
+    /**
+     * Ustawia wartość pola toBeDone.
+     *
+     * @param toBeDone wartość pola toBeDone
+     */
     public void setToBeDone(String toBeDone) {
         this.toBeDone = toBeDone;
     }

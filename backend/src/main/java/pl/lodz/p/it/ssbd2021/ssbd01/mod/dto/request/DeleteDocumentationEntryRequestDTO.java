@@ -1,9 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 
 /**
  * DTO dla przesyłania id dokumentacji która ma zostać usunięta.

@@ -1,5 +1,13 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
+import javax.annotation.security.PermitAll;
+import javax.ejb.SessionSynchronization;
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
+import javax.servlet.http.HttpServletRequest;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
@@ -10,16 +18,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
-
-import javax.annotation.security.PermitAll;
-import javax.ejb.SessionSynchronization;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.servlet.http.HttpServletRequest;
-import java.util.function.Consumer;
 
 /**
  * Typ Access level manager implementation - implementacja AccessLevelManager.
@@ -88,7 +86,9 @@ public class AccessLevelManagerImplementation extends AbstractManager implements
     @Override
     public void deleteAccessLevelsByAccountId(Long id) throws AppBaseException {
         var x = accessLevelFacade.findByAccountId(id);
-        x.forEach(accessLevel -> accessLevelFacade.remove(accessLevel));
+        for (AccessLevel al: x) {
+            accessLevelFacade.remove(al);
+        }
     }
 
 }

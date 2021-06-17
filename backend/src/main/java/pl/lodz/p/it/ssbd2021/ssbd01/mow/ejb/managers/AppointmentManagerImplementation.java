@@ -11,6 +11,8 @@ import javax.interceptor.Interceptors;
 import org.apache.commons.lang3.NotImplementedException;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AppointmentFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
@@ -82,8 +84,23 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
-    public void removeAppointmentSlot(Long id) {
-        throw new NotImplementedException();
+    public void removeAppointmentSlot(Long id) throws AppBaseException {
+        Appointment appointment;
+        try {
+            appointment = appointmentFacade.find(id);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        
+        if (appointment.getPatient() != null) {
+            throw AppointmentException.appointmentWasBooked();
+        }
+        
+        try {
+            appointmentFacade.remove(appointment);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentSlotRemovalFailed();
+        }
     }
 
     @Override
