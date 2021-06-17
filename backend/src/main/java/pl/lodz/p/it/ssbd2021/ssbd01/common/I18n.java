@@ -159,4 +159,11 @@ public class I18n {
     public static final String DOCUMENTATION_ENTRY_EDITION_FAILED = "documentation_entry_edition_failed";
     public static final String DOCUMENTATION_ENTRY_EDITED_SUCCESSFULLY = "documentation_entry_edited_successfully";
     public static final String DOCUMENTATION_ENTRY_EDITED_UNSUCCESSFULLY = "documentation_entry_edited_unsuccessfully";
+    
+    public static final String APPOINTMENT_NOT_FOUND = "appointment_not_found";
+    public static final String APPOINTMENT_SLOT_REMOVAL_FAILED = "appointment_slot_removal_failed";
+    public static final String APPOINTMENT_WAS_BOOKED = "appointmend_was_booked";
+    public static final String APPOINTMENT_ID_NULL = "appointment_id_null";
+    public static final String APPOINTMENT_SLOT_REMOVED_SUCCESSFULLY = "appointment_slot_removed_successfully";
+    public static final String APPOINTMENT_SLOT_REMOVED_UNSUCCESSFULLY = "appointment_slot_removed_unsuccessfully";
 }
