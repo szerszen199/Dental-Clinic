@@ -5,8 +5,17 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.CreatePrescriptionRequestDTO
 
 import javax.ejb.Local;
 
+/**
+ * Interfejs Prescriptions manager.
+ */
 @Local
 public interface PrescriptionsManager {
+    /**
+     * Utworzenie recepty.
+     *
+     * @param createPrescriptionRequestDTO odpowiednie DTO.
+     * @throws AppBaseException w przypadku wystąpienia błędów.
+     */
     void createPrescription(CreatePrescriptionRequestDTO createPrescriptionRequestDTO) throws AppBaseException;
 
     /**

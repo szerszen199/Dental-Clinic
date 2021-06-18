@@ -76,7 +76,13 @@ public class Prescription extends AbstractEntity implements Serializable {
     /**
      * Tworzy nową instancję klasy Prescription.
      *
-     * @param medications przepisane leki
+     * @param medications      przepisane leki
+     * @param propertiesLoader properties loader
+     * @throws NoSuchPaddingException    nie istniejący padding dla dekodowania
+     * @throws IllegalBlockSizeException błędny rozmiar bloku dla dekodowania
+     * @throws NoSuchAlgorithmException  błędny algorytm dla dekodowania
+     * @throws BadPaddingException       błędny padding dla dekodowania
+     * @throws InvalidKeyException       błędny klucz do dekodowania
      */
     public Prescription(String medications, PropertiesLoader propertiesLoader)
             throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
@@ -101,16 +107,41 @@ public class Prescription extends AbstractEntity implements Serializable {
         return medications;
     }
 
-    public void setMedications(byte[] medications) {
-        this.medications = medications;
-    }
 
-    public String getMedicationsDecrypted(PropertiesLoader propertiesLoader) throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    /**
+     * Pobiera pole medications decrypted.
+     *
+     * @param propertiesLoader properties loader
+     * @return medications decrypted
+     * @throws NoSuchPaddingException    nie istniejący padding dla dekodowania
+     * @throws IllegalBlockSizeException błędny rozmiar bloku dla dekodowania
+     * @throws NoSuchAlgorithmException  błędny algorytm dla dekodowania
+     * @throws BadPaddingException       błędny padding dla dekodowania
+     * @throws InvalidKeyException       błędny klucz do dekodowania
+     */
+    public String getMedicationsDecrypted(PropertiesLoader propertiesLoader)
+            throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         Encryptor encryptor = new Encryptor(propertiesLoader);
         return encryptor.decryptMessage(this.medications);
     }
 
-    public void setMedications(String medications, PropertiesLoader propertiesLoader) throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    public void setMedications(byte[] medications) {
+        this.medications = medications;
+    }
+
+    /**
+     * Ustawia pole medications.
+     *
+     * @param medications      medications
+     * @param propertiesLoader properties loader
+     * @throws NoSuchPaddingException    nie istniejący padding dla dekodowania
+     * @throws IllegalBlockSizeException błędny rozmiar bloku dla dekodowania
+     * @throws NoSuchAlgorithmException  błędny algorytm dla dekodowania
+     * @throws BadPaddingException       błędny padding dla dekodowania
+     * @throws InvalidKeyException       błędny klucz do dekodowania
+     */
+    public void setMedications(String medications, PropertiesLoader propertiesLoader)
+            throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         Encryptor encryptor = new Encryptor(propertiesLoader);
         this.medications = encryptor.encryptMessage(medications);
     }

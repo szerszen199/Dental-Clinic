@@ -58,7 +58,7 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
         try {
             prescription.setMedications(createPrescriptionRequestDTO.getMedications(), propertiesLoader);
         } catch (Exception e) {
-            throw PrescriptionException.InvalidMedicationsException();
+            throw PrescriptionException.invalidMedicationsException();
         }
         prescription.setCreatedBy(doctor);
         prescription.setCreatedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
@@ -68,7 +68,7 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
         try {
             prescriptionFacade.create(prescription);
         } catch (Exception e) {
-            throw PrescriptionException.CreationFailureException();
+            throw PrescriptionException.creationFailureException();
         }
 
     }
