@@ -17,11 +17,11 @@ public class DocumentationEntryTransactionRepeater {
     /**
      * Powtórzenie transakcji.
      *
-     * @param repeatable                implementacja interfejsu {@link DocumentationEntryTransactionRepeater.Repeatable}
+     * @param repeatable                implementacja interfejsu {@link Repeatable}
      * @param documentationEntryManager medical documentation manager
      * @throws Exception exception w przypadku niepowodzenia
      */
-    public void repeatTransaction(DocumentationEntryTransactionRepeater.Repeatable repeatable, DocumentationEntryManager documentationEntryManager) throws Exception {
+    public void repeatTransaction(Repeatable repeatable, DocumentationEntryManager documentationEntryManager) throws Exception {
         int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         Exception exception;
@@ -39,18 +39,6 @@ public class DocumentationEntryTransactionRepeater {
             throw exception == null ? AppBaseException.transactionRepeatFailure() : exception;
         }
     }
-
-    /**
-     * Interfejs Repeatable.
-     */
-    @FunctionalInterface
-    public interface Repeatable {
-        /**
-         * Metoda która ma zostać powtórzona.
-         *
-         * @throws AppBaseException w przypadku niepowodzenia
-         */
-        void repeat() throws AppBaseException;
-    }
-
 }
+
+

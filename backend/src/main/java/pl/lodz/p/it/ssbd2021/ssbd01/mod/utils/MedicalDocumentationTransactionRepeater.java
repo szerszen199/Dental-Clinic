@@ -4,7 +4,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.MedicalDocumentationManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
-import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -17,14 +16,16 @@ public class MedicalDocumentationTransactionRepeater {
     @Inject
     private PropertiesLoader propertiesLoader;
 
+    @Inject
+    private MedicalDocumentationManager medicalDocumentationManager;
+
     /**
      * Powtórzenie transakcji.
      *
      * @param repeatable                  implementacja interfejsu {@link Repeatable}
-     * @param medicalDocumentationManager medical documentation manager
      * @throws Exception exception w przypadku niepowodzenia
      */
-    public void repeatTransaction(Repeatable repeatable, MedicalDocumentationManager medicalDocumentationManager) throws Exception {
+    public void repeatTransaction(Repeatable repeatable) throws Exception {
         int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         Exception exception;
@@ -33,7 +34,7 @@ public class MedicalDocumentationTransactionRepeater {
                 exception = null;
                 repeatable.repeat();
                 rollbackTX = medicalDocumentationManager.isLastTransactionRollback();
-            } catch (AppBaseException | EJBTransactionRolledbackException e) {
+            } catch (Exception e) {
                 rollbackTX = true;
                 exception = e;
             }
@@ -43,16 +44,4 @@ public class MedicalDocumentationTransactionRepeater {
         }
     }
 
-    /**
-     * Interfejs Repeatable.
-     */
-    @FunctionalInterface
-    public interface Repeatable {
-        /**
-         * Metoda która ma zostać powtórzona.
-         *
-         * @throws AppBaseException w przypadku niepowodzenia
-         */
-        void repeat() throws AppBaseException;
-    }
 }

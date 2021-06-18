@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.DocumentationEntryException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
@@ -20,6 +21,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.validation.Valid;
@@ -39,6 +42,7 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_OPTIMISTIC_LOCK_
 @Stateful
 @DenyAll
 @Interceptors(LogInterceptor.class)
+@TransactionAttribute(TransactionAttributeType.NEVER)
 public class DocumentationEndpoint {
 
     @Inject
@@ -69,8 +73,8 @@ public class DocumentationEndpoint {
     @RolesAllowed({I18n.DOCTOR})
     public Response deleteDocumentationEntry(@NotNull @Valid DeleteDocumentationEntryRequestDTO deleteDocumentationEntryRequestDTO) {
         try {
-            medicalDocumentationTransactionRepeater.repeatTransaction(
-                    () -> medicalDocumentationManager.removeDocumentationEntry(deleteDocumentationEntryRequestDTO.getId()), medicalDocumentationManager);
+//            medicalDocumentationTransactionRepeater.repeatTransaction(() -> medicalDocumentationManager.removeDocumentationEntry(deleteDocumentationEntryRequestDTO.getId()));
+            medicalDocumentationManager.removeDocumentationEntry(deleteDocumentationEntryRequestDTO.getId());
         } catch (DocumentationEntryException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         } catch (Exception e) {
@@ -78,6 +82,9 @@ public class DocumentationEndpoint {
         }
         return Response.ok().entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_DELETED_SUCCESSFULLY)).build();
     }
+
+
+
 
     /**
      * Dodanie wpisu w dokumentacji medycznej pacjenta.
@@ -93,11 +100,10 @@ public class DocumentationEndpoint {
     public Response addDocumentationEntry(@NotNull @Valid AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO) {
         try {
             medicalDocumentationTransactionRepeater.repeatTransaction(
-                    () -> medicalDocumentationManager.addDocumentationEntry(addDocumentationEntryRequestDTO), medicalDocumentationManager);
+                    () -> medicalDocumentationManager.addDocumentationEntry(addDocumentationEntryRequestDTO));
         } catch (DocumentationEntryException | AccountException | EncryptionException | MedicalDocumentationException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         } catch (Exception e) {
-            e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_CREATED_UNSUCCESSFULLY)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_CREATED_SUCCESSFULLY)).build();
@@ -125,7 +131,6 @@ public class DocumentationEndpoint {
         } catch (EncryptionException | DocumentationEntryException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         } catch (Exception e) {
-            e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_EDITED_UNSUCCESSFULLY)).build();
         }
         return Response.ok().entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_EDITED_SUCCESSFULLY)).build();
