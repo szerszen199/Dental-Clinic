@@ -78,7 +78,8 @@ public class Prescription extends AbstractEntity implements Serializable {
      *
      * @param medications przepisane leki
      */
-    public Prescription(String medications, PropertiesLoader propertiesLoader) throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    public Prescription(String medications, PropertiesLoader propertiesLoader)
+            throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         Encryptor encryptor = new Encryptor(propertiesLoader);
         this.medications = encryptor.encryptMessage(medications);
     }
