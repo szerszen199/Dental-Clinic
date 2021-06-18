@@ -48,6 +48,16 @@ public class DocumentationEntryException extends AppBaseException {
     }
 
     /**
+     * Zwraca wyjątek z komunikatem {@link I18n#PATIENT_SAME_DOCTOR}.
+     *
+     * @return {@link DocumentationEntryException}
+     */
+    public static DocumentationEntryException patientSameDoctor() {
+        return new DocumentationEntryException(I18n.PATIENT_SAME_DOCTOR);
+    }
+
+
+    /**
      * Zwraca wyjątek z komunikatem {@link I18n#REMOVAL_FAILURE_ERROR}.
      *
      * @return {@link DocumentationEntryException}
