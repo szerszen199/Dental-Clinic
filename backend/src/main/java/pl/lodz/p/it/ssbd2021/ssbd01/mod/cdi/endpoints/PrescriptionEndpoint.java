@@ -43,7 +43,7 @@ public class PrescriptionEndpoint {
     private PrescriptionTransactionRepeater prescriptionTransactionRepeater;
 
     /**
-     * Dodanie wpisu w dokumentacji medycznej pacjenta.
+     * Dodanie recepty dla pacjenta.
      *
      * @param createPrescriptionRequestDTO DTO zawierające odpowiednie dla zapytania informacje.
      * @return {@link Response.Status#OK} przy powodzeniu, inaczej {@link Response.Status#BAD_REQUEST}
