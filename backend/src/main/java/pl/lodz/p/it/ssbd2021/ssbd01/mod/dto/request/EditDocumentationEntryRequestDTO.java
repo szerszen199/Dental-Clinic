@@ -36,13 +36,26 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
         this.id = id;
     }
 
+    /**
+     * Tworzy nową instancję klasy Edit documentation entry request dto.
+     */
     public EditDocumentationEntryRequestDTO() {
     }
 
+    /**
+     * Pobiera pole id.
+     *
+     * @return id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Ustawia pole id.
+     *
+     * @param id id
+     */
     public void setId(Long id) {
         this.id = id;
     }
@@ -56,6 +69,11 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
         return version;
     }
 
+    /**
+     * Ustawia pole version.
+     *
+     * @param version version
+     */
     public void setVersion(Long version) {
         this.version = version;
     }
@@ -69,6 +87,11 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
         return wasDone;
     }
 
+    /**
+     * Ustawia pole was done.
+     *
+     * @param wasDone was done
+     */
     public void setWasDone(String wasDone) {
         this.wasDone = wasDone;
     }
@@ -82,6 +105,11 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
         return toBeDone;
     }
 
+    /**
+     * Ustawia pole to be done.
+     *
+     * @param toBeDone to be done
+     */
     public void setToBeDone(String toBeDone) {
         this.toBeDone = toBeDone;
     }

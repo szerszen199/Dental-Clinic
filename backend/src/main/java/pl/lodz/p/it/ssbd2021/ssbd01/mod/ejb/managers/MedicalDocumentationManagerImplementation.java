@@ -26,6 +26,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -164,8 +165,13 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
     }
 
     @Override
-    public MedicalDocumentation getDocumentationByPatient(Long patientId) {
-        throw new NotImplementedException();
+    @RolesAllowed({I18n.DOCTOR})
+    public MedicalDocumentation getDocumentationByPatient(String patientUsername) throws MedicalDocumentationException {
+        try {
+            return medicalDocumentationFacade.getMedicalDocumentationByPatientLogin(patientUsername);
+        } catch (AppBaseException e) {
+            throw MedicalDocumentationException.noSuchMedicalDocumentation(e);
+        }
     }
 
     @Override

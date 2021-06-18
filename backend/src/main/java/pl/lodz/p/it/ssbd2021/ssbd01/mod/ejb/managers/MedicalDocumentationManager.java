@@ -60,11 +60,11 @@ public interface MedicalDocumentationManager {
 
     /**
      * Pobiera dokumentację medyczną dla pacjenta o danym kluczu głównym {@param patientId}.
-     *
-     * @param patientId klucz główny pacjenta
+     * @param patientUsername login pacjenta
      * @return dokumentacja medyczna pacjenta
+     * @throws MedicalDocumentationException przy błędach z pobraniem dokumentacji medycznej
      */
-    MedicalDocumentation getDocumentationByPatient(Long patientId);
+    MedicalDocumentation getDocumentationByPatient(String patientUsername) throws MedicalDocumentationException;
 
     /**
      * Dodaje receptę dla danego pacjenta.
