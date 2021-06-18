@@ -161,4 +161,9 @@ public class I18n {
     public static final String DOCUMENTATION_ENTRY_EDITED_UNSUCCESSFULLY = "documentation_entry_edited_unsuccessfully";
     public static final String MEDICAL_DOCUMENTATION_FETCH_FAILED = "medical_documentation_fetch_failed";
     public static final String PATIENT_SAME_DOCTOR = "patient_same_doctor";
+    public static final String INVALID_MEDICATIONS = "invalid_medications";
+    public static final String PRESCRIPTION_CREATION_FAILURE = "prescription_creation_failure";
+    public static final String PRESCRIPTION_CREATED_SUCCESSFULLY = "prescription_created_successfully";
+    public static final String EXPIRATION_DATE_NULL = "expiration_date_null";
+    public static final String MEDICATIONS_NULL = "medications_null";
 }
