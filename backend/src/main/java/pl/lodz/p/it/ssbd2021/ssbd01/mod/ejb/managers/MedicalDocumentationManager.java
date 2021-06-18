@@ -1,18 +1,13 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry;
+import javax.ejb.Local;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.DocumentationEntryException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.AddDocumentationEntryRequestDTO;
-
-import javax.ejb.Local;
-import java.util.List;
 
 /**
  * Interfejs MedicalDocumentationManager.
@@ -65,44 +60,6 @@ public interface MedicalDocumentationManager {
      * @throws MedicalDocumentationException przy błędach z pobraniem dokumentacji medycznej
      */
     MedicalDocumentation getDocumentationByPatient(String patientUsername) throws MedicalDocumentationException;
-
-    /**
-     * Dodaje receptę dla danego pacjenta.
-     *
-     * @param patientId    klucz główny pacjenta
-     * @param prescription the prescription
-     */
-    void addPrescription(Long patientId, Prescription prescription);
-
-    /**
-     * Modyfikuje receptę.
-     *
-     * @param prescription recepta
-     */
-    void editPrescription(Prescription prescription);
-
-    /**
-     * Usuwa receptę.
-     *
-     * @param id klucz główny recepty
-     */
-    void removePrescription(Long id);
-
-    /**
-     * Pobiera receptę po zadanym kluczu głównym.
-     *
-     * @param id klucz główny recepty
-     * @return recepta
-     */
-    Prescription getPrescription(Long id);
-
-    /**
-     * Pobiera wszystkie recepty dla danego pacjenta.
-     *
-     * @param patientId klucz główny pacjenta
-     * @return lista recept pacjenta
-     */
-    List<Prescription> getPrescriptionsByPatient(Long patientId);
 
     /**
      * Sprawdza czy ostatnia transakcja się powiodła.
