@@ -159,4 +159,5 @@ public class I18n {
     public static final String DOCUMENTATION_ENTRY_EDITION_FAILED = "documentation_entry_edition_failed";
     public static final String DOCUMENTATION_ENTRY_EDITED_SUCCESSFULLY = "documentation_entry_edited_successfully";
     public static final String DOCUMENTATION_ENTRY_EDITED_UNSUCCESSFULLY = "documentation_entry_edited_unsuccessfully";
+    public static final String PATIENT_SAME_DOCTOR = "patient_same_doctor";
 }

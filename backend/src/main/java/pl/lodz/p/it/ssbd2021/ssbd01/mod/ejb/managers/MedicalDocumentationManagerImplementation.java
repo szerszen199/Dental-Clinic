@@ -148,8 +148,11 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
         } catch (AppBaseException e) {
             throw DocumentationEntryException.entryNotFoundError();
         }
-        if (!documentationEntry.getDoctor().equals(loggedInDoctor) || documentationEntry.getMedicalDocumentation().getPatient().equals(loggedInDoctor)) {
+        if (!documentationEntry.getDoctor().equals(loggedInDoctor)) {
             throw DocumentationEntryException.invalidDoctorException();
+        }
+        if (documentationEntry.getMedicalDocumentation().getPatient().equals(loggedInDoctor)) {
+            throw DocumentationEntryException.patientSameDoctor();
         }
         try {
             documentationEntryFacade.remove(documentationEntry);
