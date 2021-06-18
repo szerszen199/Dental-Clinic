@@ -37,7 +37,7 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
     }
 
     /**
-     * Tworzy nową instancję klasy Edit documentation entry request dto.
+     * Tworzy nową instancję klasy EditDocumentationEntryRequestDTO.
      */
     public EditDocumentationEntryRequestDTO() {
     }
@@ -63,7 +63,7 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
     /**
      * Pobiera pole wersja.
      *
-     * @return version
+     * @return version version
      */
     public Long getVersion() {
         return version;
