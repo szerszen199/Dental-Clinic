@@ -45,6 +45,7 @@ public class PrescriptionEndpoint {
     /**
      * Dodanie wpisu w dokumentacji medycznej pacjenta.
      *
+     * @param createPrescriptionRequestDTO DTO zawierające odpowiednie dla zapytania informacje.
      * @return {@link Response.Status#OK} przy powodzeniu, inaczej {@link Response.Status#BAD_REQUEST}
      */
     @PUT
