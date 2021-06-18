@@ -83,7 +83,6 @@ class MainViewWithoutTranslation extends React.Component {
             }, {
                 headers: {Authorization: "Bearer " + JWTAuthToken}
             }).then((response) => {
-                console.log(response)
                 Cookies.set(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME, response.data.authJwtToken.token, {expires: jwtCookieExpirationTime});
                 Cookies.set(process.env.REACT_APP_ROLES_COOKIE_NAME, response.data.roles, {expires: jwtCookieExpirationTime});
                 Cookies.set(process.env.REACT_APP_LOGIN_COOKIE, response.data.username, {expires: jwtCookieExpirationTime});
@@ -100,7 +99,6 @@ class MainViewWithoutTranslation extends React.Component {
                 }
                 localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, response.data.refreshJwtToken.token);
             }).catch((response) => {
-                console.log(response);
                 logout();
             })
         }
@@ -120,7 +118,6 @@ class MainViewWithoutTranslation extends React.Component {
             }, function () {
                 i18n.changeLanguage(this.state.language);
                 accessLevelDictionary = darkModeStyleChange(Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE));
-                console.log()
             })
         } else {
             let tmp = getBrowserLanguage();
@@ -199,9 +196,7 @@ class MainViewWithoutTranslation extends React.Component {
 }
 
 function darkModeStyleChange(isDarkMode) {
-    console.log(isDarkMode)
     if (isDarkMode === true) {
-        console.log(isDarkMode)
         document.getElementById("root").style.backgroundColor = "#a8b4ae";
         loginColor = "black"
         return {
