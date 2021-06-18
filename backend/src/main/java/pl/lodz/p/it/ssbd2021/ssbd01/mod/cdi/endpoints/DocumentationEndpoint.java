@@ -73,8 +73,7 @@ public class DocumentationEndpoint {
     @RolesAllowed({I18n.DOCTOR})
     public Response deleteDocumentationEntry(@NotNull @Valid DeleteDocumentationEntryRequestDTO deleteDocumentationEntryRequestDTO) {
         try {
-//            medicalDocumentationTransactionRepeater.repeatTransaction(() -> medicalDocumentationManager.removeDocumentationEntry(deleteDocumentationEntryRequestDTO.getId()));
-            medicalDocumentationManager.removeDocumentationEntry(deleteDocumentationEntryRequestDTO.getId());
+            medicalDocumentationTransactionRepeater.repeatTransaction(() -> medicalDocumentationManager.removeDocumentationEntry(deleteDocumentationEntryRequestDTO.getId()));
         } catch (DocumentationEntryException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         } catch (Exception e) {
@@ -113,6 +112,7 @@ public class DocumentationEndpoint {
      * Edycja wpisu w dokumentacji medycznej pacjenta.
      *
      * @param editDocumentationEntryRequestDTO DTO zawierające niezbędne informacje do edycji wpisu dokumentacji medycznej.
+     * @param header                          etag
      * @return {@link Response.Status#OK} przy powodzeniu, inaczej {@link Response.Status#BAD_REQUEST}
      */
     @POST

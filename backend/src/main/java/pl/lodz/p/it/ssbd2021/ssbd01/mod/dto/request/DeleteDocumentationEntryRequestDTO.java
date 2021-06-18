@@ -11,6 +11,10 @@ public class DeleteDocumentationEntryRequestDTO {
     @NotNull(message = I18n.DOCUMENTATION_ID_NULL)
     private Long id;
 
+
+    /**
+     * Tworzy nową instancję klasy Delete documentation entry request dto.
+     */
     public DeleteDocumentationEntryRequestDTO() {
     }
 
@@ -26,7 +30,7 @@ public class DeleteDocumentationEntryRequestDTO {
     /**
      * Pobiera pole id.
      *
-     * @return id
+     * @return id id
      */
     public Long getId() {
         return id;

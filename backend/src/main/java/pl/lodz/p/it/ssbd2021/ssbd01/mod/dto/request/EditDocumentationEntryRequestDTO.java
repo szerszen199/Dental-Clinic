@@ -36,12 +36,16 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
         this.id = id;
     }
 
+    /**
+     * Tworzy nową instancję klasy EditDocumentationEntryRequestDTO.
+     */
     public EditDocumentationEntryRequestDTO() {
     }
 
     public Long getId() {
         return id;
     }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -50,11 +54,12 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
     /**
      * Pobiera pole wersja.
      *
-     * @return version
+     * @return version version
      */
     public Long getVersion() {
         return version;
     }
+
 
     public void setVersion(Long version) {
         this.version = version;
@@ -69,6 +74,7 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
         return wasDone;
     }
 
+
     public void setWasDone(String wasDone) {
         this.wasDone = wasDone;
     }
@@ -81,6 +87,7 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
     public String getToBeDone() {
         return toBeDone;
     }
+
 
     public void setToBeDone(String toBeDone) {
         this.toBeDone = toBeDone;
