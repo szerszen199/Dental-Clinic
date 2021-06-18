@@ -1,11 +1,12 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request;
 
-import java.util.HashMap;
-import java.util.Map;
-import javax.json.bind.annotation.JsonbTransient;
-import javax.validation.constraints.NotNull;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
+
+import javax.json.bind.annotation.JsonbTransient;
+import javax.validation.constraints.NotNull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Klasa DTO podczas edycji wpisu w dokumentacji medycznej.
@@ -42,18 +43,18 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
     }
 
     /**
-     * Pobiera wartość pola id.
+     * Pobiera pole id.
      *
-     * @return wartość pola id
+     * @return id
      */
     public Long getId() {
         return id;
     }
 
     /**
-     * Ustawia wartość pola id.
+     * Ustawia pole id.
      *
-     * @param id wartość pola id.
+     * @param id id
      */
     public void setId(Long id) {
         this.id = id;
@@ -62,16 +63,16 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
     /**
      * Pobiera pole wersja.
      *
-     * @return version
+     * @return version version
      */
     public Long getVersion() {
         return version;
     }
 
     /**
-     * Ustawia wartość pola version.
+     * Ustawia pole version.
      *
-     * @param version wartość pola version
+     * @param version version
      */
     public void setVersion(Long version) {
         this.version = version;
@@ -87,9 +88,9 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
     }
 
     /**
-     * Ustawia wartość pola wasDone.
+     * Ustawia pole was done.
      *
-     * @param wasDone wartość pola wasDone
+     * @param wasDone was done
      */
     public void setWasDone(String wasDone) {
         this.wasDone = wasDone;
@@ -105,9 +106,9 @@ public class EditDocumentationEntryRequestDTO implements SignableEntity {
     }
 
     /**
-     * Ustawia wartość pola toBeDone.
+     * Ustawia pole to be done.
      *
-     * @param toBeDone wartość pola toBeDone
+     * @param toBeDone to be done
      */
     public void setToBeDone(String toBeDone) {
         this.toBeDone = toBeDone;
