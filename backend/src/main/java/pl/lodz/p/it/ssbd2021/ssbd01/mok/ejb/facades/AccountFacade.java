@@ -129,6 +129,4 @@ public class AccountFacade extends AbstractFacade<Account> {
             throw AppBaseException.mismatchedPersistenceArguments(e);
         }
     }
-
-    
 }
