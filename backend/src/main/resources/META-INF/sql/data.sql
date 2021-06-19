@@ -32,5 +32,5 @@ VALUES (-1, 'level.patient', -1, true, -1, 0),
        (-15, 'level.administrator', -4, false, -1, 0),
        (-16, 'level.doctor', -4, false, -1, 0);
 
-
-
+INSERT INTO doctors_ratings (id, doctor_id, rates_sum, rates_counter, version, created_by)
+VALUES (-1, -2, 20.0, 5, 0, -2);

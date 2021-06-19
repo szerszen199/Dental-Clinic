@@ -1,10 +1,13 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
 import java.util.List;
-import java.util.Map;
 import javax.ejb.Local;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 
 /**
  * Interfejs menadżera wizyt.
@@ -67,15 +70,18 @@ public interface AppointmentManager {
      * Pobiera wszystkich lekarzy i ich oceny.
      *
      * @return wszyscy lekarze i ich oceny
+     * @throws DoctorRatingException wyjątek typu DoctorRatingException
      */
-    Map<Account, Double> getAllDoctorsAndRates();
+    List<DoctorAndRateResponseDTO> getAllDoctorsAndRates() throws DoctorRatingException;
 
     /**
      * Dodaje slot na wizytę.
      *
      * @param appointment wolna wizyta
+     * @throws AccountException wyjątek typu AccountException
+     * @throws AppointmentException wyjątek typu AppointmentException
      */
-    void addAppointmentSlot(Appointment appointment);
+    void addAppointmentSlot(Appointment appointment) throws AccountException, AppointmentException;
 
     /**
      * Modyfikuje slot wizyty.
@@ -104,4 +110,11 @@ public interface AppointmentManager {
      * @return lista wszystkich pacjentów
      */
     List<Account> getAllPatients();
+
+    /**
+     * Sprawdza czy ostatnia transakcja się powiodła.
+     *
+     * @return true jeśli ostatnia transakcja się nie powiodła, false w przeciwnym wypadku.
+     */
+    boolean isLastTransactionRollback();
 }

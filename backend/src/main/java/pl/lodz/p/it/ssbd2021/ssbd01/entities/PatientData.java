@@ -3,8 +3,10 @@ package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import java.io.Serializable;
 
 
@@ -16,6 +18,7 @@ import java.io.Serializable;
 @NamedQueries({
         @NamedQuery(name = "PatientData.findAll", query = "SELECT p FROM PatientData p")})
 public class PatientData extends AccessLevel implements Serializable {
+
     /**
      * Tworzy nową instancję klasy Patient data.
      */
@@ -33,6 +36,7 @@ public class PatientData extends AccessLevel implements Serializable {
     }
 
     @Override
+
     public String toString() {
         return "pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData[ id=" + this.getId() + " ]";
     }

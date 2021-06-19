@@ -94,7 +94,8 @@ public abstract class JwtUtilsAbstract {
         try {
             JWSObject jwsObject = JWSObject.parse(tokenToValidate);
             JWSVerifier jwsVerifier = new MACVerifier(getJwtSecret());
-            return jwsObject.verify(jwsVerifier);
+            var expirationTime = SignedJWT.parse(tokenToValidate).getJWTClaimsSet().getExpirationTime();
+            return jwsObject.verify(jwsVerifier) && expirationTime.after(new Date(System.currentTimeMillis()));
         } catch (ParseException | JOSEException e) {
             e.printStackTrace();
             return false;

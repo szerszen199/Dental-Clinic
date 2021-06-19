@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -63,8 +64,7 @@ import java.util.Set;
 public class Account extends AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-    @JoinColumn(name = "account_id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "accountId")
     private final Set<AccessLevel> accessLevels = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accounts_generator")
@@ -129,10 +129,6 @@ public class Account extends AbstractEntity implements Serializable {
     @Column(name = "last_successful_login_ip", length = 256)
     @Size(min = 0, max = 256)
     private String lastSuccessfulLoginIp;
-
-    @Column(name = "modified_by_ip", length = 256)
-    @Size(min = 0, max = 256)
-    private String modifiedByIp;
 
     @Column(name = "last_block_unlock_ip", length = 256)
     @Size(min = 0, max = 256)
@@ -298,14 +294,6 @@ public class Account extends AbstractEntity implements Serializable {
      */
     public void setLastBlockUnlockIp(String lastBlockUnlockIp) {
         this.lastBlockUnlockIp = lastBlockUnlockIp;
-    }
-
-    public String getModifiedByIp() {
-        return modifiedByIp;
-    }
-
-    public void setModifiedByIp(String modifiedByIp) {
-        this.modifiedByIp = modifiedByIp;
     }
 
     @Override
