@@ -184,5 +184,11 @@
   "login_not_in_pattern": "W loginie użytkownika występują nieprawidłowe znaki",
   "forbidden": "Zakazane",
   "internal_server_error": "Błąd Serwera",
-  "not_found":  "Zasób Nieznaleziony"
+  "not_found":  "Zasób Nieznaleziony",
+  "appointment_not_found": "Wizyta nie została znaleziona",
+  "appointment_slot_removal_failed": "Próba usunięcia terminu wizyty nie powiodła się",
+  "appointment_was_booked": "Wybrana wizyta została już zarezerwowana. Odśwież stronę!",
+  "appointment_id_null": "Wybierz wizytę",
+  "appointment_slot_removed_successfully": "Termin wizyty został poprawnie usunięty",
+  "appointment_slot_removed_unsuccessfully": "Nie udało się usunąć wizyty"
 }

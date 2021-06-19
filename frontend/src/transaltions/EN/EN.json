@@ -184,5 +184,11 @@
   "login_not_in_pattern": "Username contains invalid characters",
   "forbidden": "Forbidden access",
   "internal_server_error": "Server Error",
-  "not_found": "Resource not found"
+  "not_found": "Resource not found",
+  "appointment_not_found": "Visit was not found",
+  "appointment_slot_removal_failed": "The attempt to delete the appointment date has been unsuccessful",
+  "appointment_was_booked": "The selected visit has already been booked. Refresh the page!",
+  "appointment_id_null": "Choose a visit",
+  "appointment_slot_removed_successfully": "The appointment date has been correctly deleted",
+  "appointment_slot_removed_unsuccessfully": "Visit could not be deleted"
 }
