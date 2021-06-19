@@ -19,6 +19,7 @@ public interface AppointmentManager {
      * Dodaje rezerwację do podanej wizyty.
      *
      * @param bookAppointmentDto the book appointment dto
+     * @throws AppBaseException the app base exception
      */
     void bookAppointment(BookAppointmentDto bookAppointmentDto) throws AppBaseException;
 

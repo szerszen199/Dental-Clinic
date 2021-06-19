@@ -11,6 +11,14 @@ public class BookAppointmentDto {
     private Account doctor;
     private Account patient;
 
+    /**
+     * Instantiates a new Book appointment dto.
+     *
+     * @param appointmentDate the appointment date
+     * @param createdBy       the created by
+     * @param doctor          the doctor
+     * @param patient         the patient
+     */
     public BookAppointmentDto(LocalDateTime appointmentDate, Account createdBy, Account doctor, Account patient) {
         this.appointmentDate = appointmentDate;
         this.createdBy = createdBy;
@@ -18,6 +26,16 @@ public class BookAppointmentDto {
         this.patient = patient;
     }
 
+    public BookAppointmentDto(LocalDateTime appointmentDate) {
+        this.appointmentDate = appointmentDate;
+        this.createdBy = createdBy;
+        this.doctor = doctor;
+        this.patient = patient;
+    }
+
+    /**
+     * Instantiates a new Book appointment dto.
+     */
     public BookAppointmentDto() {
     }
 
