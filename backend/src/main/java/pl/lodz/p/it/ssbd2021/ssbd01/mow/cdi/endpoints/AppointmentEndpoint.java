@@ -56,7 +56,7 @@ public class AppointmentEndpoint {
      * @return lista aktywnych pacjentów
      */
     @GET
-    @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR})
+    @RolesAllowed({I18n.RECEPTIONIST})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("patients")
     public Response getPatients() {
