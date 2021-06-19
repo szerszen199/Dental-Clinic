@@ -1,7 +1,6 @@
 import React, {Suspense} from "react";
-import Form from "react-bootstrap/Form";
 import "./PlanAppointment.css";
-import {Accordion, Button, Card, Col, Container, Fade, Modal, Row} from "react-bootstrap";
+import {Accordion, Button, Card, Col, Container, Row} from "react-bootstrap";
 import {withTranslation} from "react-i18next";
 import Admin from "../../../views/Users/Admin/Admin";
 import Patient from "../../../views/Users/Patient/Patient";
@@ -9,23 +8,31 @@ import Receptionist from "../../../views/Users/Receptionist/Receptionist";
 import Doctor from "../../../views/Users/Doctor/Doctor";
 import {makeDoctorsListRequest} from "../ListDoctors/DoctorListRequest";
 import Rating from "@material-ui/lab/Rating";
+import {makePatientsListRequest} from "../ListPatients/ListPatientsRequest";
 
 class PlanAppointmentWithoutTranslation extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            doctorsList: []
+            doctorsList: [],
+            patientsList: []
         };
     }
 
     componentDidMount() {
         this.makeGetDoctorsRequest();
+        this.makeGetPatientRequest();
     }
 
     makeGetDoctorsRequest() {
         makeDoctorsListRequest().then((response) => {
             this.setState({doctorsList: response})
+        })
+    }
+    makeGetPatientRequest() {
+        makePatientsListRequest().then((response) => {
+            this.setState({patientsList: response})
         })
     }
     renderNull() {
