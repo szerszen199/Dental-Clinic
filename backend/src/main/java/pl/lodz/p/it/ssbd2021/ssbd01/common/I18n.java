@@ -172,4 +172,9 @@ public class I18n {
     public static final String APPOINTMENT_ID_NULL = "appointment_id_null";
     public static final String APPOINTMENT_NOT_FOUND = "appointment_not_found";
     public static final String NOT_PATIENT_OR_INACTIVE = "not_patient_or_inactive";
+    public static final String PRESCRIPTION_EDIT_FAILED = "prescription_edit_failed";
+    public static final String PRESCRIPTION_EDITED_SUCCESSFULLY = "prescription_edited_successfully";
+    public static final String PRESCRIPTION_ID_NULL = "prescription_id_null";
+    public static final String PRESCRIPTION_MEDICATIONS_NULL = "prescription_medications_null";
+    public static final String PRESCRIPTION_NOT_FOUND = "prescription_not_found";
 }
