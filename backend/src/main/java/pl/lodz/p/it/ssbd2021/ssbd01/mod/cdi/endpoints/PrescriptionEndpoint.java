@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.PrescriptionException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.EditPrescriptionRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.CreatePrescriptionRequestDTO;
@@ -79,7 +80,7 @@ public class PrescriptionEndpoint {
             prescriptionTransactionRepeater.repeatTransaction(
                     () -> prescriptionsManager.editPrescription(editPrescriptionRequestDto)
             );
-        } catch (PrescriptionException e) {
+        } catch (EncryptionException | PrescriptionException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.PRESCRIPTION_EDIT_FAILED)).build();
