@@ -4,11 +4,14 @@ import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 
+import javax.ejb.ApplicationException;
+
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.VERSION_MISMATCH;
 
 /**
  * Typ Documentation entry exception.
  */
+@ApplicationException(rollback = true)
 public class DocumentationEntryException extends AppBaseException {
     /**
      * Tworzy nową instancję klasy wyjątku DocumentationEntryException.
