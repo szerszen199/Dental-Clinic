@@ -13,8 +13,15 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorRating;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import org.apache.commons.lang3.NotImplementedException;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorRating;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
@@ -35,8 +42,9 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Klasa implementująca interfejs menadżera wizyt.
@@ -53,6 +61,9 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     private AppointmentFacade appointmentFacade;
     @Inject
     private AccountFacade accountFacade;
+
+    @Inject
+    private DoctorRatingFacade doctorRatingFacade;
     @Inject
     private LoggedInAccountUtil loggedInAccountUtil;
 
@@ -62,20 +73,17 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     @Override
     public void bookAppointment(BookAppointmentDto bookAppointmentDto) throws AppBaseException {
         Account account;
+        Appointment appointment;
         try {
             account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+            appointment = appointmentFacade.find(bookAppointmentDto.getAppointmentId());
         } catch (Exception e) {
             throw AccountException.noSuchAccount(e);
         }
-        Appointment appointment = new Appointment();
-        appointment.setCreatedBy(account);
-        appointment.setCreatedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
-        appointment.setCanceled(false);
-        appointment.setAppointmentDate(bookAppointmentDto.getAppointmentDate());
-        appointment.setDoctor(bookAppointmentDto.getDoctor());
-        appointment.setPatient(bookAppointmentDto.getPatient());
-        appointmentFacade.create(appointment);
-
+        appointment.setPatient(account);
+        appointment.setModifiedBy(account);
+        appointment.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        appointment.setModificationDateTime(LocalDateTime.now());
     }
 
     @Override
@@ -114,9 +122,9 @@ public class AppointmentManagerImplementation extends AbstractManager implements
             List<DoctorRating> doctors = doctorRatingFacade.getActiveDoctorsAndRates();
             return doctors
                     .stream()
-                    .map(doctor ->
-                            new DoctorAndRateResponseDTO(doctor.getDoctor().getFirstName(),
-                                    doctor.getDoctor().getLastName(),
+                    .map(doctor -> 
+                            new DoctorAndRateResponseDTO(doctor.getDoctor().getFirstName(), 
+                                    doctor.getDoctor().getLastName(), 
                                     doctor.getAverage()))
                     .collect(Collectors.toList());
         } catch (AppBaseException e) {
