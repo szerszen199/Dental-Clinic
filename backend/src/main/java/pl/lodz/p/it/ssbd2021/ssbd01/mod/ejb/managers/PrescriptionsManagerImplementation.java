@@ -9,6 +9,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.PrescriptionException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.CreatePrescriptionRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.EditPrescriptionRequestDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.PrescriptionResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades.PrescriptionFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
@@ -19,17 +20,14 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
 import javax.annotation.security.RolesAllowed;
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Stateful
 @RolesAllowed({I18n.DOCTOR, I18n.PATIENT})
@@ -109,4 +107,21 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
             throw PrescriptionException.prescriptionEditFailed();
         }
     }
+
+    @Override
+    public List<PrescriptionResponseDto> getPrescriptions() throws AppBaseException {
+            List<Prescription> prescriptions = prescriptionFacade.findAll();
+            return prescriptions.stream()
+                    .map(prescription ->
+                            new PrescriptionResponseDto(
+                                    prescription.getId(),
+                                    prescription.getExpiration(),
+                                    prescription.getPatient().getFirstName(),
+                                    prescription.getPatient().getLastName(),
+                                    prescription.getDoctor().getFirstName(),
+                                    prescription.getDoctor().getLastName(),
+                                    prescription.getCreationDateTime(),
+                                    prescription.getMedications()))
+                                    .collect(Collectors.toList());
+}
 }
