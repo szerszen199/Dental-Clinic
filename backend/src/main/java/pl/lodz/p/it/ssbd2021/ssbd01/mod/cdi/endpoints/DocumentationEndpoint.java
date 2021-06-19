@@ -188,29 +188,5 @@ public class DocumentationEndpoint {
         }
     }
 
-    /**
-     * Usuwa receptę.
-     *
-     * @param deletePrescriptionRequestDTO obiekt DTO przechowujący klucz biznesowy recepty
-     * @return {@link Response.Status#OK} w przypadku powodzenia, inaczej {@link Response.Status#BAD_REQUEST}
-     */
-    @POST
-    @Path("prescription/delete")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces({MediaType.APPLICATION_JSON})
-    @RolesAllowed({I18n.DOCTOR})
-    public Response removePrescription(@NotNull @Valid DeletePrescriptionRequestDTO deletePrescriptionRequestDTO) {
-        try {
-            prescriptionTransactionRepeater.repeatTransaction(
-                    () -> prescriptionManager.deletePrescription(deletePrescriptionRequestDTO.getBusinessId()),
-                    prescriptionManager
-            );
-        } catch (AppBaseException e) {
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
-        } catch (Exception e) {
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.PRESCRIPTION_REMOVAL_FAILED)).build();
-        }
-        
-        return Response.ok().entity(new MessageResponseDto(I18n.PRESCRIPTION_REMOVED_SUCCESSFULLY)).build();
-    }
+    
 }
