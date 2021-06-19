@@ -6,6 +6,12 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentDto;
+
+import javax.ejb.Local;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Interfejs menadżera wizyt.
@@ -16,10 +22,10 @@ public interface AppointmentManager {
     /**
      * Dodaje rezerwację do podanej wizyty.
      *
-     * @param appointmentId klucz główny wizyty
-     * @param login         login pacjenta
+     * @param bookAppointmentDto the book appointment dto
+     * @throws AppBaseException the app base exception
      */
-    void bookAppointment(Long appointmentId, String login);
+    void bookAppointment(BookAppointmentDto bookAppointmentDto) throws AppBaseException;
 
     /**
      * Anuluje umówioną wizytę.
