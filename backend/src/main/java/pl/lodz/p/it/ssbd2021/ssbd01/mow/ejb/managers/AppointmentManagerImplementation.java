@@ -8,12 +8,17 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
+
 import org.apache.commons.lang3.NotImplementedException;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorRating;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AppointmentFacade;
@@ -29,13 +34,13 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
 public class AppointmentManagerImplementation extends AbstractManager implements AppointmentManager {
-    
+
     @Inject
     private AppointmentFacade appointmentFacade;
-    
+
     @Inject
     private AccountFacade accountFacade;
-    
+
     @Inject
     private DoctorRatingFacade doctorRatingFacade;
 
@@ -80,9 +85,9 @@ public class AppointmentManagerImplementation extends AbstractManager implements
             List<DoctorRating> doctors = doctorRatingFacade.getActiveDoctorsAndRates();
             return doctors
                     .stream()
-                    .map(doctor -> 
-                            new DoctorAndRateResponseDTO(doctor.getDoctor().getFirstName(), 
-                                    doctor.getDoctor().getLastName(), 
+                    .map(doctor ->
+                            new DoctorAndRateResponseDTO(doctor.getDoctor().getFirstName(),
+                                    doctor.getDoctor().getLastName(),
                                     doctor.getAverage()))
                     .collect(Collectors.toList());
         } catch (AppBaseException e) {
@@ -96,8 +101,45 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
-    public void editAppointmentSlot(Appointment appointment) {
-        throw new NotImplementedException();
+    public void editAppointmentSlot(AppointmentEditRequestDto appointmentEditRequestDto) throws AppointmentException {
+        Appointment appointment;
+        try {
+            appointment = appointmentFacade.find(appointmentEditRequestDto.getId());
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentNotFound();
+        }
+
+        if (!appointmentEditRequestDto.getVersion().equals(appointment.getVersion())) {
+            throw AppointmentException.versionMismatch();
+        }
+
+        try {
+            Account account;
+            if (appointmentEditRequestDto.getPatientLogin() != null) {
+                account = accountFacade.findByLogin(appointmentEditRequestDto.getPatientLogin());
+                final boolean isAccountActivePatient = account.getAccessLevels().stream()
+                        .anyMatch(accessLevel -> accessLevel.getLevel().equals(I18n.PATIENT)
+                                && accessLevel.getActive());
+                if (account.getActive() && isAccountActivePatient) {
+                    appointment.setPatient(account);
+                } else {
+                    throw AppointmentException.appointmentNotPatientInactive();
+                }
+
+            }
+        } catch (AppBaseException e) {
+            throw AppointmentException.accountNotFound();
+        }
+
+        if (appointmentEditRequestDto.getAppointmentDate() != null) {
+            appointment.setAppointmentDate(appointmentEditRequestDto.getAppointmentDate());
+        }
+
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
     }
 
     @Override
