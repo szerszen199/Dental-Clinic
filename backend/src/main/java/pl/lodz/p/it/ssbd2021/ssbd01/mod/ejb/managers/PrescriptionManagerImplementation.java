@@ -8,6 +8,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.NotImplementedException;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
@@ -23,7 +24,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
 @Stateful
-@PermitAll
+@RolesAllowed({I18n.DOCTOR, I18n.PATIENT})
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
 public class PrescriptionManagerImplementation extends AbstractManager implements PrescriptionManager {
@@ -35,10 +36,13 @@ public class PrescriptionManagerImplementation extends AbstractManager implement
     private PropertiesLoader propertiesLoader;
 
     @Inject
-    private LoggedInAccountUtil loggedInAccountUtil;
+    private AccountFacade accountFacade;
 
     @Inject
-    private AccountFacade accountFacade;
+    private HttpServletRequest request;
+    
+    @Inject
+    private LoggedInAccountUtil loggedInAccountUtil;
 
     @Override
     public void addPrescription(Long patientId, Prescription prescription) {

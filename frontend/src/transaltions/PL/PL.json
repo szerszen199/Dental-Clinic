@@ -184,5 +184,10 @@
   "login_not_in_pattern": "W loginie użytkownika występują nieprawidłowe znaki",
   "forbidden": "Zakazane",
   "internal_server_error": "Błąd Serwera",
-  "not_found":  "Zasób Nieznaleziony"
+  "not_found":  "Zasób Nieznaleziony",
+  "no_such_prescription": "Nie wybrano recepty",
+  "prescription_removal_failed": "Usuwanie recepty nie powiodło się",
+  "prescription_removal_unauthorized": "Nie wystawiłeś tej recepty, nie możesz jej usunąć",
+  "prescription_id_null": "Wybierz receptę!",
+  "prescription_removed_successfully": "Recepta została usunięta"
 }

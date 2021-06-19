@@ -184,5 +184,10 @@
   "login_not_in_pattern": "Username contains invalid characters",
   "forbidden": "Forbidden access",
   "internal_server_error": "Server Error",
-  "not_found": "Resource not found"
+  "not_found": "Resource not found",
+  "no_such_prescription": "No prescription was selected",
+  "prescription_removal_failed": "Prescription removal failed",
+  "prescription_removal_unauthorized": "You have not issued this prescription, you cannot remove it",
+  "prescription_id_null": "Choose a prescription!",
+  "prescription_removed_successfully": "Prescription has been deleted"
 }
