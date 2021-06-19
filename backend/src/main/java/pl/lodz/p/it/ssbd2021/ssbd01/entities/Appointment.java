@@ -43,7 +43,7 @@ public class Appointment extends AbstractEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appointments_generator")
     @SequenceGenerator(name = "appointments_generator", sequenceName = "appointments_seq", allocationSize = 1)
     @Basic(optional = false)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "id", updatable = false, nullable = false)
     @NotNull
     private Long id;
 

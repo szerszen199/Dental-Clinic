@@ -10,6 +10,7 @@ public class AppointmentConverter {
     /**
      * Tworzy nową instancję obiektu AppointmentEntity korzystając z danych z obiektu createAppointmentSlotRequestDTO (konwertuje obiekt).
      *
+     * @param doctor obiekt typu Account definujący przypisanego doktora
      * @param createAppointmentSlotRequestDTO obiekt typu CreateAppointmentSlotRequestDTO
      * @return Appointment
      */
