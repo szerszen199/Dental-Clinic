@@ -50,6 +50,10 @@
   "level.administrator": "Administrator",
   "level.doctor": "Lekarz",
   "level.receptionist": "Recepcjonista",
+  "lastSuccessfulLogin": "Ostatnie poprawne zalogowanie",
+  "lastSuccessfulLoginIp": "IP",
+  "lastUnsuccessfulLogin": "Ostatnie błędne zalogowanie",
+  "lastUnsuccessfulLoginIp": "IP",
   "Login blank error": "Nazwa użytkownika nie może być pusta!",
   "Login invalid format error": "Nazwa użytkownika może zawierać tylko litery oraz cyfry i nie może zawierać spacji, znaków specjalnych oraz symboli emoji.",
   "Login too short error": "Nazwa użytkownika jest zbyt krótka! Nie może być krótsza niż 3 znaki.",
@@ -177,5 +181,8 @@
   "IT system home": "System informatyczny dla kliniki stomatologicznej.",
   "etag_invalid": "Niepoprawna wartość nagłówka etag",
   "login_invalid_size": "Niepoprawny rozmiar loginu użytkownika, powinien być pomiędzy 3 i 60 znakami",
-  "login_not_in_pattern": "W loginie użytkownika występują nieprawidłowe znaki"
+  "login_not_in_pattern": "W loginie użytkownika występują nieprawidłowe znaki",
+  "forbidden": "Zakazane",
+  "internal_server_error": "Błąd Serwera",
+  "not_found":  "Zasób Nieznaleziony"
 }

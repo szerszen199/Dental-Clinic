@@ -17,6 +17,6 @@ export default function errorAlertsWithRedirect(title, message,path) {
                 closeModal: true,
             },
         }).then(() => {
-            window.location = path;
+            window.location.hash = path;
         }));
 }

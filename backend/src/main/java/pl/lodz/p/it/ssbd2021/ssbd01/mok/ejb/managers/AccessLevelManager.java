@@ -40,4 +40,12 @@ public interface AccessLevelManager {
      * @return true jeśli ostatnia transakcja się nie powiodła, false w przeciwnym wypadku.
      */
     boolean isLastTransactionRollback();
+
+    /**
+     * Usuwa poziom dostepu po id konta.
+     *
+     * @param id the id
+     * @throws AppBaseException the app base exception
+     */
+    void deleteAccessLevelsByAccountId(Long id) throws AppBaseException;
 }

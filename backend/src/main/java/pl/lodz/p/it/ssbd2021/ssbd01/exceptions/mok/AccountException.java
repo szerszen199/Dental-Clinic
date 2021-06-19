@@ -6,11 +6,8 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_ALREADY_CONFIRMED
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CONFIRMATION_BY_TOKEN_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_CREATION_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EDIT_FAILED;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_EMAIL_ALREADY_EXISTS;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_GET_ALL_ACCOUNTS_FAILED;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_IS_BLOCKED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOCKED_FAILED;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOGIN_ALREADY_EXISTS;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_LOGIN_EMAIL_PESEL_ALREADY_EXISTS;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_NOT_FOUND;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_SET_DARK_MODE_FAILED;
@@ -49,32 +46,12 @@ public class AccountException extends AppBaseException {
     }
 
     /**
-     * Tworzy wyjątek reprezentujący próbę utworzenia konta o loginie który już istnieje.
-     *
-     * @param cause przyczyna wystąpienia wyjątku
-     * @return wyjątek typu AccountException
-     */
-    public static AccountException accountLoginExists(Throwable cause) {
-        return new AccountException(ACCOUNT_LOGIN_ALREADY_EXISTS, cause);
-    }
-
-    /**
      * Tworzy wyjątek reprezentujący próbę zablokowania konta.
      *
      * @return wyjątek typu AccountException
      */
     public static AccountException accountLockFailed() {
         return new AccountException(ACCOUNT_LOCKED_FAILED);
-    }
-
-    /**
-     * Tworzy wyjątek reprezentujący próbę utworzenia konta o emailu który już istnieje.
-     *
-     * @param cause przyczyna wystąpienia wyjątku
-     * @return wyjątek typu AccountException
-     */
-    public static AccountException accountEmailExists(Throwable cause) {
-        return new AccountException(ACCOUNT_EMAIL_ALREADY_EXISTS, cause);
     }
 
     /**
@@ -123,15 +100,6 @@ public class AccountException extends AppBaseException {
     }
 
     /**
-     * Tworzy wyjątek reprezentujący próbę wykonania operacji na zablokowanym koncie.
-     *
-     * @return wyjątek typu AccountException
-     */
-    public static AccountException accountIsBlocked() {
-        return new AccountException(ACCOUNT_IS_BLOCKED);
-    }
-
-    /**
      * Tworzy wyjątek reprezentujący próbę wykonania operacji na nieistniejącym koncie.
      *
      * @param cause przyczyna wystąpienia wyjątku
@@ -172,17 +140,6 @@ public class AccountException extends AppBaseException {
      */
     public static AccountException invalidConfirmationToken() {
         return new AccountException(INVALID_CONFIRMATION_TOKEN);
-    }
-
-    /**
-     * Tworzy wyjątek reprezentujący próbę aktywacji konta z użyciem niepoprawnego
-     * tokenu aktywacyjnego.
-     *
-     * @param cause przyczyna wystąpienia wyjątku
-     * @return wyjątek typu AccountException
-     */
-    public static AccountException invalidConfirmationToken(Throwable cause) {
-        return new AccountException(INVALID_CONFIRMATION_TOKEN, cause);
     }
 
     /**
@@ -241,6 +198,7 @@ public class AccountException extends AppBaseException {
 
     /**
      * Tworzy wyjątek reprezentujący różne wartości wersji dla encji.
+     *
      * @return wyjątek typu AccountException
      */
     public static AccountException versionMismatchException() {
