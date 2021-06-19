@@ -3,9 +3,12 @@ package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
+import javax.ejb.ApplicationException;
+
 /**
  * Typ wyjątku dla dukumentacji medycznej.
  */
+@ApplicationException(rollback = true)
 public class MedicalDocumentationException extends AppBaseException {
     /**
      * Tworzy nową instancję klasy Medical documentation exception.

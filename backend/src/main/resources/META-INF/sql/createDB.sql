@@ -6,6 +6,8 @@ DROP VIEW IF EXISTS glassfish_auth_view;
 DROP TABLE IF EXISTS access_levels;
 DROP TABLE IF EXISTS doctors_ratings;
 DROP TABLE IF EXISTS accounts;
+DROP TABLE IF EXISTS doctors_ratings;
+DROP TABLE IF EXISTS accounts;
 
 
 DROP SEQUENCE IF EXISTS accounts_seq;
@@ -14,6 +16,7 @@ DROP SEQUENCE IF EXISTS appointments_seq;
 DROP SEQUENCE IF EXISTS medical_documentations_seq;
 DROP SEQUENCE IF EXISTS documentation_entries_seq;
 DROP SEQUENCE IF EXISTS prescriptions_seq;
+DROP SEQUENCE IF EXISTS doctors_ratings_seq;
 
 -- Tabela reprezentująca dane użytkownika
 CREATE TABLE accounts
@@ -336,6 +339,47 @@ CREATE SEQUENCE prescriptions_seq -- Sekwencja wykorzystywana do tworzenia klucz
     NO MINVALUE
     NO MAXVALUE CACHE 1;
 
+CREATE TABLE doctors_ratings
+(
+    id                     BIGINT PRIMARY KEY,                             -- Klucz główny tabeli
+    doctor_id              BIGINT      NOT NULL,                           -- Id lekarza, którego dotyczą statystyki ocen
+    rates_sum              DOUBLE PRECISION NOT NULL  DEFAULT 0.              -- Suma wszystkich ocen wystawionych lekarzowi
+        CONSTRAINT rates_sum_gr0 CHECK (rates_sum >= 0),
+    rates_counter          INT NOT NULL  DEFAULT 0                         -- Ilość wszystkich wystawionych lekarzowi ocen
+        CONSTRAINT rates_counter_gr0 CHECK (rates_counter >= 0),           -- Większe-równe 0
+    active                 BOOL DEFAULT TRUE  NOT NULL,
+    version                BIGINT                                          -- Wersja
+        CONSTRAINT version_gr0 CHECK (version >= 0),
+    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Czas utworzenia wiersza w tabeli
+    created_by             BIGINT      NOT NULL,                           -- Konto które utworzyło wiersz w tabeli
+    created_by_ip          VARCHAR(256),
+    modification_date_time TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji wiersza w tabeli
+    modified_by            BIGINT,                                         -- Konto ostatnio modyfikujące wiersza w tabeli
+    modified_by_ip         VARCHAR(256)
+);
+
+ALTER TABLE doctors_ratings
+    ADD FOREIGN KEY (doctor_id) REFERENCES accounts (id);
+ALTER TABLE doctors_ratings
+    ADD FOREIGN KEY (created_by) REFERENCES accounts (id);
+ALTER TABLE doctors_ratings
+    ADD FOREIGN KEY (modified_by) REFERENCES accounts (id);
+
+CREATE
+    INDEX doctor_rating_id_index ON doctors_ratings (id);
+CREATE
+    INDEX doctor_rating_doctor_index ON doctors_ratings (doctor_id);
+CREATE
+    INDEX doctor_rating_created_by_id_index ON doctors_ratings (created_by);
+CREATE
+    INDEX doctor_rating_modified_by_id_index ON doctors_ratings (modified_by);
+
+CREATE SEQUENCE doctors_ratings_seq -- Sekwencja wykorzystywana do tworzenia klucza głownego w tabeli doctors_ratings
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE CACHE 1;
+
 --------------------------------------------------
 --                 UPRAWNIENIA                  --
 --------------------------------------------------
@@ -384,6 +428,9 @@ GRANT SELECT ON access_levels_seq TO ssbd01mow;
 ALTER TABLE appointments
     OWNER TO ssbd01admin;
 
+ALTER TABLE doctors_ratings
+    OWNER TO ssbd01admin;
+
 GRANT
     SELECT,
     INSERT,
@@ -391,7 +438,30 @@ GRANT
     DELETE
     ON appointments TO ssbd01mow;
 
-GRANT SELECT, USAGE ON appointments_seq TO ssbd01mow;
+GRANT 
+    SELECT, 
+    USAGE 
+    ON appointments_seq TO ssbd01mow;
+
+GRANT
+    SELECT,
+    INSERT,
+    UPDATE
+    ON doctors_ratings TO ssbd01mow;
+
+GRANT
+    INSERT
+    ON doctors_ratings TO ssbd01mok;
+
+GRANT
+    SELECT,
+    USAGE
+    ON doctors_ratings_seq TO ssbd01mow;
+
+GRANT
+    SELECT,
+    USAGE
+    ON doctors_ratings_seq TO ssbd01mok;
 
 -- UPRAWNIENIA dla MOD
 

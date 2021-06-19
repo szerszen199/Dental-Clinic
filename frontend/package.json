@@ -14,6 +14,7 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "bootstrap-switch-button-react": "^1.2.0",
+    "chokidar": "^3.5.2",
     "i18next": "^20.2.4",
     "i18next-browser-languagedetector": "^6.1.1",
     "i18next-xhr-backend": "^3.2.2",
