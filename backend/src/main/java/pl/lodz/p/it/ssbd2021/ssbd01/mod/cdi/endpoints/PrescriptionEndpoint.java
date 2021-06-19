@@ -2,9 +2,10 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mod.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.PrescriptionException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.EditPrescriptionRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.CreatePrescriptionRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.EditPrescriptionRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.MessageResponseDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.PrescriptionResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.PrescriptionsManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.utils.PrescriptionTransactionRepeater;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.SignatureFilterBinding;
@@ -20,12 +21,14 @@ import javax.interceptor.Interceptors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("prescription")
 @Stateful
@@ -87,4 +90,23 @@ public class PrescriptionEndpoint {
         return Response.ok().entity(new MessageResponseDto(I18n.PRESCRIPTION_EDITED_SUCCESSFULLY)).build();
     }
 
+
+    /**
+     * Pobiera listę aktywnych pacjentów.
+     *
+     * @return lista aktywnych pacjentów
+     */
+    @GET
+    @RolesAllowed({I18n.DOCTOR,I18n.PATIENT})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("prescriptions")
+    public Response getPrescription() {
+        List<PrescriptionResponseDto> prescriptions;
+        try {
+            prescriptions = prescriptionsManager.getPrescriptions();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.ok().entity(prescriptions).build();
+    }
 }

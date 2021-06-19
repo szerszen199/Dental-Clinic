@@ -5,8 +5,10 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.PrescriptionException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.CreatePrescriptionRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.EditPrescriptionRequestDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.PrescriptionResponseDto;
 
 import javax.ejb.Local;
+import java.util.List;
 
 /**
  * Interfejs Prescriptions manager.
@@ -37,4 +39,6 @@ public interface PrescriptionsManager {
      * @throws EncryptionException wyjątek EncryptionException
      */
     void editPrescription(EditPrescriptionRequestDto editPrescriptionRequestDto) throws PrescriptionException, EncryptionException;
+
+    List<PrescriptionResponseDto> getPrescriptions() throws AppBaseException;
 }
