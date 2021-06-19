@@ -16,7 +16,7 @@ function Receptionist() {
             <NavDropdown title={t("Appointments")} id="navbarScrollingDropdown">
                 <Nav.Link as={Link} style={{color: "rgb(127, 127, 127)"}} className="navMenu" to="/plan-appointment">{t("Plan an appointment")}</Nav.Link>
             </NavDropdown>
-            <Nav.Link as={Link} to="/accounts">{t("Users Accounts")}</Nav.Link>
+            <Nav.Link as={Link} to="/list-patients">{t("Patients List")}</Nav.Link>
             <MyAccount/>
         </Nav>
     );
