@@ -14,7 +14,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers.AppointmentManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
@@ -46,6 +48,25 @@ public class AppointmentEndpoint {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
         return Response.ok().entity(doctors).build();
+    }
+
+    /**
+     * Pobiera listę aktywnych pacjentów.
+     *
+     * @return lista aktywnych pacjentów
+     */
+    @GET
+    @RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("patients")
+    public Response getPatients() {
+        List<PatientResponseDTO> patients;
+        try {
+            patients = appointmentManager.getActivePatients();
+        } catch (PatientException | EJBTransactionRolledbackException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.ok().entity(patients).build();
     }
     
 }
