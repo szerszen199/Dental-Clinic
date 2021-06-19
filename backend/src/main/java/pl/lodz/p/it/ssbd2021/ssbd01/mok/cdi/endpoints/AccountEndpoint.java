@@ -8,6 +8,8 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.validation.Valid;
@@ -116,6 +118,12 @@ public class AccountEndpoint {
     @Inject
     private EntityIdentitySignerVerifier signer;
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    private void createAccountTransaction(CreateAccountRequestDTO accountDto) throws MedicalDocumentationException, AccountException, MailSendingException {
+        this.accountManager.createAccount(AccountConverter.createAccountEntityFromDto(accountDto));
+        this.medicalDocumentationManager.createMedicalDocumentation(accountDto.getLogin());
+    }
+
 
     /**
      * Tworzy nowe konto.
@@ -135,11 +143,8 @@ public class AccountEndpoint {
         do {
             try {
                 exception = null;
-                this.accountManager.createAccount(
-                        AccountConverter.createAccountEntityFromDto(accountDto)
-                );
-                this.medicalDocumentationManager.createMedicalDocumentation(accountDto.getLogin());
-                rollbackTX = accountManager.isLastTransactionRollback();
+                createAccountTransaction(accountDto);
+                rollbackTX = accountManager.isLastTransactionRollback() || medicalDocumentationManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
                 rollbackTX = true;
                 exception = e;
