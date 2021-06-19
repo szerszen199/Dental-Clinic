@@ -2,7 +2,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -11,10 +11,12 @@ import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.NotImplementedException;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorRating;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
@@ -30,7 +32,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
  * Klasa implementująca interfejs menadżera wizyt.
  */
 @Stateful
-@PermitAll
+@RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.PATIENT})
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
 public class AppointmentManagerImplementation extends AbstractManager implements AppointmentManager {
@@ -101,40 +103,22 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         }
     }
 
+    @RolesAllowed({I18n.RECEPTIONIST})
     @Override
-    public void addAppointmentSlot(Appointment appointment) throws AppointmentException {
-        String requestIp = IpAddressUtils.getClientIpAddressFromHttpServletRequest(request);
-        appointment.setCreatedByIp(requestIp);
-
+    public void addAppointmentSlot(Appointment appointment) throws AccountException, AppointmentException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
+        appointment.setCreatedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        appointment.setCreatedBy(account);
         try {
             appointmentFacade.create(appointment);
         } catch (Exception e) {
             throw AppointmentException.appointmentCreationFailed();
         }
-
-
-//        try {
-//            appointmentFacade.findByLoginOrEmailOrPesel(account.getLogin(), account.getEmail(), account.getPesel());
-//        } catch (AccountException accountException) {
-//            account.setCreatedBy(account);
-//            try {
-//                accountFacade.create(account);
-//            } catch (Exception e) {
-//                throw AccountException.accountCreationFailed();
-//            }
-//            try {
-//                mailProvider.sendActivationMail(
-//                        account.getEmail(),
-//                        jwtRegistrationConfirmationUtils.generateJwtTokenForUsername(account.getLogin()), account.getLanguage()
-//                );
-//            } catch (Exception e) {
-//                throw MailSendingException.activationLink();
-//            }
-//            return;
-//        } catch (AppBaseException e) {
-//            throw AccountException.accountCreationFailed();
-//        }
-//        throw AccountException.accountLoginEmailPeselExists();
     }
 
     @Override
