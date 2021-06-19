@@ -44,14 +44,14 @@ public class AppointmentEndpoint {
      * @return {@link Response.Status#OK} przy powodzeniu, inaczej {@link Response.Status#BAD_REQUEST}
      */
     @POST
-    @Path("remove")
+    @Path("slot/delete")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON})
     @RolesAllowed({I18n.RECEPTIONIST})
-    public Response removeAppointmentSlot(@NotNull @Valid RemoveAppointmentSlotRequestDTO removeAppointmentSlotRequestDTO) {
+    public Response deleteAppointmentSlot(@NotNull @Valid RemoveAppointmentSlotRequestDTO removeAppointmentSlotRequestDTO) {
         try {
             appointmentTransactionRepeater.repeatTransaction(
-                    () -> appointmentManager.removeAppointmentSlot(removeAppointmentSlotRequestDTO.getId()),
+                    () -> appointmentManager.deleteAppointmentSlot(removeAppointmentSlotRequestDTO.getId()),
                     appointmentManager);
         } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();

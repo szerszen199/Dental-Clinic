@@ -91,7 +91,7 @@ public interface AppointmentManager {
      * @param id klucz główny wolnej wizyty
      * @throws AppBaseException bazowy wyjątek aplikacji.
      */
-    void removeAppointmentSlot(Long id) throws AppBaseException;
+    void deleteAppointmentSlot(Long id) throws AppBaseException;
 
     /**
      * Potwierdza umówioną wizytę.

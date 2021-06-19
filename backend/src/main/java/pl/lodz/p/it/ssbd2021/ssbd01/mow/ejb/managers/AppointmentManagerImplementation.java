@@ -84,7 +84,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
-    public void removeAppointmentSlot(Long id) throws AppBaseException {
+    public void deleteAppointmentSlot(Long id) throws AppBaseException {
         Appointment appointment;
         try {
             appointment = appointmentFacade.find(id);
