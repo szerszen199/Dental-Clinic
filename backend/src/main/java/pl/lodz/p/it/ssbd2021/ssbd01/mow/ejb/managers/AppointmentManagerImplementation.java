@@ -14,10 +14,12 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorRating;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AppointmentFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.DoctorRatingFacade;
@@ -143,7 +145,21 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
-    public List<Account> getAllPatients() {
-        throw new NotImplementedException();
+    public List<PatientResponseDTO> getActivePatients() throws PatientException {
+        try {
+            List<Account> patients = accountFacade.getActivePatients();
+            return patients
+                    .stream()
+                    .map(patient ->
+                            new PatientResponseDTO(patient.getLogin(),
+                                    patient.getEmail(),
+                                    patient.getFirstName(),
+                                    patient.getLastName(),
+                                    patient.getPhoneNumber(),
+                                    patient.getPesel()))
+                    .collect(Collectors.toList());
+        } catch (AppBaseException e) {
+            throw PatientException.getActivePatients();
+        }
     }
 }
