@@ -1,19 +1,17 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod;
 
+import javax.ejb.ApplicationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
 /**
  * Typ PrescriptionException - dla recept.
  */
+@ApplicationException(rollback = true)
 public class PrescriptionException extends AppBaseException {
     
     private PrescriptionException(String message) {
         super(message);
-    }
-
-    private PrescriptionException(String message, Throwable cause) {
-        super(message, cause);
     }
 
     /**
