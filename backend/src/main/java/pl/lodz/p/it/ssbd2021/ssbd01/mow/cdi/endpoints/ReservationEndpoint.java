@@ -3,7 +3,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mow.cdi.endpoints;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers.AppointmentManagerImplementation;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers.AppointmentManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 import javax.annotation.security.DenyAll;
@@ -22,6 +22,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ * The type Reservation endpoint.
+ */
 @Path("/reservation")
 @Stateful
 @DenyAll
@@ -30,8 +33,14 @@ import javax.ws.rs.core.Response;
 public class ReservationEndpoint {
 
     @Inject
-    AppointmentManagerImplementation appointmentManagerImplementation;
+    AppointmentManager appointmentManagerImplementation;
 
+    /**
+     * Reserve appointment response.
+     *
+     * @param bookAppointmentDto the book appointment dto
+     * @return the response
+     */
     @PUT
     @Path("reserve")
     @Consumes(MediaType.APPLICATION_JSON)

@@ -59,6 +59,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         appointmentFacade.create(appointment);
 
     }
+
     @Override
     public void cancelBookedAppointment(Long id) {
         throw new NotImplementedException();
