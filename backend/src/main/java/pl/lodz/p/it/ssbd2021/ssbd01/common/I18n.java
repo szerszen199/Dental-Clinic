@@ -73,6 +73,9 @@ public class I18n {
 
     public static final String DARK_MODE_NULL = "dark_mode_null";
 
+    public static final String DOCTOR_ID_NULL = "doctor_id_null";
+    public static final String APPOINTMENT_DATE_NULL = "appointment_date_null";
+
     public static final String INVALID_REFRESH_TOKEN = "invalid_refresh_token";
     public static final String PASSWORDS_NOT_DIFFER = "both_passwords_are_same";
     public static final String AUTHENTICATION_FAILURE = "invalid_login_password_combination";
@@ -105,6 +108,8 @@ public class I18n {
     public static final String ACCOUNT_MAIL_CHANGE_CONFIRM_BUTTON = "account_mail_change_confirm_button";
     public static final String ACCOUNT_MAIL_LOCK_BY_ADMIN_SUBJECT = "account_mail_lock_by_admin_subject";
     public static final String ACCOUNT_MAIL_LOCK_BY_ADMIN_TEXT = "account_mail_lock_by_admin_text";
+    public static final String ACCOUNT_MAIL_DELETE_BY_SCHEDULER_SUBJECT = "account_mail_deleted_by_scheduler_subject";
+    public static final String ACCOUNT_MAIL_DELETE_BY_SCHEDULER_TEXT  = "account_mail_deleted_by_scheduler_text";
     public static final String ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_SUBJECT = "account_mail_lock_by_unsuccessful_login_subject";
     public static final String ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_TEXT = "account_mail_lock_by_unsuccessful_login_text";
     public static final String ACCOUNT_MAIL_LOGIN_SUBJECT = "account_mail_login_subject";
@@ -145,4 +150,21 @@ public class I18n {
     public static final String INVALID_DOCTOR_DOCUMENTATION_ENTRY = "invalid_doctor_documentation_entry";
     public static final String REMOVAL_FAILURE_ERROR = "removal_failure_error";
     public static final String DOCUMENTATION_ENTRY_DELETION_UNSUCCESSFUL = "documentation_entry_deletion_unsuccessful";
+    public static final String DOCUMENTATION_ENTRY_CREATED_SUCCESSFULLY = "documentation_entry_created_successfully";
+    public static final String PATIENT_ID_NULL = "patient_id_null";
+    public static final String MEDICAL_DOCUMENTATION_NOT_FOUND = "medical_documentation_not_found";
+    public static final String DOCUMENTATION_ENTRY_CREATION_FAILED = "documentation_entry_creation_failed";
+    public static final String DOCUMENTATION_ENTRY_CREATED_UNSUCCESSFULLY = "documentation_entry_created_failed";
+    public static final String ENCRYPTING_FAILED = "encrypting_failed";
+    public static final String MEDICAL_DOCUMENTATION_CREATION_FAILED = "medical_documentation_creation_failed";
+    public static final String DOCUMENTATION_ENTRY_ID_NULL = "documentation_entry_id_null";
+    public static final String DOCUMENTATION_ENTRY_EDITION_FAILED = "documentation_entry_edition_failed";
+    public static final String DOCUMENTATION_ENTRY_EDITED_SUCCESSFULLY = "documentation_entry_edited_successfully";
+    public static final String DOCUMENTATION_ENTRY_EDITED_UNSUCCESSFULLY = "documentation_entry_edited_unsuccessfully";
+    public static final String MEDICAL_DOCUMENTATION_FETCH_FAILED = "medical_documentation_fetch_failed";
+    public static final String PATIENT_SAME_DOCTOR = "patient_same_doctor";
+    public static final String GET_DOCTORS_AND_RATES_FAILED = "get_doctors_and_rates_failed";
+
+    public static final String APPOINTMENT_SLOT_CREATION_FAILED = "appointment_slot_creation_failed";
+    public static final String APPOINTMENT_SLOT_CREATED_SUCCESSFULLY = "appointment_slot_created_successfully";
 }

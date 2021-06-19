@@ -6,3 +6,9 @@
 .Card {
     background-color: #ffffff;
 }
+
+.account-refresh-button-div{
+    text-align: right;
+    margin-right: 10px;
+    margin-bottom: 5px;
+}

@@ -1,9 +1,12 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
+import org.hibernate.validator.constraints.UniqueElements;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,8 +40,7 @@ import java.util.Collection;
 public class MedicalDocumentation extends AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
-    @JoinColumn(name = "documentation_id", nullable = false)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH}, mappedBy = "medicalDocumentation", fetch = FetchType.EAGER)
     private final Collection<DocumentationEntry> documentationEntryCollection = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medical_documentations_generator")
@@ -51,8 +53,8 @@ public class MedicalDocumentation extends AbstractEntity implements Serializable
     private String allergies;
     @Column(name = "medications_taken")
     private String medicationsTaken;
-    @JoinColumn(name = "patient_id", referencedColumnName = "id", nullable = false, updatable = false)
-    @OneToOne(optional = false)
+    @JoinColumn(name = "patient_id", unique = true, referencedColumnName = "id", nullable = false, updatable = false)
+    @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @NotNull
     private Account patient;
 
@@ -60,6 +62,15 @@ public class MedicalDocumentation extends AbstractEntity implements Serializable
      * Tworzy nową instancję klasy MedicalDocumentation.
      */
     public MedicalDocumentation() {
+    }
+
+    /**
+     * Tworzy nową instancję klasy MedicalDocumentation dla pacjenta.
+     *
+     * @param patient patient
+     */
+    public MedicalDocumentation(Account patient) {
+        this.patient = patient;
     }
 
     @Override

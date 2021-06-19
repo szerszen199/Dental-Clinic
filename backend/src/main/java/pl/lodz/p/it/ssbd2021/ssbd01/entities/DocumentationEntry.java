@@ -4,7 +4,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -44,18 +42,18 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
     private Long id;
 
     @Column(name = "was_done")
-    private String wasDone;
+    private byte[] wasDone;
 
     @Column(name = "to_be_done")
-    private String toBeDone;
+    private byte[] toBeDone;
 
     @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
     @NotNull
     private Account doctor;
 
-    @JoinColumn(name = "documentation_id", referencedColumnName = "id", nullable = false, updatable = false, insertable = false)
-    @ManyToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
+    @JoinColumn(name = "documentation_id", referencedColumnName = "id", nullable = false, updatable = false, insertable = true)
+    @ManyToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @NotNull
     private MedicalDocumentation medicalDocumentation;
 
@@ -63,6 +61,21 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
      * Tworzy nową instancję klasy DocumentationEntry.
      */
     public DocumentationEntry() {
+    }
+
+    /**
+     * Tworzy nową instancję klasy Documentation entry.
+     *
+     * @param doctor               doktor tworzący wpis dokumentacji
+     * @param wasDone              co zostało zrobione
+     * @param toBeDone             co ma zostać zrobione wprzyszłości
+     * @param medicalDocumentation medyczna dokumentacja, dla której został dodany wpis
+     */
+    public DocumentationEntry(Account doctor, byte[] wasDone, byte[] toBeDone, MedicalDocumentation medicalDocumentation) {
+        this.doctor = doctor;
+        this.wasDone = wasDone;
+        this.toBeDone = toBeDone;
+        this.medicalDocumentation = medicalDocumentation;
     }
 
     public MedicalDocumentation getMedicalDocumentation() {
@@ -78,19 +91,19 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
         return id;
     }
 
-    public String getWasDone() {
+    public byte[] getWasDone() {
         return wasDone;
     }
 
-    public void setWasDone(String wasDone) {
+    public void setWasDone(byte[] wasDone) {
         this.wasDone = wasDone;
     }
 
-    public String getToBeDone() {
+    public byte [] getToBeDone() {
         return toBeDone;
     }
 
-    public void setToBeDone(String toBeDone) {
+    public void setToBeDone(byte [] toBeDone) {
         this.toBeDone = toBeDone;
     }
 

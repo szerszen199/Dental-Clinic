@@ -8,6 +8,8 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.validation.Valid;
@@ -29,9 +31,11 @@ import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.MedicalDocumentationManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.SetNewPasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
@@ -95,6 +99,9 @@ public class AccountEndpoint {
     private AccountManager accountManager;
 
     @Inject
+    private MedicalDocumentationManager medicalDocumentationManager;
+
+    @Inject
     private LoggedInAccountUtil loggedInAccountUtil;
 
     @Inject
@@ -110,6 +117,12 @@ public class AccountEndpoint {
 
     @Inject
     private EntityIdentitySignerVerifier signer;
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    private void createAccountTransaction(CreateAccountRequestDTO accountDto) throws MedicalDocumentationException, AccountException, MailSendingException {
+        this.accountManager.createAccount(AccountConverter.createAccountEntityFromDto(accountDto));
+        this.medicalDocumentationManager.createMedicalDocumentation(accountDto.getLogin());
+    }
 
 
     /**
@@ -130,10 +143,8 @@ public class AccountEndpoint {
         do {
             try {
                 exception = null;
-                this.accountManager.createAccount(
-                        AccountConverter.createAccountEntityFromDto(accountDto)
-                );
-                rollbackTX = accountManager.isLastTransactionRollback();
+                createAccountTransaction(accountDto);
+                rollbackTX = accountManager.isLastTransactionRollback() || medicalDocumentationManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
                 rollbackTX = true;
                 exception = e;
