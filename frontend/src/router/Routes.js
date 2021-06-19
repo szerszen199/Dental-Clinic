@@ -12,7 +12,7 @@ import Account from "../components/Account/OwnAccount/Account"
 import AccountsList from "../components/AccountsList/AccountsList";
 import Prescription from "../components/Prescription/Prescription"
 import MyAppointment from "../components/Appointment/MyAppointment/MyAppointment";
-import PlanAppointment from "../components/Appointment/PlanAppointment/PlanAppointment";
+import PlanAppointmentWithoutTranslation from "../components/Appointment/PlanAppointment/PlanAppointmentWithoutTranslation";
 import ListDoctors from "../components/Appointment/ListDoctors/ListDoctors";
 import HomeRoute from "./HomeRoute";
 import Cookies from "js-cookie";
@@ -74,7 +74,7 @@ export default function Routes() {
             <PrivateRoute authed={isPatient() || isReceptionist() || isDoctor()} path='/my-appointments'
                           component={MyAppointment}/>
             <PrivateRoute authed={isPatient() || isReceptionist()} path='/plan-appointment'
-                          component={PlanAppointment}/>
+                          component={PlanAppointmentWithoutTranslation}/>
             <PrivateRoute authed={isPatient() || isReceptionist() || isDoctor()} path='/list-doctors'
                           component={ListDoctors}/>
             <Route authed={isLoggedIn()} path='/activation-confirm/:token' component={AccountActivationConfirm}/>
