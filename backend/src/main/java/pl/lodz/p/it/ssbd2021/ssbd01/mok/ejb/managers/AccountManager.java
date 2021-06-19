@@ -3,8 +3,11 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.ChangePasswordDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.SetNewPasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 
@@ -22,10 +25,11 @@ public interface AccountManager {
      * Utworzenie konta przy rejestracji.
      *
      * @param account nowe konto
-     * @throws AccountException     wyjątek typu AccountException
-     * @throws MailSendingException wyjątek typu MailSendingException
+     * @throws AccountException              wyjątek typu AccountException
+     * @throws MailSendingException          wyjątek typu MailSendingException
+     * @throws MedicalDocumentationException wyjątek typu MedicalDocumentationException
      */
-    void createAccount(Account account) throws AccountException, MailSendingException;
+    void createAccount(Account account) throws AccountException, MailSendingException, MedicalDocumentationException;
 
     /**
      * usun konto.
@@ -149,21 +153,18 @@ public interface AccountManager {
     /**
      * Zmienia hasło {@param newPassword} wskazanego konta {@param account}.
      *
-     * @param login       login konta, którego hasło jest edytowane
-     * @param oldPassword stare hasło podane przez użytkownika
-     * @param newPassword nowe hasło
+     * @param changePasswordDto  dto z danymi do zmiany hasła
      * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                          nie powiedzie się.
      */
-    void changePassword(String login, String oldPassword, String newPassword) throws AppBaseException;
+    void changePassword(ChangePasswordDto changePasswordDto) throws AppBaseException;
 
     /**
      * Zmienia hasło {@param newPassword} wskazanego konta {@param account}.
      *
-     * @param login       login konta, którego hasło jest edytowane
-     * @param newPassword nowe hasło
+     * @param setNewPasswordDto  dto z danymi do ustawienia nowego hasła
      * @throws AppBaseException wyjątek, gdy utrwalanie stanu konta w bazie danych                          nie powiedzie się.
      */
-    void setNewPassword(String login, String newPassword) throws AppBaseException;
+    void setNewPassword(SetNewPasswordDto setNewPasswordDto) throws AppBaseException;
 
     /**
      * Wyszukuje konto na podstawie loginu.

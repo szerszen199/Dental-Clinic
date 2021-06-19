@@ -10,6 +10,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import Form from "react-bootstrap/Form";
 import {withTranslation} from "react-i18next";
+import errorAlerts from "../../Alerts/ErrorAlerts/ErrorAlerts";
 
 class OtherAccountWithoutTranslation extends React.Component {
     constructor(props) {
@@ -24,6 +25,10 @@ class OtherAccountWithoutTranslation extends React.Component {
                 lastName: "",
                 phoneNumber: "",
                 pesel: "",
+                lastSuccessfulLogin: "",
+                lastSuccessfulLoginIp: "",
+                lastUnsuccessfulLogin: "",
+                lastUnsuccessfulLoginIp: "",
                 version: "",
                 etag: "",
             },
@@ -35,6 +40,7 @@ class OtherAccountWithoutTranslation extends React.Component {
     }
 
     makeGetAccountRequest121() {
+        const {t} = this.props;
         console.log(this.state.accId);
         let requestPath = process.env.REACT_APP_BACKEND_URL + "account/other-account-info/" + this.state.accId;
 
@@ -46,6 +52,7 @@ class OtherAccountWithoutTranslation extends React.Component {
             })
             .then(result => {
                 this.setState({
+                    accId: result.data.login,
                     isActivated: result.data.active,
                     accessLevelDtoList: result.data.accessLevelDtoList,
                     account: {
@@ -54,12 +61,24 @@ class OtherAccountWithoutTranslation extends React.Component {
                         lastName: result.data.lastName,
                         phoneNumber: result.data.phoneNumber,
                         pesel: result.data.pesel,
+                        lastSuccessfulLogin: result.data.lastSuccessfulLogin,
+                        lastSuccessfulLoginIp: result.data.lastSuccessfulLoginIp,
+                        lastUnsuccessfulLogin: result.data.lastUnsuccessfulLogin,
+                        lastUnsuccessfulLoginIp: result.data.lastUnsuccessfulLoginIp,
                         version: result.data.version,
                         etag: result.headers['etag']
                     },
                     enabled: result.data.enabled,
                 })
-            })
+                console.log("result: " + result);
+            }).catch((response) => {
+                console.log(response);
+            if (response.response) {
+                errorAlerts(t(response.response.data.message), response.response.status.toString(10)).then(() => {
+                    window.location.hash = "#/accounts";
+                });
+            }
+        })
     }
 
     render() {
