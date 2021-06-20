@@ -295,5 +295,9 @@
   "Question edit prescription": "Czy chcesz edytować receptę?",
   "prescription_edit_failed": "Nie udało się edytować recepty",
   "prescription_edited_successfully": "Recepta edytowana poprawnie",
-  "prescription_expired": "Recepta wygasła"
+  "prescription_expired": "Recepta wygasła",
+  "Scheduled appointments": "Zaplanowane wizyty",
+  "title_cancel_appointment": "Uwaga odwołanie wizyty",
+  "text_cancel_appointment": "Czy napewno chcesz odwołać wizytę",
+  "delete_appointment": "Usuń wizytę"
 }

@@ -41,7 +41,7 @@ class EditAccountWithoutTranslation extends React.Component {
         }
 
         function findDueDateErrors() {
-            if (t.state.dueDate == "") {
+            if (t.state.dueDate === "") {
                 newErrors.dueDate = "due date blank error";
             }
             if (t.state.dueDate < moment(Date.now()).format('YYYY-MM-DD')) {
@@ -50,7 +50,7 @@ class EditAccountWithoutTranslation extends React.Component {
         }
 
         function findDueTimeErrors() {
-            if (t.state.dueTime == "") {
+            if (t.state.dueTime === "") {
                 newErrors.dueTime = "due time blank error";
             }
         }

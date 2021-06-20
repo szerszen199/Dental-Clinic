@@ -223,4 +223,6 @@ public class I18n {
     public static final String PRESCRIPTION_DATE_NULL = "prescription_date_null";
     public static final String PRESCRIPTION_DATE_FUTURE = "prescription_date_future";
     public static final String PRESCRIPTION_EXPIRED = "prescription_expired";
+    public static final String APPOINTMENT_CANCELED_SUCCESSFULLY = "appointment_canceled_successfully";
+    public static final Object APPOINTMENT_CANCELLATION_FAILED = "appointment_cancellation_failed";
 }

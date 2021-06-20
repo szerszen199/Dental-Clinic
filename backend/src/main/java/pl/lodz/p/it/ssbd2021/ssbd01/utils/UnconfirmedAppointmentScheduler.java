@@ -49,7 +49,7 @@ public class UnconfirmedAppointmentScheduler {
         List<Appointment> appointments = appointmentManager.getScheduledAppointments();
         for (Appointment appointment : appointments) {
             if (!appointment.getCanceled() && appointment.getPatient() != null && !appointment.getConfirmed() && appointment.getAppointmentDate().minusDays(1).isBefore(LocalDateTime.now())) {
-                appointmentManager.cancelBookedAppointment(appointment.getId());
+                appointmentManager.cancelBookedAppointmentScheduler(appointment.getId());
                 //TODO: Upewnić się że działa poprawnie po implementacji metody w appointmentManagerze.
             }
         }

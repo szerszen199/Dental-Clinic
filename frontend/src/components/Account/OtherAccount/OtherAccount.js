@@ -41,7 +41,6 @@ class OtherAccountWithoutTranslation extends React.Component {
 
     makeGetAccountRequest121() {
         const {t} = this.props;
-        console.log(this.state.accId);
         let requestPath = process.env.REACT_APP_BACKEND_URL + "account/other-account-info/" + this.state.accId;
 
         axios
