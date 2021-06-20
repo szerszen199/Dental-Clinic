@@ -7,7 +7,6 @@ import {Button} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import edit from "../../assets/edit.png";
 import {Input} from "semantic-ui-react";
-import {Fragment} from "react";
 import {FiRefreshCw} from "react-icons/fi";
 
 class AccountsListWithoutTranslation extends React.Component {

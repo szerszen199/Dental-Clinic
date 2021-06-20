@@ -13,10 +13,8 @@ import confirmationAlerts from "../../../Alerts/ConfirmationAlerts/ConfirmationA
 import {Link} from "react-router-dom";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from '@material-ui/icons/Edit';
-import Button from "@material-ui/core/Button";
 import {ButtonGroup} from "@material-ui/core";
 import {deleteAppointmentSlotRequest} from "../DeleteAppointmentSlotRequest";
-import confirmationAlerts from "../../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
 
 class PlanReceptionistAppointmentWithoutTr extends React.Component {
     constructor(props) {
@@ -82,7 +80,7 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
             clickToSelect: true,
             hideSelectColumn: true,
             bgColor: '#e6ff99',
-            onSelect: (var1, var2, rowIndex) =>{
+            onSelect: (var1, var2, rowIndex) => {
                 self.setState({chosenAccount: this.state.patientsList[rowIndex]});
             },
         };
@@ -213,9 +211,11 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
                             {t('delete')}
                         </Button>
                     </ButtonGroup>
-                        <Button size={"lg"} type="submit" onClick={() => {this.handleSubmit(row.id, t)}}>
-                            book
-                        </Button>
+                    <Button size={"lg"} type="submit" onClick={() => {
+                        this.handleSubmit(row.id, t)
+                    }}>
+                        book
+                    </Button>
                 </div>
             )
         };
@@ -225,13 +225,11 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
     }
 
     handleDeleteButtonClick(id, title, question, t) {
-            confirmationAlerts(title, question).then((confirmed) => {
-                if (confirmed) {
-                    deleteAppointmentSlotRequest(id, t);
-                }
-            });
-        return <BootstrapTable striped keyField='id' columns={columns} data={this.state.appointmentsList}
-                               selectRow={selectRow} expandRow={expandRow}/>;
+        confirmationAlerts(title, question).then((confirmed) => {
+            if (confirmed) {
+                deleteAppointmentSlotRequest(id, t);
+            }
+        });
     }
 
     render() {
