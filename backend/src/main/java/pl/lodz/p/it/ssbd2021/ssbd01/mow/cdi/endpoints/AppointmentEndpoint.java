@@ -7,6 +7,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AvailableAppointmentRespons
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers.AppointmentManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBTransactionRolledbackException;
@@ -33,6 +34,9 @@ public class AppointmentEndpoint {
     @Inject
     private AppointmentManager appointmentManager;
 
+    @Inject
+    private LoggedInAccountUtil loggedInAccountUtil;
+
     /**
      * Pobiera listę lekarz i ich ocen.
      *
@@ -53,13 +57,27 @@ public class AppointmentEndpoint {
     }
 
     @GET
-    @RolesAllowed(I18n.RECEPTIONIST)
+    @RolesAllowed({I18n.RECEPTIONIST,I18n.PATIENT})
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("available-appointments-receptionist")
-    public Response getAvailableAppointmentsList() {
+    @Path("available")
+    public Response getAllAvailableAppointmentsSlotsList() {
         List<AvailableAppointmentResponseDTO> appointments;
         try {
-            appointments = appointmentManager.getAppointmentsForReceptionist().stream().map(AvailableAppointmentResponseDTO::new).collect(Collectors.toList());
+            appointments = appointmentManager.getAllAppointmentsSlots().stream().map(AvailableAppointmentResponseDTO::new).collect(Collectors.toList());
+        } catch (AppointmentException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.ok().entity(appointments).build();
+    }
+
+    @GET
+    @RolesAllowed(I18n.DOCTOR)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("available-own")
+    public Response getOwnAvailableAppointmentsSlotsList() {
+        List<AvailableAppointmentResponseDTO> appointments;
+        try {
+            appointments = appointmentManager.getOwnAppointmentsSlots().stream().map(AvailableAppointmentResponseDTO::new).collect(Collectors.toList());
         } catch (AppointmentException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
