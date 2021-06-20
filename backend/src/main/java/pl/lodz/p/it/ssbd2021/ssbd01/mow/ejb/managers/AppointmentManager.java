@@ -32,11 +32,11 @@ public interface AppointmentManager {
     void cancelBookedAppointment(Long id);
 
     /**
-     * Modyfikuje umówioną wizytę.
+     * Modyfikuje slot wizyty.
      *
      * @param appointment modyfikowana wizyta
      */
-    void editBookedAppointment(Appointment appointment);
+    void editAppointmentSlot(Appointment appointment);
 
     /**
      * Pobiera wszystkie wolne wizyty.
@@ -83,12 +83,12 @@ public interface AppointmentManager {
     void addAppointmentSlot(Appointment appointment);
 
     /**
-     * Modyfikuje slot wizyty.
+     * Modyfikuje umówioną wizyty.
      *
      * @param appointment wolna wizyta
      * @throws AppointmentException  wyjątek appointmentException
      */
-    void editAppointmentSlot(AppointmentEditRequestDto appointment) throws AppointmentException;
+    void editBookedAppointment(AppointmentEditRequestDto appointment) throws AppointmentException;
 
     /**
      * Usuwa slot wizyty.
