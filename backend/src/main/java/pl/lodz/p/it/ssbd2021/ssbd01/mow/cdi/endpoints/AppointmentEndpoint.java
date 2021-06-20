@@ -56,8 +56,13 @@ public class AppointmentEndpoint {
         return Response.ok().entity(doctors).build();
     }
 
+    /**
+     * Pobiera listę wszystkich wolnych przyszłych terminów wizyt.
+     *
+     * @return lista przyszłych terminów wizyt.
+     */
     @GET
-    @RolesAllowed({I18n.RECEPTIONIST,I18n.PATIENT})
+    @RolesAllowed({I18n.RECEPTIONIST, I18n.PATIENT})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("available")
     public Response getAllAvailableAppointmentsSlotsList() {
@@ -70,6 +75,10 @@ public class AppointmentEndpoint {
         return Response.ok().entity(appointments).build();
     }
 
+    /**
+     * Pobiera listę wolnych przyszłych terminów wizyt dla lekarza  wywołującego metodę.
+     * @return lista przyszłych terminów wizyt.
+     */
     @GET
     @RolesAllowed(I18n.DOCTOR)
     @Produces(MediaType.APPLICATION_JSON)

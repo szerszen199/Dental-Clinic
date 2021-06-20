@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
-import org.hibernate.query.Query;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
@@ -110,7 +109,19 @@ public interface AppointmentManager {
      */
     List<Account> getAllPatients();
 
+    /**
+     * Pobiera wszystkie dostępne terminy wizyty.
+     *
+     * @return dostępne terminy wizyt.
+     * @throws AppointmentException wyjątek.
+     */
     List<Appointment> getAllAppointmentsSlots() throws AppointmentException;
 
+    /**
+     * Pobiera wszystkie dostępne terminy wizyty.
+     *
+     * @return dostępne terminy wizyt.
+     * @throws AppointmentException wyjątek.
+     */
     List<Appointment> getOwnAppointmentsSlots() throws AppointmentException;
 }

@@ -16,7 +16,11 @@ public class AvailableAppointmentResponseDTO {
     @NotNull
     Long version;
 
-
+    /**
+     * DTO do zwracania terminów wizyt.
+     *
+     * @param appointment termin wizyty na podstawie którego tworzone jest DTO.
+     */
     public AvailableAppointmentResponseDTO(Appointment appointment) {
         this.id = appointment.getId();
         this.doctorId = appointment.getDoctor().getId();

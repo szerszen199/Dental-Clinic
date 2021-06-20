@@ -12,9 +12,9 @@ public class AppointmentException extends AppBaseException {
         super(message, cause);
     }
 
-    public static AppointmentException getAllAppointmentsException(){
+    public static AppointmentException getAllAppointmentsException() {
         return new AppointmentException(I18n.GET_ALL_APPOINTMENTS_FAILED);
-    };
+    }
 
     public static AppointmentException getOwnAppointmentsException() {
         return new AppointmentException(I18n.GET_OWN_APPOINTMENTS_FAILED);
