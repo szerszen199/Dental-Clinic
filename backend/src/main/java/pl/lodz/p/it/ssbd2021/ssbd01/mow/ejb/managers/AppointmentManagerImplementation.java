@@ -16,6 +16,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorRating;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.PrescriptionException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
@@ -25,6 +27,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AppointmentFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.DoctorRatingFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 
 /**
  * Klasa implementująca interfejs menadżera wizyt.
@@ -43,6 +46,9 @@ public class AppointmentManagerImplementation extends AbstractManager implements
 
     @Inject
     private DoctorRatingFacade doctorRatingFacade;
+
+    @Inject
+    private LoggedInAccountUtil loggedInAccountUtil;
 
     @Override
     public void bookAppointment(Long appointmentId, String login) {
@@ -133,6 +139,14 @@ public class AppointmentManagerImplementation extends AbstractManager implements
 
         if (appointmentEditRequestDto.getAppointmentDate() != null) {
             appointment.setAppointmentDate(appointmentEditRequestDto.getAppointmentDate());
+        }
+
+        try {
+            appointment.setModifiedBy(accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+        } catch (AccountException e) {
+            throw AppointmentException.accountNotFound(e.getCause());
+        } catch (Exception e) {
+            throw AppointmentException.appointmentEditFailed();
         }
 
         try {
