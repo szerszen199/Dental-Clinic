@@ -61,7 +61,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
-    public void editBookedAppointment(Appointment appointment) {
+    public void editAppointmentSlot(Appointment appointment) {
         throw new NotImplementedException();
     }
 
@@ -107,7 +107,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
-    public void editAppointmentSlot(AppointmentEditRequestDto appointmentEditRequestDto) throws AppointmentException {
+    public void editBookedAppointment(AppointmentEditRequestDto appointmentEditRequestDto) throws AppointmentException {
         Appointment appointment;
         try {
             appointment = appointmentFacade.find(appointmentEditRequestDto.getId());
@@ -118,7 +118,6 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         if (!appointmentEditRequestDto.getVersion().equals(appointment.getVersion())) {
             throw AppointmentException.versionMismatch();
         }
-
         try {
             Account account;
             if (appointmentEditRequestDto.getPatientLogin() != null) {
@@ -136,11 +135,6 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         } catch (AppBaseException e) {
             throw AppointmentException.accountNotFound();
         }
-
-        if (appointmentEditRequestDto.getAppointmentDate() != null) {
-            appointment.setAppointmentDate(appointmentEditRequestDto.getAppointmentDate());
-        }
-
         try {
             appointment.setModifiedBy(accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
         } catch (AccountException e) {
