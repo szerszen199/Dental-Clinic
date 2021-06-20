@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import successAlerts from "../../../Alerts/SuccessAlerts/SuccessAlerts";
 import errorAlerts from "../../../Alerts/ErrorAlerts/ErrorAlerts";
+import successAlertsWithRefresh from "../../../Alerts/SuccessAlerts/SuccessAlertsWithRefresh";
 
 export function editPasswordRequest(oldPassword, firstPassword, secondPassword, t){
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
@@ -22,7 +22,7 @@ export function editPasswordRequest(oldPassword, firstPassword, secondPassword, 
 
     axios(config)
         .then((response) => {
-            successAlerts(t(response.data.message, response.status)).then(() => {
+            successAlertsWithRefresh(t(response.data.message, response.status)).then(() => {
             })
         })
         .catch((response) => {
