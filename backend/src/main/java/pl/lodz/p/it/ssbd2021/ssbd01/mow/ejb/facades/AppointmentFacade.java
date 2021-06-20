@@ -52,7 +52,7 @@ public class AppointmentFacade extends AbstractFacade<Appointment> {
         return null;
     }
 
-    public List<Appointment> findFutureUnassignedAppointments() throws AppBaseException {
+    public List<Appointment> findAllFutureUnassignedAppointmentsSlots() throws AppBaseException {
         try {
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<Appointment> cq = em.getCriteriaBuilder().createQuery(Appointment.class);
@@ -65,6 +65,22 @@ public class AppointmentFacade extends AbstractFacade<Appointment> {
         } catch (PersistenceException e) {
             throw AppBaseException.databaseError(e);
         }
+    }
+
+    public List<Appointment> findFutureUnassignedAppointmentSlotsForDoctor(Long doctorId) throws AppBaseException {
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Appointment> cq = em.getCriteriaBuilder().createQuery(Appointment.class);
+            Root<Appointment> root = cq.from(Appointment.class);
+
+            cq.select(root).where(cb.and(cb.isNull(root.get("patient")), cb.greaterThan(root.<LocalDateTime>get("appointmentDate"), LocalDateTime.now())), cb.equal(root.get("doctor"), doctorId));
+
+
+            return em.createQuery(cq).getResultList();
+        } catch (PersistenceException e) {
+            throw AppBaseException.databaseError(e);
+        }
+
     }
 
 
