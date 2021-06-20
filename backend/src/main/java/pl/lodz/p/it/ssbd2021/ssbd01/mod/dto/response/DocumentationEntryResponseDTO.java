@@ -142,6 +142,7 @@ public class DocumentationEntryResponseDTO implements SignableEntity {
     public Map<String, String> getPayload() {
         Map<String, String> map = new HashMap<>();
         map.put("version", getVersion().toString());
+        map.put("id", getId().toString());
         return map;
     }
 }

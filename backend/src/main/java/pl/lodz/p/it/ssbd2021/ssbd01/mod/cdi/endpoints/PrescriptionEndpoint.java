@@ -1,20 +1,27 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.PrescriptionException;
+
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.EditPrescriptionRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.CreatePrescriptionRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.EditPrescriptionRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.PrescriptionResponseDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.PrescriptionInfoDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.PrescriptionsManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.utils.PrescriptionTransactionRepeater;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.SignatureFilterBinding;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.Encryptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -34,7 +41,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
+
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_OPTIMISTIC_LOCK_ERROR;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PRESCRIPTION_NOT_FOUND;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PRESCRIPTION_GET_INFO_FAILED;
 
 @Path("prescription")
 @Stateful
@@ -49,6 +59,9 @@ public class PrescriptionEndpoint {
     private PrescriptionTransactionRepeater prescriptionTransactionRepeater;
     @Inject
     private EntityIdentitySignerVerifier signer;
+
+    @Inject
+    private PropertiesLoader propertiesLoader;
 
     /**
      * Dodanie recepty dla pacjenta.
@@ -77,7 +90,7 @@ public class PrescriptionEndpoint {
      * Edycja recepty.
      *
      * @param editPrescriptionRequestDto dto z danymi do edycji recepty
-     * @param header nagłówek If-Match z podpisem obiektu
+     * @param header                     nagłówek If-Match z podpisem obiektu
      * @return {@link Response.Status#OK} przy powodzeniu, inaczej {@link Response.Status#BAD_REQUEST}
      */
     @POST
@@ -93,9 +106,7 @@ public class PrescriptionEndpoint {
                     .entity(new MessageResponseDto(DATABASE_OPTIMISTIC_LOCK_ERROR)).build();
         }
         try {
-            prescriptionTransactionRepeater.repeatTransaction(
-                    () -> prescriptionsManager.editPrescription(editPrescriptionRequestDto)
-            );
+            prescriptionsManager.editPrescription(editPrescriptionRequestDto);
         } catch (EncryptionException | PrescriptionException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         } catch (Exception e) {
@@ -103,6 +114,30 @@ public class PrescriptionEndpoint {
         }
         return Response.ok().entity(new MessageResponseDto(I18n.PRESCRIPTION_EDITED_SUCCESSFULLY)).build();
     }
+
+    /**
+     * Pobiera informacje o recepcie o {@param id}.
+     *
+     * @param id id recepty której chcemy pobrać informacje
+     * @return informacje o wizycie
+     */
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    @RolesAllowed({I18n.RECEPTIONIST, I18n.PATIENT})
+    @Path("/info/{id}")
+    public Response getAppointmentInfo(@NotNull @PathParam("id") Long id) {
+        PrescriptionInfoDto prescription;
+        try {
+            prescription = new PrescriptionInfoDto(prescriptionsManager.findById(id), propertiesLoader);
+        } catch (PrescriptionException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(PRESCRIPTION_NOT_FOUND)).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(PRESCRIPTION_GET_INFO_FAILED)).build();
+        }
+        return Response.ok().entity(prescription).tag(signer.sign(prescription)).build();
+    }
+
 
     /**
      * Pobiera listę aktywnych pacjentów.

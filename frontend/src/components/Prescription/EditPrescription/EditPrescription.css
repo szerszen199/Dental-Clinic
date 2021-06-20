@@ -1,0 +1,6 @@
+@media all and (min-width: 480px) {
+    .EditPrescription {
+        max-width: 50%;
+        margin: auto;
+    }
+}
