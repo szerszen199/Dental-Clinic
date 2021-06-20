@@ -1,8 +1,6 @@
 import React from "react";
 import "./Dashboard.css";
 import {useTranslation} from "react-i18next";
-// import dental from "../../assets/hospital.svg";
-// import dental from "../../assets/calendar.svg";
 import dental from "../../assets/hands.svg";
 
 
