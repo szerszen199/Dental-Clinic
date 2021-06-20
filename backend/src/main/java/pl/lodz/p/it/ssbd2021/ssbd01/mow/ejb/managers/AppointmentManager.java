@@ -4,7 +4,9 @@ import java.util.List;
 import javax.ejb.Local;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AvailableAppointmentResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 
 /**
@@ -106,4 +108,6 @@ public interface AppointmentManager {
      * @return lista wszystkich pacjentów
      */
     List<Account> getAllPatients();
+
+    List<Appointment> getAppointmentsForReceptionist() throws AppointmentException;
 }
