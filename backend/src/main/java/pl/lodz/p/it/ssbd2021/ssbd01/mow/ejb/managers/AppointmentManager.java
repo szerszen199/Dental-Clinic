@@ -1,13 +1,14 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
-import java.util.List;
-import javax.ejb.Local;
+import org.hibernate.query.Query;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AvailableAppointmentResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
+
+import javax.ejb.Local;
+import java.util.List;
 
 /**
  * Interfejs menadżera wizyt.
@@ -109,5 +110,7 @@ public interface AppointmentManager {
      */
     List<Account> getAllPatients();
 
-    List<Appointment> getAppointmentsForReceptionist() throws AppointmentException;
+    List<Appointment> getAllAppointmentsSlots() throws AppointmentException;
+
+    List<Appointment> getOwnAppointmentsSlots() throws AppointmentException;
 }

@@ -14,6 +14,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AppointmentFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.DoctorRatingFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -39,6 +40,9 @@ public class AppointmentManagerImplementation extends AbstractManager implements
 
     @Inject
     private AccountFacade accountFacade;
+
+    @Inject
+    private LoggedInAccountUtil loggedInAccountUtil;
 
     @Inject
     private DoctorRatingFacade doctorRatingFacade;
@@ -119,16 +123,26 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         throw new NotImplementedException();
     }
 
-    @RolesAllowed(I18n.RECEPTIONIST)
+    @RolesAllowed({I18n.RECEPTIONIST, I18n.PATIENT})
     @Override
-    public List<Appointment> getAppointmentsForReceptionist() throws AppointmentException {
+    public List<Appointment> getAllAppointmentsSlots() throws AppointmentException {
         try {
-            List<Appointment> appointments = appointmentFacade.findFutureUnassignedAppointments();
-            return appointments;
+            return appointmentFacade.findAllFutureUnassignedAppointmentsSlots();
         } catch (AppBaseException e) {
             throw AppointmentException.getAllAppointmentsException();
         }
 
 
+    }
+
+    @RolesAllowed(I18n.DOCTOR)
+    @Override
+    public List<Appointment> getOwnAppointmentsSlots() throws AppointmentException {
+        try {
+            Account account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+            return appointmentFacade.findFutureUnassignedAppointmentSlotsForDoctor(account.getId());
+        } catch (AppBaseException e) {
+            throw AppointmentException.getOwnAppointmentsException();
+        }
     }
 }
