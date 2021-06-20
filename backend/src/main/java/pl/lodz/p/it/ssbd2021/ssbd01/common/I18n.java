@@ -163,4 +163,5 @@ public class I18n {
     public static final String PATIENT_SAME_DOCTOR = "patient_same_doctor";
     public static final String GET_DOCTORS_AND_RATES_FAILED = "get_doctors_and_rates_failed";
     public static final String GET_ALL_APPOINTMENTS_FAILED = "get_all_appointments_failed";
+    public static final String GET_OWN_APPOINTMENTS_FAILED = "get_own_appointments_failed";
 }
