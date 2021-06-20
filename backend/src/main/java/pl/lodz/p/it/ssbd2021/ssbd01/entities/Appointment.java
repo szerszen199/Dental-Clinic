@@ -38,7 +38,7 @@ import java.time.LocalDateTime;
         @NamedQuery(name = "Appointment.findByCreationDateTime", query = "SELECT a FROM Appointment a WHERE a.creationDateTime = :creationDateTime"),
         @NamedQuery(name = "Appointment.findAllScheduled", query = "SELECT a FROM Appointment a WHERE a.patient != null AND a.doctor != null"),
         @NamedQuery(name = "Appointment.findAllScheduledByDoctor", query = "SELECT a FROM Appointment a WHERE a.patient != null AND a.doctor = :doctor"),
-        @NamedQuery(name = "Appointment.updateRating", query = "UPDATE Appointment set rating=:rating WHERE id=:id"),
+        @NamedQuery(name = "Appointment.updateRating", query = "UPDATE Appointment set rating=:rating, version=version+1 WHERE id=:id"),
         @NamedQuery(name = "Appointment.findAllScheduledByPatient", query = "SELECT a FROM Appointment a WHERE a.patient = :patient AND a.doctor != null"),
         @NamedQuery(name = "Appointment.findByModificationDateTime", query = "SELECT a FROM Appointment a WHERE a.modificationDateTime = :modificationDateTime")})
 public class Appointment extends AbstractEntity implements Serializable {

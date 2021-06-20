@@ -27,6 +27,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
 import javax.annotation.security.DenyAll;
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateful;
@@ -410,20 +411,21 @@ public class AppointmentEndpoint {
     /**
      * Ocenia wizytę.
      *
-     * @param id   id wizyty która ma zostać potwierdzona.
-     * @param mark ocena wizyty,
+     * @param id    id wizyty która ma zostać potwierdzona.
+     * @param mark  ocena wizyty,
+     * @param token token.
      * @return status powodzenia operacji.
      */
     @GET
-    @RolesAllowed(I18n.PATIENT)
+    @PermitAll
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("rate/{id}/{mark}")
-    public Response rateAppointment(@PathParam("id") Long id, @PathParam("mark") BigDecimal mark) {
+    @Path("rate/{token}/{id}/{mark}")
+    public Response rateAppointment(@PathParam("token") String token, @PathParam("id") Long id, @PathParam("mark") BigDecimal mark) {
         try {
 
-            appointmentManager.rateAppointment(id, mark);
+            appointmentManager.rateAppointment(token, id, mark);
         } catch (AppointmentException e) {
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_RATED_SUCCESSFULLY)).build();
     }

@@ -11,10 +11,9 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentEditRequestDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentSelfDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentEditRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.CreateAppointmentSlotRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
@@ -39,7 +38,7 @@ import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -269,10 +268,15 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
-    @RolesAllowed(I18n.PATIENT)
-    public void rateAppointment(Long id, BigDecimal rate) throws AppointmentException {
+    @PermitAll
+    public void rateAppointment(String token, Long id, BigDecimal rate) throws AppointmentException {
         Appointment appointment;
-        if (rate.doubleValue() < 0 || rate.doubleValue() > 5 || rate.toString().length() != 3) {
+
+        if (!jwtAppointmentRatingUtils.validateJwtToken(token)) {
+            throw AppointmentException.invalidToken();
+        }
+
+        if (rate.doubleValue() < 0 || rate.doubleValue() > 5 || (rate.toString().length() != 3 && rate.toString().length() != 1)) {
             throw AppointmentException.invalidRatingScore();
         }
         try {
@@ -283,7 +287,13 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         if (appointment == null) {
             throw AppointmentException.appointmentNotFound();
         }
-        String callerName = loggedInAccountUtil.getLoggedInAccountLogin();
+        String callerName;
+        try {
+            callerName = jwtAppointmentRatingUtils.getUserNameFromJwtToken(token);
+        } catch (ParseException e) {
+            throw AppointmentException.accountNotFound();
+        }
+
         if (appointment.getPatient() == null || !appointment.getPatient().getLogin().equals(callerName)) {
             throw AppointmentException.appointmentNotBelongingToPatient();
         }
@@ -293,10 +303,25 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         if (appointment.getAppointmentDate().isAfter(LocalDateTime.now())) {
             throw AppointmentException.appointmentNotFinished();
         }
+        if (appointment.getRating() != null) {
+            throw AppointmentException.appointmentAlreadyRated();
+        }
         try {
             appointmentFacade.updateRating(id, rate);
         } catch (AppointmentException e) {
             throw AppointmentException.appointmentEditFailed();
+        }
+        try {
+            List<DoctorRating> doctorRatings = doctorRatingFacade.findAll();
+            for (DoctorRating doctorRating : doctorRatings) {
+                if (doctorRating.getDoctor().getLogin().equals(appointment.getDoctor().getLogin())) {
+                    doctorRating.setRatesCounter(doctorRating.getRatesCounter() + 1);
+                    doctorRating.setRatesSum(doctorRating.getRatesSum() + appointment.getRating().doubleValue());
+                    doctorRatingFacade.edit(doctorRating);
+                }
+            }
+        } catch (AppBaseException e) {
+            throw AppointmentException.doctorRatingFailed();
         }
     }
 

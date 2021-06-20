@@ -1,7 +1,8 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request;
 
-import javax.validation.constraints.NotNull;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Typ RemoveAppointmentSlotRequestDTO - do funkcjonalności usuwania dostępnego terminu wizyty.

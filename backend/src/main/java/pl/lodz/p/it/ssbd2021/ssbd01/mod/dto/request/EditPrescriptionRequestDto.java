@@ -5,7 +5,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
