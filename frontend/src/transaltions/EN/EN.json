@@ -89,6 +89,7 @@
   "Error": "Error!",
   "Question edit password": "Do you want to edit your password?",
   "Question edit account": "Do you want to edit account?",
+  "Question add appointment slot": "Do you want to add appointment slot?",
   "invalid_login_password_combination": "Invalid login or password",
   "account_not_found": "Account not found",
   "login_failure": "Authentication failed",
@@ -190,5 +191,7 @@
   "Date and Time": "Select date and time",
   "DateTime blank error": "Date and Time cannot be blank!",
   "DateTime past error": "Date and Time must be from the future!",
-  "Doctor blank error": "You have to select doctor!"
+  "Doctor blank error": "You have to select doctor!",
+  "appointment_slot_created_successfully": "Appointment slot created successfully",
+  "appointment_slot_creation_failed": "Unable to create appointment slot"
 }
