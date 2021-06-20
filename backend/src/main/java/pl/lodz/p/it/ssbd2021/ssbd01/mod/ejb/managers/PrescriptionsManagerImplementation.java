@@ -104,6 +104,14 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
         }
 
         try {
+            prescription.setModifiedBy(accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+        } catch (AccountException e) {
+            throw PrescriptionException.accountNotFound(e.getCause());
+        } catch (Exception e) {
+            throw PrescriptionException.prescriptionEditFailed();
+        }
+
+        try {
             prescriptionFacade.edit(prescription);
         } catch (AppBaseException e) {
             throw PrescriptionException.prescriptionEditFailed();
