@@ -1,15 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.NotImplementedException;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
@@ -88,9 +78,90 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         throw new NotImplementedException();
     }
 
+    @PermitAll
     @Override
-    public void cancelBookedAppointment(Long id) {
-        throw new NotImplementedException();
+    public void cancelBookedAppointmentScheduler(Long id) throws AppointmentException {
+        Appointment appointment;
+        try {
+            appointment = appointmentFacade.find(id);
+            if (appointment == null) {
+                throw AppointmentException.appointmentNotFound();
+            }
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        appointment.setCanceled(true);
+        appointment.setCancellationDateTime(LocalDateTime.now());
+        appointment.setCanceledBy(null);
+        appointment.setModifiedBy(null);
+        appointment.setModifiedByIp(null);
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (Exception e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
+    }
+
+    @Override
+    public void cancelBookedAppointment(Long id) throws AppointmentException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        } catch (Exception e) {
+            throw AppointmentException.accountNotFound();
+        }
+        Appointment appointment;
+        try {
+            appointment = appointmentFacade.find(id);
+            if (appointment == null) {
+                throw AppointmentException.appointmentNotFound();
+            }
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        appointment.setCanceled(true);
+        appointment.setCancellationDateTime(LocalDateTime.now());
+        appointment.setCanceledBy(account);
+        appointment.setModifiedBy(account);
+        appointment.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (Exception e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
+    }
+
+    @Override
+    public void cancelBookedAppointmentPatient(Long id) throws AppointmentException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        } catch (Exception e) {
+            throw AppointmentException.accountNotFound();
+        }
+        Appointment appointment;
+        try {
+            appointment = appointmentFacade.find(id);
+            if (appointment == null) {
+                throw AppointmentException.appointmentNotFound();
+            }
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        if (!appointment.getPatient().equals(account)) {
+            throw AppointmentException.appointmentNotBelongingToPatient();
+        }
+        appointment.setCanceled(true);
+        appointment.setCancellationDateTime(LocalDateTime.now());
+        appointment.setCanceledBy(account);
+        appointment.setModifiedBy(account);
+        appointment.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (Exception e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
+
     }
 
     @Override
@@ -141,7 +212,6 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     @Override
     public Appointment findById(Long id) throws AppBaseException {
         Appointment appointment = appointmentFacade.find(id);
-        ;
         if (appointment == null) {
             throw AppointmentException.appointmentNotFound();
         }

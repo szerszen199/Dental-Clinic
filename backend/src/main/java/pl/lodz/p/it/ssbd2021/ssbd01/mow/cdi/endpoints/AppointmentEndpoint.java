@@ -1,29 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.cdi.endpoints;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.annotation.security.DenyAll;
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.EJBTransactionRolledbackException;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
@@ -450,6 +426,48 @@ public class AppointmentEndpoint {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_RATED_SUCCESSFULLY)).build();
+    }
+
+    /**
+     * Odwołanie wizyty przez recepcjonistę.
+     *
+     * @param id the id
+     * @return the response
+     */
+    @PUT
+    @RolesAllowed(I18n.RECEPTIONIST)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("cancel/receptionist/{id}")
+    public Response cancelAppointmentReceptionist(@NotNull @PathParam("id") Long id) {
+        try {
+            appointmentManager.cancelBookedAppointment(id);
+        } catch (AppointmentException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(I18n.APPOINTMENT_CANCELLATION_FAILED).build();
+        }
+        return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_CANCELED_SUCCESSFULLY)).build();
+    }
+
+    /**
+     * Odwołanie wizyty przez recepcjonistę.
+     *
+     * @param id the id
+     * @return the response
+     */
+    @PUT
+    @RolesAllowed(I18n.PATIENT)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("cancel/patient/{id}")
+    public Response cancelAppointmentPatient(@NotNull @PathParam("id") Long id) {
+        try {
+            appointmentManager.cancelBookedAppointmentPatient(id);
+        } catch (AppointmentException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(I18n.APPOINTMENT_CANCELLATION_FAILED).build();
+        }
+        return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_CANCELED_SUCCESSFULLY)).build();
     }
 
 }

@@ -6,6 +6,7 @@ import {Col, Container, Row} from "react-bootstrap";
 import {withTranslation} from "react-i18next";
 import axios from "axios";
 import Cookies from "js-cookie";
+import errorAlerts from "../../Alerts/ErrorAlerts/ErrorAlerts";
 
 class OwnAccountWithoutTranslation extends React.Component {
     constructor(props) {
@@ -35,7 +36,7 @@ class OwnAccountWithoutTranslation extends React.Component {
     }
 
     makeGetAccountRequest121() {
-        console.log(this.state.accId);
+        const {t} = this.props;
         let requestPath = process.env.REACT_APP_BACKEND_URL + "account/info"
 
         axios
@@ -61,6 +62,11 @@ class OwnAccountWithoutTranslation extends React.Component {
                     },
                 })
             })
+            .catch(response => {
+                if (response.response) {
+                    errorAlerts(t(response.response.data.message), response.response.status.toString(10));
+                }
+            });
     }
 
     render() {

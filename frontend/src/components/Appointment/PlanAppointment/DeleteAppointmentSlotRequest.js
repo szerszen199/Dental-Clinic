@@ -1,7 +1,6 @@
 import Cookies from "js-cookie";
 import axios from "axios";
 import errorAlerts from "../../Alerts/ErrorAlerts/ErrorAlerts";
-import React from "react";
 import successAlertsWithRefresh from "../../Alerts/SuccessAlerts/SuccessAlertsWithRefresh";
 
 export function deleteAppointmentSlotRequest(id, t) {
