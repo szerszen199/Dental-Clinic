@@ -1,6 +1,6 @@
 import React from "react";
 import "./PlanAppointment.css";
-import {Accordion, Button, Card, Col, Container, Fade, Modal, Row} from "react-bootstrap";
+import {Accordion, Button, Card, Col, Container, Row} from "react-bootstrap";
 
 function PlanAppointment() {
     return (
