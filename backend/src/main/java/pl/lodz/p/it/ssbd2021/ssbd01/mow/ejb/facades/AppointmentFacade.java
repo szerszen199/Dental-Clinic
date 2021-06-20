@@ -52,6 +52,12 @@ public class AppointmentFacade extends AbstractFacade<Appointment> {
         return null;
     }
 
+    /**
+     * Zwraca listę wolnych przyszłych terminów wizyt u wszystkich lekarzy.
+     *
+     * @return lista wolnych przyszłych terminów wizyt u wszystkich lekarzy.
+     * @throws AppBaseException wyjątek.
+     */
     public List<Appointment> findAllFutureUnassignedAppointmentsSlots() throws AppBaseException {
         try {
             CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -67,6 +73,13 @@ public class AppointmentFacade extends AbstractFacade<Appointment> {
         }
     }
 
+    /**
+     * Zwraca listę wolnych przyszłych terminów wizyt u danego lekarza.
+     *
+     * @param doctorId lekarz którego terminy mają zostać zwrócone.
+     * @return lista dostępnych terminów.
+     * @throws AppBaseException wyjątek.
+     */
     public List<Appointment> findFutureUnassignedAppointmentSlotsForDoctor(Long doctorId) throws AppBaseException {
         try {
             CriteriaBuilder cb = em.getCriteriaBuilder();
