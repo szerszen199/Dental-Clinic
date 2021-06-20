@@ -40,6 +40,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
     "react-switch": "^6.0.0",
+    "react-theme-toggle-button": "^1.1.0",
     "react-toggle-dark-mode": "^1.0.4",
     "reactjs-popup": "^2.0.4",
     "sweetalert": "^2.1.2",
