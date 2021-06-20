@@ -1,8 +1,9 @@
 import React from "react";
-import {Card, CardDeck} from "react-bootstrap";
-import tooth from "../../assets/tooth.png"
 import "./Dashboard.css";
 import {useTranslation} from "react-i18next";
+// import dental from "../../assets/hospital.svg";
+// import dental from "../../assets/calendar.svg";
+import dental from "../../assets/hands.svg";
 
 
 export default function Dashboard() {
@@ -10,44 +11,8 @@ export default function Dashboard() {
     document.title = t("Dental Clinic");
     return (
         <div className="Dashboard">
-            <CardDeck>
-                <Card>
-                    <Card.Img variant="top" src={tooth} style={{width: "30px"}}/>
-                    <Card.Body>
-                        <Card.Title>{t("Nearest appointments")}</Card.Title>
-                        <Card.Text>
-                            {t("Sample Text")}
-                        </Card.Text>
-                    </Card.Body>
-                    <Card.Footer>
-                        {/*<small className="text-muted">Last updated 3 mins ago</small>*/}
-                    </Card.Footer>
-                </Card>
-                <Card>
-                    <Card.Img variant="top" src={tooth} style={{width: "30px"}}/>
-                    <Card.Body>
-                        <Card.Title>{t("Prescriptions")}</Card.Title>
-                        <Card.Text>
-                            {t("Sample Text")}
-                        </Card.Text>
-                    </Card.Body>
-                    <Card.Footer>
-                        {/*<small className="text-muted">Last updated 3 mins ago</small>*/}
-                    </Card.Footer>
-                </Card>
-                <Card>
-                    <Card.Img variant="top" src={tooth} style={{width: "30px"}}/>
-                    <Card.Body>
-                        <Card.Title>{t("Account")}</Card.Title>
-                        <Card.Text>
-                            {t("Sample Text")}
-                        </Card.Text>
-                    </Card.Body>
-                    <Card.Footer>
-                        {/*<small className="text-muted">Last updated 3 mins ago</small>*/}
-                    </Card.Footer>
-                </Card>
-            </CardDeck>
+            <img src={dental} alt="Edit" className="center" width={400}
+                 style={{paddingBottom: "5px", paddingLeft: "3px"}}/>
         </div>
     );
 }
