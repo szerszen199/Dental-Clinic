@@ -47,7 +47,7 @@ class NewDocumentationEntryWithoutTranslation extends React.Component {
 
         axios(config)
             .then((response) => {
-                successAlertsWithRedirect(t(response.data.message), response.status.toString(), "/account-documentation/" + self.state.patient).then(() => {
+                successAlertsWithRedirect(t(response.data.message), response.status.toString(), "#/account-documentation/" + self.state.patient).then(() => {
                 })
             })
             .catch((response) => {
