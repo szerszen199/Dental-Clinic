@@ -94,7 +94,8 @@ public class AppointmentManagerImplementation extends AbstractManager implements
             return doctors
                     .stream()
                     .map(doctor ->
-                            new DoctorAndRateResponseDTO(doctor.getDoctor().getFirstName(),
+                            new DoctorAndRateResponseDTO(doctor.getDoctor().getLogin(),
+                                    doctor.getDoctor().getFirstName(),
                                     doctor.getDoctor().getLastName(),
                                     doctor.getAverage()))
                     .collect(Collectors.toList());
