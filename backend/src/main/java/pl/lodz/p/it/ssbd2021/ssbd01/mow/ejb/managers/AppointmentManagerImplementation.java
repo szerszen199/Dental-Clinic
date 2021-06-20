@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
 import org.apache.commons.lang3.NotImplementedException;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorRating;
@@ -15,6 +16,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -117,6 +119,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         throw new NotImplementedException();
     }
 
+    @RolesAllowed(I18n.RECEPTIONIST)
     @Override
     public List<Appointment> getAppointmentsForReceptionist() throws AppointmentException {
         try {
