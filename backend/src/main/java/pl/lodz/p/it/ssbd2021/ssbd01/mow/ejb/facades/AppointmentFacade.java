@@ -54,11 +54,11 @@ public class AppointmentFacade extends AbstractFacade<Appointment> {
 
     public List<Appointment> findFutureUnassignedAppointments() throws AppBaseException {
         try {
-            CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+            CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<Appointment> cq = em.getCriteriaBuilder().createQuery(Appointment.class);
             Root<Appointment> root = cq.from(Appointment.class);
 
-            cq.select(root).where(cb.or(cb.isNull(root.get("patient")), cb.greaterThan(root.<LocalDateTime>get("appointmentDate"), LocalDateTime.now())));
+            cq.select(root).where(cb.and(cb.isNull(root.get("patient")), cb.greaterThan(root.<LocalDateTime>get("appointmentDate"), LocalDateTime.now())));
 
 
             return em.createQuery(cq).getResultList();
