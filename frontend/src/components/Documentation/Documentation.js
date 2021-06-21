@@ -15,6 +15,8 @@ import edit from "../../assets/edit.png";
 import * as PropTypes from "prop-types";
 import {Fragment} from "react";
 import {FiRefreshCw} from "react-icons/fi";
+import confirmationAlerts from "../Alerts/ConfirmationAlerts/ConfirmationAlerts";
+import successAlerts from "../Alerts/SuccessAlerts/SuccessAlerts";
 
 
 class DocumentationListWithoutTranslation extends React.Component {
@@ -84,14 +86,38 @@ class DocumentationListWithoutTranslation extends React.Component {
     }
 
     makeDeleteDocumentationRequest(id) {
-
+        const {t} = this.props;
+        let self = this;
+        let title = "";
+        let question = "";
+        confirmationAlerts(title, question).then((confirmed) => {
+            if (confirmed) {
+                axios.post(process.env.REACT_APP_BACKEND_URL + "documentation/delete", {
+                    id: id,
+                }, {
+                    headers: {
+                        Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
+                    }
+                }).then((res) => {
+                    successAlerts(t(res.data.message, res.status)).then(() => {
+                        self.makeGetAllDocumentationRequest();
+                    })
+                }).catch((res) => {
+                    if (res.response) {
+                        errorAlerts(t(res.response.data.message), res.response.status.toString(10));
+                    }
+                });
+            }
+        });
     }
 
     linkEdit = (cell, row, rowIndex, formatExtraData) => {
         return (
             <Button variant="outline-secondary">
                 <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}
-                     onClick={this.makeDeleteDocumentationRequest(this.state.documentation[rowIndex].id)}/>
+                     onClick={() => {
+                         this.makeDeleteDocumentationRequest(this.state.documentation[rowIndex].id)
+                     }}/>
             </Button>
         );
     }
@@ -139,7 +165,6 @@ class DocumentationListWithoutTranslation extends React.Component {
     renderNull() {
         const {t} = this.props;
         return <div>{t('Loading')}</div>
-
     }
 
     render() {

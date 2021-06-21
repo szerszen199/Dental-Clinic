@@ -191,6 +191,7 @@
   "to_be_done": "What is to be done",
   "doctorLogin": "Doctor's Username",
   "delete": "Delete",
-  "to_documentation": "To Documentation"
+  "to_documentation": "To Documentation",
+  "documentation_entry_deletion_unsuccessful": "Failed to delete documentation entry"
 
 }

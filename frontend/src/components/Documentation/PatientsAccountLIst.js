@@ -76,13 +76,13 @@ class DocumentationWithoutTranslation extends React.Component {
                 text: t('to_documentation'),
                 headerStyle: {verticalAlign: "middle"},
                 style: {textAlign: "center"},
-                formatter: this.linkEdit
+                formatter: this.linkDocumentation
             }
         ]
         return <BootstrapTable striped keyField='login' columns={columns} data={this.state.accountsList}/>;
     }
 
-    linkEdit = (cell, row, rowIndex, formatExtraData) => {
+    linkDocumentation = (cell, row, rowIndex, formatExtraData) => {
         return (
             <Link to={"/account-documentation/" + this.state.accountsList[rowIndex].login}>
                 <Button variant="outline-secondary">
