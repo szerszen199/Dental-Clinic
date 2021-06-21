@@ -191,5 +191,7 @@
   "to_be_done": "Co ma zostać wykonane",
   "doctorLogin": "Login Lekarza",
   "delete": "Usuń",
-  "to_documentation": "Do Dokumentacji"
+  "to_documentation": "Do Dokumentacji",
+  "documentation_entry_deletion_unsuccessful": "Nie udało się usunąć wpisu w dokumentację",
+  "documentation_entry_deleted_successfully": "Udało się usunąć wpis w dokumentację"
 }
