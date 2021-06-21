@@ -184,5 +184,12 @@
   "login_not_in_pattern": "W loginie użytkownika występują nieprawidłowe znaki",
   "forbidden": "Zakazane",
   "internal_server_error": "Błąd Serwera",
-  "not_found":  "Zasób Nieznaleziony"
+  "not_found":  "Zasób Nieznaleziony",
+  "creation_time": "Czas Stworzenia",
+  "modification_time": "Czas Modyfikacji",
+  "was_done": "Co zostało wykonane",
+  "to_be_done": "Co ma zostać wykonane",
+  "doctorLogin": "Login Lekarza",
+  "delete": "Usuń",
+  "to_documentation": "Do Dokumentacji"
 }
