@@ -212,4 +212,25 @@ public class AppointmentEndpoint {
         return Response.ok().entity(allScheduledAppointmentsResponseDTO).build();
     }
 
+    /**
+     * Pobiera listę wszystkich umówionych terminów wizyt.
+     *
+     * @return DTO z listą wszystkich umówionych wizyt.
+     */
+    @GET
+    @RolesAllowed(I18n.RECEPTIONIST)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("all-scheduled-appointments-by-doctor")
+    public Response getAllScheduleAppointmentsByDoctor() {
+        AllScheduledAppointmentsResponseDTO allScheduledAppointmentsResponseDTO;
+        try {
+            allScheduledAppointmentsResponseDTO = appointmentManager.getScheduledAppointmentsByDoctor();
+        } catch (AppointmentException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.GET_ALL_SCHEDULED_APPOINTMENTS_FAILED)).build();
+        }
+        return Response.ok().entity(allScheduledAppointmentsResponseDTO).build();
+    }
+
 }

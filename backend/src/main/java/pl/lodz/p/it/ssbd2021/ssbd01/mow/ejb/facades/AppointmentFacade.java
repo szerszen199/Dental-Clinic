@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
@@ -85,6 +86,25 @@ public class AppointmentFacade extends AbstractFacade<Appointment> {
     public List<Appointment> findAllScheduledAppointments() throws AppBaseException {
         try {
             TypedQuery<Appointment> tq = em.createNamedQuery("Appointment.findAllScheduled", Appointment.class);
+            return tq.getResultList();
+        } catch (NoResultException e) {
+            return new ArrayList<>();
+        } catch (PersistenceException e) {
+            throw AppBaseException.databaseError(e);
+        }
+    }
+
+    /**
+     * Metoda zwracająca wszystkie umówione wizyty dla doktora o zadanym loginie.
+     *
+     * @param doctor zalogowany lekarz
+     * @return lista wizyt
+     * @throws AppBaseException app base exception
+     */
+    public List<Appointment> findAllScheduledAppointmentsByDoctor(Account doctor) throws AppBaseException {
+        try {
+            TypedQuery<Appointment> tq = em.createNamedQuery("Appointment.findAllScheduledByDoctor", Appointment.class);
+            tq.setParameter("doctor", doctor);
             return tq.getResultList();
         } catch (NoResultException e) {
             return new ArrayList<>();
