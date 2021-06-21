@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
@@ -130,5 +131,16 @@ public class AccountFacade extends AbstractFacade<Account> {
         }
     }
 
-    
+
+    public List<Account> getAllPatients() throws AppBaseException {
+        try {
+            TypedQuery<Account> tq = em.createNamedQuery("Account.findByAccessLevel", Account.class);
+            tq.setParameter("level", I18n.PATIENT);
+            return tq.getResultList();
+        } catch (PersistenceException e) {
+            throw AppBaseException.databaseError(e);
+        } catch (IllegalArgumentException e) {
+            throw AppBaseException.mismatchedPersistenceArguments(e);
+        }
+    }
 }

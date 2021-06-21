@@ -1,9 +1,42 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.cdi.endpoints;
 
 
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.MedicalDocumentationManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.ChangePasswordDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.SetNewPasswordDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmMailChangeRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.CreateAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.RevokeAndGrantAccessLevelDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetDarkModeRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetLanguageRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetNewPasswordRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SimpleUsernameRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoWithAccessLevelsResponseDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.GetAllPatientsResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtResetPasswordConfirmation;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.SignatureFilterBinding;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
+
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBTransactionRolledbackException;
@@ -25,41 +58,9 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.MedicalDocumentationManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.ChangePasswordDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.SetNewPasswordDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ChangePasswordRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmAccountRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.ConfirmMailChangeRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.CreateAccountRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.RevokeAndGrantAccessLevelDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetDarkModeRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetLanguageRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetNewPasswordRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SimpleUsernameRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoWithAccessLevelsResponseDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
-import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtResetPasswordConfirmation;
-import pl.lodz.p.it.ssbd2021.ssbd01.security.SignatureFilterBinding;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AccountConverter;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCESS_LEVEL_ADD_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCESS_LEVEL_REVOKED_SUCCESSFULLY;
@@ -802,6 +803,25 @@ public class AccountEndpoint {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_GET_ALL_ACCOUNTS_FAILED)).build();
         }
         return Response.ok(accountInfoResponseDTOList).build();
+    }
+
+    /**
+     * Pobiera listę wszystkich pacjentów.
+     *
+     * @return lista wszystkich pacjentów
+     */
+    @GET
+    @RolesAllowed({I18n.DOCTOR})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/patients")
+    public Response getAllPatients() {
+        try {
+            return Response.ok(new GetAllPatientsResponseDTO(accountManager.getAllPatients())).build();
+        } catch (AccountException e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
+        } catch (AppBaseException e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_GET_ALL_ACCOUNTS_FAILED)).build();
+        }
     }
 
     /**
