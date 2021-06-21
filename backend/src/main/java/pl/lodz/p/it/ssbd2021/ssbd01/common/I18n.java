@@ -75,6 +75,7 @@ public class I18n {
 
     public static final String DOCTOR_ID_NULL = "doctor_id_null";
     public static final String APPOINTMENT_DATE_NULL = "appointment_date_null";
+    public static final String APPOINTMENT_DATE_FUTURE = "appointment_date_future";
 
     public static final String INVALID_REFRESH_TOKEN = "invalid_refresh_token";
     public static final String PASSWORDS_NOT_DIFFER = "both_passwords_are_same";
@@ -167,4 +168,16 @@ public class I18n {
 
     public static final String APPOINTMENT_SLOT_CREATION_FAILED = "appointment_slot_creation_failed";
     public static final String APPOINTMENT_SLOT_CREATED_SUCCESSFULLY = "appointment_slot_created_successfully";
+    public static final String APPOINTMENT_ID_NULL = "appointment_id_null";
+    public static final String APPOINTMENT_SLOT_EDIT_FAILED = "appointment_slot_edit_failed";
+    public static final String APPOINTMENT_SLOT_EDITED_SUCCESSFULLY = "appointment_slot_edited_successfully";
+    public static final String APPOINTMENT_NOT_FOUND = "appointment_not_found";
+    public static final String APPOINTMENT_NOT_DOCTOR_OR_INACTIVE = "appointment_not_doctor_or_inactive";
+    public static final String APPOINTMENT_GET_INFO_FAILED = "appointment_get_info_failed";
+    public static final String APPOINTMENT_CONFIRMED_NULL = "appointment_confirmed_null";
+    public static final String APPOINTMENT_CANCELED_NULL = "appointment_canceled_null";
+    public static final String DOCTOR_LOGIN_NULL = "doctor_login_null";
+
+
+
 }
