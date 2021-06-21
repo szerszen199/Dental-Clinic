@@ -54,6 +54,14 @@ public class DocumentationEntryFacade extends AbstractFacade<DocumentationEntry>
         query.executeUpdate();
     }
 
+
+    /**
+     * Pobiera wszystkie wpisy w dokumentacje dla użytkownika.
+     *
+     * @param login login użytkownika
+     * @return listę wpisów w dokumentację.
+     * @throws AppBaseException w przypadku błędów
+     */
     public List<DocumentationEntry> getDocumentationEntriesByLogin(String login) throws AppBaseException {
         try {
             TypedQuery<DocumentationEntry> tq = em.createNamedQuery("DocumentationEntry.findByPatientLogin", DocumentationEntry.class);
