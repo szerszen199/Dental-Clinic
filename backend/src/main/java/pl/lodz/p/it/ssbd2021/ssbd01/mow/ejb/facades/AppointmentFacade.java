@@ -49,7 +49,7 @@ public class AppointmentFacade extends AbstractFacade<Appointment> {
 
     @Override
     protected EntityManager getEntityManager() {
-        return null;
+        return em;
     }
 
     /**

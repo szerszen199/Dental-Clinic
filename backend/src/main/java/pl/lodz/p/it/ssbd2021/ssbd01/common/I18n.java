@@ -73,6 +73,9 @@ public class I18n {
 
     public static final String DARK_MODE_NULL = "dark_mode_null";
 
+    public static final String DOCTOR_ID_NULL = "doctor_id_null";
+    public static final String APPOINTMENT_DATE_NULL = "appointment_date_null";
+
     public static final String INVALID_REFRESH_TOKEN = "invalid_refresh_token";
     public static final String PASSWORDS_NOT_DIFFER = "both_passwords_are_same";
     public static final String AUTHENTICATION_FAILURE = "invalid_login_password_combination";
@@ -147,7 +150,6 @@ public class I18n {
     public static final String INVALID_DOCTOR_DOCUMENTATION_ENTRY = "invalid_doctor_documentation_entry";
     public static final String REMOVAL_FAILURE_ERROR = "removal_failure_error";
     public static final String DOCUMENTATION_ENTRY_DELETION_UNSUCCESSFUL = "documentation_entry_deletion_unsuccessful";
-    public static final String DOCTOR_ID_NULL = "doctor_id_null";
     public static final String DOCUMENTATION_ENTRY_CREATED_SUCCESSFULLY = "documentation_entry_created_successfully";
     public static final String PATIENT_ID_NULL = "patient_id_null";
     public static final String MEDICAL_DOCUMENTATION_NOT_FOUND = "medical_documentation_not_found";
@@ -162,6 +164,9 @@ public class I18n {
     public static final String MEDICAL_DOCUMENTATION_FETCH_FAILED = "medical_documentation_fetch_failed";
     public static final String PATIENT_SAME_DOCTOR = "patient_same_doctor";
     public static final String GET_DOCTORS_AND_RATES_FAILED = "get_doctors_and_rates_failed";
+
+    public static final String APPOINTMENT_SLOT_CREATION_FAILED = "appointment_slot_creation_failed";
+    public static final String APPOINTMENT_SLOT_CREATED_SUCCESSFULLY = "appointment_slot_created_successfully";
     public static final String GET_ALL_APPOINTMENTS_FAILED = "get_all_appointments_failed";
     public static final String GET_OWN_APPOINTMENTS_FAILED = "get_own_appointments_failed";
     public static final String INVALID_MEDICATIONS = "invalid_medications";

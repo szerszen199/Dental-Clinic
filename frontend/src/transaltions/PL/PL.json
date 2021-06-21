@@ -89,6 +89,7 @@
   "Error": "Błąd!",
   "Question edit password": "Czy na pewno chcesz zmienić swoje hasło?",
   "Question edit account": "Czy na pewno chcesz zmienić dane konta?",
+  "Question add appointment slot": "Czy na pewno chcesz dodać termin wizyty?",
   "invalid_login_password_combination": "Błędny login lub hasło",
   "account_not_found": "Konto nie znalezione",
   "login_failure": "Logowanie nieudane",
@@ -186,5 +187,13 @@
   "internal_server_error": "Błąd Serwera",
   "not_found":  "Zasób Nieznaleziony",
   "get_active_patients_failed": "Nie udało się pobrać listy pacjentów",
-  "Patients List": "Lista pacjentów"
+  "Patients List": "Lista pacjentów",
+  "Select doctor": "Wybierz lekarza",
+  "Add new appointment": "Dodaj nową wizytę",
+  "Date and Time": "Wybierz termin wizyty",
+  "DateTime blank error": "Termin nie może być pusty!",
+  "DateTime past error": "Termin musi być z przyszłości!",
+  "Doctor blank error": "Musisz wybrać lekarza!",
+  "appointment_slot_created_successfully": "Utworzono termin wizyty",
+  "appointment_slot_creation_failed": "Nie udało się utworzyć terminu wizyty"
 }
