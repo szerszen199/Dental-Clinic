@@ -203,4 +203,23 @@ public class AppointmentEndpoint {
         return Response.ok().entity(appointments).build();
     }
 
+    /**
+     * Pobiera listę wszystkich umówionych terminów wizyt.
+     *
+     * @return lista przyszłych terminów wizyt.
+     */
+    @GET
+    @RolesAllowed(I18n.RECEPTIONIST)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("all-scheduled-appointments")
+    public Response getAllScheduleAppointments() {
+        List<AvailableAppointmentResponseDTO> appointments;
+        try {
+            appointments = appointmentManager.getOwnAppointmentsSlots().stream().map(AvailableAppointmentResponseDTO::new).collect(Collectors.toList());
+        } catch (AppointmentException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.ok().entity(appointments).build();
+    }
+
 }
