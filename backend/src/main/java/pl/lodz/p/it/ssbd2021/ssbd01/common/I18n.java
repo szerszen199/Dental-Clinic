@@ -106,7 +106,7 @@ public class I18n {
     public static final String ACCOUNT_MAIL_LOCK_BY_ADMIN_SUBJECT = "account_mail_lock_by_admin_subject";
     public static final String ACCOUNT_MAIL_LOCK_BY_ADMIN_TEXT = "account_mail_lock_by_admin_text";
     public static final String ACCOUNT_MAIL_DELETE_BY_SCHEDULER_SUBJECT = "account_mail_deleted_by_scheduler_subject";
-    public static final String ACCOUNT_MAIL_DELETE_BY_SCHEDULER_TEXT  = "account_mail_deleted_by_scheduler_text";
+    public static final String ACCOUNT_MAIL_DELETE_BY_SCHEDULER_TEXT = "account_mail_deleted_by_scheduler_text";
     public static final String ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_SUBJECT = "account_mail_lock_by_unsuccessful_login_subject";
     public static final String ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_TEXT = "account_mail_lock_by_unsuccessful_login_text";
     public static final String ACCOUNT_MAIL_LOGIN_SUBJECT = "account_mail_login_subject";
@@ -167,5 +167,10 @@ public class I18n {
     public static final String PRESCRIPTION_CREATED_SUCCESSFULLY = "prescription_created_successfully";
     public static final String EXPIRATION_DATE_NULL = "expiration_date_null";
     public static final String MEDICATIONS_NULL = "medications_null";
+    public static final String APPOINTMENT_EDIT_FAILED = "appointment_edit_failed";
+    public static final String APPOINTMENT_EDIT_SUCCESSFUL = "appointment_edit_successful";
+    public static final String APPOINTMENT_ID_NULL = "appointment_id_null";
+    public static final String APPOINTMENT_NOT_FOUND = "appointment_not_found";
+    public static final String NOT_PATIENT_OR_INACTIVE = "not_patient_or_inactive";
     public static final String GET_ACTIVE_PATIENTS_FAILED = "get_active_patients_failed";
 }
