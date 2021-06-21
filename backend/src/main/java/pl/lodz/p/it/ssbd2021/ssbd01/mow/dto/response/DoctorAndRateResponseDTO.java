@@ -1,12 +1,19 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Typ DoctorAndRateResponseDTO - klasa DTO reprezentująca informację o lekarzu i jego ocenie.
  */
 public class DoctorAndRateResponseDTO {
-    
+
+    @NotNull
     private String firstName;
+
+    @NotNull
     private String lastName;
+
+    @NotNull
     private double avgRate;
 
     /**

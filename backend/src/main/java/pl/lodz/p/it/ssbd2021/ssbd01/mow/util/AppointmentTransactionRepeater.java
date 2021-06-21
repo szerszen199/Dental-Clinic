@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2021.ssbd01.mow;
+package pl.lodz.p.it.ssbd2021.ssbd01.mow.util;
 
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
@@ -23,7 +23,7 @@ public class AppointmentTransactionRepeater {
      * @param appointmentManager komponent AppointmentManager
      * @throws Exception wyjątek w przypadku niepowodzenia
      */
-    public void repeatTransaction(AppointmentTransactionRepeater.Repeatable repeatable, AppointmentManager appointmentManager) throws Exception {
+    public void repeatTransaction(Repeatable repeatable, AppointmentManager appointmentManager) throws Exception {
         int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         Exception exception;
@@ -40,18 +40,5 @@ public class AppointmentTransactionRepeater {
         if (rollbackTX) {
             throw exception == null ? AppBaseException.transactionRepeatFailure() : exception;
         }
-    }
-
-    /**
-     * Interfejs Repeatable.
-     */
-    @FunctionalInterface
-    public interface Repeatable {
-        /**
-         * Metoda która ma zostać powtórzona.
-         *
-         * @throws AppBaseException w przypadku niepowodzenia
-         */
-        void repeat() throws AppBaseException;
     }
 }
