@@ -195,5 +195,11 @@
   "DateTime past error": "Termin musi być z przyszłości!",
   "Doctor blank error": "Musisz wybrać lekarza!",
   "appointment_slot_created_successfully": "Utworzono termin wizyty",
-  "appointment_slot_creation_failed": "Nie udało się utworzyć terminu wizyty"
+  "appointment_slot_creation_failed": "Nie udało się utworzyć terminu wizyty",
+  "doctor_name": "Lekarz",
+  "patient_name": "Pacjent",
+  "date": "Data",
+  "scheduled_appointments": "Zaplanowane wizyty",
+  "edit": "Edycja",
+  "get_all_scheduled_appointments_failed": "Pobieranie wszystkich wizyt nie powiodło się"
 }
