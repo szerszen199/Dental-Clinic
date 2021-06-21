@@ -1,18 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.annotation.security.PermitAll;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import org.apache.commons.lang3.NotImplementedException;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorRating;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import org.apache.commons.lang3.NotImplementedException;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
@@ -23,9 +10,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AppointmentFacade;
@@ -61,14 +45,10 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     private AppointmentFacade appointmentFacade;
     @Inject
     private AccountFacade accountFacade;
-
     @Inject
     private DoctorRatingFacade doctorRatingFacade;
     @Inject
     private LoggedInAccountUtil loggedInAccountUtil;
-
-    @Inject
-    private DoctorRatingFacade doctorRatingFacade;
 
     @Override
     public void bookAppointment(BookAppointmentDto bookAppointmentDto) throws AppBaseException {
@@ -80,10 +60,15 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         } catch (Exception e) {
             throw AccountException.noSuchAccount(e);
         }
+//        if (!editDocumentationEntryRequestDTO.getVersion().equals(documentationEntry.getVersion())) {
+//            throw DocumentationEntryException.versionMismatchException();
+//        }
+
         appointment.setPatient(account);
         appointment.setModifiedBy(account);
         appointment.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         appointment.setModificationDateTime(LocalDateTime.now());
+        appointmentFacade.edit(appointment);
     }
 
     @Override
