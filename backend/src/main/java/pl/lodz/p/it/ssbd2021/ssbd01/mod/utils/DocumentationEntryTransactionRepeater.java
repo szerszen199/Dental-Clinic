@@ -14,6 +14,9 @@ public class DocumentationEntryTransactionRepeater {
     @Inject
     private PropertiesLoader propertiesLoader;
 
+    @Inject
+    private DocumentationEntryManager documentationEntryManager;
+
     /**
      * Powtórzenie transakcji.
      *
@@ -21,7 +24,7 @@ public class DocumentationEntryTransactionRepeater {
      * @param documentationEntryManager medical documentation manager
      * @throws Exception exception w przypadku niepowodzenia
      */
-    public void repeatTransaction(Repeatable repeatable, DocumentationEntryManager documentationEntryManager) throws Exception {
+    public void repeatTransaction(Repeatable repeatable) throws Exception {
         int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         Exception exception;
