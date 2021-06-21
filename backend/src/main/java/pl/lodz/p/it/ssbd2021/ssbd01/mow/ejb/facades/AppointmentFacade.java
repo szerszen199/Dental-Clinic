@@ -76,6 +76,12 @@ public class AppointmentFacade extends AbstractFacade<Appointment> {
         }
     }
 
+    /**
+     * Metoda zwracająca wszystkie umówione wizyty.
+     *
+     * @return lista wizyt
+     * @throws AppBaseException app base exception
+     */
     public List<Appointment> findAllScheduledAppointments() throws AppBaseException {
         try {
             TypedQuery<Appointment> tq = em.createNamedQuery("Appointment.findAllScheduled", Appointment.class);

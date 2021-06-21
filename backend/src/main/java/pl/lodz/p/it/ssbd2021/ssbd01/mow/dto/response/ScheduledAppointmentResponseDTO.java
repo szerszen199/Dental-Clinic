@@ -1,39 +1,49 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+/**
+ * Typ ScheduledAppointmentResponseDTO.
+ */
 public class ScheduledAppointmentResponseDTO {
 
     @NotNull
     Long id;
+
     @NotNull
     @Login
     String doctorLogin;
+
     @NotNull
     @Login
     String patientLogin;
+
     @NotNull
     LocalDateTime date;
+
     @NotNull
     Long version;
+
     @NotNull
     String doctorFirstName;
+
     @NotNull
     String doctorLastName;
+
     @NotNull
     String patientFirstName;
+
     @NotNull
     String patientLastName;
 
     /**
      * DTO do zwracania umówionej wizyty.
      *
-     * @param appointment termin wizyty na podstawie którego tworzone jest DTO.
+     * @param appointment wizyta, na podstawie której tworzone jest DTO.
      */
     public ScheduledAppointmentResponseDTO(Appointment appointment) {
         this.id = appointment.getId();
@@ -47,6 +57,9 @@ public class ScheduledAppointmentResponseDTO {
         this.doctorLastName = appointment.getDoctor().getLastName();
     }
 
+    /**
+     * Tworzy nową instancję klasy ScheduledAppointmentResponseDTO.
+     */
     public ScheduledAppointmentResponseDTO() {
     }
 
