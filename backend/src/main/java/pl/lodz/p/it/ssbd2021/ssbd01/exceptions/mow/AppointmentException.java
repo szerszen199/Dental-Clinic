@@ -70,4 +70,22 @@ public class AppointmentException extends AppBaseException {
     public static AppointmentException appointmentNotPatientInactive() {
         return new AppointmentException(I18n.NOT_PATIENT_OR_INACTIVE);
     }
+
+    /**
+     * Wyjątek błędnego pobiernania wszystkich wizyt.
+     *
+     * @return wyjątek AppointmentException
+     */
+    public static AppointmentException getAllAppointmentsException() {
+        return new AppointmentException(I18n.GET_ALL_APPOINTMENTS_FAILED);
+    }
+
+    /**
+     * Wyjątek błędnego pobiernania własnych wizyt.
+     *
+     * @return
+     */
+    public static AppointmentException getOwnAppointmentsException() {
+        return new AppointmentException(I18n.GET_OWN_APPOINTMENTS_FAILED);
+    }
 }
