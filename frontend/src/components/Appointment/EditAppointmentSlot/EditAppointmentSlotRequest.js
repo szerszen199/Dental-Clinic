@@ -20,7 +20,7 @@ export function editAppointmentSlotRequest(appId, doctorLogin, appointmentDate, 
         }
     }).then((response) => {
         successAlerts(t(response.data.message, response.status)).then(() => {
-            window.location.hash = "#/available-appointments";
+            window.location.hash = "#/plan-appointment-receptionist";
         })
     }).catch((response) => {
             if (response.response) {

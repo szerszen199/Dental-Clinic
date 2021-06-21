@@ -3,6 +3,9 @@ import "../PlanAppointment.css";
 import BootstrapTable from "react-bootstrap-table-next";
 import {makeAppointmentSlotsListRequest} from "../AppointmentSlotsListRequest";
 import {withTranslation} from "react-i18next";
+import {Button} from "react-bootstrap";
+import edit from "../../../../assets/edit.png";
+import {Link} from "react-router-dom";
 
 class PlanReceptionistAppointmentWithoutTr extends React.Component {
     constructor(props) {
@@ -38,7 +41,7 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
                 text: t('ID'),
                 style: {verticalAlign: "middle"},
                 sort: true,
-                hidden: true
+                hidden: false
             },
             {
                 dataField: 'date',
@@ -73,7 +76,9 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
             renderer: row => (
                 <div>
                     <p>{ `Tu moze isc przycisk edycji/wyboru/idk, kolumna  ${row.doctor}` }</p>
-                    <p>You can render anything here, also you can add additional data on every row object</p>
+                    <Link to={"/appointment-slot/" + row.id}>
+                        {t("Edit")}
+                    </Link>
                     <p>expandRow.renderer callback will pass the origin row object to you</p>
                 </div>
             )
