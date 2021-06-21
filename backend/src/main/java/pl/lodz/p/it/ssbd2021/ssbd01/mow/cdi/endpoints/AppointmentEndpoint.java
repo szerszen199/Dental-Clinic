@@ -3,9 +3,11 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mow.cdi.endpoints;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.CreateAppointmentSlotRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AvailableAppointmentResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers.AppointmentManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 
@@ -35,10 +37,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.stream.Collectors;
+
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.SignatureFilterBinding;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AppointmentConverter;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_OPTIMISTIC_LOCK_ERROR;
 
@@ -63,13 +67,10 @@ public class AppointmentEndpoint {
     private AppointmentTransactionRepeater appointmentTransactionRepeater;
 
     @Inject
-    private PropertiesLoader propertiesLoader;
-
-    @Inject
     private AccountManager accountManager;
 
     @Inject
-    private LoggedInAccountUtil loggedInAccountUtil;
+    private EntityIdentitySignerVerifier signer;
 
     /**
      * Pobiera listę lekarz i ich ocen.
