@@ -16,7 +16,7 @@ export function addAppointmentRequest(doctorLogin, appointmentDate, t) {
         }
     }).then((response) => {
         successAlerts(t(response.data.message, response.status)).then(() => {
-            window.location.hash = "#/plan-appointment";
+            window.location.hash = "#/plan-appointment-receptionist";
         })
     })
         .catch((response) => {

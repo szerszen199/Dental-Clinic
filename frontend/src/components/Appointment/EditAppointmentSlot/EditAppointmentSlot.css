@@ -7,4 +7,9 @@
         margin: 0 auto;
         max-width: 320px;
     }
+
+    .EditAppointmentSlotRefreshButton {
+        text-align: end;
+    }
+
 }
