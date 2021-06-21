@@ -5,7 +5,9 @@ import javax.ejb.Local;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 
 /**
  * Interfejs menadżera wizyt.
@@ -101,9 +103,10 @@ public interface AppointmentManager {
     void confirmBookedAppointment(Long id);
 
     /**
-     * Pobiera wszystkich pacjentów.
+     * Pobiera wszystkich aktywnych pacjentów.
      *
-     * @return lista wszystkich pacjentów
+     * @return lista wszystkich aktywnych pacjentów
+     * @throws PatientException wyjątek typu PatientException
      */
-    List<Account> getAllPatients();
+    List<PatientResponseDTO> getActivePatients() throws PatientException;
 }

@@ -167,4 +167,5 @@ public class I18n {
     public static final String PRESCRIPTION_CREATED_SUCCESSFULLY = "prescription_created_successfully";
     public static final String EXPIRATION_DATE_NULL = "expiration_date_null";
     public static final String MEDICATIONS_NULL = "medications_null";
+    public static final String GET_ACTIVE_PATIENTS_FAILED = "get_active_patients_failed";
 }
