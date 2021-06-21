@@ -44,6 +44,16 @@ public class AppointmentException extends AppBaseException {
     }
 
     /**
+     * Wyjątek w przypadku niepowodzenia odnalezienia konta edytującego wizytę.
+     *
+     * @param cause powód wyjątku
+     * @return wyjątek PrescriptionException
+     */
+    public static AppointmentException accountNotFound(Throwable cause) {
+        return new AppointmentException(I18n.ACCOUNT_NOT_FOUND, cause);
+    }
+
+    /**
      * Wyjątek błędu edycji wizyty.
      *
      * @return wyjątek AppointmentException
@@ -54,7 +64,8 @@ public class AppointmentException extends AppBaseException {
 
     /**
      * Wyjątek nieaktywnego konta dla wizyty, lub gdy konto nie jest pacjentem.
-     * @return  wyjątek AppointmentException
+     *
+     * @return wyjątek AppointmentException
      */
     public static AppointmentException appointmentNotPatientInactive() {
         return new AppointmentException(I18n.NOT_PATIENT_OR_INACTIVE);

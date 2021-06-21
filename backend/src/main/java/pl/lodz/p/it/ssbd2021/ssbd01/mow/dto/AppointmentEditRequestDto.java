@@ -14,14 +14,9 @@ public class AppointmentEditRequestDto implements SignableEntity {
 
     @NotNull(message = I18n.APPOINTMENT_ID_NULL)
     private Long id;
-
     @Login
     @NotNull(message = I18n.PATIENT_ID_NULL)
     private String patientLogin;
-
-    @Future
-    private LocalDateTime appointmentDate;
-
     @NotNull(message = I18n.VERSION_NULL)
     private Long version;
 
@@ -31,14 +26,6 @@ public class AppointmentEditRequestDto implements SignableEntity {
 
     public void setPatientLogin(String patientLogin) {
         this.patientLogin = patientLogin;
-    }
-
-    public LocalDateTime getAppointmentDate() {
-        return appointmentDate;
-    }
-
-    public void setAppointmentDate(LocalDateTime appointmentDate) {
-        this.appointmentDate = appointmentDate;
     }
 
     public Long getVersion() {
@@ -60,6 +47,7 @@ public class AppointmentEditRequestDto implements SignableEntity {
     @Override
     public Map<String, String> getPayload() {
         Map<String, String> map = new HashMap<>();
+        map.put("id", String.valueOf(id));
         map.put("version", String.valueOf(version));
         return map;
     }

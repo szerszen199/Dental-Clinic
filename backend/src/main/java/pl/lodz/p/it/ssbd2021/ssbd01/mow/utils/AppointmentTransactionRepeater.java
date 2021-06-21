@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.utils;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.utils.Repeatable;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers.AppointmentManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
@@ -17,15 +18,16 @@ public class AppointmentTransactionRepeater {
     @Inject
     private PropertiesLoader propertiesLoader;
 
+    @Inject
+    private AppointmentManager appointmentManager;
+
     /**
      * Powtórzenie transakcji.
      *
-     * @param repeatable         implementacja interfejsu {@link AppointmentTransactionRepeater.Repeatable}
-     * @param appointmentManager manager wizyt pacjentów
+     * @param repeatable implementacja interfejsu {@link Repeatable}
      * @throws Exception exception w przypadku niepowodzenia transakcji
      */
-    public void repeatTransaction(AppointmentTransactionRepeater.Repeatable repeatable,
-                                  AppointmentManager appointmentManager) throws Exception {
+    public void repeatTransaction(Repeatable repeatable) throws Exception {
 
         int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
@@ -44,19 +46,5 @@ public class AppointmentTransactionRepeater {
             throw exception == null ? AppBaseException.transactionRepeatFailure() : exception;
         }
 
-    }
-
-    /**
-     * Interfejs Repeatable.
-     */
-    @FunctionalInterface
-    public interface Repeatable {
-
-        /**
-         * Powtórzenie transakcji.
-         *
-         * @throws AppBaseException wyjątek AppBaseException
-         */
-        void repeat() throws AppBaseException;
     }
 }

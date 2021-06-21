@@ -46,4 +46,41 @@ public class PrescriptionException extends AppBaseException {
     public static PrescriptionException creationFailureException() {
         return new PrescriptionException(I18n.PRESCRIPTION_CREATION_FAILURE);
     }
+
+    /**
+     * Wyjątek w przypadku nie odnalezienia recepty.
+     *
+     * @return wyjątek PrescriptionException
+     */
+    public static PrescriptionException prescriptionNotFound() {
+        return new PrescriptionException(I18n.PRESCRIPTION_NOT_FOUND);
+    }
+
+    /**
+     * Wyjątek w przypadku braku zgodności wersji recepty.
+     *
+     * @return wyjątek PrescriptionException
+     */
+    public static PrescriptionException versionMismatch() {
+        return new PrescriptionException(I18n.VERSION_MISMATCH);
+    }
+
+    /**
+     * Wyjątek w przypadku niepowodzenia edycji recepty.
+     *
+     * @return wyjątek PrescriptionException
+     */
+    public static PrescriptionException prescriptionEditFailed() {
+        return new PrescriptionException(I18n.PRESCRIPTION_EDIT_FAILED);
+    }
+
+    /**
+     * Wyjątek w przypadku niepowodzenia odnalezienia konta edytującego receptę.
+     *
+     * @param cause powód wyjątku
+     * @return wyjątek PrescriptionException
+     */
+    public static PrescriptionException accountNotFound(Throwable cause) {
+        return new PrescriptionException(I18n.ACCOUNT_NOT_FOUND, cause);
+    }
 }
