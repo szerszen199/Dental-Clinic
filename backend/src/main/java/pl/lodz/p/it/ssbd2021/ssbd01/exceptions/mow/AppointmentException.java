@@ -83,7 +83,7 @@ public class AppointmentException extends AppBaseException {
     /**
      * Wyjątek błędnego pobiernania własnych wizyt.
      *
-     * @return
+     * @return wyjątek AppointmentException
      */
     public static AppointmentException getOwnAppointmentsException() {
         return new AppointmentException(I18n.GET_OWN_APPOINTMENTS_FAILED);
