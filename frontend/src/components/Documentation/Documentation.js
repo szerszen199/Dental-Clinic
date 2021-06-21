@@ -1,6 +1,6 @@
 import React, {Suspense} from "react";
 
-import {Col, Container, FormControl, Row} from "react-bootstrap";
+import {Button, Col, Container, FormControl, Row} from "react-bootstrap";
 import {Label} from "semantic-ui-react";
 
 import axios from "axios";
@@ -8,6 +8,13 @@ import Cookies from "js-cookie";
 import Form from "react-bootstrap/Form";
 import {withTranslation} from "react-i18next";
 import errorAlerts from "../Alerts/ErrorAlerts/ErrorAlerts";
+import {DocumentationEntry} from "./DocumentationEntry";
+import BootstrapTable from "react-bootstrap-table-next";
+import {Link} from "react-router-dom";
+import edit from "../../assets/edit.png";
+import * as PropTypes from "prop-types";
+import {Fragment} from "react";
+import {FiRefreshCw} from "react-icons/fi";
 
 
 class DocumentationListWithoutTranslation extends React.Component {
@@ -15,113 +22,140 @@ class DocumentationListWithoutTranslation extends React.Component {
         super(props);
         this.state = {
             accId: this.props.accId,
-            isActivated: "",
-            accessLevelDtoList: "",
-            account: {
-                email: "",
-                firstName: "",
-                lastName: "",
-                phoneNumber: "",
-                pesel: "",
-                lastSuccessfulLogin: "",
-                lastSuccessfulLoginIp: "",
-                lastUnsuccessfulLogin: "",
-                lastUnsuccessfulLoginIp: "",
-                version: "",
-                etag: "",
-            },
+            documentation: [1]
         };
     }
 
     componentDidMount() {
-        this.makeGetAccountRequest121();
+        this.makeGetAllDocumentationRequest();
     }
 
-    makeGetAccountRequest121() {
-        const {t} = this.props;
-        console.log(this.state.accId);
-        let requestPath = process.env.REACT_APP_BACKEND_URL + "account/other-account-info/" + this.state.accId;
+    renderButton() {
+        let self = this;
+        return <Button variant={"secondary"} onClick={() => {
+            this.makeGetAllDocumentationRequest()
+        }}>
+            <FiRefreshCw/>
+        </Button>
+    }
 
-        axios
-            .get(requestPath, {
-                headers: {
-                    Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
-                }
-            })
-            .then(result => {
-                this.setState({
-                    accId: result.data.login,
-                    isActivated: result.data.active,
-                    accessLevelDtoList: result.data.accessLevelDtoList,
-                    account: {
-                        email: result.data.email,
-                        firstName: result.data.firstName,
-                        lastName: result.data.lastName,
-                        phoneNumber: result.data.phoneNumber,
-                        pesel: result.data.pesel,
-                        lastSuccessfulLogin: result.data.lastSuccessfulLogin,
-                        lastSuccessfulLoginIp: result.data.lastSuccessfulLoginIp,
-                        lastUnsuccessfulLogin: result.data.lastUnsuccessfulLogin,
-                        lastUnsuccessfulLoginIp: result.data.lastUnsuccessfulLoginIp,
-                        version: result.data.version,
-                        etag: result.headers['etag']
-                    },
-                    enabled: result.data.enabled,
-                })
-                console.log("result: " + result);
-            }).catch((response) => {
-            console.log(response);
-            if (response.response) {
-                errorAlerts(t(response.response.data.message), response.response.status.toString(10)).then(() => {
-                    window.location.hash = "#/accounts";
-                });
+
+    makeGetAllDocumentationRequest() {
+        const {t} = this.props;
+        let self = this;
+        axios.post(process.env.REACT_APP_BACKEND_URL + "documentation/get-all", {
+            patient: this.state.accId,
+        }, {
+            headers: {
+                Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
             }
-        })
+        }).then(function (result) {
+            const allEntries = [];
+            for (const documentationEntry of result.data.documentationEntries) {
+                allEntries.push(new DocumentationEntry(
+                    documentationEntry.creationTime,
+                    documentationEntry.modificationTime,
+                    documentationEntry.wasDone,
+                    documentationEntry.toBeDone,
+                    documentationEntry.id,
+                    documentationEntry.version,
+                    documentationEntry.doctorLogin,
+                    documentationEntry.etag));
+            }
+            let compare = function (a, b) {
+                if (a.creationTime < b.creationTime) {
+                    return -1;
+                }
+                if (a.creationTime > b.creationTime) {
+                    return 1;
+                }
+                return 0;
+            }
+            allEntries.sort(compare);
+            self.setState({
+                accId: result.data.patientUsername,
+                documentation: allEntries
+            })
+        }).catch((response) => {
+            if (response.response) {
+                errorAlerts(t(response.response.data.message), response.response.status.toString(10));
+            }
+        });
+    }
+
+    makeDeleteDocumentationRequest(id) {
+
+    }
+
+    linkEdit = (cell, row, rowIndex, formatExtraData) => {
+        return (
+            <Button variant="outline-secondary">
+                <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}
+                     onClick={this.makeDeleteDocumentationRequest(this.state.documentation[rowIndex].id)}/>
+            </Button>
+        );
+    }
+
+    renderDocumentation() {
+        const {t} = this.props;
+        const columns = [
+            {
+                dataField: 'creationTime',
+                text: t('creation_time'),
+                style: {verticalAlign: "middle"}
+            },
+            {
+                dataField: 'modificationTime',
+                text: t('modification_time'),
+                style: {verticalAlign: "middle"}
+            },
+            {
+                dataField: 'wasDone',
+                text: t('was_done'),
+                style: {verticalAlign: "middle"}
+            },
+            {
+                dataField: 'toBeDone',
+                text: t('to_be_done'),
+                style: {verticalAlign: "middle"}
+            },
+            {
+                dataField: 'doctorLogin',
+                text: t('doctorLogin'),
+                style: {verticalAlign: "middle"}
+            },
+            {
+                dataField: 'actions',
+                text: t('delete'),
+                headerStyle: {verticalAlign: "middle"},
+                style: {textAlign: "center"},
+                formatter: this.linkEdit
+            }
+        ]
+
+        return <BootstrapTable striped keyField='id' columns={columns} data={this.state.documentation}/>;
+    }
+
+    renderNull() {
+        const {t} = this.props;
+        return <div>{t('Loading')}</div>
+
     }
 
     render() {
         const {t} = this.props;
-        document.title = t("Dental Clinic") + " - " + t("Edit Other Account");
+        document.title = t("Dental Clinic") + " - " + t("Documentation");
         return (
-            <div className="OtherAccount">
-                <Container>
-                    <Row>
-                        <Col style={{maxWidth: "515px"}}>
-                            <Label className={"LoginLabel required"}>
-                                Login
-                            </Label>
-                            <FormControl
-                                type="text"
-                                disabled={true}
-                                value={this.state.accId}
-                            />
-                        </Col>
-                        <Col style={{maxWidth: "60px"}}/>
-                        <Col/>
-                    </Row>
-                    <Row>
-                        <Col style={{maxWidth: "60px"}}/>
-                        <Col>
-                            <hr/>
-                            <hr/>
-                            <div className="enabled">
-                                <Row>
-                                    <Form style={{width: "100%"}}>
-                                        <Form.Group size="lg" controlId="isEnabled">
-                                            <Form.Label>{t("Enabled")}</Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                value={this.state.enabled}
-                                                disabled={true}
-                                            />
-                                        </Form.Group>
-                                    </Form>
-                                </Row>
-                            </div>
-                        </Col>
-                    </Row>
-                </Container>
-            </div>
+            <Fragment>
+                <div className="account-refresh-button-div">
+                    {this.renderButton()}
+                </div>
+                <div className="documentation">
+                    <Container>
+                        {this.renderDocumentation()}
+                    </Container>
+                </div>
+            </Fragment>
         );
     }
 

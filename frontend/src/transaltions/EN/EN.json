@@ -184,5 +184,13 @@
   "login_not_in_pattern": "Username contains invalid characters",
   "forbidden": "Forbidden access",
   "internal_server_error": "Server Error",
-  "not_found": "Resource not found"
+  "not_found": "Resource not found",
+  "creation_time": "Creation Time",
+  "modification_time": "Modification time",
+  "was_done": "What was done",
+  "to_be_done": "What is to be done",
+  "doctorLogin": "Doctor's Username",
+  "delete": "Delete",
+  "to_documentation": "To Documentation"
+
 }
