@@ -83,6 +83,15 @@ public class AppointmentException extends AppBaseException {
     }
 
     /**
+     * Wyjątek błędnego pobiernania wszystkich umówionych wizyt.
+     *
+     * @return wyjątek AppointmentException
+     */
+    public static AppointmentException getAllScheduledAppointmentsException() {
+        return new AppointmentException(I18n.GET_ALL_SCHEDULED_APPOINTMENTS_FAILED);
+    }
+
+    /**
      * Wyjątek błędnego pobiernania własnych wizyt.
      *
      * @return wyjątek AppointmentException
