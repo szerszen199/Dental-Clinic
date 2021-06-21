@@ -194,7 +194,7 @@ public class AppointmentEndpoint {
     /**
      * Pobiera listę wszystkich umówionych terminów wizyt.
      *
-     * @return lista przyszłych terminów wizyt.
+     * @return DTO z listą wszystkich umówionych wizyt.
      */
     @GET
     @RolesAllowed(I18n.RECEPTIONIST)

@@ -61,6 +61,7 @@ public interface AppointmentManager {
      * Pobiera wszystkie umówione wizyty.
      *
      * @return umówione wizyty
+     * @throws AppointmentException appointment exception
      */
     AllScheduledAppointmentsResponseDTO getScheduledAppointments() throws AppointmentException;
 
