@@ -185,4 +185,5 @@ public class I18n {
     public static final String PRESCRIPTION_MEDICATIONS_NULL = "prescription_medications_null";
     public static final String PRESCRIPTION_NOT_FOUND = "prescription_not_found";
     public static final String GET_ACTIVE_PATIENTS_FAILED = "get_active_patients_failed";
+    public static final String NO_ACCESS_LEVEL = "no_access_level";
 }
