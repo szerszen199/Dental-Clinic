@@ -4,5 +4,4 @@ export class Account {
         this.name = name;
         this.email = email;
     }
-
 }
