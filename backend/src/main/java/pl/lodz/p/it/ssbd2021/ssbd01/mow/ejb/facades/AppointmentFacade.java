@@ -114,6 +114,25 @@ public class AppointmentFacade extends AbstractFacade<Appointment> {
     }
 
     /**
+     * Metoda zwracająca wszystkie umówione wizyty dla pacjenta o zadanym loginie.
+     *
+     * @param patient zalogowany pacjent
+     * @return lista wizyt
+     * @throws AppBaseException app base exception
+     */
+    public List<Appointment> findAllScheduledAppointmentsByPatient(Account patient) throws AppBaseException {
+        try {
+            TypedQuery<Appointment> tq = em.createNamedQuery("Appointment.findAllScheduledByPatient", Appointment.class);
+            tq.setParameter("patient", patient);
+            return tq.getResultList();
+        } catch (NoResultException e) {
+            return new ArrayList<>();
+        } catch (PersistenceException e) {
+            throw AppBaseException.databaseError(e);
+        }
+    }
+
+    /**
      * Zwraca listę wolnych przyszłych terminów wizyt u danego lekarza.
      *
      * @param doctorId lekarz którego terminy mają zostać zwrócone.
