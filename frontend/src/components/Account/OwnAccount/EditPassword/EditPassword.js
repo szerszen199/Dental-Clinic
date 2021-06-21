@@ -23,26 +23,53 @@ class EditPasswordWithoutTranslation extends React.Component {
 
         const newErrors = {}
 
-        function findPasswordErrors(pwd) {
+        function findOldPasswordErrors() {
+            if (t.state.currentPassword === '') {
+                newErrors['currentPassword'] = "Password blank error";
+                return;
+            }
+
+            if (t.state.currentPassword.length < 8) {
+                newErrors['currentPassword'] = "Password too short error";
+            }
+        }
+
+        function findNewPasswordErrors() {
             if (t.state.password === '') {
-                newErrors[pwd] = "Password blank error";
+                newErrors['password'] = "Password blank error";
                 return;
             }
 
             if (t.state.password.length < 8) {
-                newErrors[pwd] = "Password too short error";
+                newErrors['password'] = "Password too short error";
                 return;
             }
 
             if (t.state.password !== t.state.repeatedPassword) {
-                newErrors[pwd] = "Passwords mismatch error";
+                newErrors['password'] = "Passwords mismatch error";
+            }
+        }
+
+        function findRepeatedPasswordErrors() {
+            if (t.state.repeatedPassword === '') {
+                newErrors['repeatedPassword'] = "Password blank error";
+                return;
+            }
+
+            if (t.state.repeatedPassword.length < 8) {
+                newErrors['repeatedPassword'] = "Password too short error";
+                return;
+            }
+
+            if (t.state.password !== t.state.repeatedPassword) {
+                newErrors['repeatedPassword'] = "Passwords mismatch error";
             }
         }
 
 
-        findPasswordErrors('password');
-        findPasswordErrors('currentPassword');
-        findPasswordErrors('repeatedPassword');
+        findOldPasswordErrors();
+        findNewPasswordErrors();
+        findRepeatedPasswordErrors();
         console.log(newErrors)
         return newErrors;
     }
@@ -67,6 +94,7 @@ class EditPasswordWithoutTranslation extends React.Component {
                     // We got errors!
                     this.setState({errors: newErrors})
                 } else {
+                    this.setState({errors: newErrors})
                     confirmationAlerts(title, question).then((confirmed) => {
                         if (confirmed) {
                             this.setNotEditable(this);
