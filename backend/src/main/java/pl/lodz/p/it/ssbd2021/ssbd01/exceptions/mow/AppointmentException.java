@@ -7,16 +7,32 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_SLOT_CREATION
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_NOT_FOUND;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_SLOT_REMOVAL_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_WAS_BOOKED;
+import javax.ejb.ApplicationException;
+
 
 /**
  * Klasa wyjątku dla wizyty.
  */
+@ApplicationException(rollback = true)
 public class AppointmentException extends AppBaseException {
-    
+
+    /**
+     * Tworzy nową instancję klasy wyjątku AppointmentException.
+     *
+     * @param message wiadomość zawarta w wyjątku
+     */
     private AppointmentException(String message) {
         super(message);
     }
 
+    /**
+     * Tworzy nową instancję klasy wyjątku AppointmentException.
+     *
+     * @param message wiadomość zawarta w wyjątku
+     * @param cause   przyczyna wystąpienia wyjątku
+     */
+    private AppointmentException(String message, Throwable cause) {
+        super(message, cause);
     /**
      * Zwraca wyjątek z komunikatem {@link I18n#APPOINTMENT_NOT_FOUND}.
      *
@@ -133,6 +149,14 @@ public class AppointmentException extends AppBaseException {
      * @return wyjątek typu AppointmentException
      */
     public static AppointmentException appointmentCreationFailed() {
-        return new AppointmentException(APPOINTMENT_SLOT_CREATION_FAILED);
+        return new AppointmentException(I18n.APPOINTMENT_SLOT_CREATION_FAILED);
+    }
+
+    /**
+     * Wyjątek nieaktywnego konta dla wizyty, lub gdy konto nie jest pacjentem.
+     * @return  wyjątek AppointmentException
+     */
+    public static AppointmentException appointmentNotDoctorOrInactive() {
+        return new AppointmentException(I18n.APPOINTMENT_NOT_DOCTOR_OR_INACTIVE);
     }
 }

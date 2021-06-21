@@ -1,0 +1,15 @@
+@media all and (min-width: 480px) {
+    .EditAppointmentSlot {
+        padding: 60px 0;
+    }
+
+    .EditAppointmentSlot form {
+        margin: 0 auto;
+        max-width: 320px;
+    }
+
+    .EditAppointmentSlotRefreshButton {
+        text-align: end;
+    }
+
+}

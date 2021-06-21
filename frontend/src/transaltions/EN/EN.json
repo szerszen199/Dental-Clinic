@@ -191,7 +191,7 @@
   "appointment_was_booked": "The selected visit has already been booked. Refresh the page!",
   "appointment_id_null": "Choose a visit",
   "appointment_slot_removed_successfully": "The appointment date has been correctly deleted",
-  "appointment_slot_removed_unsuccessfully": "Visit could not be deleted"
+  "appointment_slot_removed_unsuccessfully": "Visit could not be deleted",
   "get_active_patients_failed": "Unable to retrieve patients list",
   "Patients List": "Patients List",
   "Select doctor": "Select doctor",
@@ -226,5 +226,9 @@
   "get_all_scheduled_appointments_failed": "Get all scheduled appointments failed",
   "appointment_slot_creation_failed": "Unable to create appointment slot",
   "no_access_level": "Access level has been revoked",
-  "patients_account_list": "Patient's Accounts"
+  "patients_account_list": "Patient's Accounts",
+  "Edit appointment slot": "Edit appointment slot",
+  "Question edit appointment slot": "Do you want to edit appointment slot?",
+  "appointment_slot_edited_successfully": "Appointment slot edited successfully",
+  "appointment_slot_edit_failed": "Appointment slot edit failed"
 }
