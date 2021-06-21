@@ -195,5 +195,6 @@
   "DateTime past error": "Date and Time must be from the future!",
   "Doctor blank error": "You have to select doctor!",
   "appointment_slot_created_successfully": "Appointment slot created successfully",
-  "appointment_slot_creation_failed": "Unable to create appointment slot"
+  "appointment_slot_creation_failed": "Unable to create appointment slot",
+  "no_access_level": "Access level has been revoked"
 }
