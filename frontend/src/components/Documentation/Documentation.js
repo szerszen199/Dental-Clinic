@@ -88,9 +88,7 @@ class DocumentationListWithoutTranslation extends React.Component {
     makeDeleteDocumentationRequest(id) {
         const {t} = this.props;
         let self = this;
-        let title = "";
-        let question = "";
-        confirmationAlerts(title, question).then((confirmed) => {
+        confirmationAlerts(t("Warning"), t("delete_documentation_entry")).then((confirmed) => {
             if (confirmed) {
                 axios.post(process.env.REACT_APP_BACKEND_URL + "documentation/delete", {
                     id: id,
@@ -160,11 +158,6 @@ class DocumentationListWithoutTranslation extends React.Component {
         ]
 
         return <BootstrapTable striped keyField='id' columns={columns} data={this.state.documentation}/>;
-    }
-
-    renderNull() {
-        const {t} = this.props;
-        return <div>{t('Loading')}</div>
     }
 
     render() {
