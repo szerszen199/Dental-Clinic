@@ -2,12 +2,13 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.NotImplementedException;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
@@ -26,15 +27,15 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AppointmentFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.DoctorRatingFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
-import javax.annotation.security.RolesAllowed;
 
 /**
  * Klasa implementująca interfejs menadżera wizyt.
  */
 @Stateful
-@PermitAll
+@RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.PATIENT})
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
 public class AppointmentManagerImplementation extends AbstractManager implements AppointmentManager {
@@ -47,6 +48,9 @@ public class AppointmentManagerImplementation extends AbstractManager implements
 
     @Inject
     private DoctorRatingFacade doctorRatingFacade;
+
+    @Inject
+    private HttpServletRequest request;
 
     @Inject
     private LoggedInAccountUtil loggedInAccountUtil;
@@ -102,9 +106,22 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         }
     }
 
+    @RolesAllowed({I18n.RECEPTIONIST})
     @Override
-    public void addAppointmentSlot(Appointment appointment) {
-        throw new NotImplementedException();
+    public void addAppointmentSlot(Appointment appointment) throws AccountException, AppointmentException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
+        appointment.setCreatedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        appointment.setCreatedBy(account);
+        try {
+            appointmentFacade.create(appointment);
+        } catch (Exception e) {
+            throw AppointmentException.appointmentCreationFailed();
+        }
     }
 
     @Override
@@ -190,6 +207,11 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         }
 
 
+    }
+
+    @Override
+    public List<Account> getAllPatients() {
+        return null;
     }
 
     @RolesAllowed(I18n.DOCTOR)

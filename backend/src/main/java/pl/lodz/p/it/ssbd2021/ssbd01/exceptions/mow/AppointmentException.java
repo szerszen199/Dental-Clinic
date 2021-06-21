@@ -3,6 +3,8 @@ package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_SLOT_CREATION_FAILED;
+
 /**
  * Klasa wyjątku dla wizyty.
  */
@@ -87,5 +89,14 @@ public class AppointmentException extends AppBaseException {
      */
     public static AppointmentException getOwnAppointmentsException() {
         return new AppointmentException(I18n.GET_OWN_APPOINTMENTS_FAILED);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę utworzenia terminu wizyty, która się nie powiodła.
+     *
+     * @return wyjątek typu AppointmentException
+     */
+    public static AppointmentException appointmentCreationFailed() {
+        return new AppointmentException(APPOINTMENT_SLOT_CREATION_FAILED);
     }
 }
