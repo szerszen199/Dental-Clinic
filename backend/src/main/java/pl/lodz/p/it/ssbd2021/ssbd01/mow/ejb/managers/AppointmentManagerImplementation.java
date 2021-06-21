@@ -1,11 +1,18 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
 import org.apache.commons.lang3.NotImplementedException;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorRating;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
@@ -16,17 +23,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AppointmentFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.DoctorRatingFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
-
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Klasa implementująca interfejs menadżera wizyt.
@@ -42,9 +38,6 @@ public class AppointmentManagerImplementation extends AbstractManager implements
 
     @Inject
     private AccountFacade accountFacade;
-
-    @Inject
-    private LoggedInAccountUtil loggedInAccountUtil;
 
     @Inject
     private DoctorRatingFacade doctorRatingFacade;

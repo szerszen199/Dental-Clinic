@@ -1,52 +1,38 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.cdi.endpoints;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AvailableAppointmentResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers.AppointmentManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
-
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.EJBTransactionRolledbackException;
-import javax.ejb.Stateful;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.ws.rs.GET;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import java.util.List;
-import java.util.stream.Collectors;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.MessageResponseDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.RemoveAppointmentSlotRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AvailableAppointmentResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers.AppointmentManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.util.AppointmentTransactionRepeater;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 
 /**
  * Typ AppointmentEndpoint - punkt dostępowy dla zapytań związanych z wizytami i lekarzami.
- */
-@Path("appointment")
-@Stateful
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.MessageResponseDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.AppointmentTransactionRepeater;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.RemoveAppointmentSlotRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers.AppointmentManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
-
-/**
- * Typ AppointmentEndpoint - dla wizyt.
  */
 @Path("appointment")
 @Stateful
@@ -59,6 +45,9 @@ public class AppointmentEndpoint {
 
     @Inject
     private LoggedInAccountUtil loggedInAccountUtil;
+
+    @Inject
+    private AppointmentTransactionRepeater appointmentTransactionRepeater;
 
     /**
      * Pobiera listę lekarz i ich ocen.
@@ -100,6 +89,7 @@ public class AppointmentEndpoint {
 
     /**
      * Pobiera listę wolnych przyszłych terminów wizyt dla lekarza  wywołującego metodę.
+     *
      * @return lista przyszłych terminów wizyt.
      */
     @GET
@@ -115,8 +105,6 @@ public class AppointmentEndpoint {
         }
         return Response.ok().entity(appointments).build();
     }
-
-    private AppointmentTransactionRepeater appointmentTransactionRepeater;
 
     /**
      * Usuwa dostępny termin wizyty.
