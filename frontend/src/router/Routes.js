@@ -11,7 +11,7 @@ import GuestHomeRoute from "./GuestHomeRoute";
 import Account from "../components/Account/OwnAccount/Account"
 import AccountsList from "../components/AccountsList/AccountsList";
 import Prescription from "../components/Prescription/Prescription"
-import MyAppointment from "../components/Appointment/MyAppointment/MyAppointment";
+import MyAppointment from "../components/Appointment/MyAppointments/MyAppointments";
 import PlanAppointment from "../components/Appointment/PlanAppointment/PlanAppointment";
 import ListDoctors from "../components/Appointment/ListDoctors/ListDoctors";
 import HomeRoute from "./HomeRoute";
