@@ -1,6 +1,4 @@
 import React, {Suspense} from "react";
-import "./AccountsList.css";
-import {makeAccountsListRequest} from "./AccountsListRequest";
 import {withTranslation} from "react-i18next";
 import BootstrapTable from 'react-bootstrap-table-next';
 import {Button} from "react-bootstrap";
@@ -9,8 +7,10 @@ import {FiRefreshCw} from "react-icons/fi";
 import edit from "../../assets/edit.png";
 import {Input} from "semantic-ui-react";
 import {Fragment} from "react";
+import {makeAccountsListRequest} from "./AccountsListRequest";
 
-class AccountsListWithoutTranslation extends React.Component {
+
+class DocumentationWithoutTranslation extends React.Component {
 
 
     constructor(props) {
@@ -84,7 +84,7 @@ class AccountsListWithoutTranslation extends React.Component {
 
     linkEdit = (cell, row, rowIndex, formatExtraData) => {
         return (
-            <Link to={"/other-account/" + this.state.accountsList[rowIndex].login}>
+            <Link to={"/account-documentation/" + this.state.accountsList[rowIndex].login}>
                 <Button variant="outline-secondary">
                     <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}/>
                 </Button>
@@ -109,7 +109,7 @@ class AccountsListWithoutTranslation extends React.Component {
 
     render() {
         const {t} = this.props;
-        document.title = t("Dental Clinic") + " - " + t("Users Accounts");
+        document.title = t("Dental Clinic") + " - " + t("Documentation Entries");
         return <Fragment>
             <div className="account-refresh-button-div">
                 {this.renderButton()}
@@ -127,12 +127,12 @@ class AccountsListWithoutTranslation extends React.Component {
 }
 
 
-const AccountsListTr = withTranslation()(AccountsListWithoutTranslation)
+const DocumentationTr = withTranslation()(DocumentationWithoutTranslation)
 
 export default function AccountsList() {
     return (
         <Suspense fallback="loading">
-            <AccountsListTr/>
+            <DocumentationTr/>
         </Suspense>
     );
 }
