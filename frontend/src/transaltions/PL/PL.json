@@ -184,5 +184,7 @@
   "login_not_in_pattern": "W loginie użytkownika występują nieprawidłowe znaki",
   "forbidden": "Zakazane",
   "internal_server_error": "Błąd Serwera",
-  "not_found":  "Zasób Nieznaleziony"
+  "not_found":  "Zasób Nieznaleziony",
+  "get_active_patients_failed": "Nie udało się pobrać listy pacjentów",
+  "Patients List": "Lista pacjentów"
 }

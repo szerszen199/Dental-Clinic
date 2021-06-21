@@ -184,5 +184,7 @@
   "login_not_in_pattern": "Username contains invalid characters",
   "forbidden": "Forbidden access",
   "internal_server_error": "Server Error",
-  "not_found": "Resource not found"
+  "not_found": "Resource not found",
+  "get_active_patients_failed": "Unable to retrieve patients list",
+  "Patients List": "Patients List"
 }
