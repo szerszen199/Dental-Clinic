@@ -34,11 +34,12 @@ public class DocumentationInfoResponseDTO {
      * @throws InvalidKeyException       błędny klucz do dekodowania
      */
     public DocumentationInfoResponseDTO(MedicalDocumentation documentation,
+                                        List<DocumentationEntry> documentationEntryList,
                                         Encryptor encryptor,
                                         EntityIdentitySignerVerifier entityIdentitySignerVerifier)
             throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         documentationEntries = new ArrayList<>();
-        for (DocumentationEntry documentationEntry : documentation.getDocumentationEntryCollection()) {
+        for (DocumentationEntry documentationEntry : documentationEntryList) {
             documentationEntries.add(new DocumentationEntryResponseDTO(documentationEntry, encryptor, entityIdentitySignerVerifier));
         }
         this.patientUsername = documentation.getPatient().getLogin();
