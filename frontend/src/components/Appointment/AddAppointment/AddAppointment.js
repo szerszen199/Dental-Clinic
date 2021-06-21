@@ -41,7 +41,6 @@ class AddAppointmentWithoutTranslation extends React.Component {
         }
 
         function findDoctorErrors() {
-            console.log(t.state.doctor);
             if (t.state.doctor == null || t.state.doctor === '') {
                 newErrors.doctor = "Doctor blank error";
             }
@@ -66,7 +65,6 @@ class AddAppointmentWithoutTranslation extends React.Component {
     handleSubmit(title, question, t) {
         return function (event) {
             event.preventDefault();
-            console.log(this.state.dateTime);
             const newErrors = this.findFormErrors(this);
 
             if (Object.keys(newErrors).length > 0) {
@@ -85,7 +83,6 @@ class AddAppointmentWithoutTranslation extends React.Component {
 
     renderDoctors() {
         const {t} = this.props;
-        console.log(this.state.doctorsList);
         return (
                 <Form.Group size="lg" controlId="doctor">
                     <Form.Label className="required">{t("Select doctor")}</Form.Label>

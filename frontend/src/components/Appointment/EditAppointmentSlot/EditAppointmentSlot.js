@@ -8,10 +8,7 @@ import {editAppointmentSlotRequest} from "./EditAppointmentSlotRequest";
 import {makeDoctorsListRequest} from "../ListDoctors/DoctorListRequest";
 import Cookies from "js-cookie";
 import confirmationAlerts from "../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
-import {makeAccountsListRequest} from "../../AccountsList/AccountsListRequest";
 import {FiRefreshCw} from "react-icons/fi";
-import {Col, Container, Row} from "react-bootstrap";
-import {Label} from "semantic-ui-react";
 import * as moment from "moment";
 import errorAlerts from "../../Alerts/ErrorAlerts/ErrorAlerts";
 
@@ -52,7 +49,6 @@ class EditAppointmentSlotWithoutTranslation extends React.Component {
         }
 
         function findDoctorErrors() {
-            console.log(t.state.doctor);
             if (t.state.doctor == null || t.state.doctor === '') {
                 newErrors.doctor = "Doctor blank error";
             }
@@ -98,7 +94,6 @@ class EditAppointmentSlotWithoutTranslation extends React.Component {
     handleSubmit(title, question, t) {
         return function (event) {
             event.preventDefault()
-            console.log(this.state.errors)
             if (this.state.isDisabled === true) {
                 this.setEditable()
             } else {
@@ -133,10 +128,9 @@ class EditAppointmentSlotWithoutTranslation extends React.Component {
         });
     }
 
-    refreshList(self) {
-        makeAccountsListRequest().then((response) => {
-            self.setState({accountsList: response});
-        })
+    refreshList() {
+        this.makeGetDoctorsRequest();
+        this.makeGetAppointmentRequest();
     }
 
     makeGetDoctorsRequest() {
@@ -147,7 +141,6 @@ class EditAppointmentSlotWithoutTranslation extends React.Component {
 
     renderDoctors() {
         const {t} = this.props;
-        console.log(this.state.doctorsList);
         return (
             <Form.Group size="lg" controlId="doctor">
                 <Form.Label className="required">{t("Select doctor")}</Form.Label>
@@ -177,8 +170,8 @@ class EditAppointmentSlotWithoutTranslation extends React.Component {
     }
 
     renderButton() {
-        return <Button variant={"secondary"} size="lg" onClick={() => {
-            this.makeGetAccountRequest()
+        return <Button variant={"secondary"} size="sm" onClick={() => {
+            this.refreshList();
         }}>
             <FiRefreshCw/>
         </Button>
@@ -190,6 +183,9 @@ class EditAppointmentSlotWithoutTranslation extends React.Component {
         return (
             <div className="EditAppointmentSlot">
                 <Form onSubmit={this.handleSubmit(t("Warning"), t("Question edit appointment slot"), t)}>
+                    <div class="EditAppointmentSlotRefreshButton">
+                        {this.renderButton()}
+                    </div>
                     <Form.Group size="lg" controlId="dateTime">
                         <Form.Label className="required">{t("Date and Time")}</Form.Label>
                         <Form.Control

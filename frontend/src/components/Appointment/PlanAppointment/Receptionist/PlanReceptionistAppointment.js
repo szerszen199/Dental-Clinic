@@ -41,7 +41,7 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
                 text: t('ID'),
                 style: {verticalAlign: "middle"},
                 sort: true,
-                hidden: false
+                hidden: true
             },
             {
                 dataField: 'date',
