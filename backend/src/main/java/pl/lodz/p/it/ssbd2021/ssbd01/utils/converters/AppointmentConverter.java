@@ -14,7 +14,7 @@ public class AppointmentConverter {
      * @param createAppointmentSlotRequestDTO obiekt typu CreateAppointmentSlotRequestDTO
      * @return Appointment
      */
-    public static Appointment createAccountEntityFromDto(Account doctor, CreateAppointmentSlotRequestDTO createAppointmentSlotRequestDTO) {
+    public static Appointment createAppointmentEntityFromDto(Account doctor, CreateAppointmentSlotRequestDTO createAppointmentSlotRequestDTO) {
         return new Appointment(doctor, createAppointmentSlotRequestDTO.getAppointmentDate());
     }
 }

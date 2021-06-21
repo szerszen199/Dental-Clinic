@@ -4,9 +4,11 @@ import java.util.List;
 import javax.ejb.Local;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 
 /**
@@ -59,6 +61,14 @@ public interface AppointmentManager {
     List<Appointment> getBookedAppointments();
 
     /**
+     * Pobiera wizytę o {@param id}.
+     *
+     * @param id klucz główny wizyty
+     * @return umówione wizyty
+     */
+    Appointment findById(Long id) throws AppBaseException;
+
+    /**
      * Dodaje ocenę lekarza po wizycie.
      *
      * @param doctorId klucz główny lekarza
@@ -86,9 +96,9 @@ public interface AppointmentManager {
     /**
      * Modyfikuje slot wizyty.
      *
-     * @param appointment wolna wizyta
+     * @param newAppointment edytowana wizyta
      */
-    void editAppointmentSlot(Appointment appointment);
+    void editAppointmentSlot(AppointmentSlotEditRequestDTO newAppointment) throws AppointmentException;
 
     /**
      * Usuwa slot wizyty.

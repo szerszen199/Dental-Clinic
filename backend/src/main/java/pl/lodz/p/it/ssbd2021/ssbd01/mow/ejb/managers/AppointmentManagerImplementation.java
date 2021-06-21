@@ -16,8 +16,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorRating;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AccountFacade;
@@ -83,6 +83,11 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
+    public Appointment findById(Long id) throws AppBaseException {
+        return appointmentFacade.find(id);
+    }
+
+    @Override
     public void rateDoctor(Long doctorId, Double rate) {
         throw new NotImplementedException();
     }
@@ -105,12 +110,12 @@ public class AppointmentManagerImplementation extends AbstractManager implements
 
     @RolesAllowed({I18n.RECEPTIONIST})
     @Override
-    public void addAppointmentSlot(Appointment appointment) throws AccountException, AppointmentException {
+    public void addAppointmentSlot(Appointment appointment) throws AppointmentException {
         Account account;
         try {
             account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
         } catch (Exception e) {
-            throw AccountException.noSuchAccount(e);
+            throw AppointmentException.accountNotFound();
         }
         appointment.setCreatedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         appointment.setCreatedBy(account);
@@ -121,9 +126,69 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         }
     }
 
+    @RolesAllowed({I18n.RECEPTIONIST})
     @Override
-    public void editAppointmentSlot(Appointment appointment) {
-        throw new NotImplementedException();
+    public void editAppointmentSlot(AppointmentSlotEditRequestDTO newAppointment) throws AppointmentException {
+        Appointment appointment;
+        try {
+            appointment = appointmentFacade.find(newAppointment.getId());
+            if(appointment == null)
+            {
+                throw AppointmentException.appointmentNotFound();
+            }
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentNotFound();
+        }
+
+
+        if (!newAppointment.getVersion().equals(appointment.getVersion())) {
+            throw AppointmentException.versionMismatch();
+        }
+        if (newAppointment.getDoctorLogin() != null) {
+            Account doctor;
+            boolean isAccountActiveDoctor;
+            try {
+                doctor = accountFacade.findByLogin(newAppointment.getDoctorLogin());
+                isAccountActiveDoctor = doctor.getAccessLevels().stream()
+                        .anyMatch(accessLevel -> accessLevel.getLevel().equals(I18n.DOCTOR)
+                                && accessLevel.getActive());
+            } catch (AppBaseException e) {
+                throw AppointmentException.accountNotFound();
+            }
+
+            try {
+                if (doctor.getActive() && isAccountActiveDoctor) {
+                    appointment.setDoctor(doctor);
+                } else {
+                    throw AppointmentException.appointmentNotDoctorOrInactive();
+                }
+            } catch (AppointmentException e) {
+                throw AppointmentException.appointmentNotDoctorOrInactive();
+            }
+        }
+
+
+
+
+
+        if (newAppointment.getAppointmentDate() != null) {
+            appointment.setAppointmentDate(newAppointment.getAppointmentDate());
+        }
+
+        try {
+            appointment.setModifiedBy(accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+            appointment.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        } catch (Exception e) {
+            throw AppointmentException.accountNotFound();
+        }
+
+
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
+
     }
 
     @Override
