@@ -13,8 +13,6 @@ import Account from "../components/Account/OwnAccount/Account"
 import AccountsList from "../components/AccountsList/AccountsList";
 import Prescription from "../components/Prescription/Prescription"
 import MyAppointment from "../components/Appointment/MyAppointments/MyAppointments";
-import PlanAppointment from "../components/Appointment/PlanAppointment/PlanAppointment";
-import MyAppointment from "../components/Appointment/MyAppointment/MyAppointment";
 import PlanReceptionistAppointment from "../components/Appointment/PlanAppointment/Receptionist/PlanReceptionistAppointment";
 import PlanPatientAppointment from "../components/Appointment/PlanAppointment/Patient/PlanPatientAppointment";
 import ViewDoctorAppointmentSlots from "../components/Appointment/PlanAppointment/Doctor/ViewDoctorAppointmentSlots";
@@ -98,7 +96,6 @@ export default function Routes() {
                           component={ListDoctors}/>
             <PrivateRoute authed={isReceptionist()} path='/list-patients'
                           component={ListPatients}/>
-            <PrivateRoute authed={isPatient() || isReceptionist()} path='/available-appointments' component={AccountsList}/>
             <Route authed={isLoggedIn()} path='/activation-confirm/:token' component={AccountActivationConfirm}/>
             <Route authed={isLoggedIn()} path='/mail-change-confirm/:token' component={MailChangeConfirm}/>
             <Route authed={isLoggedIn()} path='/password-change-confirm/:token' component={PasswordChangeConfirm}/>
