@@ -45,7 +45,7 @@ public class ReservationEndpoint {
     @Path("reserve")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON})
-    @RolesAllowed({I18n.DOCTOR})
+    @RolesAllowed({I18n.RECEPTIONIST,I18n.PATIENT})
     public Response reserveAppointment(@NotNull @Valid BookAppointmentDto bookAppointmentDto) {
         try {
             appointmentManagerImplementation.bookAppointment(bookAppointmentDto);
