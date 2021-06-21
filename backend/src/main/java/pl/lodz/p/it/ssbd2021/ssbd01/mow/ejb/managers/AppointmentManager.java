@@ -74,6 +74,14 @@ public interface AppointmentManager {
     AllScheduledAppointmentsResponseDTO getScheduledAppointmentsByDoctor() throws AppointmentException;
 
     /**
+     * Pobiera wszystkie umówione wizyty dla zalogowanego pacjenta.
+     *
+     * @return umówione wizyty
+     * @throws AppointmentException appointment exception
+     */
+    AllScheduledAppointmentsResponseDTO getScheduledAppointmentsByPatient() throws AppointmentException;
+
+    /**
      * Dodaje ocenę lekarza po wizycie.
      *
      * @param doctorId klucz główny lekarza

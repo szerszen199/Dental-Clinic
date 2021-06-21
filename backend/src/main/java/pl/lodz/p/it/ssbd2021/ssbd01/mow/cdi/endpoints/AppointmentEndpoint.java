@@ -213,18 +213,39 @@ public class AppointmentEndpoint {
     }
 
     /**
-     * Pobiera listę wszystkich umówionych terminów wizyt.
+     * Pobiera listę wszystkich umówionych terminów wizyt dla zalogowanego lekarza.
      *
-     * @return DTO z listą wszystkich umówionych wizyt.
+     * @return DTO z listą wszystkich umówionych wizyt dla zalogowanego lekarza.
      */
     @GET
-    @RolesAllowed(I18n.RECEPTIONIST)
+    @RolesAllowed(I18n.DOCTOR)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("all-scheduled-appointments-by-doctor")
     public Response getAllScheduleAppointmentsByDoctor() {
         AllScheduledAppointmentsResponseDTO allScheduledAppointmentsResponseDTO;
         try {
             allScheduledAppointmentsResponseDTO = appointmentManager.getScheduledAppointmentsByDoctor();
+        } catch (AppointmentException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.GET_ALL_SCHEDULED_APPOINTMENTS_FAILED)).build();
+        }
+        return Response.ok().entity(allScheduledAppointmentsResponseDTO).build();
+    }
+
+    /**
+     * Pobiera listę wszystkich umówionych terminów wizyt dla zalogowanego pacjenta.
+     *
+     * @return DTO z listą wszystkich umówionych wizyt dla zalogowanego pacjenta.
+     */
+    @GET
+    @RolesAllowed(I18n.PATIENT)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("all-scheduled-appointments-by-patient")
+    public Response getAllScheduleAppointmentsByPatient() {
+        AllScheduledAppointmentsResponseDTO allScheduledAppointmentsResponseDTO;
+        try {
+            allScheduledAppointmentsResponseDTO = appointmentManager.getScheduledAppointmentsByPatient();
         } catch (AppointmentException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (Exception e) {

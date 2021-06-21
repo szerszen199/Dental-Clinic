@@ -118,6 +118,26 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
+    public AllScheduledAppointmentsResponseDTO getScheduledAppointmentsByPatient() throws AppointmentException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        } catch (Exception e) {
+            throw AppointmentException.accountNotFound();
+        }
+        try {
+            List<Appointment> appointments = appointmentFacade.findAllScheduledAppointmentsByPatient(account);
+            List<ScheduledAppointmentResponseDTO> scheduledAppointmentResponseDTOS = new ArrayList<>();
+            for (Appointment a : appointments) {
+                scheduledAppointmentResponseDTOS.add(new ScheduledAppointmentResponseDTO(a));
+            }
+            return new AllScheduledAppointmentsResponseDTO(scheduledAppointmentResponseDTOS);
+        } catch (AppBaseException e) {
+            throw AppointmentException.getAllScheduledAppointmentsException();
+        }
+    }
+
+    @Override
     public void rateDoctor(Long doctorId, Double rate) {
         throw new NotImplementedException();
     }
