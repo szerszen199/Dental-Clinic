@@ -1,6 +1,14 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.cdi.endpoints;
 
-import java.util.List;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AvailableAppointmentResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers.AppointmentManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
+
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateful;
@@ -12,26 +20,21 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers.AppointmentManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.utils.AppointmentTransactionRepeater;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.SignatureFilterBinding;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_OPTIMISTIC_LOCK_ERROR;
 
@@ -51,6 +54,9 @@ public class AppointmentEndpoint {
 
     @Inject
     private AppointmentTransactionRepeater appointmentTransactionRepeater;
+
+    @Inject
+    private LoggedInAccountUtil loggedInAccountUtil;
 
     /**
      * Pobiera listę lekarz i ich ocen.
@@ -118,6 +124,44 @@ public class AppointmentEndpoint {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.APPOINTMENT_EDIT_FAILED)).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_EDIT_SUCCESSFUL)).build();
+    }
+
+
+    /**
+     * Pobiera listę wszystkich wolnych przyszłych terminów wizyt.
+     *
+     * @return lista przyszłych terminów wizyt.
+     */
+    @GET
+    @RolesAllowed({I18n.RECEPTIONIST, I18n.PATIENT})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("available")
+    public Response getAllAvailableAppointmentsSlotsList() {
+        List<AvailableAppointmentResponseDTO> appointments;
+        try {
+            appointments = appointmentManager.getAllAppointmentsSlots().stream().map(AvailableAppointmentResponseDTO::new).collect(Collectors.toList());
+        } catch (AppointmentException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.ok().entity(appointments).build();
+    }
+
+    /**
+     * Pobiera listę wolnych przyszłych terminów wizyt dla lekarza  wywołującego metodę.
+     * @return lista przyszłych terminów wizyt.
+     */
+    @GET
+    @RolesAllowed(I18n.DOCTOR)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("available-own")
+    public Response getOwnAvailableAppointmentsSlotsList() {
+        List<AvailableAppointmentResponseDTO> appointments;
+        try {
+            appointments = appointmentManager.getOwnAppointmentsSlots().stream().map(AvailableAppointmentResponseDTO::new).collect(Collectors.toList());
+        } catch (AppointmentException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.ok().entity(appointments).build();
     }
 
 }

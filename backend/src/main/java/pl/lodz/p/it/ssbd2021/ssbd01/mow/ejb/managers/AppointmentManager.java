@@ -12,6 +12,9 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 
+import javax.ejb.Local;
+import java.util.List;
+
 /**
  * Interfejs menadżera wizyt.
  */
@@ -120,4 +123,20 @@ public interface AppointmentManager {
      * @return true jeśli ostatnia transakcja się nie powiodła, false jeśli nie.
      */
     boolean isLastTransactionRollback();
+
+    /**
+     * Pobiera wszystkie dostępne terminy wizyty.
+     *
+     * @return dostępne terminy wizyt.
+     * @throws AppointmentException wyjątek.
+     */
+    List<Appointment> getAllAppointmentsSlots() throws AppointmentException;
+
+    /**
+     * Pobiera wszystkie dostępne terminy wizyty.
+     *
+     * @return dostępne terminy wizyt.
+     * @throws AppointmentException wyjątek.
+     */
+    List<Appointment> getOwnAppointmentsSlots() throws AppointmentException;
 }

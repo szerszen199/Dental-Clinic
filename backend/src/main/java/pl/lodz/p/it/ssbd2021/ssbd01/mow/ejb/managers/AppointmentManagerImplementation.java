@@ -14,9 +14,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorRating;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.PrescriptionException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
@@ -30,6 +28,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.DoctorRatingFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
+import javax.annotation.security.RolesAllowed;
 
 /**
  * Klasa implementująca interfejs menadżera wizyt.
@@ -178,6 +177,29 @@ public class AppointmentManagerImplementation extends AbstractManager implements
                     .collect(Collectors.toList());
         } catch (AppBaseException e) {
             throw PatientException.getActivePatients();
+        }
+    }
+
+    @RolesAllowed({I18n.RECEPTIONIST, I18n.PATIENT})
+    @Override
+    public List<Appointment> getAllAppointmentsSlots() throws AppointmentException {
+        try {
+            return appointmentFacade.findAllFutureUnassignedAppointmentsSlots();
+        } catch (AppBaseException e) {
+            throw AppointmentException.getAllAppointmentsException();
+        }
+
+
+    }
+
+    @RolesAllowed(I18n.DOCTOR)
+    @Override
+    public List<Appointment> getOwnAppointmentsSlots() throws AppointmentException {
+        try {
+            Account account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+            return appointmentFacade.findFutureUnassignedAppointmentSlotsForDoctor(account.getId());
+        } catch (AppBaseException e) {
+            throw AppointmentException.getOwnAppointmentsException();
         }
     }
 }
