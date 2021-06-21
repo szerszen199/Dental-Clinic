@@ -48,6 +48,7 @@ public class EditPrescriptionRequestDto implements SignableEntity {
     @Override
     public Map<String, String> getPayload() {
         Map<String, String> map = new HashMap<>();
+        map.put("id", String.valueOf(id));
         map.put("version", String.valueOf(getVersion()));
         return map;
     }
