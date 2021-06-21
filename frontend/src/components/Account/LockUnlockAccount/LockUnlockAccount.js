@@ -112,7 +112,7 @@ class LockAccountWithoutTranslation extends React.Component {
             })
             .then(result => this.setState({
                 isActivated: result.active
-            }))
+            })).then(window.location.reload())
     }
 
 
@@ -126,7 +126,7 @@ class LockAccountWithoutTranslation extends React.Component {
                 }
             }).then((response) => {
             successAlerts(t(response.data.message, response.status)).then(() => {
-                this.makeGetAccountRequest()
+                this.makeGetAccountRequest();
             })
         })
             .catch((response) => {
