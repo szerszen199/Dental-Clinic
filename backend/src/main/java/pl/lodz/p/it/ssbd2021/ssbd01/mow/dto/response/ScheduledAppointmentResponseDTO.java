@@ -35,16 +35,16 @@ public class ScheduledAppointmentResponseDTO {
      *
      * @param appointment termin wizyty na podstawie którego tworzone jest DTO.
      */
-    public ScheduledAppointmentResponseDTO(Appointment appointment, Account patient, Account doctor) {
+    public ScheduledAppointmentResponseDTO(Appointment appointment) {
         this.id = appointment.getId();
         this.doctorLogin = appointment.getDoctor().getLogin();
         this.patientLogin = appointment.getPatient().getLogin();
         this.date = appointment.getAppointmentDate();
         this.version = appointment.getVersion();
-        this.patientFirstName = patient.getFirstName();
-        this.patientLastName = patient.getLastName();
-        this.doctorFirstName = doctor.getLastName();
-        this.doctorLastName = doctor.getLastName();
+        this.patientFirstName = appointment.getPatient().getFirstName();
+        this.patientLastName = appointment.getPatient().getLastName();
+        this.doctorFirstName = appointment.getDoctor().getLastName();
+        this.doctorLastName = appointment.getDoctor().getLastName();
     }
 
     public ScheduledAppointmentResponseDTO() {

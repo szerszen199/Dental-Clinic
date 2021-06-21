@@ -9,6 +9,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AllScheduledAppointmentsResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 
@@ -61,7 +62,7 @@ public interface AppointmentManager {
      *
      * @return umówione wizyty
      */
-    List<Appointment> getBookedAppointments();
+    AllScheduledAppointmentsResponseDTO getScheduledAppointments() throws AppointmentException;
 
     /**
      * Dodaje ocenę lekarza po wizycie.
