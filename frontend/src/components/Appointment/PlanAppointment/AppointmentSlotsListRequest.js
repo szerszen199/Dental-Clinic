@@ -8,7 +8,7 @@ export async function makeAppointmentSlotsListRequest() {
     let data = await getData(token);
     let appointments = []
     for (const i in data) {
-        appointments.push(new AppointmentSlot(data[i].id, moment(data[i].date).format("DD.MM.YYY HH:mm"), data[i].doctor))
+        appointments.push(new AppointmentSlot(data[i].id, moment(data[i].date).format("DD.MM.YYYY HH:mm"), data[i].doctor))
     }
     return appointments
 }
@@ -18,7 +18,7 @@ export async function makeDoctorAppointmentSlotsListRequest() {
     let data = await getDoctorData(token);
     let appointments = []
     for (const i in data) {
-        appointments.push(new AppointmentSlot(data[i].id, moment(data[i].date).format("DD.MM.YYY HH:mm"), data[i].doctor.firstName + " "+ data[i].doctor.lastName))
+        appointments.push(new AppointmentSlot(data[i].id, moment(data[i].date).format("DD.MM.YYYY HH:mm"), data[i].doctor.firstName + " "+ data[i].doctor.lastName))
     }
     return appointments
 }

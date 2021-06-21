@@ -41,9 +41,10 @@ public interface AppointmentManager {
     /**
      * Modyfikuje slot wizyty.
      *
-     * @param appointment modyfikowana wizyta
+     * @param newAppointment edytowana wizyta
+     * @throws AppointmentException wyjątek typu AppointmentException
      */
-    void editAppointmentSlot(Appointment appointment);
+    void editAppointmentSlot(AppointmentSlotEditRequestDTO newAppointment) throws AppointmentException;
 
     /**
      * Pobiera wszystkie wolne wizyty.
@@ -84,6 +85,15 @@ public interface AppointmentManager {
     AllScheduledAppointmentsResponseDTO getScheduledAppointmentsByPatient() throws AppointmentException;
 
     /**
+     * Pobiera wizytę o {@param id}.
+     *
+     * @param id klucz główny wizyty
+     * @return umówione wizyty
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    Appointment findById(Long id) throws AppBaseException;
+
+    /**
      * Dodaje ocenę lekarza po wizycie.
      *
      * @param doctorId klucz główny lekarza
@@ -103,10 +113,9 @@ public interface AppointmentManager {
      * Dodaje slot na wizytę.
      *
      * @param appointment wolna wizyta
-     * @throws AccountException wyjątek typu AccountException
      * @throws AppointmentException wyjątek typu AppointmentException
      */
-    void addAppointmentSlot(Appointment appointment) throws AccountException, AppointmentException;
+    void addAppointmentSlot(CreateAppointmentSlotRequestDTO appointment) throws AppointmentException;
 
     /**
      * Modyfikuje umówioną wizyty.
@@ -138,13 +147,6 @@ public interface AppointmentManager {
      * @throws PatientException wyjątek typu PatientException
      */
     List<PatientResponseDTO> getActivePatients() throws PatientException;
-
-    /**
-     * Sprawdza czy ostatnia transakcja się powiodła.
-     *
-     * @return true jeśli ostatnia transakcja się nie powiodła, false jeśli nie.
-     */
-    boolean isLastTransactionRollback();
 
     /**
      * Pobiera wszystkie dostępne terminy wizyty.

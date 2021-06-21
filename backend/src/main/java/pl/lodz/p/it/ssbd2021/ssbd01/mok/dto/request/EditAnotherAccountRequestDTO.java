@@ -5,7 +5,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -60,7 +60,7 @@ public class EditAnotherAccountRequestDTO extends EditOwnAccountRequestDTO {
     @Override
     @JsonbTransient
     public Map<String, String> getPayload() {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new LinkedHashMap<>();
         map.put("version", String.valueOf(getVersion()));
         map.put("login", getLogin());
         return map;

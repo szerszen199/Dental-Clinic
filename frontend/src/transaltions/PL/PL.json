@@ -227,4 +227,8 @@
   "appointment_id_null": "Wybierz wizytę",
   "appointment_slot_removed_successfully": "Termin wizyty został poprawnie usunięty",
   "appointment_slot_removed_unsuccessfully": "Nie udało się usunąć wizyty"
+  "Edit appointment slot": "Edytuj termin wizyty",
+  "Question edit appointment slot": "Czy chcesz edytować termin wizyty?",
+  "appointment_slot_edited_successfully": "Termin wizyty został zmieniony",
+  "appointment_slot_edit_failed": "Nie udało się zmienić terminu wizyty"
 }
