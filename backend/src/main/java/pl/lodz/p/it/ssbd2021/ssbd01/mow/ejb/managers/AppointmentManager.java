@@ -115,13 +115,6 @@ public interface AppointmentManager {
     List<PatientResponseDTO> getActivePatients() throws PatientException;
 
     /**
-     * Pobiera wszystkich pacjentów.
-     *
-     * @return lista wszystkich pacjentów
-     */
-    List<Account> getAllPatients();
-
-    /**
      * Sprawdza czy ostatnia transakcja się powiodła.
      *
      * @return true jeśli ostatnia transakcja się nie powiodła, false jeśli nie.
