@@ -89,7 +89,7 @@ public class AppointmentEndpoint {
         }
         try {
             appointmentTransactionRepeater.repeatTransaction(() -> appointmentManager
-                    .editBookedAppointment(appointmentEditRequestDto), appointmentManager);
+                    .editBookedAppointment(appointmentEditRequestDto));
         } catch (AppointmentException e) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         } catch (Exception e) {
