@@ -172,4 +172,9 @@ public class I18n {
     public static final String APPOINTMENT_ID_NULL = "appointment_id_null";
     public static final String APPOINTMENT_SLOT_REMOVED_SUCCESSFULLY = "appointment_slot_removed_successfully";
     public static final String APPOINTMENT_SLOT_REMOVED_UNSUCCESSFULLY = "appointment_slot_removed_unsuccessfully";
+    public static final String INVALID_MEDICATIONS = "invalid_medications";
+    public static final String PRESCRIPTION_CREATION_FAILURE = "prescription_creation_failure";
+    public static final String PRESCRIPTION_CREATED_SUCCESSFULLY = "prescription_created_successfully";
+    public static final String EXPIRATION_DATE_NULL = "expiration_date_null";
+    public static final String MEDICATIONS_NULL = "medications_null";
 }
