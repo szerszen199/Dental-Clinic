@@ -137,6 +137,8 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         if (!appointmentEditRequestDto.getVersion().equals(appointment.getVersion())) {
             throw AppointmentException.versionMismatch();
         }
+
+
         try {
             Account account;
             if (appointmentEditRequestDto.getPatientLogin() != null) {
@@ -160,6 +162,10 @@ public class AppointmentManagerImplementation extends AbstractManager implements
             throw AppointmentException.accountNotFound(e.getCause());
         } catch (Exception e) {
             throw AppointmentException.appointmentEditFailed();
+        }
+
+        if (appointmentEditRequestDto.getAppointmentDate() != null) {
+            appointment.setAppointmentDate(appointmentEditRequestDto.getAppointmentDate());
         }
 
         try {
