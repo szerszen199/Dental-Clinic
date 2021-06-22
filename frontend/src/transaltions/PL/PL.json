@@ -219,5 +219,10 @@
   "new_entry": "Nowy wpis",
   "question_add_new_entry": "Czy na pewno chcesz dodać nowy wpis dokuemntacji?",
   "title_add_new_entry": "Dodawanie nowego wpisu dokumentacji",
-  "not_empty": "Pola nie mogą być puste"
+  "not_empty": "Pola nie mogą być puste",
+  "documentation_entry_created_successfully": "Dodanie nowego wpisu dokumentacji powiodło się",
+  "documentation_entry_created_unsuccessfully": "Dodanie nowego wpisu dokumentacji nie powiodło się",
+  "medical_documentation_not_found": "Dokumentacja medyczna dla tego pacjenta nie istnieje",
+  "encrypting_failed": "Szyfrowanie danych nie powiodło się",
+  "documentation_entry_creation_failed": "Dodanie nowego wpisu dokumentacji nie powiodło się"
 }

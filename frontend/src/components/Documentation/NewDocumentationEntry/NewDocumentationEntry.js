@@ -16,8 +16,17 @@ class NewDocumentationEntryWithoutTranslation extends React.Component {
             patient: this.props.accId,
             isDisabled: true,
             wasDone: "",
-            toBeDone: ""
+            toBeDone: "",
+            errors: {},
         }
+    }
+
+    setValid(field) {
+        var array = this.state.errors;
+        if (!!array[field]) {
+            array[field] = null;
+        }
+        this.setState({errors: array})
     }
 
     makeAddNewEntryRequest(t) {
@@ -42,23 +51,47 @@ class NewDocumentationEntryWithoutTranslation extends React.Component {
             })
             .catch((response) => {
                 if (response.response) {
+                    console.log(response.response.data.message)
                     errorAlerts(t(response.response.data.message), response.response.status.toString(10));
                 }
             });
+    }
+
+    findFormErrors(self, t) {
+        const newErrors = {}
+
+        function findToBeDoneErrors() {
+            if (self.state.toBeDone === '') {
+                newErrors.toBeDone = t("not_empty");
+            }
+        }
+
+        function findWasDoneErrors() {
+            if (self.state.wasDone === '') {
+                newErrors.wasDone = t("not_empty");
+            }
+        }
+
+        findWasDoneErrors();
+        findToBeDoneErrors();
+
+        return newErrors;
     }
 
 
     handleSubmit(t) {
         return function (event) {
             event.preventDefault()
-            if (this.state.wasDone !== "" && this.state.toBeDone !== "") {
+            const newErrors = this.findFormErrors(this, t);
+            console.log(newErrors);
+            if (Object.keys(newErrors).length > 0) {
+                this.setState({errors: newErrors})
+            } else {
                 confirmationAlerts(t("title_add_new_entry"), t("question_add_new_entry")).then((confirmed) => {
                     if (confirmed) {
                         this.makeAddNewEntryRequest(t);
                     }
                 });
-            } else {
-                errorAlerts(t("Warning"), t(""));
             }
         }.bind(this);
     }
@@ -79,8 +112,13 @@ class NewDocumentationEntryWithoutTranslation extends React.Component {
                             onChange={
                                 (e) => {
                                     this.setState({toBeDone: e.target.value});
+                                    this.setValid('toBeDone');
                                 }}
+                            isInvalid={!!this.state.errors.toBeDone}
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {t(this.state.errors.toBeDone)}
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group size="lg" controlId="toBeDone">
                         <Form.Label className="required">{t("was_done")}</Form.Label>
@@ -91,8 +129,13 @@ class NewDocumentationEntryWithoutTranslation extends React.Component {
                             onChange={
                                 (e) => {
                                     this.setState({wasDone: e.target.value});
+                                    this.setValid('wasDone');
                                 }}
+                            isInvalid={!!this.state.errors.wasDone}
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {t(this.state.errors.wasDone)}
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group>
                         <Button block size="lg" type="submit">
