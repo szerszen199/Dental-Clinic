@@ -13,6 +13,8 @@ import editIcon from "../../assets/edit.png";
 import {FiRefreshCw} from "react-icons/fi";
 import confirmationAlerts from "../Alerts/ConfirmationAlerts/ConfirmationAlerts";
 import successAlerts from "../Alerts/SuccessAlerts/SuccessAlerts";
+import {Link} from "react-router-dom";
+import edit from "../../assets/edit.png";
 
 
 class DocumentationListWithoutTranslation extends React.Component {
@@ -123,13 +125,11 @@ class DocumentationListWithoutTranslation extends React.Component {
 
     linkEdit = (cell, row, rowIndex, formatExtraData) => {
         return (
-            <Button
-                variant="outline-secondary">
-                <img src={editIcon} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}
-                     onClick={() => {
-                         this.makeEditEntryRequest(this.props, this.state.documentation[rowIndex].id)
-                     }}/>
-            </Button>
+            <Link to={"/edit-documentation-entry/" + this.state.accId + "/" + this.state.documentation[rowIndex].id}>
+                <Button variant="outline-secondary">
+                    <img src={editIcon} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}/>
+                </Button>
+            </Link>
         );
     }
 
@@ -149,12 +149,12 @@ class DocumentationListWithoutTranslation extends React.Component {
             {
                 dataField: 'wasDone',
                 text: t('was_done'),
-                style: {verticalAlign: "middle"}
+                style: {verticalAlign: "middle"},
             },
             {
                 dataField: 'toBeDone',
                 text: t('to_be_done'),
-                style: {verticalAlign: "middle"}
+                style: {verticalAlign: "middle"},
             },
             {
                 dataField: 'doctorLogin',
@@ -170,17 +170,14 @@ class DocumentationListWithoutTranslation extends React.Component {
             },
             {
                 dataField: 'actionsEdit',
-                text: t('Save'),
+                text: t('Edit'),
                 headerStyle: {verticalAlign: "middle"},
                 style: {textAlign: "center"},
                 formatter: this.linkEdit,
             }
         ]
 
-        return <BootstrapTable striped keyField='id'
-                               columns={columns}
-                               data={this.data.documentation}
-        />;
+        return <BootstrapTable striped keyField='id' columns={columns} data={this.state.documentation}/>;
     }
 
 
