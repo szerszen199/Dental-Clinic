@@ -78,12 +78,12 @@ public class Appointment extends AbstractEntity implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "reminder_mail_sent", nullable = false)
-    private Boolean reminderMailSent;
+    private Boolean reminderMailSent = false;
 
     @Basic(optional = false)
     @NotNull
     @Column(name = "rate_mail_sent", nullable = false)
-    private Boolean rateMailSent;
+    private Boolean rateMailSent = false;
 
     public LocalDateTime getConfirmationDateTime() {
         return confirmationDateTime;

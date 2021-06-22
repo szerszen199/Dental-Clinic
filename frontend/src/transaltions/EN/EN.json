@@ -301,5 +301,10 @@
   "delete_appointment": "Delete appointment",
   "title_reserve_appointment": "Reserve appointment",
   "reserve_appointment_text": "Are you sure you want to reserve appointment ?",
-  "appointment_reserved_successfully" : "Reservation successful"
+  "appointment_reserved_successfully" : "Reservation successful",
+  "text_confirm_appointment":"Are you sure you want to confirm an appointment?" ,
+  "title_confirm_appointment": "Warrning Appointment confirmation",
+  "appointment_is_in_past": "Appointment is in past",
+  "confirm_appointment": "Confirm appointment"
+
 }

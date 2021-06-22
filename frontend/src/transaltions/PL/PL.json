@@ -300,10 +300,11 @@
   "title_cancel_appointment": "Uwaga odwołanie wizyty",
   "text_cancel_appointment": "Czy napewno chcesz odwołać wizytę",
   "delete_appointment": "Usuń wizytę",
-  "documentation_entry_edition_failed": "Edycja wpisu dokumentacji nie powiodła się",
   "title_reserve_appointment": "Rezerwuj wizytę",
   "reserve_appointment_text": "Czy na pewno chcesz rezerwowac wizytę?",
   "appointment_reserved_successfully": "Rezerwacja przebiegła pomyślnie",
-  "appointment_not_found": "Wizyty nie znaleziono",
-  "appointment_edit_failed": "Edycja wizyty się nie powiodła"
+  "text_confirm_appointment":"Czy na pewno chcesz potwierdzić wizytę?" ,
+  "title_confirm_appointment": "Potwierdzenie wizyty",
+  "appointment_is_in_past": "Wizyta jest w przeszłości",
+  "confirm_appointment": "Potwierdź wizytę"
 }

@@ -196,4 +196,8 @@ public class AppointmentException extends AppBaseException {
     public static AppointmentException invalidRatingScore() {
         return new AppointmentException(I18n.INVALID_RATING_SCORE);
     }
+
+    public static AppointmentException appointmentIsInPast() {
+        return new AppointmentException(I18n.APPOINTMENT_IS_IN_PAST);
+    }
 }

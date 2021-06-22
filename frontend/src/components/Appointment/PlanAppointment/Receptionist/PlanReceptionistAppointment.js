@@ -5,7 +5,7 @@ import {makeAppointmentSlotsListRequest} from "../AppointmentSlotsListRequest";
 import {withTranslation} from "react-i18next";
 import {makePatientsListRequest} from "../../ListPatients/ListPatientsRequest";
 import {planAppointmentRequest} from "./PlanAppointmentRequest";
-import {Button, Col, Row} from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
 import {FiRefreshCw} from "react-icons/fi";
 import Cookies from "js-cookie";
 import {Input} from "semantic-ui-react";
@@ -16,7 +16,6 @@ import EditIcon from '@material-ui/icons/Edit';
 import Button from "@material-ui/core/Button";
 import {ButtonGroup} from "@material-ui/core";
 import {deleteAppointmentSlotRequest} from "../DeleteAppointmentSlotRequest";
-import confirmationAlerts from "../../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
 
 class PlanReceptionistAppointmentWithoutTr extends React.Component {
     constructor(props) {
@@ -230,8 +229,6 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
                     deleteAppointmentSlotRequest(id, t);
                 }
             });
-        return <BootstrapTable striped keyField='id' columns={columns} data={this.state.appointmentsList}
-                               selectRow={selectRow} expandRow={expandRow}/>;
     }
 
     render() {

@@ -226,4 +226,5 @@ public class I18n {
     public static final Object APPOINTMENT_CANCELLATION_FAILED = "appointment_cancellation_failed";
     public static final String PATIENT_LOGIN_NULL = "patient_login_null";
     public static final String APPOINTMENT_RESERVED_SUCCESSFULLY = "appointment_reserved_successfully";
+    public static final String APPOINTMENT_IS_IN_PAST = "appointment_is_in_past";
 }
