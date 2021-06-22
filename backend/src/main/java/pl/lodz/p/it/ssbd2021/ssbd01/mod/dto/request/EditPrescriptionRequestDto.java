@@ -1,7 +1,8 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.validation.constraints.NotNull;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
@@ -45,10 +46,11 @@ public class EditPrescriptionRequestDto implements SignableEntity {
     }
 
     @Override
+    @JsonbTransient
     public Map<String, String> getPayload() {
-        Map<String, String> map = new HashMap<>();
-        map.put("id", String.valueOf(id));
-        map.put("version", String.valueOf(getVersion()));
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("version", getVersion().toString());
+        map.put("id", getId().toString());
         return map;
     }
 }

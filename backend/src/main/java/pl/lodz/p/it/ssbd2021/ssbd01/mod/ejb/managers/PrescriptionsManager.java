@@ -7,6 +7,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.ejb.Local;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.PrescriptionException;
@@ -40,9 +41,18 @@ public interface PrescriptionsManager {
      *
      * @param editPrescriptionRequestDto dto z danymi do edycji recepty
      * @throws PrescriptionException wyjątek PrescriptionException
-     * @throws EncryptionException wyjątek EncryptionException
+     * @throws EncryptionException   wyjątek EncryptionException
      */
     void editPrescription(EditPrescriptionRequestDto editPrescriptionRequestDto) throws PrescriptionException, EncryptionException;
+
+    /**
+     * Pobiera receptę i {@param id}.
+     *
+     * @param id klucz główny wizyty
+     * @return recepta
+     * @throws PrescriptionException wyjątek typu PrescriptionException
+     */
+    Prescription findById(Long id) throws PrescriptionException;
 
     /**
      * Gets patient prescriptions.
