@@ -410,7 +410,12 @@ public class AppointmentEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("rate/{id}")
     public Response rateAppointment(@PathParam("id") Long id, Double mark) {
-        appointmentManager.rateAppointment(id, mark);
+        try {
+
+            appointmentManager.rateAppointment(id, mark);
+        }catch (AppointmentException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_RATED_SUCCESSFULLY)).build();
     }
 
