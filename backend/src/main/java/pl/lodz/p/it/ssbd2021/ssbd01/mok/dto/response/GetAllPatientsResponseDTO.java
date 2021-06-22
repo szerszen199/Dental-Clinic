@@ -9,6 +9,11 @@ public class GetAllPatientsResponseDTO {
 
     List<PatientDTO> patients;
 
+    /**
+     * Tworzy nową instancję klasy GetAllPatientsResponseDTO.
+     *
+     * @param accounts lista kont
+     */
     public GetAllPatientsResponseDTO(List<Account> accounts) {
         this.patients = new ArrayList<>();
         for (Account account : accounts) {
@@ -33,6 +38,11 @@ public class GetAllPatientsResponseDTO {
         private final String phoneNumber;
         private final String pesel;
 
+        /**
+         * Tworzy nową instancję klasy PatientDTO.
+         *
+         * @param account the account
+         */
         public PatientDTO(Account account) {
             this.login = account.getLogin();
             this.id = account.getId();

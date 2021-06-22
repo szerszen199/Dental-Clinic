@@ -26,6 +26,9 @@ public interface DocumentationEntryManager {
     /**
      * Edytuje wpis w dokumentacji medycznej.
      *
+     * @param username login użytkownika.
+     * @return Lista wpisów w dokumentację dla użytkownika.
+     * @throws DocumentationEntryException w przypadku błędu.
      */
     List<DocumentationEntry> getDocumentationEntriesForUser(String username) throws DocumentationEntryException;
 
