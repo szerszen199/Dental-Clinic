@@ -5,10 +5,10 @@ import javax.ejb.Local;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.CreateAppointmentSlotRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 
 /**
@@ -88,10 +88,9 @@ public interface AppointmentManager {
      * Dodaje slot na wizytę.
      *
      * @param appointment wolna wizyta
-     * @throws AccountException wyjątek typu AccountException
      * @throws AppointmentException wyjątek typu AppointmentException
      */
-    void addAppointmentSlot(Appointment appointment) throws AccountException, AppointmentException;
+    void addAppointmentSlot(CreateAppointmentSlotRequestDTO appointment) throws AppointmentException;
 
     /**
      * Modyfikuje slot wizyty.
