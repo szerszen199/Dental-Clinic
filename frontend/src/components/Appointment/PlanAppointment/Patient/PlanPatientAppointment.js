@@ -1,11 +1,11 @@
 import React from "react";
-import "./PlanAppointment.css";
+import "../PlanAppointment.css";
 import {Accordion, Button, Card, Col, Container, Row} from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
-import {AppointmentSlot} from "../AppointmentSlot";
-import {makeAppointmentSlotsListRequest} from "./AppointmentSlotsListRequest";
+import {AppointmentSlot} from "../../AppointmentSlot";
+import {makeAppointmentSlotsListRequest} from "../AppointmentSlotsListRequest";
 
-class PlanAppointment extends React.Component {
+class PlanPatientAppointment extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -57,7 +57,7 @@ class PlanAppointment extends React.Component {
             clickToSelect: true,
             clickToExpand: true,
             hideSelectColumn: true,
-            bgColor: '#e6ff99'
+            bgColor: '#e0f4fc'
         };
 
         const expandRow = {
@@ -85,4 +85,4 @@ class PlanAppointment extends React.Component {
     }
 }
 
-export default PlanAppointment;
+export default PlanPatientAppointment;
