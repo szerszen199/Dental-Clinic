@@ -1039,4 +1039,3 @@ public class AccountEndpoint {
     }
 
 }
-

@@ -164,7 +164,7 @@ public class I18n {
     public static final String DOCUMENTATION_ENTRY_EDITED_UNSUCCESSFULLY = "documentation_entry_edited_unsuccessfully";
     public static final String MEDICAL_DOCUMENTATION_FETCH_FAILED = "medical_documentation_fetch_failed";
     public static final String PATIENT_SAME_DOCTOR = "patient_same_doctor";
-    
+
     public static final String GET_DOCTORS_AND_RATES_FAILED = "get_doctors_and_rates_failed";
 
     public static final String APPOINTMENT_SLOT_CREATION_FAILED = "appointment_slot_creation_failed";
@@ -211,7 +211,16 @@ public class I18n {
     public static final String APPOINTMENT_CONFIRMED_NULL = "appointment_confirmed_null";
     public static final String APPOINTMENT_CANCELED_NULL = "appointment_canceled_null";
     public static final String DOCTOR_LOGIN_NULL = "doctor_login_null";
+    public static final String APPOINTMENT_RATED_SUCCESSFULLY = "appointment_rated_successfully";
+    public static final String APPOINTMENT_NOT_FINISHED = "appointment_not_finished";
+    public static final String APPOINTMENT_RATE_SUBJECT = "appointment_rate_subject";
+    public static final String APPOINTMENT_RATE_TEXT = "appointment_rate_text";
+    public static final String APPOINTMENT_RATE_LINK = "appointment_rate_link";
+    public static final String INVALID_RATING_SCORE = "invalid_rating_score";
 
+    public static final String PRESCRIPTION_GET_INFO_FAILED = "prescription_get_info_failed";
 
-
+    public static final String PRESCRIPTION_DATE_NULL = "prescription_date_null";
+    public static final String PRESCRIPTION_DATE_FUTURE = "prescription_date_future";
+    public static final String PRESCRIPTION_EXPIRED = "prescription_expired";
 }
