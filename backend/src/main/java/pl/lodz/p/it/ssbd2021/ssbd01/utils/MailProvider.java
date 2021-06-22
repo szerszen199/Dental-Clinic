@@ -431,6 +431,30 @@ public class MailProvider {
         }
     }
 
+    /**
+     * Wysyła maila z przypomnieniem o konieczności potwierdzenia wizyty.
+     *
+     * @param email Adres, na który zostanie wysłana wiadomość.
+     * @param lang  język wiadomości email
+     * @param token token
+     * @param id    id wizyty do ocenienia
+     * @throws MailSendingException Błąd wysyłania wiadomości.
+     */
+    public void sendAppointmentRateMail(String email, String lang, String token, Long id) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(I18n.APPOINTMENT_RATE_SUBJECT);
+        String activationLink = buildRatingLink(getContextPath(), token, id);
+        String messageText = paragraph(langBundle.getString(I18n.APPOINTMENT_RATE_TEXT))
+                + hyperlink(activationLink, langBundle.getString(I18n.APPOINTMENT_RATE_LINK));
+        try {
+            mailManager.sendMail(email, subject, getFrom(), messageText, session);
+        } catch (MessagingException e) {
+            throw MailSendingException.mailFailed();
+        }
+    }
+
+
     private String paragraph(String text) {
         return "<p>" + text + "</p>";
     }
@@ -476,6 +500,12 @@ public class MailProvider {
         sb.append("/new-password-admin/");
         sb.append(token);
 
+        return sb.toString();
+    }
+
+    private String buildRatingLink(String contextPath, String token, Long id) {
+        StringBuilder sb = new StringBuilder(getFrontendUrl());
+        sb.append("/rate-appointment/").append(id.toString()).append("/").append(token);
         return sb.toString();
     }
 

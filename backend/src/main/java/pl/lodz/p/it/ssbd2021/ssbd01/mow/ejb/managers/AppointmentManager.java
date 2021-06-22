@@ -1,20 +1,20 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentEditRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.CreateAppointmentSlotRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AllScheduledAppointmentsResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 
 import javax.ejb.Local;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -92,8 +92,9 @@ public interface AppointmentManager {
      *
      * @param doctorId klucz główny lekarza
      * @param rate     ocena
+     * @throws AppointmentException wyjątek typu AppointmentException
      */
-    void rateDoctor(Long doctorId, Double rate);
+    void rateAppointment(Long doctorId, BigDecimal rate) throws AppointmentException;
 
     /**
      * Pobiera wszystkich lekarzy i ich oceny.
@@ -174,10 +175,19 @@ public interface AppointmentManager {
      * Wysyła przypomnienie o konieczności potwierdzenia wizyty.
      *
      * @param id id wizyty dla której należy wysłać przypomnienie
-     * @throws AppointmentException wyjątek sygnalizująvy błąd operacji na wizycie.
-     * @throws MailSendingException wyjątek sygnalizująvy błąd wysyłania maila.
+     * @throws AppointmentException wyjątek sygnalizujący błąd operacji na wizycie.
+     * @throws MailSendingException wyjątek sygnalizujący błąd wysyłania maila.
      */
     void sendAppointmentReminder(Long id) throws AppointmentException, MailSendingException;
+
+    /**
+     * Wysyła mail z prośbą o ocenienie wizyty.
+     *
+     * @param id id wizyty dla której należy wysłać prośbę.
+     * @throws AppointmentException wyjątek sygnalizujący błąd operacji na wizycie.
+     * @throws MailSendingException wyjątek sygnalizujący błąd wysyłania maila.
+     */
+    void sendAppointmentRateEmail(Long id) throws AppointmentException, MailSendingException;
 
     /**
      * Sprawdza czy ostatnia transakcja się powiodła.

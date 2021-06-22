@@ -285,7 +285,7 @@
   "patient_lastname" : "Patient's lastname",
   "doctor_firstname" : "Doctor's firstname",
   "doctor_lastname" : "Doctor's lastname",
-
+  "to_prescriptions" : "To prescriptions",
   "expiration_date_null": "Expiration date can't be null",
   "medications_null": "Medications can't be null",
   "documentation_id_null": "Documentation id can't be null",
@@ -294,7 +294,6 @@
   "prescription_removal_failed": "Prescription removal failed",
   "prescription_removal_unauthorized": "You have not issued this prescription, you cannot remove it",
   "prescription_removed_successfully": "Prescription has been deleted",
-  "to_prescriptions" : "To prescriptions",
   "Edit prescription": "Edit prescription",
   "Medications": "Medications",
   "Question edit prescription":  "Are you sure you want to edit prescription?",
