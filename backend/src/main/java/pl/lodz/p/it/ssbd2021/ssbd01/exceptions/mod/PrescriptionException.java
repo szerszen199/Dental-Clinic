@@ -83,4 +83,8 @@ public class PrescriptionException extends AppBaseException {
     public static PrescriptionException accountNotFound(Throwable cause) {
         return new PrescriptionException(I18n.ACCOUNT_NOT_FOUND, cause);
     }
+
+    public static AppBaseException invalidDateException() {
+        return new PrescriptionException(I18n.INVALID_DATE_PRESCRIPTION);
+    }
 }
