@@ -185,7 +185,7 @@
   "login_not_in_pattern": "W loginie użytkownika występują nieprawidłowe znaki",
   "forbidden": "Zakazane",
   "internal_server_error": "Błąd Serwera",
-  "not_found":  "Zasób nie znaleziony",
+  "not_found": "Zasób nie znaleziony",
   "get_active_patients_failed": "Nie udało się pobrać listy pacjentów",
   "Patients List": "Lista pacjentów",
   "Select doctor": "Wybierz lekarza",
@@ -226,9 +226,10 @@
   "appointment_was_booked": "Wybrana wizyta została już zarezerwowana. Odśwież stronę!",
   "appointment_id_null": "Wybierz wizytę",
   "appointment_slot_removed_successfully": "Termin wizyty został poprawnie usunięty",
-  "appointment_slot_removed_unsuccessfully": "Nie udało się usunąć wizyty"
+  "appointment_slot_removed_unsuccessfully": "Nie udało się usunąć wizyty",
   "Edit appointment slot": "Edytuj termin wizyty",
   "Question edit appointment slot": "Czy chcesz edytować termin wizyty?",
   "appointment_slot_edited_successfully": "Termin wizyty został zmieniony",
-  "appointment_slot_edit_failed": "Nie udało się zmienić terminu wizyty"
+  "appointment_slot_edit_failed": "Nie udało się zmienić terminu wizyty",
+  "Question delete appointment slot": "Czy na pewno chcesz usunąć termin wizyty?"
 }

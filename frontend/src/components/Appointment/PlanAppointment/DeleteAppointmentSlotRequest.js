@@ -2,11 +2,14 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import successAlerts from "../../Alerts/SuccessAlerts/SuccessAlerts";
 import errorAlerts from "../../Alerts/ErrorAlerts/ErrorAlerts";
+import {FiRefreshCw} from "react-icons/fi";
+import React from "react";
+import successAlertsWithRefresh from "../../Alerts/SuccessAlerts/SuccessAlertsWithRefresh";
 
-export function removeAppointmentSlotRequest(id, render, t) {
+export function deleteAppointmentSlotRequest(id, t) {
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
     let configDeleteAppointmentSlot = {
-        method: 'put',
+        method: 'post',
         url: process.env.REACT_APP_BACKEND_URL + "appointment/slot/delete",
         headers: {
             'Authorization': 'Bearer ' + token,
@@ -17,13 +20,11 @@ export function removeAppointmentSlotRequest(id, render, t) {
         }
     };
 
-    axios(configDeleteAppointmentSlot, t)
-        .then(function (response) {
-            successAlerts(t(response.data.message, response.status)).then(() => {})
-            render();
+    axios(configDeleteAppointmentSlot)
+        .then(response => {
+            successAlertsWithRefresh(t(response.data.message), response.status.toString(10));
         })
-        .catch((response) => {
-            console.log(response);
+        .catch(response => {
             if (response.response) {
                 errorAlerts(t(response.response.data.message), response.response.status.toString(10));
             }

@@ -1,13 +1,12 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow;
 
+import javax.ejb.ApplicationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_SLOT_CREATION_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_NOT_FOUND;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_SLOT_REMOVAL_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_WAS_BOOKED;
-import javax.ejb.ApplicationException;
 
 
 /**
@@ -33,6 +32,8 @@ public class AppointmentException extends AppBaseException {
      */
     private AppointmentException(String message, Throwable cause) {
         super(message, cause);
+    }
+
     /**
      * Zwraca wyjątek z komunikatem {@link I18n#APPOINTMENT_NOT_FOUND}.
      *
@@ -58,16 +59,6 @@ public class AppointmentException extends AppBaseException {
      */
     public static AppBaseException appointmentWasBooked() {
         return new AppointmentException(APPOINTMENT_WAS_BOOKED);
-    }
-
-
-    /**
-     * Wyjątek braku znalezenia wizyty o danym ID.
-     *
-     * @return AppointmentException wyjątek
-     */
-    public static AppointmentException appointmentNotFound() {
-        return new AppointmentException(I18n.APPOINTMENT_NOT_FOUND);
     }
 
     /**
@@ -154,7 +145,8 @@ public class AppointmentException extends AppBaseException {
 
     /**
      * Wyjątek nieaktywnego konta dla wizyty, lub gdy konto nie jest pacjentem.
-     * @return  wyjątek AppointmentException
+     *
+     * @return wyjątek AppointmentException
      */
     public static AppointmentException appointmentNotDoctorOrInactive() {
         return new AppointmentException(I18n.APPOINTMENT_NOT_DOCTOR_OR_INACTIVE);

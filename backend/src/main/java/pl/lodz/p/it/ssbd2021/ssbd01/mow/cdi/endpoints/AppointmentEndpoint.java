@@ -1,27 +1,8 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.cdi.endpoints;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.security.DenyAll;
-import javax.annotation.security.RolesAllowed;
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.CreateAppointmentSlotRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AllScheduledAppointmentsResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AvailableAppointmentResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AppointmentInfoResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers.AppointmentManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
-
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateful;
@@ -46,16 +27,24 @@ import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.MessageResponseDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.CreateAppointmentSlotRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.RemoveAppointmentSlotRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AllScheduledAppointmentsResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AppointmentInfoResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AvailableAppointmentResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers.AppointmentManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.util.AppointmentTransactionRepeater;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.SignatureFilterBinding;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
-import java.util.List;
-import java.util.stream.Collectors;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_GET_INFO_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_NOT_FOUND;
@@ -155,7 +144,7 @@ public class AppointmentEndpoint {
      * Edytuje wizytę.
      *
      * @param appointmentSlotEditRequestDto dane potrzebne do edycji terminu wizyty
-     * @param header                    nagłówek If-Match z podpisem obiektu
+     * @param header                        nagłówek If-Match z podpisem obiektu
      * @return 400 jezeli się nie powiodło 200 jeżeli się powiodło
      */
     @PUT
@@ -345,8 +334,7 @@ public class AppointmentEndpoint {
     public Response deleteAppointmentSlot(@NotNull @Valid RemoveAppointmentSlotRequestDTO removeAppointmentSlotRequestDTO) {
         try {
             appointmentTransactionRepeater.repeatTransaction(
-                    () -> appointmentManager.deleteAppointmentSlot(removeAppointmentSlotRequestDTO.getId()),
-                    appointmentManager);
+                    () -> appointmentManager.deleteAppointmentSlot(removeAppointmentSlotRequestDTO.getId()));
         } catch (AppBaseException e) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         } catch (Exception e) {
