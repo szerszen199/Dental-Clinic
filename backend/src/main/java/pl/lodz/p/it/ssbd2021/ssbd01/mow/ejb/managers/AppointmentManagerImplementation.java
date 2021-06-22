@@ -9,6 +9,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentSelfDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AccountFacade;
@@ -51,12 +52,12 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     private LoggedInAccountUtil loggedInAccountUtil;
 
     @Override
-    public void bookAppointment(BookAppointmentDto bookAppointmentDto) throws AppBaseException {
+    public void bookAppointmentSelf(BookAppointmentSelfDto bookAppointmentSelfDto) throws AppBaseException {
         Account account;
         Appointment appointment;
         try {
             account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
-            appointment = appointmentFacade.find(bookAppointmentDto.getAppointmentId());
+            appointment = appointmentFacade.find(bookAppointmentSelfDto.getAppointmentId());
         } catch (Exception e) {
             throw AccountException.noSuchAccount(e);
         }
@@ -65,6 +66,26 @@ public class AppointmentManagerImplementation extends AbstractManager implements
 //        }
 
         appointment.setPatient(account);
+        appointment.setModifiedBy(account);
+        appointment.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        appointment.setModificationDateTime(LocalDateTime.now());
+        appointmentFacade.edit(appointment);
+    }
+
+    @Override
+    public void bookAppointment(BookAppointmentDto bookAppointmentDto) throws AppBaseException {
+        Account account;
+        Account patient;
+        Appointment appointment;
+        try {
+            account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+            patient = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+            appointment = appointmentFacade.find(bookAppointmentDto.getAppointmentId());
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
+
+        appointment.setPatient(patient);
         appointment.setModifiedBy(account);
         appointment.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         appointment.setModificationDateTime(LocalDateTime.now());
