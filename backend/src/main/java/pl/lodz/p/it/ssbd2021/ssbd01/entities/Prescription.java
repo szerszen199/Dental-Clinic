@@ -50,10 +50,10 @@ public class Prescription extends AbstractEntity implements Serializable {
     @NotNull
     private Long id;
 
-
     @Basic(optional = false)
     @Column(name = "expiration", updatable = false, nullable = false)
     @NotNull
+    @Future
     private LocalDateTime expiration;
 
     @Column(name = "medications")
