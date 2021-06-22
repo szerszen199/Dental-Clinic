@@ -5,6 +5,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
@@ -41,6 +42,8 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.validation.Valid;
@@ -117,7 +120,6 @@ public class AccountEndpoint {
     @Inject
     private EntityIdentitySignerVerifier signer;
 
-
     /**
      * Tworzy nowe konto.
      *
@@ -135,11 +137,8 @@ public class AccountEndpoint {
         Exception exception;
         do {
             try {
+                new TransactionMaker().CreateAccountAndDocumentation(accountDto, accountManager, medicalDocumentationManager);
                 exception = null;
-                this.accountManager.createAccount(
-                        AccountConverter.createAccountEntityFromDto(accountDto)
-                );
-                this.medicalDocumentationManager.createMedicalDocumentation(accountDto.getLogin());
                 rollbackTX = accountManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
                 rollbackTX = true;
@@ -452,7 +451,6 @@ public class AccountEndpoint {
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
     }
 
-
     /**
      * Edycja konta innego użytkownika.
      *
@@ -537,7 +535,6 @@ public class AccountEndpoint {
         }
         return Response.ok().entity(new MessageResponseDto(I18n.EMAIL_CONFIRMED_SUCCESSFULLY)).build();
     }
-
 
     /**
      * Metoda służąca do blokowania konta przez administratora.
@@ -757,7 +754,6 @@ public class AccountEndpoint {
         return Response.ok().entity(account).tag(signer.sign(account)).build();
     }
 
-
     /**
      * Pobiera informacje o koncie o {@param login}.
      *
@@ -946,7 +942,6 @@ public class AccountEndpoint {
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_RESET_MAIL_SENT_SUCCESSFULLY)).build();
     }
 
-
     /**
      * Endpoint dla ustawiania w aktualnym koncie trybu ciemnego.
      *
@@ -987,7 +982,6 @@ public class AccountEndpoint {
         return Response.status(Status.OK).entity(new MessageResponseDto(ACCOUNT_DARK_MODE_SET_SUCCESSFULLY)).build();
     }
 
-
     /**
      * Endpoint dla ustawiania w aktualnym koncie języka interfejsu.
      *
@@ -1026,6 +1020,21 @@ public class AccountEndpoint {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.LANGUAGE_SET_SUCCESSFULLY)).build();
+    }
+
+    private static class TransactionMaker {
+        @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+        @PermitAll
+        public void CreateAccountAndDocumentation(
+                CreateAccountRequestDTO accountDto,
+                AccountManager accountManager,
+                MedicalDocumentationManager medicalDocumentationManager) throws MedicalDocumentationException, AccountException, MailSendingException {
+            accountManager.createAccount(
+                    AccountConverter.createAccountEntityFromDto(accountDto)
+            );
+            medicalDocumentationManager.createMedicalDocumentation(accountDto.getLogin());
+        }
+
     }
 
 }
