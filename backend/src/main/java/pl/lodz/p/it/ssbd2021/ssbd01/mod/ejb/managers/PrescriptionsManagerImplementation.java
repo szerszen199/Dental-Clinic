@@ -20,14 +20,19 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
 import javax.annotation.security.RolesAllowed;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Stateful
 @RolesAllowed({I18n.DOCTOR, I18n.PATIENT})
@@ -117,57 +122,44 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
     }
 
     @Override
-    public List<PrescriptionResponseDto> getPrescriptions() throws AppBaseException {
-            List<Prescription> prescriptions = prescriptionFacade.findAll();
-            return prescriptions.stream()
-                    .map(prescription ->
-                            new PrescriptionResponseDto(
-                                    prescription.getId(),
-                                    prescription.getExpiration(),
-                                    prescription.getPatient().getFirstName(),
-                                    prescription.getPatient().getLastName(),
-                                    prescription.getDoctor().getFirstName(),
-                                    prescription.getDoctor().getLastName(),
-                                    prescription.getCreationDateTime(),
-                                    prescription.getMedications()))
-                                    .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<PrescriptionResponseDto> getPatientPrescriptions() throws AppBaseException {
+    public List<PrescriptionResponseDto> getPatientPrescriptions() throws AppBaseException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         Account account;
         account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
         List<Prescription> prescriptions = prescriptionFacade.findByPatientLogin(account.getLogin());
-        return prescriptions.stream()
-                .map(prescription ->
-                        new PrescriptionResponseDto(
-                                prescription.getId(),
-                                prescription.getExpiration(),
-                                prescription.getPatient().getFirstName(),
-                                prescription.getPatient().getLastName(),
-                                prescription.getDoctor().getFirstName(),
-                                prescription.getDoctor().getLastName(),
-                                prescription.getCreationDateTime(),
-                                prescription.getMedications()))
-                .collect(Collectors.toList());
+        List<PrescriptionResponseDto> prescriptionResponseDtoList = new ArrayList<>();
+        for (Prescription prescription: prescriptions){
+            PrescriptionResponseDto prescriptionResponseDto = new PrescriptionResponseDto(
+                    prescription.getId(),
+                    prescription.getExpiration(),
+                    prescription.getPatient().getFirstName(),
+                    prescription.getPatient().getLastName(),
+                    prescription.getDoctor().getFirstName(),
+                    prescription.getDoctor().getLastName(),
+                    prescription.getCreationDateTime(),
+                    prescription.getMedicationsDecrypted(propertiesLoader));
+            prescriptionResponseDtoList.add(prescriptionResponseDto);
+        }
+        return prescriptionResponseDtoList;
     }
 
     @Override
-    public List<PrescriptionResponseDto> getDoctorPrescriptions() throws AppBaseException {
+    public List<PrescriptionResponseDto> getDoctorPrescriptions() throws AppBaseException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         Account account;
         account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
         List<Prescription> prescriptions = prescriptionFacade.findByDoctorLogin(account.getLogin());
-        return prescriptions.stream()
-                .map(prescription ->
-                        new PrescriptionResponseDto(
-                                prescription.getId(),
-                                prescription.getExpiration(),
-                                prescription.getPatient().getFirstName(),
-                                prescription.getPatient().getLastName(),
-                                prescription.getDoctor().getFirstName(),
-                                prescription.getDoctor().getLastName(),
-                                prescription.getCreationDateTime(),
-                                prescription.getMedications()))
-                .collect(Collectors.toList());
+        List<PrescriptionResponseDto> prescriptionResponseDtoList = new ArrayList<>();
+        for (Prescription prescription: prescriptions){
+            PrescriptionResponseDto prescriptionResponseDto = new PrescriptionResponseDto(
+                    prescription.getId(),
+                    prescription.getExpiration(),
+                    prescription.getPatient().getFirstName(),
+                    prescription.getPatient().getLastName(),
+                    prescription.getDoctor().getFirstName(),
+                    prescription.getDoctor().getLastName(),
+                    prescription.getCreationDateTime(),
+                    prescription.getMedicationsDecrypted(propertiesLoader));
+            prescriptionResponseDtoList.add(prescriptionResponseDto);
+        }
+        return prescriptionResponseDtoList;
     }
 }
