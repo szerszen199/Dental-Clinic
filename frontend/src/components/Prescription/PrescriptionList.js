@@ -1,22 +1,19 @@
 import "./Prescription.css";
-import {Accordion, Card, Button} from "react-bootstrap";
-import React, {Suspense} from "react";
+import React, {Fragment, Suspense} from "react";
 import "./PrescriptionsList.css";
 import {makePrescriptionsListRequest} from "./PrescriptionsListRequest";
 import {withTranslation} from "react-i18next";
 import BootstrapTable from 'react-bootstrap-table-next';
-import {Input} from "semantic-ui-react";
-import {Fragment} from "react";
+import Cookies from "js-cookie";
 
 class PrescriptionsListWithoutTranslation extends React.Component {
 
-
+    
     constructor(props) {
         super(props);
         this.state = {
             prescriptionsList: []
         };
-        this.unFilteredList = []
     }
 
     componentDidMount() {
@@ -24,30 +21,14 @@ class PrescriptionsListWithoutTranslation extends React.Component {
     }
 
     makeGetPrescriptionsRequest() {
-        makePrescriptionsListRequest().then((response) => {
-            this.unFilteredList = response
-            this.setState({prescriptionsList: this.unFilteredList})
+        let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
+        function isPatient() {
+            return token !== undefined && Cookies !== undefined && Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) === process.env.REACT_APP_ROLE_PATIENT;
+        }
+        makePrescriptionsListRequest(isPatient()).then((response) => {
+            this.prescriptionsList = response
+            this.setState({prescriptionsList: this.prescriptionsList})
         })
-    }
-
-    filterList(input) {
-        let tempList = []
-        for (let i in this.unFilteredList) {
-            if (this.unFilteredList[i].name.toUpperCase().includes(input.toUpperCase())) {
-                tempList.push(this.unFilteredList[i])
-            }
-        }
-        this.setState({prescriptionsList: tempList})
-    }
-
-    getHintList(list) {
-        let tempList = [];
-        let uniqueList = [...new Set(this.state.prescriptionsList.map(a => a.name))];
-        for (let i in uniqueList) {
-            tempList.push(<option key={i} value={uniqueList[i]}>{uniqueList[i]}</option>);
-        }
-        return tempList;
-
     }
 
     renderPrescriptions() {
@@ -81,44 +62,16 @@ class PrescriptionsListWithoutTranslation extends React.Component {
     renderNull() {
         const {t} = this.props;
         return <div>{t('Loading')}</div>
-
     }
 
     render() {
         const {t} = this.props;
         document.title = t("Dental Clinic") + " - " + t("Users Prescriptions");
         return <Fragment>
-            <datalist id='options'>
-                {this.state.prescriptionsList.length !== this.unFilteredList.length ? this.getHintList() : []}
-            </datalist>
+
             <div className="AccountListGroup">
-                <Input list='options' id="ListFilter" onChange={e => this.filterList(e.target.value)}
-                       placeholder={t("Filter")}/>
+                {t("Prescriptions")}
                 {!this.state.prescriptionsList.length ? this.renderNull() : this.renderPrescriptions()}
-            </div>
-            <div className="Prescription">
-                <Accordion>
-                    <Card className="Card">
-                        <Card.Header>
-                            <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                                Aspirin
-                            </Accordion.Toggle>
-                        </Card.Header>
-                        <Accordion.Collapse eventKey="0">
-                            <Card.Body>Aspirin - 1 pack, 1 pill every morning</Card.Body>
-                        </Accordion.Collapse>
-                    </Card>
-                    <Card className="Card">
-                        <Card.Header>
-                            <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                                Ibuprom
-                            </Accordion.Toggle>
-                        </Card.Header>
-                        <Accordion.Collapse eventKey="1">
-                            <Card.Body>Ibuprom - 2 packs, 2 pills everyday</Card.Body>
-                        </Accordion.Collapse>
-                    </Card>
-                </Accordion>
             </div>
         </Fragment>
     }
