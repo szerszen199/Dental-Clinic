@@ -1,5 +1,8 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.exceptions;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
+
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.EDIT_ACCOUNT_MAIL;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_ACCOUNT_LOCK_SEND_ERROR;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_ACTIVATION_CONFIRMATION_SEND_ERROR;
@@ -73,5 +76,9 @@ public class MailSendingException extends AppBaseException {
      */
     public static MailSendingException activationConfirmation() {
         return new MailSendingException(MAIL_ACTIVATION_CONFIRMATION_SEND_ERROR);
+    }
+
+    public static MailSendingException mailFailed() {
+        return new MailSendingException(I18n.MAIL_FAILED);
     }
 }

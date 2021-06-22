@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
@@ -32,6 +33,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -252,6 +254,20 @@ public class AppointmentEndpoint {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.GET_ALL_SCHEDULED_APPOINTMENTS_FAILED)).build();
         }
         return Response.ok().entity(allScheduledAppointmentsResponseDTO).build();
+    }
+
+    @GET
+    @RolesAllowed({I18n.PATIENT, I18n.RECEPTIONIST})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("confirm/{id}")
+    public Response confirmAppointment(@PathParam("id") Long id) {
+
+        try {
+            appointmentManager.confirmBookedAppointment(id);
+        } catch (AppointmentException | MailSendingException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_CONFIRMED_SUCCESSFULLY)).build();
     }
 
 }

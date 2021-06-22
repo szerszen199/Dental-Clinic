@@ -187,4 +187,11 @@ public class I18n {
     public static final String GET_ACTIVE_PATIENTS_FAILED = "get_active_patients_failed";
     public static final String GET_ALL_SCHEDULED_APPOINTMENTS_FAILED = "get_all_scheduled_appointments_failed";
     public static final String NO_ACCESS_LEVEL = "no_access_level";
+    public static final String APPOINTMENT_MAIL_CONFIRMED_SUBJECT = "appointment_confirmed_mail_subject";
+    public static final String APPOINTMENT_MAIL_CONFIRMED_TEXT = "appointment_confirmed_mail_text";
+    public static final String APPOINTMENT_NOT_BELONGING_TO_PATIENT = "appointment_not_belonging_to_patient";
+    public static final String APPOINTMENT_ALREADY_CONFIRMED = "appointment_already_confirmed";
+    public static final String APPOINTMENT_CANCELED = "appointment_canceled";
+    public static final String MAIL_FAILED = "mail_failed";
+    public static final String APPOINTMENT_CONFIRMED_SUCCESSFULLY = "appointment_confirmed_successfully";
 }

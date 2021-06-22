@@ -4,6 +4,8 @@ import java.util.List;
 import javax.ejb.Local;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
@@ -43,12 +45,6 @@ public interface AppointmentManager {
      */
     void editAppointmentSlot(Appointment appointment);
 
-    /**
-     * Pobiera wszystkie wolne wizyty.
-     *
-     * @return wolne wizyty
-     */
-    List<Appointment> getAllAppointmentSlots();
 
     /**
      * Pobiera wolne wizyty od teraz.
@@ -126,7 +122,7 @@ public interface AppointmentManager {
      *
      * @param id klucz główny wizyty
      */
-    void confirmBookedAppointment(Long id);
+    void confirmBookedAppointment(Long id) throws AppointmentException, MailSendingException;
 
     /**
      * Pobiera wszystkich aktywnych pacjentów.
