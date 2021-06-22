@@ -216,7 +216,11 @@
   "appointment_slot_creation_failed": "Unable to create appointment slot",
   "no_access_level": "Access level has been revoked",
   "patients_account_list": "Patient's Accounts",
-  "Expiration_Date" : "Expiration date",
+  "expiration" : "Expiration date",
+  "patient_firstname" : "Patient's firstname",
+  "patient_lastname" : "Patient's lastname",
+  "doctor_firstname" : "Doctor's firstname",
+  "doctor_lastname" : "Doctor's lastname",
   "medications" : "Mediactions",
   "to_prescriptions" : "To prescriptions"
 }
