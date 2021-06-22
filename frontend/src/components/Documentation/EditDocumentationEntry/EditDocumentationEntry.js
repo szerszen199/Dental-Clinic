@@ -124,7 +124,7 @@ class EditDocumentationEntryWithoutTranslation extends React.Component {
         document.title = t("Dental Clinic") + " - " + t("edit_entry");
 
         return (
-            <div className="AddNewEntry">
+            <div className="EditEntry">
                 <Form onSubmit={this.handleSubmit(t)}>
                     <Form.Group size="lg" controlId="toBeDone">
                         <Form.Label className="required">{t("to_be_done")}</Form.Label>
