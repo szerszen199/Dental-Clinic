@@ -137,7 +137,7 @@ public class AccountEndpoint {
         Exception exception;
         do {
             try {
-                new TransactionMaker().CreateAccountAndDocumentation(accountDto, accountManager, medicalDocumentationManager);
+                new TransactionMaker().createAccountAndDocumentation(accountDto, accountManager, medicalDocumentationManager);
                 exception = null;
                 rollbackTX = accountManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
@@ -1025,7 +1025,7 @@ public class AccountEndpoint {
     private static class TransactionMaker {
         @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
         @PermitAll
-        public void CreateAccountAndDocumentation(
+        public void createAccountAndDocumentation(
                 CreateAccountRequestDTO accountDto,
                 AccountManager accountManager,
                 MedicalDocumentationManager medicalDocumentationManager) throws MedicalDocumentationException, AccountException, MailSendingException {
