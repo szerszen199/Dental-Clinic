@@ -3,17 +3,31 @@ package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_SLOT_CREATION_FAILED;
+import javax.ejb.ApplicationException;
+
 
 /**
  * Klasa wyjątku dla wizyty.
  */
+@ApplicationException(rollback = true)
 public class AppointmentException extends AppBaseException {
-    protected AppointmentException(String message) {
+
+    /**
+     * Tworzy nową instancję klasy wyjątku AppointmentException.
+     *
+     * @param message wiadomość zawarta w wyjątku
+     */
+    private AppointmentException(String message) {
         super(message);
     }
 
-    protected AppointmentException(String message, Throwable cause) {
+    /**
+     * Tworzy nową instancję klasy wyjątku AppointmentException.
+     *
+     * @param message wiadomość zawarta w wyjątku
+     * @param cause   przyczyna wystąpienia wyjątku
+     */
+    private AppointmentException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -106,6 +120,41 @@ public class AppointmentException extends AppBaseException {
      * @return wyjątek typu AppointmentException
      */
     public static AppointmentException appointmentCreationFailed() {
-        return new AppointmentException(APPOINTMENT_SLOT_CREATION_FAILED);
+        return new AppointmentException(I18n.APPOINTMENT_SLOT_CREATION_FAILED);
+    }
+
+    /**
+     * Wyjątek nieaktywnego konta dla wizyty, lub gdy konto nie jest pacjentem.
+     * @return  wyjątek AppointmentException
+     */
+    public static AppointmentException appointmentNotDoctorOrInactive() {
+        return new AppointmentException(I18n.APPOINTMENT_NOT_DOCTOR_OR_INACTIVE);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę działania na wizycie nie należącej do pacjenta.
+     *
+     * @return wyjątek typu AppointmentException reprezentujący próbę działania na wizycie nie należącej do pacjenta.
+     */
+    public static AppointmentException appointmentNotBelongingToPatient() {
+        return new AppointmentException(I18n.APPOINTMENT_NOT_BELONGING_TO_PATIENT);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę potwierdzenia już potwierdzonej wizyty.
+     *
+     * @return zwraca wyjątek reprezentujący próbę potwierdzenia już potwierdzonej wizyty..
+     */
+    public static AppointmentException appointmentAlreadyConfirmed() {
+        return new AppointmentException(I18n.APPOINTMENT_ALREADY_CONFIRMED);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę potwierdzenia anulowanej wizyty.
+     *
+     * @return zwraca wyjątek reprezentujący próbę potwierdzenia anulowanej wizyty.
+     */
+    public static AppointmentException appointmentCanceled() {
+        return new AppointmentException(I18n.APPOINTMENT_CANCELED);
     }
 }

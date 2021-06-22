@@ -1,22 +1,20 @@
-import React, {Suspense} from "react";
+import React, {Fragment, Suspense} from "react";
 
-import {Button, Col, Container, FormControl, Row} from "react-bootstrap";
-import {Label} from "semantic-ui-react";
+import {Button, Container} from "react-bootstrap";
 
 import axios from "axios";
 import Cookies from "js-cookie";
-import Form from "react-bootstrap/Form";
 import {withTranslation} from "react-i18next";
 import errorAlerts from "../Alerts/ErrorAlerts/ErrorAlerts";
 import {DocumentationEntry} from "./DocumentationEntry";
 import BootstrapTable from "react-bootstrap-table-next";
-import {Link} from "react-router-dom";
-import edit from "../../assets/delete-xxl.png";
-import * as PropTypes from "prop-types";
-import {Fragment} from "react";
+import deleteIcon from "../../assets/delete-xxl.png";
+import editIcon from "../../assets/edit.png";
 import {FiRefreshCw} from "react-icons/fi";
 import confirmationAlerts from "../Alerts/ConfirmationAlerts/ConfirmationAlerts";
 import successAlerts from "../Alerts/SuccessAlerts/SuccessAlerts";
+import {Link} from "react-router-dom";
+import edit from "../../assets/edit.png";
 
 
 class DocumentationListWithoutTranslation extends React.Component {
@@ -109,13 +107,13 @@ class DocumentationListWithoutTranslation extends React.Component {
         });
     }
 
-    linkEdit = (cell, row, rowIndex, formatExtraData) => {
+    linkDelete = (cell, row, rowIndex, formatExtraData) => {
 
         return (
             <Button
                 disabled={this.state.documentation[rowIndex].doctorLogin !== Cookies.get(process.env.REACT_APP_LOGIN_COOKIE)}
                 variant="outline-secondary">
-                <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}
+                <img src={deleteIcon} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}
                      onClick={() => {
                          this.makeDeleteDocumentationRequest(this.state.documentation[rowIndex].id)
                      }}/>
@@ -125,45 +123,63 @@ class DocumentationListWithoutTranslation extends React.Component {
 
     }
 
+    linkEdit = (cell, row, rowIndex, formatExtraData) => {
+        return (
+            <Link to={"/edit-documentation-entry/" + this.state.accId + "/" + this.state.documentation[rowIndex].id}>
+                <Button variant="outline-secondary">
+                    <img src={editIcon} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}/>
+                </Button>
+            </Link>
+        );
+    }
+
     renderDocumentation() {
         const {t} = this.props;
         const columns = [
             {
                 dataField: 'creationTime',
                 text: t('creation_time'),
-                style: {verticalAlign: "middle"}
+                style: {verticalAlign: "middle"},
             },
             {
                 dataField: 'modificationTime',
                 text: t('modification_time'),
-                style: {verticalAlign: "middle"}
+                style: {verticalAlign: "middle"},
             },
             {
                 dataField: 'wasDone',
                 text: t('was_done'),
-                style: {verticalAlign: "middle"}
+                style: {verticalAlign: "middle"},
             },
             {
                 dataField: 'toBeDone',
                 text: t('to_be_done'),
-                style: {verticalAlign: "middle"}
+                style: {verticalAlign: "middle"},
             },
             {
                 dataField: 'doctorLogin',
                 text: t('doctorLogin'),
-                style: {verticalAlign: "middle"}
+                style: {verticalAlign: "middle"},
             },
             {
                 dataField: 'actions',
                 text: t('delete'),
                 headerStyle: {verticalAlign: "middle"},
                 style: {textAlign: "center"},
-                formatter: this.linkEdit
+                formatter: this.linkDelete,
+            },
+            {
+                dataField: 'actionsEdit',
+                text: t('Edit'),
+                headerStyle: {verticalAlign: "middle"},
+                style: {textAlign: "center"},
+                formatter: this.linkEdit,
             }
         ]
 
         return <BootstrapTable striped keyField='id' columns={columns} data={this.state.documentation}/>;
     }
+
 
     render() {
         const {t} = this.props;
