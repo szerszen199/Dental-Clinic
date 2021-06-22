@@ -195,5 +195,10 @@
   "DateTime past error": "Date and Time must be from the future!",
   "Doctor blank error": "You have to select doctor!",
   "appointment_slot_created_successfully": "Appointment slot created successfully",
-  "appointment_slot_creation_failed": "Unable to create appointment slot"
+  "appointment_slot_creation_failed": "Unable to create appointment slot",
+  "ID": "ID",
+  "My appointments slots": "My appointments slots",
+  "Date": "Date",
+  "Doctors First Name":"Doctor's  first name",
+  "Doctors Last Name":"Doctor's  last name"
 }

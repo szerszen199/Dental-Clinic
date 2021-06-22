@@ -14,6 +14,7 @@ import Prescription from "../components/Prescription/Prescription"
 import MyAppointment from "../components/Appointment/MyAppointment/MyAppointment";
 import PlanReceptionistAppointment from "../components/Appointment/PlanAppointment/Receptionist/PlanReceptionistAppointment";
 import PlanPatientAppointment from "../components/Appointment/PlanAppointment/Patient/PlanPatientAppointment";
+import ViewDoctorAppointmentSlots from "../components/Appointment/PlanAppointment/Doctor/ViewDoctorAppointmentSlots";
 import ListDoctors from "../components/Appointment/ListDoctors/ListDoctors";
 import HomeRoute from "./HomeRoute";
 import Cookies from "js-cookie";
@@ -83,6 +84,8 @@ export default function Routes() {
                           component={PlanReceptionistAppointment}/>
             <PrivateRoute authed={isReceptionist()} path='/add-appointment'
                           component={AddAppointment}/>
+            <PrivateRoute authed={isDoctor()} path='/my-appointments-slots'
+                          component={ViewDoctorAppointmentSlots}/>
             <PrivateRoute authed={isPatient() || isReceptionist() || isDoctor()} path='/list-doctors'
                           component={ListDoctors}/>
             <PrivateRoute authed={isReceptionist()} path='/list-patients'

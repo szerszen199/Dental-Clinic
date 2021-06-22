@@ -1,11 +1,10 @@
-import React from "react";
+import React, {Suspense} from "react";
 import "../PlanAppointment.css";
-import {Accordion, Button, Card, Col, Container, Row} from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
-import {AppointmentSlot} from "../../AppointmentSlot";
 import {makeAppointmentSlotsListRequest} from "../AppointmentSlotsListRequest";
+import {withTranslation} from "react-i18next";
 
-class PlanReceptionistAppointment extends React.Component {
+class PlanReceptionistAppointmentWithoutTr extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -26,28 +25,36 @@ class PlanReceptionistAppointment extends React.Component {
     }
 
     renderNull() {
-        return <div>{'Loading'}</div>
+        const {t} = this.props;
+        return <div>{t('Loading')}</div>
 
     }
 
     renderAppointments(){
+        const {t} = this.props;
         const columns = [
             {
                 dataField: 'id',
-                text: 'ID',
+                text: t('ID'),
                 style: {verticalAlign: "middle"},
                 sort: true,
                 hidden: true
             },
             {
                 dataField: 'date',
-                text: 'Data',
+                text: t('Date'),
                 style: {verticalAlign: "middle"},
                 sort: true
             },
             {
-                dataField: 'doctor',
-                text: 'Lekarz',
+                dataField: 'doctor.lastName',
+                text: t('Doctors Last Name'),
+                style: {verticalAlign: "middle"},
+                sort: true
+            },
+            {
+                dataField: 'doctor.firstName',
+                text: t('Doctors First Name'),
                 style: {verticalAlign: "middle"},
                 sort: true
             }
@@ -78,11 +85,18 @@ class PlanReceptionistAppointment extends React.Component {
     render() {
         return (
             <div className="MyAppointment">
-                <div> Select Appointment</div>
                 {!this.state.appointmentsList.length ? this.renderNull() : this.renderAppointments()}
             </div>
         );
     }
 }
 
-export default PlanReceptionistAppointment;
+const AppointmentWithTranslation =  withTranslation()(PlanReceptionistAppointmentWithoutTr);
+
+export default function PlanReceptionistAppointment(){
+    return (
+        <Suspense fallback="loading">
+            <AppointmentWithTranslation/>
+        </Suspense>
+    );
+}

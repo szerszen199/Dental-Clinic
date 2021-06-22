@@ -3,10 +3,10 @@ import "../PlanAppointment.css";
 import {Accordion, Button, Card, Col, Container, Row} from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import {AppointmentSlot} from "../../AppointmentSlot";
-import {makeAppointmentSlotsListRequest} from "../AppointmentSlotsListRequest";
+import {makeDoctorAppointmentSlotsListRequest} from "../AppointmentSlotsListRequest";
 import {withTranslation} from "react-i18next";
 
-class PlanPatientAppointmentWithoutTr extends React.Component {
+class ViewDoctorAppointmentSlotsWithoutTr extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -16,11 +16,11 @@ class PlanPatientAppointmentWithoutTr extends React.Component {
     }
 
     componentDidMount() {
-        this.makeGetAppointmentsSlotsRequest();
+        this.makeDoctorGetAppointmentsSlotsRequest();
     }
 
-    makeGetAppointmentsSlotsRequest() {
-        makeAppointmentSlotsListRequest().then((response) => {
+    makeDoctorGetAppointmentsSlotsRequest() {
+        makeDoctorAppointmentSlotsListRequest().then((response) => {
             this.unFilteredList = response
             this.setState({appointmentsList: this.unFilteredList})
         })
@@ -45,19 +45,9 @@ class PlanPatientAppointmentWithoutTr extends React.Component {
                 dataField: 'date',
                 text: t('Date'),
                 style: {verticalAlign: "middle"},
-                sort: true
-            },
-            {
-                dataField: 'doctor.lastName',
-                text: t('Doctors Last Name'),
-                style: {verticalAlign: "middle"},
-                sort: true
-            },
-            {
-                dataField: 'doctor.firstName',
-                text: t('Doctors First Name'),
-                style: {verticalAlign: "middle"},
-                sort: true
+                sort: true,
+                align: 'center',
+                headerAlign:'center'
             }
         ]
         const selectRow = {
@@ -65,7 +55,7 @@ class PlanPatientAppointmentWithoutTr extends React.Component {
             clickToSelect: true,
             clickToExpand: true,
             hideSelectColumn: true,
-            bgColor: '#e0f4fc'
+            bgColor: '#fff7cc'
         };
 
         const expandRow = {
@@ -93,7 +83,7 @@ class PlanPatientAppointmentWithoutTr extends React.Component {
     }
 }
 
-const AppointmentWithTranslation =  withTranslation()(PlanPatientAppointmentWithoutTr);
+const AppointmentWithTranslation =  withTranslation()(ViewDoctorAppointmentSlotsWithoutTr);
 
 export default function PlanReceptionistAppointment(){
     return (
