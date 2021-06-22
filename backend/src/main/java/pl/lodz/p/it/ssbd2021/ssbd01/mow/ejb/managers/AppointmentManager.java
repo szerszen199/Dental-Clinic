@@ -2,19 +2,17 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
 import java.util.List;
 import javax.ejb.Local;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.CreateAppointmentSlotRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AllScheduledAppointmentsResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
-
 
 
 /**
@@ -121,7 +119,7 @@ public interface AppointmentManager {
      * Modyfikuje umówioną wizyty.
      *
      * @param appointment wolna wizyta
-     * @throws AppointmentException  wyjątek appointmentException
+     * @throws AppointmentException wyjątek appointmentException
      */
     void editBookedAppointment(AppointmentEditRequestDto appointment) throws AppointmentException;
 

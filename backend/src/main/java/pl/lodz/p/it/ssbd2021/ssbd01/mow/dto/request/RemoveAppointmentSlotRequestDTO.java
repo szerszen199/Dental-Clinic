@@ -13,6 +13,12 @@ public class RemoveAppointmentSlotRequestDTO {
 
     /**
      * Tworzy nową instancję klasy RemoveAppointmentSlotRequestDTO.
+     */
+    public RemoveAppointmentSlotRequestDTO() {
+    }
+
+    /**
+     * Tworzy nową instancję klasy RemoveAppointmentSlotRequestDTO.
      *
      * @param id klucz główny niezarezerwowanej wizyty
      */

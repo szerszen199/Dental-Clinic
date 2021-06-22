@@ -15,15 +15,17 @@ public class AppointmentTransactionRepeater {
 
     @Inject
     private PropertiesLoader propertiesLoader;
+    
+    @Inject
+    private AppointmentManager appointmentManager;
 
     /**
      * Powtarza transakcję w ramach komponentu AppointmentManager.
      *
      * @param repeatable         implementacja interfejsu {@link Repeatable}
-     * @param appointmentManager komponent AppointmentManager
      * @throws Exception wyjątek w przypadku niepowodzenia
      */
-    public void repeatTransaction(Repeatable repeatable, AppointmentManager appointmentManager) throws Exception {
+    public void repeatTransaction(Repeatable repeatable) throws Exception {
         int retryTXCounter = propertiesLoader.getTransactionRetryCount();
         boolean rollbackTX = false;
         Exception exception;

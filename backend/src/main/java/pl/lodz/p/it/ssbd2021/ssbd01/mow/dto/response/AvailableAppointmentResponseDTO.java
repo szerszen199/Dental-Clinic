@@ -1,28 +1,21 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
-
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 
 public class AvailableAppointmentResponseDTO {
 
     @NotNull
-    private Long id;
-    
-    @NotNull
-    private Long doctorId;
-    
-    @NotNull
-    private LocalDateTime date;
-    
-    LocalDateTime date;
-    
-    @NotNull
     Long version;
-    
     @NotNull
     DoctorInfoResponseDTO doctor;
+    @NotNull
+    private Long id;
+    @NotNull
+    private Long doctorId;
+    @NotNull
+    private LocalDateTime date;
 
     /**
      * DTO do zwracania terminów wizyt.
