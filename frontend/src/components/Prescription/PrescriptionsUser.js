@@ -1,7 +1,5 @@
 import React, {Fragment, Suspense} from "react";
-
 import {Button, Container} from "react-bootstrap";
-
 import axios from "axios";
 import Cookies from "js-cookie";
 import {withTranslation} from "react-i18next";
@@ -15,7 +13,6 @@ class PrescriptionsListWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            accId: this.props.accId,
             prescriptions: []
         };
     }
@@ -37,7 +34,7 @@ class PrescriptionsListWithoutTranslation extends React.Component {
         const {t} = this.props;
         console.log(this.state)
         let self = this;
-        axios.get(process.env.REACT_APP_BACKEND_URL + "prescription/prescriptions/doctor/" + self.state.accId, {
+        axios.get(process.env.REACT_APP_BACKEND_URL + "prescription/prescriptions/patient", {
             headers: {
                 Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
             }

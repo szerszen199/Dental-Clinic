@@ -216,7 +216,11 @@
   "get_all_scheduled_appointments_failed": "Pobieranie wszystkich wizyt nie powiodło się",
   "no_access_level": "Konto nie posiada poziomu dostępu",
   "patients_account_list": "Konta Pacjentów",
-  "Expiration_Date" : "Data ważaności",
+  "expiration" : "Data ważaności",
+  "patient_firstname" : "Imię pacjęta",
+  "patient_lastname" : "Nazwisko pacjęta",
+  "doctor_firstname" : "Imię doktora",
+  "doctor_lastname" : "nazwisko doktora",
   "medications" : "Leki",
   "to_prescriptions" : "Do recept"
 }
