@@ -1,17 +1,21 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
-import java.util.List;
-import javax.ejb.Local;
-
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AllScheduledAppointmentsResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.CreateAppointmentSlotRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 
+import javax.ejb.Local;
+import java.util.List;
 
 
 /**
@@ -38,16 +42,11 @@ public interface AppointmentManager {
     /**
      * Modyfikuje slot wizyty.
      *
-     * @param appointment modyfikowana wizyta
+     * @param newAppointment edytowana wizyta
+     * @throws AppointmentException wyjątek typu AppointmentException
      */
-    void editAppointmentSlot(Appointment appointment);
+    void editAppointmentSlot(AppointmentSlotEditRequestDTO newAppointment) throws AppointmentException;
 
-    /**
-     * Pobiera wszystkie wolne wizyty.
-     *
-     * @return wolne wizyty
-     */
-    List<Appointment> getAllAppointmentSlots();
 
     /**
      * Pobiera wolne wizyty od teraz.
@@ -81,6 +80,15 @@ public interface AppointmentManager {
     List<Appointment> getScheduledAppointmentsByPatient() throws AppointmentException;
 
     /**
+     * Pobiera wizytę o {@param id}.
+     *
+     * @param id klucz główny wizyty
+     * @return umówione wizyty
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    Appointment findById(Long id) throws AppBaseException;
+
+    /**
      * Dodaje ocenę lekarza po wizycie.
      *
      * @param doctorId klucz główny lekarza
@@ -100,16 +108,16 @@ public interface AppointmentManager {
      * Dodaje slot na wizytę.
      *
      * @param appointment wolna wizyta
-     * @throws AccountException wyjątek typu AccountException
+     * @throws AccountException     wyjątek typu AccountException
      * @throws AppointmentException wyjątek typu AppointmentException
      */
-    void addAppointmentSlot(Appointment appointment) throws AccountException, AppointmentException;
+    void addAppointmentSlot(CreateAppointmentSlotRequestDTO appointment) throws AppointmentException;
 
     /**
      * Modyfikuje umówioną wizyty.
      *
      * @param appointment wolna wizyta
-     * @throws AppointmentException  wyjątek appointmentException
+     * @throws AppointmentException wyjątek appointmentException
      */
     void editBookedAppointment(AppointmentEditRequestDto appointment) throws AppointmentException;
 
@@ -121,11 +129,22 @@ public interface AppointmentManager {
     void removeAppointmentSlot(Long id);
 
     /**
+     * Potwierdza własną umówioną wizytę.
+     *
+     * @param id klucz główny wizyty
+     * @throws AppointmentException wyjątek sygnalizująvy błąd operacji na wizycie.
+     * @throws MailSendingException wyjątek sygnalizująvy błąd wysyłania maila.
+     */
+    void confirmOwnBookedAppointment(Long id) throws AppointmentException, MailSendingException;
+
+    /**
      * Potwierdza umówioną wizytę.
      *
      * @param id klucz główny wizyty
+     * @throws AppointmentException wyjątek sygnalizująvy błąd operacji na wizycie.
+     * @throws MailSendingException wyjątek sygnalizująvy błąd wysyłania maila.
      */
-    void confirmBookedAppointment(Long id);
+    void confirmBookedAppointment(Long id) throws AppointmentException, MailSendingException;
 
     /**
      * Pobiera wszystkich aktywnych pacjentów.
@@ -157,4 +176,13 @@ public interface AppointmentManager {
      * @throws AppointmentException wyjątek.
      */
     List<Appointment> getOwnAppointmentsSlots() throws AppointmentException;
+
+    /**
+     * Wysyła przypomnienie o konieczności potwierdzenia wizyty.
+     *
+     * @param id id wizyty dla której należy wysłać przypomnienie
+     * @throws AppointmentException wyjątek sygnalizująvy błąd operacji na wizycie.
+     * @throws MailSendingException wyjątek sygnalizująvy błąd wysyłania maila.
+     */
+    void sendAppointmentReminder(Long id) throws AppointmentException, MailSendingException;
 }

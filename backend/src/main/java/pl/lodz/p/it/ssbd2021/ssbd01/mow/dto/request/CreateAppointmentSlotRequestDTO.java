@@ -19,7 +19,7 @@ public class CreateAppointmentSlotRequestDTO {
     @NotNull(message = I18n.DOCTOR_ID_NULL)
     private String doctorLogin;
 
-    @Future
+    @Future(message = I18n.APPOINTMENT_DATE_FUTURE)
     @NotNull(message = I18n.APPOINTMENT_DATE_NULL)
     private LocalDateTime appointmentDate;
 

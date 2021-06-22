@@ -197,6 +197,11 @@
   "medications blank error": "Przepisane lekarstwa nie mogą być puste!",
   "appointment_slot_created_successfully": "Utworzono termin wizyty",
   "appointment_slot_creation_failed": "Nie udało się utworzyć terminu wizyty",
+  "ID": "ID",
+  "My appointments slots": "Moje terminy wizyt",
+  "Date": "Data",
+  "Doctors First Name":"Imię lekarza",
+  "Doctors Last Name":"Nazwisko lekarza",
   "creation_time": "Czas Stworzenia",
   "modification_time": "Czas Modyfikacji",
   "was_done": "Co zostało wykonane",
@@ -245,5 +250,15 @@
   "Documentation Entries": "Wpisy w dokumentacje",
   "due date past date": "Data ważności musi być przyszła",
   "canceled": "Anulowana",
-  "confirmed": "Potwierdzona"
+  "confirmed": "Potwierdzona",
+  "Edit appointment slot": "Edytuj termin wizyty",
+  "Question edit appointment slot": "Czy chcesz edytować termin wizyty?",
+  "appointment_slot_edited_successfully": "Termin wizyty został zmieniony",
+  "appointment_slot_edit_failed": "Nie udało się zmienić terminu wizyty",
+  "edit_entry": "Edycja wpisu",
+  "question_edit_entry": "Czy na pewno chcesz zedytować wpis dokuemntacji?",
+  "title_edit_entry": "Edycja wpisu dokumentacji",
+  "documentation_entry_edited_successfully": "Edycja wpisu dokumentacji powiodła się",
+  "documentation_entry_edited_unsuccessfully": "Edycja wpisu dokumentacji nie powiodła się",
+  "documentation_entry_edition_failed": "Edycja wpisu dokumentacji nie powiodła się"
 }

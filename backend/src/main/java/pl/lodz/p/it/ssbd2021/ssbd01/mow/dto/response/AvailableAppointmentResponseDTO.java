@@ -10,11 +10,11 @@ public class AvailableAppointmentResponseDTO {
     @NotNull
     Long id;
     @NotNull
-    Long doctorId;
-    @NotNull
     LocalDateTime date;
     @NotNull
     Long version;
+    @NotNull
+    DoctorInfoResponseDTO doctor;
 
     /**
      * DTO do zwracania terminów wizyt.
@@ -23,10 +23,18 @@ public class AvailableAppointmentResponseDTO {
      */
     public AvailableAppointmentResponseDTO(Appointment appointment) {
         this.id = appointment.getId();
-        this.doctorId = appointment.getDoctor().getId();
         this.date = appointment.getAppointmentDate();
         this.version = appointment.getVersion();
+        this.doctor = new DoctorInfoResponseDTO(appointment.getDoctor());
 
+    }
+
+    public DoctorInfoResponseDTO getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(DoctorInfoResponseDTO doctor) {
+        this.doctor = doctor;
     }
 
     public Long getId() {
@@ -35,14 +43,6 @@ public class AvailableAppointmentResponseDTO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getDoctorId() {
-        return doctorId;
-    }
-
-    public void setDoctorId(Long doctorId) {
-        this.doctorId = doctorId;
     }
 
     public LocalDateTime getDate() {

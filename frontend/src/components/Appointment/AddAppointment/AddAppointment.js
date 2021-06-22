@@ -14,7 +14,6 @@ class AddAppointmentWithoutTranslation extends React.Component {
         this.state = {
             dateTime: "",
             doctor: "",
-            toggleContents: "",
             doctorsList: [],
             errors: {}
         };
@@ -42,7 +41,6 @@ class AddAppointmentWithoutTranslation extends React.Component {
         }
 
         function findDoctorErrors() {
-            console.log(t.state.doctor);
             if (t.state.doctor == null || t.state.doctor === '') {
                 newErrors.doctor = "Doctor blank error";
             }
@@ -67,7 +65,6 @@ class AddAppointmentWithoutTranslation extends React.Component {
     handleSubmit(title, question, t) {
         return function (event) {
             event.preventDefault();
-            console.log(this.state.dateTime);
             const newErrors = this.findFormErrors(this);
 
             if (Object.keys(newErrors).length > 0) {
@@ -86,7 +83,6 @@ class AddAppointmentWithoutTranslation extends React.Component {
 
     renderDoctors() {
         const {t} = this.props;
-        console.log(this.state.doctorsList);
         return (
                 <Form.Group size="lg" controlId="doctor">
                     <Form.Label className="required">{t("Select doctor")}</Form.Label>
@@ -114,11 +110,6 @@ class AddAppointmentWithoutTranslation extends React.Component {
         );
     }
 
-    renderNull() {
-        const {t} = this.props;
-        return <div>{t('Loading')}</div>
-    }
-
     render() {
         const {t} = this.props;
         document.title = t("Dental Clinic") + " - " + t("Add new appointment");
@@ -141,7 +132,7 @@ class AddAppointmentWithoutTranslation extends React.Component {
                             {t(this.state.errors.dateTime)}
                         </Form.Control.Feedback>
                     </Form.Group>
-                    {!this.state.doctorsList.length ? this.renderNull() : this.renderDoctors()}
+                    {this.renderDoctors()}
                     <Button block size="lg" type="submit" disabled={false}>
                         {t("Add new appointment")}
                     </Button>
