@@ -196,6 +196,12 @@
   "Doctor blank error": "Musisz wybrać lekarza!",
   "appointment_slot_created_successfully": "Utworzono termin wizyty",
   "appointment_slot_creation_failed": "Nie udało się utworzyć terminu wizyty",
+  "ID": "ID",
+  "My appointments slots": "Moje terminy wizyt",
+  "Date": "Data",
+  "Doctors First Name":"Imię lekarza",
+  "Doctors Last Name":"Nazwisko lekarza"
+  "appointment_slot_creation_failed": "Nie udało się utworzyć terminu wizyty",
   "creation_time": "Czas Stworzenia",
   "modification_time": "Czas Modyfikacji",
   "was_done": "Co zostało wykonane",
