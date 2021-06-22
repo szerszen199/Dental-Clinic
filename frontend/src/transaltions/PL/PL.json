@@ -185,6 +185,7 @@
   "login_not_in_pattern": "W loginie użytkownika występują nieprawidłowe znaki",
   "forbidden": "Zakazane",
   "internal_server_error": "Błąd Serwera",
+  "not_found":  "Zasób Nieznaleziony",
   "get_active_patients_failed": "Nie udało się pobrać listy pacjentów",
   "Patients List": "Lista pacjentów",
   "Select doctor": "Wybierz lekarza",
@@ -195,7 +196,6 @@
   "Doctor blank error": "Musisz wybrać lekarza!",
   "appointment_slot_created_successfully": "Utworzono termin wizyty",
   "appointment_slot_creation_failed": "Nie udało się utworzyć terminu wizyty",
-  "not_found":  "Zasób Nieznaleziony",
   "creation_time": "Czas Stworzenia",
   "modification_time": "Czas Modyfikacji",
   "was_done": "Co zostało wykonane",
@@ -207,5 +207,12 @@
   "documentation_entry_deleted_successfully": "Udało się usunąć wpis w dokumentacji",
   "documentation_entry_not_found": "Wpis w dokumentacji nie znaleziony",
   "invalid_doctor_documentation_entry": "Nie wlasciwy lekarz dla wpisu w dokumentacji",
-  "delete_documentation_entry": "Czy na pewno chcesz usunąć wpis w dokumentacji?"
+  "delete_documentation_entry": "Czy na pewno chcesz usunąć wpis w dokumentacji?",
+  "doctor_name": "Lekarz",
+  "patient_name": "Pacjent",
+  "date": "Data",
+  "scheduled_appointments": "Zaplanowane wizyty",
+  "edit": "Edycja",
+  "get_all_scheduled_appointments_failed": "Pobieranie wszystkich wizyt nie powiodło się",
+  "no_access_level": "Konto nie posiada poziomu dostępu"
 }
