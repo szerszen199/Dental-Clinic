@@ -4,6 +4,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 import javax.annotation.security.PermitAll;
@@ -15,10 +16,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -153,6 +156,23 @@ public class AppointmentFacade extends AbstractFacade<Appointment> {
             throw AppBaseException.databaseError(e);
         }
 
+    }
+
+    /**
+     *  Metoda do aktualizacji oceny.
+     * @param id id wizyty do aktualizacji
+     * @param decimal ocena
+     * @throws AppointmentException błąd edycji.
+     */
+    public void updateRating(Long id, BigDecimal decimal) throws AppointmentException {
+        try {
+            Query query = em.createNamedQuery("Appointment.updateRating");
+            query.setParameter("id", id);
+            query.setParameter("rating", decimal);
+            query.executeUpdate();
+        } catch (IllegalStateException | PersistenceException e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
     }
 
 

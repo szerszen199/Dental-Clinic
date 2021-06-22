@@ -178,4 +178,22 @@ public class AppointmentException extends AppBaseException {
     public static AppointmentException appointmentCanceled() {
         return new AppointmentException(I18n.APPOINTMENT_CANCELED);
     }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę ocenienia nieodbytej jeszcze wizyty.
+     *
+     * @return zwraca wyjątek reprezentujący próbę ocenienia nieodbytej jeszcze wizyty.
+     */
+    public static AppointmentException appointmentNotFinished() {
+        return new AppointmentException(I18n.APPOINTMENT_NOT_FINISHED);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę ocenienia niedozwoloną wartością.
+     *
+     * @return zwraca wyjątek reprezentujący próbę ocenienia niedozwoloną wartością.
+     */
+    public static AppointmentException invalidRatingScore() {
+        return new AppointmentException(I18n.INVALID_RATING_SCORE);
+    }
 }
