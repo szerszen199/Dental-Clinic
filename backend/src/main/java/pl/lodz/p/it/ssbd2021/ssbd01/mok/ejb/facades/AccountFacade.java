@@ -132,6 +132,12 @@ public class AccountFacade extends AbstractFacade<Account> {
     }
 
 
+    /**
+     * Pobiera wszystkich pacjentów.
+     *
+     * @return Lista kont będących pacjentami
+     * @throws AppBaseException w przypadku błędów
+     */
     public List<Account> getAllPatients() throws AppBaseException {
         try {
             TypedQuery<Account> tq = em.createNamedQuery("Account.findByAccessLevel", Account.class);

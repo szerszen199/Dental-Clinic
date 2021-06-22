@@ -25,6 +25,7 @@ public class DocumentationInfoResponseDTO {
      * Tworzy nową instancję klasy Documentation info response dto.
      *
      * @param documentation                dokumentacja
+     * @param documentationEntryList       lista wpisów w dokumentacje
      * @param encryptor                    encryptor
      * @param entityIdentitySignerVerifier entity identity signer verifier
      * @throws NoSuchPaddingException    nie istniejący padding dla dekodowania
