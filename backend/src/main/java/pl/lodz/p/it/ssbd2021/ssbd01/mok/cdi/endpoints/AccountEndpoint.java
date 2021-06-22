@@ -8,8 +8,6 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.validation.Valid;
@@ -51,6 +49,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SetNewPasswordRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.SimpleUsernameRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.AccountInfoWithAccessLevelsResponseDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.GetAllPatientsResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccessLevelManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers.AccountManager;
@@ -142,9 +141,10 @@ public class AccountEndpoint {
         Exception exception;
         do {
             try {
+                new TransactionMaker().createAccountAndDocumentation(accountDto, accountManager, medicalDocumentationManager);
                 exception = null;
                 createAccountTransaction(accountDto);
-                rollbackTX = accountManager.isLastTransactionRollback() || medicalDocumentationManager.isLastTransactionRollback();
+                rollbackTX = accountManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
                 rollbackTX = true;
                 exception = e;
@@ -456,7 +456,6 @@ public class AccountEndpoint {
         return Response.ok().entity(new MessageResponseDto(I18n.ACCOUNT_EDITED_SUCCESSFULLY)).build();
     }
 
-
     /**
      * Edycja konta innego użytkownika.
      *
@@ -541,7 +540,6 @@ public class AccountEndpoint {
         }
         return Response.ok().entity(new MessageResponseDto(I18n.EMAIL_CONFIRMED_SUCCESSFULLY)).build();
     }
-
 
     /**
      * Metoda służąca do blokowania konta przez administratora.
@@ -761,7 +759,6 @@ public class AccountEndpoint {
         return Response.ok().entity(account).tag(signer.sign(account)).build();
     }
 
-
     /**
      * Pobiera informacje o koncie o {@param login}.
      *
@@ -807,6 +804,25 @@ public class AccountEndpoint {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_GET_ALL_ACCOUNTS_FAILED)).build();
         }
         return Response.ok(accountInfoResponseDTOList).build();
+    }
+
+    /**
+     * Pobiera listę wszystkich pacjentów.
+     *
+     * @return lista wszystkich pacjentów
+     */
+    @GET
+    @RolesAllowed({I18n.DOCTOR})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/patients")
+    public Response getAllPatients() {
+        try {
+            return Response.ok(new GetAllPatientsResponseDTO(accountManager.getAllPatients())).build();
+        } catch (AccountException e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
+        } catch (AppBaseException e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(ACCOUNT_GET_ALL_ACCOUNTS_FAILED)).build();
+        }
     }
 
     /**
@@ -931,7 +947,6 @@ public class AccountEndpoint {
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.PASSWORD_RESET_MAIL_SENT_SUCCESSFULLY)).build();
     }
 
-
     /**
      * Endpoint dla ustawiania w aktualnym koncie trybu ciemnego.
      *
@@ -972,7 +987,6 @@ public class AccountEndpoint {
         return Response.status(Status.OK).entity(new MessageResponseDto(ACCOUNT_DARK_MODE_SET_SUCCESSFULLY)).build();
     }
 
-
     /**
      * Endpoint dla ustawiania w aktualnym koncie języka interfejsu.
      *
@@ -1011,6 +1025,21 @@ public class AccountEndpoint {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.LANGUAGE_SET_SUCCESSFULLY)).build();
+    }
+
+    private static class TransactionMaker {
+        @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+        @PermitAll
+        public void createAccountAndDocumentation(
+                CreateAccountRequestDTO accountDto,
+                AccountManager accountManager,
+                MedicalDocumentationManager medicalDocumentationManager) throws MedicalDocumentationException, AccountException, MailSendingException {
+            accountManager.createAccount(
+                    AccountConverter.createAccountEntityFromDto(accountDto)
+            );
+            medicalDocumentationManager.createMedicalDocumentation(accountDto.getLogin());
+        }
+
     }
 
 }
