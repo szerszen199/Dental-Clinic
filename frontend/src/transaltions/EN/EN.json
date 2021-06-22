@@ -207,11 +207,12 @@
   "invalid_doctor_documentation_entry": "Invalid doctor for documentation entry",
   "delete_documentation_entry": "Are you sure you want to delete documentation entry?",
   "documentation_entry_deleted_successfully": "Documentation entry deleted successfully",
-  "appointment_slot_creation_failed": "Unable to create appointment slot",
   "doctor_name": "Doctor's name",
   "patient_name": "Patient's name",
   "date": "Date",
   "scheduled_appointments": "Scheduled appointments",
   "edit": "Edit",
-  "get_all_scheduled_appointments_failed": "Get all scheduled appointments failed"
+  "get_all_scheduled_appointments_failed": "Get all scheduled appointments failed",
+  "appointment_slot_creation_failed": "Unable to create appointment slot",
+  "no_access_level": "Access level has been revoked"
 }
