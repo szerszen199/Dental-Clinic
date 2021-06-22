@@ -155,8 +155,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         Appointment appointment;
         try {
             appointment = appointmentFacade.find(newAppointment.getId());
-            if(appointment == null)
-            {
+            if (appointment == null) {
                 throw AppointmentException.appointmentNotFound();
             }
         } catch (AppBaseException e) {
