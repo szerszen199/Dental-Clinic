@@ -224,7 +224,6 @@
   "get_all_scheduled_appointments_failed": "Pobieranie wszystkich wizyt nie powiodło się",
   "no_access_level": "Konto nie posiada poziomu dostępu",
   "patients_account_list": "Konta Pacjentów",
-  "appointment_not_found": "Wizyta nie została znaleziona",
   "appointment_slot_removal_failed": "Próba usunięcia terminu wizyty nie powiodła się",
   "appointment_was_booked": "Wybrana wizyta została już zarezerwowana. Odśwież stronę!",
   "appointment_id_null": "Wybierz wizytę",
@@ -271,7 +270,6 @@
   "documentation_entry_edited_unsuccessfully": "Edycja wpisu dokumentacji nie powiodła się",
   "documentation_entry_edition_failed": "Edycja wpisu dokumentacji nie powiodła się",
   "appointment_edit_successful": "Umówiona wizyta edytowana poprawnie",
-  "appointment_edit_failed": "Nie udało się edytować umówionej wizyty",
   "expiration": "Data ważaności",
   "patient_firstname": "Imię pacjenta",
   "patient_lastname": "Nazwisko pacjenta",
@@ -301,20 +299,14 @@
   "text_cancel_appointment": "Czy napewno chcesz odwołać wizytę",
   "delete_appointment": "Usuń wizytę",
 
-  "expiration_date_null": "Data wygaśnięcia nie może być pusta",
-  "medications_null": "Zapisane lekarstwa nie mogą być puste",
-  "documentation_id_null": "Id dokumentacji nie może być puste",
   "no_such_prescription": "Nie wybrano recepty",
   "prescription_removal_failed": "Usuwanie recepty nie powiodło się",
   "prescription_removal_unauthorized": "Nie wystawiłeś tej recepty, nie możesz jej usunąć",
   "prescription_removed_successfully": "Recepta została usunięta",
-  "Question delete prescription": "Czy chcesz usunąć receptę?"
-=======
-  "documentation_entry_edition_failed": "Edycja wpisu dokumentacji nie powiodła się",
+  "Question delete prescription": "Czy chcesz usunąć receptę?",
   "title_reserve_appointment": "Rezerwuj wizytę",
   "reserve_appointment_text": "Czy na pewno chcesz rezerwowac wizytę?",
   "appointment_reserved_successfully": "Rezerwacja przebiegła pomyślnie",
   "appointment_not_found": "Wizyty nie znaleziono",
   "appointment_edit_failed": "Edycja wizyty się nie powiodła"
->>>>>>> origin/develop
 }
