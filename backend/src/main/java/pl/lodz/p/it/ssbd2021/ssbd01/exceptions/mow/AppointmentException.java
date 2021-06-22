@@ -108,4 +108,16 @@ public class AppointmentException extends AppBaseException {
     public static AppointmentException appointmentCreationFailed() {
         return new AppointmentException(APPOINTMENT_SLOT_CREATION_FAILED);
     }
+
+    public static AppointmentException appointmentNotBelongingToPatient() {
+        return new AppointmentException(I18n.APPOINTMENT_NOT_BELONGING_TO_PATIENT);
+    }
+
+    public static AppointmentException appointmentAlreadyConfirmed() {
+        return new AppointmentException(I18n.APPOINTMENT_ALREADY_CONFIRMED);
+    }
+
+    public static AppointmentException appointmentCanceled() {
+        return new AppointmentException(I18n.APPOINTMENT_CANCELED);
+    }
 }
