@@ -14,9 +14,11 @@ function Receptionist() {
     return (
         <Nav activeKey={window.location.hash}>
             <NavDropdown title={t("Appointments")} id="navbarScrollingDropdown">
+                <Nav.Link as={Link} style={{color: "rgb(127, 127, 127)"}} className="navMenu" to="/add-appointment">{t("Add new appointment")}</Nav.Link>
                 <Nav.Link as={Link} style={{color: "rgb(127, 127, 127)"}} className="navMenu" to="/plan-appointment">{t("Plan an appointment")}</Nav.Link>
+                <Nav.Link as={Link} style={{color: "rgb(127, 127, 127)"}} className="navMenu" to="/my-appointments">{t("Scheduled appointments")}</Nav.Link>
             </NavDropdown>
-            <Nav.Link as={Link} to="/accounts">{t("Users Accounts")}</Nav.Link>
+            <Nav.Link as={Link} to="/list-patients">{t("Patients List")}</Nav.Link>
             <MyAccount/>
         </Nav>
     );

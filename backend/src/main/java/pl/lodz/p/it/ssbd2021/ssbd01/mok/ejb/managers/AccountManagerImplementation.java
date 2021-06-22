@@ -409,6 +409,15 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
+    public List<Account> getAllPatients() throws AppBaseException {
+        try {
+            return accountFacade.getAllPatients();
+        } catch (AppBaseException e) {
+            throw AccountException.getAllAccountsFailed();
+        }
+    }
+
+    @Override
     public void changePassword(ChangePasswordDto changePasswordDto) throws AppBaseException {
         Account account;
         try {

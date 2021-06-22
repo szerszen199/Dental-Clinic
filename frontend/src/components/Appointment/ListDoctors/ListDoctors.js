@@ -1,6 +1,6 @@
 import React, {Suspense} from "react";
 import "./ListDoctors.css";
-import {Accordion, Button, Card, Col, Container, Row} from "react-bootstrap";
+import {Button, Card, Col, Container, Row} from "react-bootstrap";
 import Rating from '@material-ui/lab/Rating';
 import {makeDoctorsListRequest} from "./DoctorListRequest";
 import {Fragment} from 'react';
@@ -32,7 +32,6 @@ class DoctorsList extends React.Component {
     }
 
     renderDoctors() {
-        const {t} = this.props;
         return this.state.doctorsList.map((doctor, index) => (
             <Card className="Card">
                 <Card.Body style={{width: "100%"}}>

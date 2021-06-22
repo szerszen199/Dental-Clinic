@@ -3,11 +3,19 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 import java.util.List;
 import javax.ejb.Local;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AllScheduledAppointmentsResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
+
+
 
 /**
  * Interfejs menadżera wizyt.
@@ -31,11 +39,11 @@ public interface AppointmentManager {
     void cancelBookedAppointment(Long id);
 
     /**
-     * Modyfikuje umówioną wizytę.
+     * Modyfikuje slot wizyty.
      *
      * @param appointment modyfikowana wizyta
      */
-    void editBookedAppointment(Appointment appointment);
+    void editAppointmentSlot(Appointment appointment);
 
     /**
      * Pobiera wszystkie wolne wizyty.
@@ -55,8 +63,25 @@ public interface AppointmentManager {
      * Pobiera wszystkie umówione wizyty.
      *
      * @return umówione wizyty
+     * @throws AppointmentException appointment exception
      */
-    List<Appointment> getBookedAppointments();
+    AllScheduledAppointmentsResponseDTO getScheduledAppointments() throws AppointmentException;
+
+    /**
+     * Pobiera wszystkie umówione wizyty dla zalogowanego doktora.
+     *
+     * @return umówione wizyty
+     * @throws AppointmentException appointment exception
+     */
+    AllScheduledAppointmentsResponseDTO getScheduledAppointmentsByDoctor() throws AppointmentException;
+
+    /**
+     * Pobiera wszystkie umówione wizyty dla zalogowanego pacjenta.
+     *
+     * @return umówione wizyty
+     * @throws AppointmentException appointment exception
+     */
+    AllScheduledAppointmentsResponseDTO getScheduledAppointmentsByPatient() throws AppointmentException;
 
     /**
      * Dodaje ocenę lekarza po wizycie.
@@ -78,15 +103,18 @@ public interface AppointmentManager {
      * Dodaje slot na wizytę.
      *
      * @param appointment wolna wizyta
+     * @throws AccountException wyjątek typu AccountException
+     * @throws AppointmentException wyjątek typu AppointmentException
      */
-    void addAppointmentSlot(Appointment appointment);
+    void addAppointmentSlot(Appointment appointment) throws AccountException, AppointmentException;
 
     /**
-     * Modyfikuje slot wizyty.
+     * Modyfikuje umówioną wizyty.
      *
      * @param appointment wolna wizyta
+     * @throws AppointmentException  wyjątek appointmentException
      */
-    void editAppointmentSlot(Appointment appointment);
+    void editBookedAppointment(AppointmentEditRequestDto appointment) throws AppointmentException;
 
     /**
      * Usuwa slot wizyty.
@@ -104,11 +132,19 @@ public interface AppointmentManager {
     void confirmBookedAppointment(Long id);
 
     /**
-     * Pobiera wszystkich pacjentów.
+     * Pobiera wszystkich aktywnych pacjentów.
      *
-     * @return lista wszystkich pacjentów
+     * @return lista wszystkich aktywnych pacjentów
+     * @throws PatientException wyjątek typu PatientException
      */
-    List<Account> getAllPatients();
+    List<PatientResponseDTO> getActivePatients() throws PatientException;
+
+    /**
+     * Sprawdza czy ostatnia transakcja się powiodła.
+     *
+     * @return true jeśli ostatnia transakcja się nie powiodła, false jeśli nie.
+     */
+    boolean isLastTransactionRollback();
 
     /**
      * Pobiera wszystkie dostępne terminy wizyty.

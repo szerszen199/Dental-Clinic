@@ -7,6 +7,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 import javax.annotation.security.PermitAll;
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -16,6 +17,8 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
+
+import java.util.List;
 
 /**
  * Klasa definiująca główne operacje wykonywane na encjach typu Account.
@@ -45,6 +48,7 @@ public class AccountFacade extends AbstractFacade<Account> {
         super(entityClass);
     }
 
+
     /**
      * Wyszukuje konta na podstawie danego loginu.
      *
@@ -67,5 +71,24 @@ public class AccountFacade extends AbstractFacade<Account> {
     @Override
     protected EntityManager getEntityManager() {
         return em;
+    }
+
+    /**
+     * Pobiera listę aktywnych pacjentów.
+     *
+     * @return lista aktywnych pacjentów
+     * @throws AppBaseException bazowy wyjątek aplikacyjny
+     */
+    public List<Account> getActivePatients() throws AppBaseException {
+        try {
+            TypedQuery<Account> tq = em.createNamedQuery("Account.findActivePatients", Account.class);
+            return tq.getResultList();
+        } catch (PersistenceException e) {
+            throw AppBaseException.databaseError(e);
+        } catch (IllegalArgumentException e) {
+            throw AppBaseException.mismatchedPersistenceArguments(e);
+        } catch (EJBTransactionRolledbackException e) {
+            throw AppBaseException.transactionRepeatFailure();
+        }
     }
 }

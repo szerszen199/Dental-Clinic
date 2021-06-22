@@ -458,6 +458,7 @@ GRANT
     ON doctors_ratings TO ssbd01mow;
 
 GRANT
+    SELECT,
     INSERT
     ON doctors_ratings TO ssbd01mok;
 

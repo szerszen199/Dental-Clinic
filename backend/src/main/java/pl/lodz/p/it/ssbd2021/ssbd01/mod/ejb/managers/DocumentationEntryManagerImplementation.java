@@ -17,6 +17,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
+import java.util.List;
 
 @Stateful
 @PermitAll
@@ -62,6 +63,15 @@ public class DocumentationEntryManagerImplementation extends AbstractManager imp
             documentationEntryFacade.edit(documentationEntry);
         } catch (Exception e) {
             throw DocumentationEntryException.documentationEntryEditionFailed();
+        }
+    }
+
+    @Override
+    public List<DocumentationEntry> getDocumentationEntriesForUser(String username) throws DocumentationEntryException {
+        try {
+            return documentationEntryFacade.getDocumentationEntriesByLogin(username);
+        } catch (AppBaseException e) {
+            throw DocumentationEntryException.entryNotFoundError();
         }
     }
 }

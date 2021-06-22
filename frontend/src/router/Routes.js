@@ -6,12 +6,13 @@ import Registration from "../components/Registration/Registration";
 import Login from "../components/Login/Login";
 import Reset from "../components/ResetPassword/Reset";
 import Dashboard from "../components/Dashboard/Dashboard"
+import PatientsAccountList from "../components/Documentation/PatientsAccountLIst"
 import PrivateRoute from "./PrivateRoute";
 import GuestHomeRoute from "./GuestHomeRoute";
 import Account from "../components/Account/OwnAccount/Account"
 import AccountsList from "../components/AccountsList/AccountsList";
 import Prescription from "../components/Prescription/Prescription"
-import MyAppointment from "../components/Appointment/MyAppointment/MyAppointment";
+import MyAppointment from "../components/Appointment/MyAppointments/MyAppointments";
 import PlanAppointment from "../components/Appointment/PlanAppointment/PlanAppointment";
 import ListDoctors from "../components/Appointment/ListDoctors/ListDoctors";
 import HomeRoute from "./HomeRoute";
@@ -23,6 +24,9 @@ import UnlockConfirm from "../components/Confirmation/UnlockConfirm";
 import AccountActivationConfirm from "../components/Confirmation/AccountActivationConfirm";
 import MailChangeConfirm from "../components/Confirmation/MailChangeConfirm";
 import PasswordChangeConfirm from "../components/Confirmation/PasswordChangeConfirm";
+import ListPatients from "../components/Appointment/ListPatients/ListPatients";
+import AddAppointment from "../components/Appointment/AddAppointment/AddAppointment";
+import DocumentationList from "../components/Documentation/Documentation";
 
 export default function Routes() {
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
@@ -71,12 +75,18 @@ export default function Routes() {
             <PrivateRoute authed={isLoggedIn()} path='/account' component={Account}/>
             <PrivateRoute authed={isAdministrator() || isReceptionist()} path='/accounts' component={AccountsList}/>
             <PrivateRoute authed={isAdministrator()} path='/other-account/:accId' component={OtherAccount} />
+            <PrivateRoute authed={isDoctor()} path='/account-documentation/:accId' component={DocumentationList} />
             <PrivateRoute authed={isPatient() || isReceptionist() || isDoctor()} path='/my-appointments'
                           component={MyAppointment}/>
             <PrivateRoute authed={isPatient() || isReceptionist()} path='/plan-appointment'
                           component={PlanAppointment}/>
+            <PrivateRoute authed={isReceptionist()} path='/add-appointment'
+                          component={AddAppointment}/>
+            <PrivateRoute authed={isDoctor()} path='/patients_account_list' component={PatientsAccountList}/>
             <PrivateRoute authed={isPatient() || isReceptionist() || isDoctor()} path='/list-doctors'
                           component={ListDoctors}/>
+            <PrivateRoute authed={isReceptionist()} path='/list-patients'
+                          component={ListPatients}/>
             <Route authed={isLoggedIn()} path='/activation-confirm/:token' component={AccountActivationConfirm}/>
             <Route authed={isLoggedIn()} path='/mail-change-confirm/:token' component={MailChangeConfirm}/>
             <Route authed={isLoggedIn()} path='/password-change-confirm/:token' component={PasswordChangeConfirm}/>
