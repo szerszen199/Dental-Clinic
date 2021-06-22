@@ -103,20 +103,6 @@ public class PrescriptionEndpoint {
         return Response.ok().entity(new MessageResponseDto(I18n.PRESCRIPTION_EDITED_SUCCESSFULLY)).build();
     }
 
-    @GET
-    @RolesAllowed({I18n.DOCTOR})
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("prescriptions")
-    public Response getPrescription() {
-        List<PrescriptionResponseDto> prescriptions;
-        try {
-            prescriptions = prescriptionsManager.getPrescriptions();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-        }
-        return Response.ok(prescriptions).build();
-    }
-
     /**
      * Pobiera listę aktywnych pacjentów.
      *

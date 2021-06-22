@@ -11,9 +11,9 @@ public class PrescriptionResponseDto {
     private final String doctorFirstname;
     private final String doctorLastname;
     private final LocalDateTime creationDateTime;
-    private final byte[] medications;
+    private final String medications;
 
-    public PrescriptionResponseDto(Long prescriptionId, LocalDateTime expiration, String patientFirstname, String patientLastname, String doctorFirstname, String doctorLastname, LocalDateTime creationDateTime, byte[] medications) {
+    public PrescriptionResponseDto(Long prescriptionId, LocalDateTime expiration, String patientFirstname, String patientLastname, String doctorFirstname, String doctorLastname, LocalDateTime creationDateTime, String medications) {
         this.prescriptionId = prescriptionId;
         this.expiration = expiration;
         this.patientFirstname = patientFirstname;
@@ -52,7 +52,7 @@ public class PrescriptionResponseDto {
         return creationDateTime;
     }
 
-    public byte[] getMedications() {
+    public String getMedications() {
         return medications;
     }
 }
