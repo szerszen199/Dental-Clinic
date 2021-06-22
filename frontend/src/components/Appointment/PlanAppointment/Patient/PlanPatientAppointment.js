@@ -86,7 +86,6 @@ class PlanPatientAppointmentWithoutTr extends React.Component {
     render() {
         return (
             <div className="MyAppointment">
-                <div> Select Appointment</div>
                 {!this.state.appointmentsList.length ? this.renderNull() : this.renderAppointments()}
             </div>
         );
