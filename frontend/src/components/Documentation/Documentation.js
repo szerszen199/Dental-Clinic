@@ -110,14 +110,19 @@ class DocumentationListWithoutTranslation extends React.Component {
     }
 
     linkEdit = (cell, row, rowIndex, formatExtraData) => {
+
         return (
-            <Button variant="outline-secondary">
+            <Button
+                disabled={this.state.documentation[rowIndex].doctorLogin !== Cookies.get(process.env.REACT_APP_LOGIN_COOKIE)}
+                variant="outline-secondary">
                 <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}
                      onClick={() => {
                          this.makeDeleteDocumentationRequest(this.state.documentation[rowIndex].id)
                      }}/>
             </Button>
         );
+
+
     }
 
     renderDocumentation() {
