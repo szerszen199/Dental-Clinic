@@ -1,8 +1,9 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow;
 
-import javax.ejb.ApplicationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+
+import javax.ejb.ApplicationException;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_NOT_FOUND;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_SLOT_REMOVAL_FAILED;
@@ -197,6 +198,11 @@ public class AppointmentException extends AppBaseException {
         return new AppointmentException(I18n.INVALID_RATING_SCORE);
     }
 
+    /**
+     * Tworzy wyjątek reprezentujący próbę zatwierdzenia wizyty z przeszłości.
+     *
+     * @return zwraca wyjątek  reprezentujący próbę zatwierdzenia wizyty z przeszłości.
+     */
     public static AppointmentException appointmentIsInPast() {
         return new AppointmentException(I18n.APPOINTMENT_IS_IN_PAST);
     }
