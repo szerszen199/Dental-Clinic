@@ -11,7 +11,7 @@ import errorAlerts from "../Alerts/ErrorAlerts/ErrorAlerts";
 import {DocumentationEntry} from "./DocumentationEntry";
 import BootstrapTable from "react-bootstrap-table-next";
 import {Link} from "react-router-dom";
-import edit from "../../assets/edit.png";
+import edit from "../../assets/delete-xxl.png";
 import * as PropTypes from "prop-types";
 import {Fragment} from "react";
 import {FiRefreshCw} from "react-icons/fi";
