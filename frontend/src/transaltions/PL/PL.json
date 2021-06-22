@@ -282,7 +282,7 @@
   "patient_id_null": "Id pacjenta nie może być puste",
   "expiration_date_null": "Data wygaśnięcia nie może być pusta",
   "medications_null": "Zapisane lekarstwa nie mogą być puste",
-  "documentation_id_null": "Id dokumentacji nie może być puste"
+  "documentation_id_null": "Id dokumentacji nie może być puste",
   "no_such_prescription": "Nie wybrano recepty",
   "prescription_removal_failed": "Usuwanie recepty nie powiodło się",
   "prescription_removal_unauthorized": "Nie wystawiłeś tej recepty, nie możesz jej usunąć",

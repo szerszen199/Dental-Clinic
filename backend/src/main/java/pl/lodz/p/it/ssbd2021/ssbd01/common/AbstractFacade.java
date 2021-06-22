@@ -86,7 +86,7 @@ public abstract class AbstractFacade<T> {
      * @return obiekt encji.
      * @throws AppBaseException wyjątek typu AppBaseException
      */
-    public T find(Object id) throws AppBaseException {
+    public T find(Long id) throws AppBaseException {
         try {
             return getEntityManager().find(entityClass, id);
         } catch (PersistenceException e) {

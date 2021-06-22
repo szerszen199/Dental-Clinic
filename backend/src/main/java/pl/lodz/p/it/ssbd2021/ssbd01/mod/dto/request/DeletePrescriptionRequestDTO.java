@@ -9,7 +9,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 public class DeletePrescriptionRequestDTO {
 
     @NotNull(message = I18n.PRESCRIPTION_ID_NULL)
-    private String businessId;
+    private Long id;
 
     /**
      * Tworzy nową instancję klasy DeletePrescriptionRequestDTO.
@@ -20,27 +20,27 @@ public class DeletePrescriptionRequestDTO {
     /**
      * Tworzy nową instancję klasy DeletePrescriptionRequestDTO.
      *
-     * @param businessId the business id
+     * @param id klucz główny wizyty
      */
-    public DeletePrescriptionRequestDTO(String businessId) {
-        this.businessId = businessId;
+    public DeletePrescriptionRequestDTO(Long id) {
+        this.id = id;
     }
 
     /**
-     * Pobiera pole businessId.
+     * Pobiera pole id.
      *
-     * @return identyfikator biznesowy recepty
+     * @return klucz główny wizyty
      */
-    public String getBusinessId() {
-        return businessId;
+    public Long getId() {
+        return id;
     }
 
     /**
-     * Ustawia pole businessId.
+     * Ustawia pole id.
      *
-     * @param businessId identyfikator biznesowy recepty
+     * @param id klucz główny recepty
      */
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
+    public void setBusinessId(Long id) {
+        this.id = id;
     }
 }

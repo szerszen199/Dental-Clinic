@@ -7,6 +7,8 @@ import errorAlerts from "../Alerts/ErrorAlerts/ErrorAlerts";
 import BootstrapTable from "react-bootstrap-table-next";
 import {FiRefreshCw} from "react-icons/fi";
 import {PrescriptionEntry} from "./PrescriptionEntry";
+import {IconButton} from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 
 class PrescriptionsListWithoutTranslation extends React.Component {
@@ -105,9 +107,23 @@ class PrescriptionsListWithoutTranslation extends React.Component {
                 text: t('medications'),
                 style: {verticalAlign: "middle"}
             },
+            {
+                dataField: 'delete',
+                text: t('delete'),
+                style: {verticalAlign: "middle"},
+                formatter: this.deletePrescription
+            },
         ]
 
         return <BootstrapTable striped keyField='id' columns={columns} data={this.state.prescriptions}/>;
+    }
+
+    deletePrescription = (cell, row, rowIndex, formatExtraData) => {
+        return (
+            <IconButton aria-label="delete" alt="Delete">
+                <DeleteIcon />
+            </IconButton>
+        );
     }
 
     render() {

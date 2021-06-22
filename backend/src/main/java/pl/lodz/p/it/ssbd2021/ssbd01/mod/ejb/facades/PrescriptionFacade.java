@@ -1,11 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
-
+import java.util.List;
 import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -16,9 +11,12 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
-import java.util.List;
-import javax.persistence.PersistenceException;
-import javax.persistence.TypedQuery;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.PrescriptionException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 /**
  * Klasa definiująca główne operacje wykonywane na encjach typu Prescription.
@@ -91,22 +89,14 @@ public class PrescriptionFacade extends AbstractFacade<Prescription> {
         return em;
     }
 
-    /**
-     * Pobiera receptę na podstawie jej identyfikatora biznesowego.
-     *
-     * @param businessId identyfikator biznesowy recepty
-     * @return recepta
-     * @throws AppBaseException bazowy wyjątek aplikacji
-     */
-    public Prescription findByBusinessId(String businessId) throws AppBaseException {
-        try {
-            TypedQuery<Prescription> tq = em.createNamedQuery("Prescription.findByBusinessId", Prescription.class);
-            tq.setParameter("business", businessId);
-            return tq.getSingleResult();
-        } catch (NoResultException e) {
+    @Override
+    public Prescription find(Long id) throws AppBaseException {
+        Prescription prescription = super.find(id);
+        
+        if (prescription == null) {
             throw PrescriptionException.noSuchPrescription();
-        } catch (PersistenceException e) {
-            throw AppBaseException.databaseError(e);
         }
+        
+        return prescription;
     }
 }

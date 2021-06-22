@@ -1,11 +1,10 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
-
-import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
+import javax.validation.constraints.NotNull;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
 
 /**
  * Klasa dto dla edycji recepty.
@@ -13,7 +12,7 @@ import java.util.Map;
 public class EditPrescriptionRequestDto implements SignableEntity {
 
     @NotNull(message = I18n.PRESCRIPTION_ID_NULL)
-    private String id;
+    private Long id;
 
     @NotNull(message = I18n.PRESCRIPTION_MEDICATIONS_NULL)
     private String medications;
@@ -21,11 +20,11 @@ public class EditPrescriptionRequestDto implements SignableEntity {
     @NotNull(message = I18n.VERSION_NULL)
     private Long version;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

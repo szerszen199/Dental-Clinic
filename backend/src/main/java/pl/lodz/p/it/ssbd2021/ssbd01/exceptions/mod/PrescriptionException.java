@@ -1,21 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-
-import javax.ejb.ApplicationException;
-
-/**
- * Typ Prescription exception.
- */
-@ApplicationException(rollback = true)
-public class PrescriptionException extends AppBaseException {
-    /**
-     * Tworzy nową instancję klasy Prescription exception.
-     *
-     * @param message message
-     */
-    protected PrescriptionException(String message) {
 import javax.ejb.ApplicationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
@@ -102,6 +86,9 @@ public class PrescriptionException extends AppBaseException {
      */
     public static AppBaseException invalidDateException() {
         return new PrescriptionException(I18n.INVALID_DATE_PRESCRIPTION);
+    }
+     
+    /** 
      * Wyjątek wystepujący, gdy wskazana recepta nie istnieje.
      *
      * @return wyjątek typu PrescriptionException
