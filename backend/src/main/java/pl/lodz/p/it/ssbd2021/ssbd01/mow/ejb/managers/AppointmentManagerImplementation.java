@@ -12,6 +12,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AllScheduledAppointmentsResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.CreateAppointmentSlotRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.ScheduledAppointmentResponseDTO;
@@ -142,6 +144,11 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
+    public Appointment findById(Long id) throws AppBaseException {
+        return appointmentFacade.find(id);
+    }
+
+    @Override
     public void rateDoctor(Long doctorId, Double rate) {
         throw new NotImplementedException();
     }
@@ -165,20 +172,100 @@ public class AppointmentManagerImplementation extends AbstractManager implements
 
     @RolesAllowed({I18n.RECEPTIONIST})
     @Override
-    public void addAppointmentSlot(Appointment appointment) throws AccountException, AppointmentException {
+    public void addAppointmentSlot(CreateAppointmentSlotRequestDTO appointmentSlot) throws AppointmentException {
+        Account doctor;
+        boolean isAccountActiveDoctor;
+        try {
+            doctor = accountFacade.findByLogin(appointmentSlot.getDoctorLogin());
+            isAccountActiveDoctor = doctor.getAccessLevels().stream()
+                    .anyMatch(accessLevel -> accessLevel.getLevel().equals(I18n.DOCTOR)
+                            && accessLevel.getActive());
+        } catch (AppBaseException e) {
+            throw AppointmentException.accountNotFound();
+        }
+
         Account account;
         try {
             account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
         } catch (Exception e) {
-            throw AccountException.noSuchAccount(e);
+            throw AppointmentException.accountNotFound();
         }
+
+        Appointment appointment = new Appointment();
+
+        if (doctor.getActive() && isAccountActiveDoctor) {
+            appointment.setDoctor(doctor);
+        } else {
+            throw AppointmentException.appointmentNotDoctorOrInactive();
+        }
+
         appointment.setCreatedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         appointment.setCreatedBy(account);
+        appointment.setAppointmentDate(appointmentSlot.getAppointmentDate());
+
         try {
             appointmentFacade.create(appointment);
         } catch (Exception e) {
             throw AppointmentException.appointmentCreationFailed();
         }
+    }
+
+    @RolesAllowed({I18n.RECEPTIONIST})
+    @Override
+    public void editAppointmentSlot(AppointmentSlotEditRequestDTO newAppointment) throws AppointmentException {
+        Appointment appointment;
+        try {
+            appointment = appointmentFacade.find(newAppointment.getId());
+            if (appointment == null) {
+                throw AppointmentException.appointmentNotFound();
+            }
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentNotFound();
+        }
+
+        if (!newAppointment.getVersion().equals(appointment.getVersion())) {
+            throw AppointmentException.versionMismatch();
+        }
+        if (newAppointment.getDoctorLogin() != null) {
+            Account doctor;
+            boolean isAccountActiveDoctor;
+            try {
+                doctor = accountFacade.findByLogin(newAppointment.getDoctorLogin());
+                isAccountActiveDoctor = doctor.getAccessLevels().stream()
+                        .anyMatch(accessLevel -> accessLevel.getLevel().equals(I18n.DOCTOR)
+                                && accessLevel.getActive());
+            } catch (AppBaseException e) {
+                throw AppointmentException.accountNotFound();
+            }
+
+            try {
+                if (doctor.getActive() && isAccountActiveDoctor) {
+                    appointment.setDoctor(doctor);
+                } else {
+                    throw AppointmentException.appointmentNotDoctorOrInactive();
+                }
+            } catch (AppointmentException e) {
+                throw AppointmentException.appointmentNotDoctorOrInactive();
+            }
+        }
+
+        if (newAppointment.getAppointmentDate() != null) {
+            appointment.setAppointmentDate(newAppointment.getAppointmentDate());
+        }
+
+        try {
+            appointment.setModifiedBy(accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+            appointment.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        } catch (Exception e) {
+            throw AppointmentException.accountNotFound();
+        }
+
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
+
     }
 
     @Override
