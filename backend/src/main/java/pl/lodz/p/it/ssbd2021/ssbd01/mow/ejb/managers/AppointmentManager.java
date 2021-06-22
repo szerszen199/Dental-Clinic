@@ -65,6 +65,7 @@ public interface AppointmentManager {
      *
      * @param id klucz główny wizyty
      * @return umówione wizyty
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     Appointment findById(Long id) throws AppBaseException;
 
@@ -96,6 +97,7 @@ public interface AppointmentManager {
      * Modyfikuje slot wizyty.
      *
      * @param newAppointment edytowana wizyta
+     * @throws AppointmentException wyjątek typu AppointmentException
      */
     void editAppointmentSlot(AppointmentSlotEditRequestDTO newAppointment) throws AppointmentException;
 

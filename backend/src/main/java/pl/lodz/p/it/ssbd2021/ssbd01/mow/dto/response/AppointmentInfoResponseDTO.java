@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Typ Appointment info response dto.
+ */
 public class AppointmentInfoResponseDTO implements SignableEntity {
 
     @NotNull(message = I18n.APPOINTMENT_ID_NULL)
@@ -38,6 +41,11 @@ public class AppointmentInfoResponseDTO implements SignableEntity {
 
     private LocalDateTime cancellationDateTime;
 
+    /**
+     * Tworzy nową instancję klasy AppointmentInfoResponseDTO.
+     *
+     * @param appointment wizyta
+     */
     public AppointmentInfoResponseDTO(Appointment appointment) {
         this.id = appointment.getId();
         this.appointmentDate = appointment.getAppointmentDate();
@@ -45,13 +53,16 @@ public class AppointmentInfoResponseDTO implements SignableEntity {
         this.canceled = appointment.getCanceled();
         this.doctorLogin = appointment.getDoctor().getLogin();
         this.version = appointment.getVersion();
-        if(appointment.getPatient() != null) {
+        if (appointment.getPatient() != null) {
             this.patientLogin = appointment.getPatient().getLogin();
         }
         this.confirmationDateTime = appointment.getConfirmationDateTime();
         this.cancellationDateTime = appointment.getCancellationDateTime();
     }
 
+    /**
+     * Tworzy nową instancję klasy AppointmentInfoResponseDTO.
+     */
     public AppointmentInfoResponseDTO() {
     }
 
