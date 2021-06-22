@@ -1,19 +1,18 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry;
-import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
-import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.Encryptor;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.json.bind.annotation.JsonbTransient;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.json.bind.annotation.JsonbTransient;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.Encryptor;
 
 /**
  * Typ Documentation entry response dto.
@@ -142,6 +141,7 @@ public class DocumentationEntryResponseDTO implements SignableEntity {
     public Map<String, String> getPayload() {
         Map<String, String> map = new HashMap<>();
         map.put("version", getVersion().toString());
+        map.put("id", getId().toString());
         return map;
     }
 }

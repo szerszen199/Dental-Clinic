@@ -5,12 +5,16 @@ import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
 /**
- * Typ PrescriptionException - dla recept.
+ * Typ Prescription exception.
  */
 @ApplicationException(rollback = true)
 public class PrescriptionException extends AppBaseException {
-    
-    private PrescriptionException(String message) {
+    /**
+     * Tworzy nową instancję klasy Prescription exception.
+     *
+     * @param message message
+     */
+    protected PrescriptionException(String message) {
         super(message);
     }
 
@@ -87,8 +91,17 @@ public class PrescriptionException extends AppBaseException {
     public static AppBaseException invalidDateException() {
         return new PrescriptionException(I18n.INVALID_DATE_PRESCRIPTION);
     }
-     
-    /** 
+
+    /**
+     * Wyjątek w przypadku przedawnoinej recepty.
+     *
+     * @return wyjątek PrescriptionException
+     */
+    public static PrescriptionException prescriptionExpired() {
+        return new PrescriptionException(I18n.PRESCRIPTION_EXPIRED);
+    }
+
+    /**
      * Wyjątek wystepujący, gdy wskazana recepta nie istnieje.
      *
      * @return wyjątek typu PrescriptionException

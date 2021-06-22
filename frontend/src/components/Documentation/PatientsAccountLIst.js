@@ -9,11 +9,11 @@ import addNew from "../../assets/new.png";
 import {Input} from "semantic-ui-react";
 import {Fragment} from "react";
 import {makeAccountsListRequest} from "./AccountsListRequest";
+import {IconButton} from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 
 class DocumentationWithoutTranslation extends React.Component {
-
-
     constructor(props) {
         super(props);
         this.state = {
@@ -99,9 +99,23 @@ class DocumentationWithoutTranslation extends React.Component {
                 headerStyle: {verticalAlign: "middle"},
                 style: {textAlign: "center"},
                 formatter: this.linkPrescriptions
+            },
+            {
+                dataField: 'actions',
+                text: t('delete'),
+                style: {verticalAlign: "middle"},
+                formatter: this.deletePrescription
             }
         ]
         return <BootstrapTable striped keyField='login' columns={columns} data={this.state.accountsList}/>;
+    }
+
+    deletePrescription = (cell, row, rowIndex, formatExtraData) => {
+        return (
+            <IconButton aria-label="delete" alt="Delete">
+                <DeleteIcon />
+            </IconButton>
+        );
     }
 
     linkDocumentation = (cell, row, rowIndex, formatExtraData) => {
