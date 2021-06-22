@@ -194,6 +194,7 @@
   "DateTime blank error": "Termin nie może być pusty!",
   "DateTime past error": "Termin musi być z przyszłości!",
   "Doctor blank error": "Musisz wybrać lekarza!",
+  "medications blank error": "Przepisane lekarstwa nie mogą być puste!",
   "appointment_slot_created_successfully": "Utworzono termin wizyty",
   "appointment_slot_creation_failed": "Nie udało się utworzyć terminu wizyty",
   "creation_time": "Czas Stworzenia",
@@ -215,5 +216,7 @@
   "edit": "Edycja",
   "get_all_scheduled_appointments_failed": "Pobieranie wszystkich wizyt nie powiodło się",
   "no_access_level": "Konto nie posiada poziomu dostępu",
-  "patients_account_list": "Konta Pacjentów"
+  "patients_account_list": "Konta Pacjentów",
+  "medications": "Zalecone Lekarstwa",
+  "create_prescription": "Utwórz Recepte"
 }
