@@ -122,7 +122,12 @@ public class DoctorRating extends AbstractEntity implements Serializable {
     public Long getId() {
         return this.id;
     }
-    
+
+    /**
+     * Oblicza średnią ocen dla doktora.
+     *
+     * @return średnia ocen
+     */
     public double getAverage() {
         if (ratesCounter == 0) {
             return 0d;

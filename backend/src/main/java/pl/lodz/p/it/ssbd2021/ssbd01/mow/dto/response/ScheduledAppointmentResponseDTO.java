@@ -1,12 +1,11 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
-import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
-import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
 
 /**
  * Typ ScheduledAppointmentResponseDTO.
@@ -28,6 +27,7 @@ public class ScheduledAppointmentResponseDTO implements SignableEntity {
      * DTO do zwracania umówionej wizyty.
      *
      * @param appointment wizyta, na podstawie której tworzone jest DTO.
+     * @param entityIdentitySignerVerifier obiekt klasy do funkcjonalności podpisywania etag
      */
     public ScheduledAppointmentResponseDTO(Appointment appointment, EntityIdentitySignerVerifier entityIdentitySignerVerifier) {
         this.id = appointment.getId();
