@@ -18,6 +18,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorRating;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.CreateAppointmentSlotRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AccountFacade;
@@ -110,15 +111,37 @@ public class AppointmentManagerImplementation extends AbstractManager implements
 
     @RolesAllowed({I18n.RECEPTIONIST})
     @Override
-    public void addAppointmentSlot(Appointment appointment) throws AppointmentException {
+    public void addAppointmentSlot(CreateAppointmentSlotRequestDTO appointmentSlot) throws AppointmentException {
+        Account doctor;
+        boolean isAccountActiveDoctor;
+        try {
+            doctor = accountFacade.findByLogin(appointmentSlot.getDoctorLogin());
+            isAccountActiveDoctor = doctor.getAccessLevels().stream()
+                    .anyMatch(accessLevel -> accessLevel.getLevel().equals(I18n.DOCTOR)
+                            && accessLevel.getActive());
+        } catch (AppBaseException e) {
+            throw AppointmentException.accountNotFound();
+        }
+
         Account account;
         try {
             account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
         } catch (Exception e) {
             throw AppointmentException.accountNotFound();
         }
+
+        Appointment appointment = new Appointment();
+
+        if (doctor.getActive() && isAccountActiveDoctor) {
+            appointment.setDoctor(doctor);
+        } else {
+            throw AppointmentException.appointmentNotDoctorOrInactive();
+        }
+
         appointment.setCreatedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         appointment.setCreatedBy(account);
+        appointment.setAppointmentDate(appointmentSlot.getAppointmentDate());
+
         try {
             appointmentFacade.create(appointment);
         } catch (Exception e) {
@@ -139,7 +162,6 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         } catch (AppBaseException e) {
             throw AppointmentException.appointmentNotFound();
         }
-
 
         if (!newAppointment.getVersion().equals(appointment.getVersion())) {
             throw AppointmentException.versionMismatch();
@@ -167,10 +189,6 @@ public class AppointmentManagerImplementation extends AbstractManager implements
             }
         }
 
-
-
-
-
         if (newAppointment.getAppointmentDate() != null) {
             appointment.setAppointmentDate(newAppointment.getAppointmentDate());
         }
@@ -181,7 +199,6 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         } catch (Exception e) {
             throw AppointmentException.accountNotFound();
         }
-
 
         try {
             appointmentFacade.edit(appointment);

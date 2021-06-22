@@ -45,8 +45,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_GET_INFO_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_NOT_FOUND;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_OPTIMISTIC_LOCK_ERROR;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PASSWORD_CHANGE_FAILED;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.TRANSACTION_FAILED_ERROR;
 
 /**
  * Typ AppointmentEndpoint - punkt dostępowy dla zapytań związanych z wizytami i lekarzami.
@@ -132,8 +130,7 @@ public class AppointmentEndpoint {
     public Response createAppointmentSlot(@NotNull @Valid CreateAppointmentSlotRequestDTO appointmentSlotDto) {
         try {
             appointmentTransactionRepeater.repeatTransaction(
-                    () -> appointmentManager.addAppointmentSlot(AppointmentConverter.createAppointmentEntityFromDto(
-                            accountManager.findByLogin(appointmentSlotDto.getDoctorLogin()), appointmentSlotDto)));
+                    () -> appointmentManager.addAppointmentSlot(appointmentSlotDto));
         } catch (AppointmentException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         } catch (Exception e) {
