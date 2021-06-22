@@ -75,11 +75,6 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
-    public void editAppointmentSlot(Appointment appointment) {
-        throw new NotImplementedException();
-    }
-
-    @Override
     public List<Appointment> getAllAppointmentSlots() {
         throw new NotImplementedException();
     }
@@ -145,7 +140,11 @@ public class AppointmentManagerImplementation extends AbstractManager implements
 
     @Override
     public Appointment findById(Long id) throws AppBaseException {
-        return appointmentFacade.find(id);
+        Appointment appointment = appointmentFacade.find(id);;
+        if (appointment == null) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        return appointment;
     }
 
     @Override

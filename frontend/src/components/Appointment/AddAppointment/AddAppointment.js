@@ -14,7 +14,6 @@ class AddAppointmentWithoutTranslation extends React.Component {
         this.state = {
             dateTime: "",
             doctor: "",
-            toggleContents: "",
             doctorsList: [],
             errors: {}
         };
@@ -114,11 +113,6 @@ class AddAppointmentWithoutTranslation extends React.Component {
         );
     }
 
-    renderNull() {
-        const {t} = this.props;
-        return <div>{t('Loading')}</div>
-    }
-
     render() {
         const {t} = this.props;
         document.title = t("Dental Clinic") + " - " + t("Add new appointment");
@@ -141,7 +135,7 @@ class AddAppointmentWithoutTranslation extends React.Component {
                             {t(this.state.errors.dateTime)}
                         </Form.Control.Feedback>
                     </Form.Group>
-                    {!this.state.doctorsList.length ? this.renderNull() : this.renderDoctors()}
+                    {this.renderDoctors()}
                     <Button block size="lg" type="submit" disabled={false}>
                         {t("Add new appointment")}
                     </Button>

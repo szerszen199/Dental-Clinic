@@ -27,6 +27,7 @@ import PasswordChangeConfirm from "../components/Confirmation/PasswordChangeConf
 import ListPatients from "../components/Appointment/ListPatients/ListPatients";
 import AddAppointment from "../components/Appointment/AddAppointment/AddAppointment";
 import DocumentationList from "../components/Documentation/Documentation";
+import EditAppointmentSlot from "../components/Appointment/EditAppointmentSlot/EditAppointmentSlot";
 
 export default function Routes() {
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
@@ -82,6 +83,7 @@ export default function Routes() {
                           component={PlanAppointment}/>
             <PrivateRoute authed={isReceptionist()} path='/add-appointment'
                           component={AddAppointment}/>
+            <PrivateRoute authed={isReceptionist()} path='/appointment-slot/:appId' component={EditAppointmentSlot} />
             <PrivateRoute authed={isDoctor()} path='/patients_account_list' component={PatientsAccountList}/>
             <PrivateRoute authed={isPatient() || isReceptionist() || isDoctor()} path='/list-doctors'
                           component={ListDoctors}/>

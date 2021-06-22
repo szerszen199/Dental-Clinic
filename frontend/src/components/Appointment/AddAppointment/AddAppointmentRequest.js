@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 
 export function addAppointmentRequest(doctorLogin, appointmentDate, t) {
 
-    axios.post(process.env.REACT_APP_BACKEND_URL + "appointment/create", {
+    axios.post(process.env.REACT_APP_BACKEND_URL + "appointment/create-slot", {
             doctorLogin: doctorLogin,
             appointmentDate: appointmentDate
 
