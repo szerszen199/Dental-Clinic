@@ -3,19 +3,30 @@ import "./PlanAppointment.css";
 import {Accordion, Button, Card, Col, Container, Row} from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import {AppointmentSlot} from "../AppointmentSlot";
+import {makeAppointmentSlotsListRequest} from "./AppointmentSlotsListRequest";
 
 class PlanAppointment extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            accountsList: []
+            appointmentsList: []
         };
         this.unFilteredList = []
-        this.testList = [
-            new AppointmentSlot(1,"teraz","Jan Sobieski"),
-            new AppointmentSlot(2,"jutro","Janusz Tracz"),
-            new AppointmentSlot(3,"nigdy","Świnka Peppa")
-        ]
+    }
+
+    componentDidMount() {
+        this.makeGetAppointmentsSlotsRequest();
+    }
+
+    makeGetAppointmentsSlotsRequest() {
+        makeAppointmentSlotsListRequest().then((response) => {
+            this.unFilteredList = response
+            this.setState({appointmentsList: this.unFilteredList})
+        })
+    }
+
+    renderNull() {
+        return <div>{'Loading'}</div>
 
     }
 
@@ -25,7 +36,8 @@ class PlanAppointment extends React.Component {
                 dataField: 'id',
                 text: 'ID',
                 style: {verticalAlign: "middle"},
-                sort: true
+                sort: true,
+                hidden: true
             },
             {
                 dataField: 'date',
@@ -45,7 +57,7 @@ class PlanAppointment extends React.Component {
             clickToSelect: true,
             clickToExpand: true,
             hideSelectColumn: true,
-            bgColor: '#00BFFF'
+            bgColor: '#e6ff99'
         };
 
         const expandRow = {
@@ -60,66 +72,14 @@ class PlanAppointment extends React.Component {
             )
         };
 
-        return <BootstrapTable striped keyField='id' columns={columns} data={this.testList} selectRow={ selectRow }   expandRow={ expandRow } />;
+        return <BootstrapTable striped keyField='id' columns={columns} data={this.state.appointmentsList} selectRow={ selectRow }   expandRow={ expandRow } />;
     }
 
     render() {
         return (
             <div className="MyAppointment">
-                {/*<Accordion>*/}
-                {/*    <Card className="Card">*/}
-                {/*        <Card.Header style={{width: "100%"}}>*/}
-                {/*            <Accordion.Toggle as={Button} variant="link" eventKey="0">*/}
-                {/*                <p className="Buttons">17.08.2021 13:45 dr.Doktor</p>*/}
-                {/*            </Accordion.Toggle>*/}
-                {/*        </Card.Header>*/}
-                {/*        <Accordion.Collapse eventKey="0">*/}
-                {/*            <Card.Body>*/}
-                {/*                <Container style={{width: "100%"}}>*/}
-                {/*                    <Row style={{width: "100%"}}>*/}
-                {/*                        <Col>*/}
-                {/*                            <p>Address: Politechniki 1 Lodz</p>*/}
-                {/*                        </Col>*/}
-                {/*                        <Col style={{maxWidth: "100px"}}>*/}
-                {/*                            <Button*/}
-                {/*                                block size="sm"*/}
-                {/*                                type="submit">*/}
-                {/*                                Schedule*/}
-                {/*                            </Button>*/}
-                {/*                        </Col>*/}
-                {/*                    </Row>*/}
-                {/*                </Container>*/}
-                {/*            </Card.Body>*/}
-                {/*        </Accordion.Collapse>*/}
-                {/*    </Card>*/}
-                {/*    <Card className="Card">*/}
-                {/*        <Card.Header>*/}
-                {/*            <Accordion.Toggle as={Button} variant="link" eventKey="1">*/}
-                {/*                22.10.2021 18:00 dr Lekarz*/}
-                {/*            </Accordion.Toggle>*/}
-                {/*        </Card.Header>*/}
-                {/*        <Accordion.Collapse eventKey="1">*/}
-                {/*            <Card.Body>*/}
-                {/*                <Container style={{width: "100%"}}>*/}
-                {/*                    <Row style={{width: "100%"}}>*/}
-                {/*                        <Col>*/}
-                {/*                            <p>Address: Politechniki 2 Lodz</p>*/}
-                {/*                        </Col>*/}
-                {/*                        <Col style={{maxWidth: "100px"}}>*/}
-                {/*                            <Button*/}
-                {/*                                block size="sm"*/}
-                {/*                                type="submit">*/}
-                {/*                                Schedule*/}
-                {/*                            </Button>*/}
-                {/*                        </Col>*/}
-                {/*                    </Row>*/}
-                {/*                </Container>*/}
-                {/*            </Card.Body>*/}
-                {/*        </Accordion.Collapse>*/}
-                {/*    </Card>*/}
-                {/*</Accordion>*/}
-
-                {this.renderAppointments()}
+                <div> Select Appointment</div>
+                {!this.state.appointmentsList.length ? this.renderNull() : this.renderAppointments()}
             </div>
         );
     }
