@@ -151,6 +151,14 @@ public interface AccountManager {
     List<Account> getAllAccounts() throws AppBaseException;
 
     /**
+     * Pobranie listy wszystkich pacjentów.
+     *
+     * @return lista wszystkich pacjentów
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    List<Account> getAllPatients() throws AppBaseException;
+
+    /**
      * Zmienia hasło {@param newPassword} wskazanego konta {@param account}.
      *
      * @param changePasswordDto  dto z danymi do zmiany hasła

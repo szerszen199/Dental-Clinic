@@ -3,6 +3,8 @@ package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_SLOT_CREATION_FAILED;
+
 /**
  * Klasa wyjątku dla wizyty.
  */
@@ -44,6 +46,16 @@ public class AppointmentException extends AppBaseException {
     }
 
     /**
+     * Wyjątek w przypadku niepowodzenia odnalezienia konta edytującego wizytę.
+     *
+     * @param cause powód wyjątku
+     * @return wyjątek PrescriptionException
+     */
+    public static AppointmentException accountNotFound(Throwable cause) {
+        return new AppointmentException(I18n.ACCOUNT_NOT_FOUND, cause);
+    }
+
+    /**
      * Wyjątek błędu edycji wizyty.
      *
      * @return wyjątek AppointmentException
@@ -54,9 +66,46 @@ public class AppointmentException extends AppBaseException {
 
     /**
      * Wyjątek nieaktywnego konta dla wizyty, lub gdy konto nie jest pacjentem.
-     * @return  wyjątek AppointmentException
+     *
+     * @return wyjątek AppointmentException
      */
     public static AppointmentException appointmentNotPatientInactive() {
         return new AppointmentException(I18n.NOT_PATIENT_OR_INACTIVE);
+    }
+
+    /**
+     * Wyjątek błędnego pobiernania wszystkich wizyt.
+     *
+     * @return wyjątek AppointmentException
+     */
+    public static AppointmentException getAllAppointmentsException() {
+        return new AppointmentException(I18n.GET_ALL_APPOINTMENTS_FAILED);
+    }
+
+    /**
+     * Wyjątek błędnego pobiernania wszystkich umówionych wizyt.
+     *
+     * @return wyjątek AppointmentException
+     */
+    public static AppointmentException getAllScheduledAppointmentsException() {
+        return new AppointmentException(I18n.GET_ALL_SCHEDULED_APPOINTMENTS_FAILED);
+    }
+
+    /**
+     * Wyjątek błędnego pobiernania własnych wizyt.
+     *
+     * @return wyjątek AppointmentException
+     */
+    public static AppointmentException getOwnAppointmentsException() {
+        return new AppointmentException(I18n.GET_OWN_APPOINTMENTS_FAILED);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę utworzenia terminu wizyty, która się nie powiodła.
+     *
+     * @return wyjątek typu AppointmentException
+     */
+    public static AppointmentException appointmentCreationFailed() {
+        return new AppointmentException(APPOINTMENT_SLOT_CREATION_FAILED);
     }
 }

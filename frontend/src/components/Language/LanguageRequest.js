@@ -2,6 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 export function languageRequest(language){
+    language = language.toLowerCase();
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
     let config = {
         method: 'put',

@@ -1,5 +1,6 @@
 export class Doctor {
-    constructor(name, rate) {
+    constructor(login, name, rate) {
+        this.login = login;
         this.name = name;
         this.rate = rate;
     }

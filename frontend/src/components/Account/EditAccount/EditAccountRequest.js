@@ -1,6 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import successAlerts from "../../Alerts/SuccessAlerts/SuccessAlerts";
+import successAlertsWithRefresh from "../../Alerts/SuccessAlerts/SuccessAlertsWithRefresh";
 import errorAlerts from "../../Alerts/ErrorAlerts/ErrorAlerts";
 
 export function editAccountRequest(email, firstName, lastName, phoneNumber, pesel, version, etag, login, t) {
@@ -52,7 +52,7 @@ export function editAccountRequest(email, firstName, lastName, phoneNumber, pese
 
     axios(axiosConfig)
         .then((response) => {
-            successAlerts(t(response.data.message, response.status)).then(() => {
+            successAlertsWithRefresh(t(response.data.message, response.status)).then(() => {
             })
         })
         .catch((response) => {
