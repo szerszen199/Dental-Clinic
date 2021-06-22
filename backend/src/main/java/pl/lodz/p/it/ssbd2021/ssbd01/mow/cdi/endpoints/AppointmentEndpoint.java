@@ -46,6 +46,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -393,8 +394,8 @@ public class AppointmentEndpoint {
     @GET
     @RolesAllowed(I18n.PATIENT)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("rate/{id}")
-    public Response rateAppointment(@PathParam("id") Long id, Double mark) {
+    @Path("rate/{id}/{mark}")
+    public Response rateAppointment(@PathParam("id") Long id, @PathParam("mark") BigDecimal mark) {
         try {
 
             appointmentManager.rateAppointment(id, mark);

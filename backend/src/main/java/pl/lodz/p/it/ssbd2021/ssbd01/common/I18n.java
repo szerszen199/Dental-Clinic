@@ -211,4 +211,5 @@ public class I18n {
     public static final String APPOINTMENT_RATE_SUBJECT = "appointment_rate_subject";
     public static final String APPOINTMENT_RATE_TEXT = "appointment_rate_text";
     public static final String APPOINTMENT_RATE_LINK = "appointment_rate_link";
+    public static final String INVALID_RATING_SCORE = "invalid_rating_score";
 }
