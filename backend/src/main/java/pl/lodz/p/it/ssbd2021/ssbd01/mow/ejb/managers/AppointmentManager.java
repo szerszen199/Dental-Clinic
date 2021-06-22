@@ -63,7 +63,7 @@ public interface AppointmentManager {
      * @return umówione wizyty
      * @throws AppointmentException appointment exception
      */
-    AllScheduledAppointmentsResponseDTO getScheduledAppointments() throws AppointmentException;
+    List<Appointment> getScheduledAppointments() throws AppointmentException;
 
     /**
      * Pobiera wszystkie umówione wizyty dla zalogowanego doktora.
@@ -71,7 +71,7 @@ public interface AppointmentManager {
      * @return umówione wizyty
      * @throws AppointmentException appointment exception
      */
-    AllScheduledAppointmentsResponseDTO getScheduledAppointmentsByDoctor() throws AppointmentException;
+    List<Appointment> getScheduledAppointmentsByDoctor() throws AppointmentException;
 
     /**
      * Pobiera wszystkie umówione wizyty dla zalogowanego pacjenta.
@@ -79,7 +79,7 @@ public interface AppointmentManager {
      * @return umówione wizyty
      * @throws AppointmentException appointment exception
      */
-    AllScheduledAppointmentsResponseDTO getScheduledAppointmentsByPatient() throws AppointmentException;
+    List<Appointment> getScheduledAppointmentsByPatient() throws AppointmentException;
 
     /**
      * Dodaje ocenę lekarza po wizycie.

@@ -215,5 +215,12 @@
   "edit": "Edycja",
   "get_all_scheduled_appointments_failed": "Pobieranie wszystkich wizyt nie powiodło się",
   "no_access_level": "Konto nie posiada poziomu dostępu",
-  "patients_account_list": "Konta Pacjentów"
+  "patients_account_list": "Konta Pacjentów",
+  "edit_entry": "Edycja wpisu",
+  "question_edit_entry": "Czy na pewno chcesz zedytować wpis dokuemntacji?",
+  "title_edit_entry": "Edycja wpisu dokumentacji",
+  "not_empty": "Pola nie mogą być puste",
+  "documentation_entry_edited_successfully": "Edycja wpisu dokumentacji powiodła się",
+  "documentation_entry_edited_unsuccessfully": "Edycja wpisu dokumentacji nie powiodła się",
+  "documentation_entry_edition_failed": "Edycja wpisu dokumentacji nie powiodła się"
 }

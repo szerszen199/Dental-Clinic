@@ -2,7 +2,7 @@ import React, {Suspense} from 'react';
 import {withTranslation} from 'react-i18next';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import "./NewDocumentationEntry.css";
+import "./EditDocumentationEntry.css";
 import axios from "axios";
 import Cookies from "js-cookie";
 import errorAlerts from "../../Alerts/ErrorAlerts/ErrorAlerts";
@@ -16,14 +16,16 @@ class EditDocumentationEntryWithoutTranslation extends React.Component {
             wasDone: "",
             toBeDone: "",
             version: "",
-            id: this.props.accId,
-            etag: ""
+            id: this.props.entryId,
+            accId: this.props.accId,
+            etag: "",
+            errors: {}
         }
     }
 
     componentDidMount() {
         axios
-            .get(process.env.REACT_APP_BACKEND_URL + "documentation/edit", {
+            .get(process.env.REACT_APP_BACKEND_URL + "documentation/get/" + this.props.entryId, {
                 headers: {
                     Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
                 }
@@ -34,8 +36,8 @@ class EditDocumentationEntryWithoutTranslation extends React.Component {
                     toBeDone: result.data.toBeDone,
                     version: result.data.version,
                     id: result.data.id,
-                    etag: result.headers['etag']
-                })
+                    etag: result.data.etag
+                });
             })
     }
 
@@ -48,24 +50,27 @@ class EditDocumentationEntryWithoutTranslation extends React.Component {
     }
 
     makeEditEntryRequest(t) {
+        console.log(this.state)
         let config = {
             method: 'post',
             url: process.env.REACT_APP_BACKEND_URL + "documentation/edit",
             headers: {
                 'Authorization': 'Bearer ' + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME),
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "If-Match": this.state.etag
             },
             data: {
                 toBeDone: this.state.toBeDone,
                 wasDone: this.state.wasDone,
-                patient: this.state.patient
+                id: this.state.id,
+                version: this.state.version
             }
         };
         let self = this;
 
         axios(config)
             .then((response) => {
-                successAlertsWithRedirect(t(response.data.message), response.status.toString(), "/account-documentation/" + self.state.patient).then(() => {
+                successAlertsWithRedirect(t(response.data.message), response.status.toString(), "/account-documentation/" + self.state.accId).then(() => {
                 })
             })
             .catch((response) => {
@@ -102,11 +107,10 @@ class EditDocumentationEntryWithoutTranslation extends React.Component {
         return function (event) {
             event.preventDefault()
             const newErrors = this.findFormErrors(this, t);
-            console.log(newErrors);
             if (Object.keys(newErrors).length > 0) {
                 this.setState({errors: newErrors})
             } else {
-                confirmationAlerts(t("title_add_new_entry"), t("question_add_new_entry")).then((confirmed) => {
+                confirmationAlerts(t("title_edit_entry"), t("question_edit_entry")).then((confirmed) => {
                     if (confirmed) {
                         this.makeEditEntryRequest(t);
                     }
@@ -117,7 +121,7 @@ class EditDocumentationEntryWithoutTranslation extends React.Component {
 
     render() {
         const {t} = this.props;
-        document.title = t("Dental Clinic") + " - " + t("new_entry");
+        document.title = t("Dental Clinic") + " - " + t("edit_entry");
 
         return (
             <div className="AddNewEntry">
@@ -173,7 +177,7 @@ const EditDocumentationEntryTr = withTranslation()(EditDocumentationEntryWithout
 export default function EditDocumentationEntry(props) {
     return (
         <Suspense fallback="loading">
-            <EditDocumentationEntryTr accId={props.match.params.accId}/>
+            <EditDocumentationEntryTr accId={props.match.params.accId} entryId={props.match.params.entryId}/>
         </Suspense>
     );
 }
