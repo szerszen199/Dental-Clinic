@@ -119,12 +119,6 @@ public class AccountEndpoint {
     @Inject
     private EntityIdentitySignerVerifier signer;
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    private void createAccountTransaction(CreateAccountRequestDTO accountDto) throws MedicalDocumentationException, AccountException, MailSendingException {
-        this.accountManager.createAccount(AccountConverter.createAccountEntityFromDto(accountDto));
-        this.medicalDocumentationManager.createMedicalDocumentation(accountDto.getLogin());
-    }
-
 
     /**
      * Tworzy nowe konto.
@@ -144,8 +138,9 @@ public class AccountEndpoint {
         do {
             try {
                 new TransactionMaker().createAccountAndDocumentation(accountDto, accountManager, medicalDocumentationManager);
+//                this.accountManager.createAccount(AccountConverter.createAccountEntityFromDto(accountDto));
+//                this.medicalDocumentationManager.createMedicalDocumentation(accountDto.getLogin());
                 exception = null;
-                createAccountTransaction(accountDto);
                 rollbackTX = accountManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
                 rollbackTX = true;
