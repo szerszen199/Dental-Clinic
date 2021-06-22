@@ -100,22 +100,8 @@ class DocumentationWithoutTranslation extends React.Component {
                 style: {textAlign: "center"},
                 formatter: this.linkPrescriptions
             },
-            {
-                dataField: 'actions',
-                text: t('delete'),
-                style: {verticalAlign: "middle"},
-                formatter: this.deletePrescription
-            }
         ]
         return <BootstrapTable striped keyField='login' columns={columns} data={this.state.accountsList}/>;
-    }
-
-    deletePrescription = (cell, row, rowIndex, formatExtraData) => {
-        return (
-            <IconButton aria-label="delete" alt="Delete">
-                <DeleteIcon />
-            </IconButton>
-        );
     }
 
     linkDocumentation = (cell, row, rowIndex, formatExtraData) => {

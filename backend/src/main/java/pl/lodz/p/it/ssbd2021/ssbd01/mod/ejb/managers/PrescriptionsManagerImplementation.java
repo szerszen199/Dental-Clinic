@@ -153,6 +153,7 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
                     prescription.getExpiration(),
                     prescription.getPatient().getFirstName(),
                     prescription.getPatient().getLastName(),
+                    prescription.getDoctor().getLogin(),
                     prescription.getDoctor().getFirstName(),
                     prescription.getDoctor().getLastName(),
                     prescription.getCreationDateTime(),
@@ -175,6 +176,7 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
                     prescription.getExpiration(),
                     prescription.getPatient().getFirstName(),
                     prescription.getPatient().getLastName(),
+                    prescription.getDoctor().getLogin(),
                     prescription.getDoctor().getFirstName(),
                     prescription.getDoctor().getLastName(),
                     prescription.getCreationDateTime(),
@@ -198,13 +200,7 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
             throw PrescriptionException.prescriptionRemovalFailed();
         }
 
-        try {
-            prescription = prescriptionFacade.find(id);
-        } catch (PrescriptionException e) {
-            throw e;
-        } catch (AppBaseException e) {
-            throw PrescriptionException.prescriptionRemovalFailed();
-        }
+        prescription = this.findById(id);
 
         if (prescription.getDoctor() != loggedInDoctor) {
             throw PrescriptionException.prescriptionRemovalUnauthorized();

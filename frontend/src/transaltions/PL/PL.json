@@ -300,5 +300,6 @@
   "no_such_prescription": "Nie wybrano recepty",
   "prescription_removal_failed": "Usuwanie recepty nie powiodło się",
   "prescription_removal_unauthorized": "Nie wystawiłeś tej recepty, nie możesz jej usunąć",
-  "prescription_removed_successfully": "Recepta została usunięta"
+  "prescription_removed_successfully": "Recepta została usunięta",
+  "Question delete prescription": "Czy chcesz usunąć receptę?"
 }

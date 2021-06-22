@@ -40,7 +40,7 @@ public class DeletePrescriptionRequestDTO {
      *
      * @param id klucz główny recepty
      */
-    public void setBusinessId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }
