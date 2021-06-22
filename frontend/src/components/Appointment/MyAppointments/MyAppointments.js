@@ -17,7 +17,6 @@ class MyAppointmentsWithoutTranslation extends React.Component {
     }
 
     componentDidMount() {
-        this.renderLoading();
         this.makeGetAppointments();
     }
 
@@ -93,7 +92,7 @@ class MyAppointmentsWithoutTranslation extends React.Component {
                 </div>
                 <div className="documentation">
                     <Container>
-                        {this.renderTableOfAppointments()}
+                        {!this.state.appointments.length ? this.renderLoading() : this.renderTableOfAppointments()}
                     </Container>
                 </div>
             </Fragment>
