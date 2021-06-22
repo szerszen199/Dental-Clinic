@@ -125,7 +125,8 @@ public class AppointmentException extends AppBaseException {
 
     /**
      * Wyjątek nieaktywnego konta dla wizyty, lub gdy konto nie jest pacjentem.
-     * @return  wyjątek AppointmentException
+     *
+     * @return wyjątek AppointmentException
      */
     public static AppointmentException appointmentNotDoctorOrInactive() {
         return new AppointmentException(I18n.APPOINTMENT_NOT_DOCTOR_OR_INACTIVE);
@@ -158,6 +159,11 @@ public class AppointmentException extends AppBaseException {
         return new AppointmentException(I18n.APPOINTMENT_CANCELED);
     }
 
+    /**
+     * Tworzy wyjątek reprezentujący próbę ocenienia nieodbytej jeszcze wizyty.
+     *
+     * @return zwraca wyjątek reprezentujący próbę ocenienia nieodbytej jeszcze wizyty.
+     */
     public static AppointmentException appointmentNotFinished() {
         return new AppointmentException(I18n.APPOINTMENT_NOT_FINISHED);
     }

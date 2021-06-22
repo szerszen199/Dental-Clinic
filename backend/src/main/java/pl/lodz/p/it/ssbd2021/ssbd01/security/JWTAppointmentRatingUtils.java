@@ -6,9 +6,9 @@ import javax.inject.Inject;
 import java.text.ParseException;
 
 /**
- *  Klasa Jwt oceniania wizyty z maila.
+ * Klasa Jwt oceniania wizyty z maila.
  */
-public class JWTAppointmentRatingUtils extends JwtUtilsAbstract{
+public class JWTAppointmentRatingUtils extends JwtUtilsAbstract {
     @Inject
     private PropertiesLoader propertiesLoader;
 

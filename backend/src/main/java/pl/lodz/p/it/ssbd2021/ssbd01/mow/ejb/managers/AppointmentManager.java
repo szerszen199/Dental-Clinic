@@ -92,6 +92,7 @@ public interface AppointmentManager {
      *
      * @param doctorId klucz główny lekarza
      * @param rate     ocena
+     * @throws AppointmentException wyjątek typu AppointmentException
      */
     void rateAppointment(Long doctorId, Double rate) throws AppointmentException;
 

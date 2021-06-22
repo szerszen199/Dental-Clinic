@@ -432,6 +432,15 @@ public class MailProvider {
         }
     }
 
+    /**
+     * Wysyła maila z przypomnieniem o konieczności potwierdzenia wizyty.
+     *
+     * @param email Adres, na który zostanie wysłana wiadomość.
+     * @param lang  język wiadomości email
+     * @param token token
+     * @param id    id wizyty do ocenienia
+     * @throws MailSendingException Błąd wysyłania wiadomości.
+     */
     public void sendAppointmentRateMail(String email, String lang, String token, Long id) throws MailSendingException {
         Locale locale = new Locale(lang);
         ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);

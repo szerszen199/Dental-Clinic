@@ -52,28 +52,6 @@ import java.util.stream.Collectors;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_GET_INFO_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_NOT_FOUND;
-import javax.annotation.security.DenyAll;
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.EJBTransactionRolledbackException;
-import javax.ejb.Stateful;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_OPTIMISTIC_LOCK_ERROR;
 
 /**
@@ -405,6 +383,13 @@ public class AppointmentEndpoint {
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_CONFIRMED_SUCCESSFULLY)).build();
     }
 
+    /**
+     * Ocenia wizytę.
+     *
+     * @param id   id wizyty która ma zostać potwierdzona.
+     * @param mark ocena wizyty,
+     * @return status powodzenia operacji.
+     */
     @GET
     @RolesAllowed(I18n.PATIENT)
     @Produces(MediaType.APPLICATION_JSON)
@@ -413,7 +398,7 @@ public class AppointmentEndpoint {
         try {
 
             appointmentManager.rateAppointment(id, mark);
-        }catch (AppointmentException e) {
+        } catch (AppointmentException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_RATED_SUCCESSFULLY)).build();
