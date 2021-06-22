@@ -217,4 +217,7 @@ public class I18n {
     public static final String APPOINTMENT_RATE_TEXT = "appointment_rate_text";
     public static final String APPOINTMENT_RATE_LINK = "appointment_rate_link";
     public static final String INVALID_RATING_SCORE = "invalid_rating_score";
+    public static final String INVALID_TOKEN = "invalid_token";
+    public static final String APPOINTMENT_ALREADY_RATED = "appointment_already_rated";
+    public static final String DOCTOR_ALREADY_RATED = "doctor_rating_failed";
 }

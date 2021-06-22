@@ -1,29 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.cdi.endpoints;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.annotation.security.DenyAll;
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.EJBTransactionRolledbackException;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
@@ -51,6 +27,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
 import javax.annotation.security.DenyAll;
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateful;
@@ -434,20 +411,21 @@ public class AppointmentEndpoint {
     /**
      * Ocenia wizytę.
      *
-     * @param id   id wizyty która ma zostać potwierdzona.
-     * @param mark ocena wizyty,
+     * @param id    id wizyty która ma zostać potwierdzona.
+     * @param mark  ocena wizyty,
+     * @param token token.
      * @return status powodzenia operacji.
      */
     @GET
-    @RolesAllowed(I18n.PATIENT)
+    @PermitAll
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("rate/{id}/{mark}")
-    public Response rateAppointment(@PathParam("id") Long id, @PathParam("mark") BigDecimal mark) {
+    @Path("rate/{token}/{id}/{mark}")
+    public Response rateAppointment(@PathParam("token") String token, @PathParam("id") Long id, @PathParam("mark") BigDecimal mark) {
         try {
 
-            appointmentManager.rateAppointment(id, mark);
+            appointmentManager.rateAppointment(token, id, mark);
         } catch (AppointmentException e) {
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_RATED_SUCCESSFULLY)).build();
     }
