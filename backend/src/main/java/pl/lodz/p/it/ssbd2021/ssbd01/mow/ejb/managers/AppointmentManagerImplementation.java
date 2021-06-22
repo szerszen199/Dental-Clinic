@@ -18,6 +18,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.ScheduledAppointmentRespons
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AppointmentFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.DoctorRatingFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
@@ -58,6 +59,9 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     @Inject
     private LoggedInAccountUtil loggedInAccountUtil;
 
+    @Inject
+    private EntityIdentitySignerVerifier entityIdentitySignerVerifier;
+
     @Override
     public void bookAppointment(Long appointmentId, String login) {
         throw new NotImplementedException();
@@ -89,7 +93,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
             List<Appointment> appointments = appointmentFacade.findAllScheduledAppointments();
             List<ScheduledAppointmentResponseDTO> scheduledAppointmentResponseDTOS = new ArrayList<>();
             for (Appointment a : appointments) {
-                scheduledAppointmentResponseDTOS.add(new ScheduledAppointmentResponseDTO(a));
+                scheduledAppointmentResponseDTOS.add(new ScheduledAppointmentResponseDTO(a, entityIdentitySignerVerifier));
             }
             return new AllScheduledAppointmentsResponseDTO(scheduledAppointmentResponseDTOS);
         } catch (AppBaseException e) {
@@ -109,7 +113,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
             List<Appointment> appointments = appointmentFacade.findAllScheduledAppointmentsByDoctor(account);
             List<ScheduledAppointmentResponseDTO> scheduledAppointmentResponseDTOS = new ArrayList<>();
             for (Appointment a : appointments) {
-                scheduledAppointmentResponseDTOS.add(new ScheduledAppointmentResponseDTO(a));
+                scheduledAppointmentResponseDTOS.add(new ScheduledAppointmentResponseDTO(a, entityIdentitySignerVerifier));
             }
             return new AllScheduledAppointmentsResponseDTO(scheduledAppointmentResponseDTOS);
         } catch (AppBaseException e) {
@@ -129,7 +133,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
             List<Appointment> appointments = appointmentFacade.findAllScheduledAppointmentsByPatient(account);
             List<ScheduledAppointmentResponseDTO> scheduledAppointmentResponseDTOS = new ArrayList<>();
             for (Appointment a : appointments) {
-                scheduledAppointmentResponseDTOS.add(new ScheduledAppointmentResponseDTO(a));
+                scheduledAppointmentResponseDTOS.add(new ScheduledAppointmentResponseDTO(a, entityIdentitySignerVerifier));
             }
             return new AllScheduledAppointmentsResponseDTO(scheduledAppointmentResponseDTOS);
         } catch (AppBaseException e) {

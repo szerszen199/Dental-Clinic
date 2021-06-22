@@ -86,7 +86,7 @@ public class AccessLevelManagerImplementation extends AbstractManager implements
             if (accessLevel.getLevel().equals(I18n.DOCTOR)) {
 
                 Optional<DoctorRating> doctorRatingOptional;
-                
+
                 try {
                     doctorRatingOptional = doctorRatingFacade.findByDoctorLogin(login);
                 } catch (Exception e) {
@@ -95,7 +95,13 @@ public class AccessLevelManagerImplementation extends AbstractManager implements
 
                 if (doctorRatingOptional.isEmpty()) {
                     DoctorRating doctorRating = new DoctorRating(accessLevel.getAccountId());
-                    doctorRatingFacade.create(doctorRating);
+                    doctorRating.setCreatedBy(accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+                    doctorRating.setCreatedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(httpServletRequest));
+                    try {
+                        doctorRatingFacade.create(doctorRating);
+                    } catch(Exception e) {
+                        throw AccessLevelException.accessLevelAddFailed();
+                    }
                 }
             }
             
