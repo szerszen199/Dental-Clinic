@@ -22,6 +22,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AppointmentConverter;
 
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.ws.rs.GET;
@@ -53,6 +55,7 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.TRANSACTION_FAILED_ERROR;
 @Stateful
 @DenyAll
 @Interceptors(LogInterceptor.class)
+@TransactionAttribute(TransactionAttributeType.NEVER)
 public class AppointmentEndpoint {
 
     @Inject
@@ -157,42 +160,14 @@ public class AppointmentEndpoint {
         if (!signer.verifyEntityIntegrity(header, appointmentSlotEditRequestDto)) {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(DATABASE_OPTIMISTIC_LOCK_ERROR)).build();
         }
-
-        int retryTXCounter = propertiesLoader.getTransactionRetryCount();
-        boolean rollbackTX = false;
-        Exception exception;
-        do {
-            try {
-                exception = null;
-                appointmentManager.editAppointmentSlot(appointmentSlotEditRequestDto);
-                rollbackTX = appointmentManager.isLastTransactionRollback();
-            } catch (AppBaseException | EJBTransactionRolledbackException e) {
-                rollbackTX = true;
-                exception = e;
-            }
-            catch (Exception e) {
-                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.APPOINTMENT_SLOT_EDIT_FAILED)).build();
-            }
-        } while (rollbackTX && --retryTXCounter > 0);
-
-//        try {
-//            //appointmentManager.editAppointmentSlot(appointmentSlotEditRequestDto);
-//            appointmentTransactionRepeater.repeatTransaction(
-//                    () -> appointmentManager.editAppointmentSlot(appointmentSlotEditRequestDto));
-//        } catch (AppointmentException e) {
-//            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
-//        } catch (Exception e) {
-//            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.APPOINTMENT_SLOT_EDIT_FAILED)).build();
-//        }
-        if (exception != null) {
-            if (exception instanceof AppointmentException) {
-                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(exception.getMessage())).build();
-            } else if (exception instanceof AppBaseException) {
-                return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(PASSWORD_CHANGE_FAILED)).build();
-            }
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(TRANSACTION_FAILED_ERROR)).build();
+        try {
+            appointmentTransactionRepeater.repeatTransaction(
+                    () -> appointmentManager.editAppointmentSlot(appointmentSlotEditRequestDto));
+        } catch (AppointmentException e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.APPOINTMENT_SLOT_EDIT_FAILED)).build();
         }
-
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_SLOT_EDITED_SUCCESSFULLY)).build();
     }
 }

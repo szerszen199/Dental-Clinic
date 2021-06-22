@@ -22,7 +22,7 @@ public class AppointmentTransactionRepeater {
     /**
      * Powtórzenie transakcji.
      *
-     * @param repeatable                  implementacja interfejsu {@link Repeatable}
+     * @param repeatable                implementacja interfejsu {@link Repeatable}
      * @throws Exception exception w przypadku niepowodzenia
      */
     public void repeatTransaction(Repeatable repeatable) throws Exception {
@@ -43,5 +43,6 @@ public class AppointmentTransactionRepeater {
             throw exception == null ? AppBaseException.transactionRepeatFailure() : exception;
         }
     }
-
 }
+
+

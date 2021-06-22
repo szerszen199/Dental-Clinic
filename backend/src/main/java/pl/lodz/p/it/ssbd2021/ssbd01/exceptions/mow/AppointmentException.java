@@ -4,10 +4,13 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 
+import javax.ejb.ApplicationException;
+
 
 /**
  * Typ Appointment exception - wyjątki dla wizyty.
  */
+@ApplicationException(rollback = true)
 public class AppointmentException extends AppBaseException {
 
     /**
