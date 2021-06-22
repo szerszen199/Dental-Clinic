@@ -77,11 +77,6 @@ class MyAppointmentsWithoutTranslation extends React.Component {
         return <BootstrapTable striped keyField='id' columns={columns} data={this.state.appointments}/>;
     }
 
-    renderLoading() {
-        const {t} = this.props;
-        return <div>{t('Loading')}</div>
-    }
-
     render() {
         const {t} = this.props;
         document.title = t("Dental Clinic") + " - " + t("scheduled_appointments");
@@ -92,7 +87,7 @@ class MyAppointmentsWithoutTranslation extends React.Component {
                 </div>
                 <div className="documentation">
                     <Container>
-                        {!this.state.appointments.length ? this.renderLoading() : this.renderTableOfAppointments()}
+                        {this.renderTableOfAppointments()}
                     </Container>
                 </div>
             </Fragment>
