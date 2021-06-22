@@ -219,5 +219,10 @@
   "new_entry": "New entry",
   "question_add_new_entry": "Are you sure you want to add new documentation entry?",
   "title_add_new_entry": "Adding new documentation entry",
-  "not_empty": "Fields can;t be empty!"
+  "not_empty": "Fields can't be empty!",
+  "documentation_entry_created_successfully": "Documentation entry was created successfully",
+  "documentation_entry_created_unsuccessfully": "Documentation entry was created unsuccessfully",
+  "medical_documentation_not_found": "Documentation for that patient doesn't exist",
+  "encrypting_failed": "Encrypting data failed,",
+  "documentation_entry_creation_failed": "Documentation entry creation failed"
 }
