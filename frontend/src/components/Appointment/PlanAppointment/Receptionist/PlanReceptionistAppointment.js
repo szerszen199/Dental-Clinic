@@ -229,8 +229,6 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
                     deleteAppointmentSlotRequest(id, t);
                 }
             });
-        return <BootstrapTable striped keyField='id' columns={columns} data={this.state.appointmentsList}
-                               selectRow={selectRow} expandRow={expandRow}/>;
     }
 
     render() {
