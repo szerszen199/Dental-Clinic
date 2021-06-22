@@ -9,28 +9,23 @@ import {Col, Container, Row} from "react-bootstrap";
 import {Label} from "semantic-ui-react";
 import * as moment from "moment";
 import confirmationAlerts from "../Alerts/ConfirmationAlerts/ConfirmationAlerts";
-
-const emailRegex = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-
-const phoneNumberRegex = new RegExp(/^\d+$/);
-
-const peselRegex = new RegExp(/^\d+$/);
-
+import errorAlerts from "../Alerts/ErrorAlerts/ErrorAlerts";
+import successAlertsWithRedirect from "../Alerts/SuccessAlerts/SuccessAlertsWithRedirect";
 
 class EditAccountWithoutTranslation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            accId: this.props.id,
+            accId: this.props.accId,
             dueDate: moment(Date.now()).format('YYYY-MM-DD'),
-            dueTime: moment(Date.now()).format('hh:mm'),
+            dueTime: moment(Date.now()).format('HH:mm'),
             medications: "",
             errors: {}
         }
     }
 
     setValid(field) {
-        var array = this.state.errors;
+        let array = this.state.errors;
         if (!!array[field]) {
             array[field] = null;
         }
@@ -43,14 +38,29 @@ class EditAccountWithoutTranslation extends React.Component {
 
         function findMedicationsErrors() {
             if (t.state.medications === '') {
-                newErrors.lastName = "medications blank error";
-
+                newErrors.medications = "medications blank error";
             }
+        }
 
+        function findDueDateErrors() {
+            if (t.state.dueDate == "") {
+                newErrors.dueDate = "due date blank error";
+            }
+            if (t.state.dueDate < moment(Date.now()).format('YYYY-MM-DD')) {
+                newErrors.dueDate = "due date past date";
+            }
+        }
+
+        function findDueTimeErrors() {
+            if (t.state.dueTime == "") {
+                newErrors.dueTime = "due time blank error";
+            }
         }
 
 
-        findMedicationsErrors()
+        findMedicationsErrors();
+        findDueDateErrors();
+        findDueTimeErrors()
 
         return newErrors;
     }
@@ -68,14 +78,26 @@ class EditAccountWithoutTranslation extends React.Component {
                 this.setEditable()
             } else {
                 const newErrors = this.findFormErrors(this);
-
                 if (Object.keys(newErrors).length > 0) {
                     // We got errors!
                     this.setState({errors: newErrors})
                 } else {
                     confirmationAlerts(title, question).then((confirmed) => {
                         if (confirmed) {
-                            // editAccountRequest(this.state.email, this.state.firstName, this.state.lastName, phoneNumber, pesel, this.state.version, this.state.etag, this.state.accId, t);
+                            let dueDate = this.state.dueDate + "T" + this.state.dueTime;
+                            axios.put(process.env.REACT_APP_BACKEND_URL + "prescription/create", {
+                                patient: this.state.accId,
+                                expiration: dueDate,
+                                medications: this.state.medications
+                            }, {
+                                headers: {
+                                    Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
+                                }
+                            }).then((res) => {
+                                successAlertsWithRedirect(t(res.data.message), res.status.toString(10), "#/patients_account_list")
+                            }).catch((response) => {
+                                errorAlerts(t(response.response.data.message), response.response.status.toString(10));
+                            })
                         }
 
                     });
@@ -87,18 +109,10 @@ class EditAccountWithoutTranslation extends React.Component {
 
     render() {
         const {t} = this.props;
-        let lastSuccessfulLogin = "";
-        let lastUnsuccessfulLogin = "";
-        if (this.state.lastSuccessfulLogin !== "" && this.state.lastSuccessfulLogin !== undefined) {
-            lastSuccessfulLogin = moment(this.state.lastSuccessfulLogin).format('DD.MM.YYYY HH:mm:ss');
-        }
-        if (this.state.lastUnsuccessfulLogin !== "" && this.state.lastUnsuccessfulLogin !== undefined) {
-            lastUnsuccessfulLogin = moment(this.state.lastUnsuccessfulLogin).format('DD.MM.YYYY HH:mm:ss');
-        }
 
         return (
             <div className="EditAccount">
-                <Form onSubmit={this.handleSubmit(t("Warning"), t("Question edit account"), t)}>
+                <Form onSubmit={this.handleSubmit(t("Warning"), t("Question create prescription"), t)}>
                     <Form.Group size="lg" controlId="username">
                         <Form.Label>{t("Login")}</Form.Label>
                         <Form.Control
@@ -112,12 +126,12 @@ class EditAccountWithoutTranslation extends React.Component {
                         <Form.Label className="required">{t("medications")}</Form.Label>
                         <Form.Control
                             autoFocus
-                            type="text"
+                            as="textarea"
+                            rows={5}
                             value={this.state.medications}
                             onChange={
                                 (e) => {
                                     this.setState({medications: e.target.value}, () => {
-                                        console.log(this.state)
                                     });
                                     this.setValid('medications');
                                 }}
@@ -134,7 +148,6 @@ class EditAccountWithoutTranslation extends React.Component {
                             value={this.state.dueDate}
                             onChange={(e) => {
                                 this.setState({dueDate: e.target.value}, () => {
-                                    console.log(this.state)
                                 });
                                 this.setValid('dueDate');
                             }}
@@ -151,7 +164,6 @@ class EditAccountWithoutTranslation extends React.Component {
                             value={this.state.dueTime}
                             onChange={(e) => {
                                 this.setState({dueTime: e.target.value}, () => {
-                                    console.log(this.state)
                                 });
                                 this.setValid('dueTime');
                             }}
@@ -180,7 +192,7 @@ const EditAccountTr = withTranslation()(EditAccountWithoutTranslation)
 export default function EditAccount(props) {
     return (
         <Suspense fallback="loading">
-            <EditAccountTr account={props.account} id={props.id}/>
+            <EditAccountTr accId={props.match.params.accId}/>
         </Suspense>
     );
 }

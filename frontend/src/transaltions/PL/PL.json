@@ -218,5 +218,13 @@
   "no_access_level": "Konto nie posiada poziomu dostępu",
   "patients_account_list": "Konta Pacjentów",
   "medications": "Zalecone Lekarstwa",
-  "create_prescription": "Utwórz Recepte"
+  "create_prescription": "Utwórz Recepte",
+  "to_create_prescription": "Utwórz Recepte",
+  "Question create prescription": "Jesteś pewny że chcesz stworzyć receptę?",
+  "dueDate": "Data ważności",
+  "dueTime": "Czas Ważności",
+  "invalid_date_prescription": "Data ważności recepty musi być przyszła",
+  "invalid_medications": "Błędne zalecone lekarstwa",
+  "prescription_creation_failure": "Błąd przy tworzeniu recepty",
+  "prescription_created_successfully": "Recepta utworzona pomyślnie"
 }

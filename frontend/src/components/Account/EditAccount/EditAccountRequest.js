@@ -52,7 +52,7 @@ export function editAccountRequest(email, firstName, lastName, phoneNumber, pese
 
     axios(axiosConfig)
         .then((response) => {
-            successAlertsWithRefresh(t(response.data.message, response.status)).then(() => {
+            successAlertsWithRefresh(t(response.data.message), response.status.toString(10)).then(() => {
             })
         })
         .catch((response) => {
