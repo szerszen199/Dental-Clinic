@@ -5,9 +5,9 @@ import Button from "react-bootstrap/Button";
 import "./NewDocumentationEntry.css";
 import axios from "axios";
 import Cookies from "js-cookie";
-import successAlertsWithRefresh from "../../Alerts/SuccessAlerts/SuccessAlertsWithRefresh";
 import errorAlerts from "../../Alerts/ErrorAlerts/ErrorAlerts";
 import confirmationAlerts from "../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
+import successAlertsWithRedirect from "../../Alerts/SuccessAlerts/SuccessAlertsWithRedirect";
 
 class NewDocumentationEntryWithoutTranslation extends React.Component {
     constructor(props) {
@@ -43,10 +43,11 @@ class NewDocumentationEntryWithoutTranslation extends React.Component {
                 patient: this.state.patient
             }
         };
+        let self = this;
 
         axios(config)
             .then((response) => {
-                successAlertsWithRefresh(t(response.data.message, response.status)).then(() => {
+                successAlertsWithRedirect(t(response.data.message), response.status.toString(), "/account-documentation/" + self.state.patient).then(() => {
                 })
             })
             .catch((response) => {
