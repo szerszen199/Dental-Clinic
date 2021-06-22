@@ -107,37 +107,10 @@ class PrescriptionsListWithoutTranslation extends React.Component {
                 dataField: 'medications',
                 text: t('medications'),
                 style: {verticalAlign: "middle"}
-            },
-            {
-                dataField: 'actions',
-                text: t('delete'),
-                style: {verticalAlign: "middle"},
-                formatter: this.linkDelete
             }
         ]
 
         return <BootstrapTable striped keyField='prescriptionId' columns={columns} data={this.state.prescriptions}/>;
-    }
-
-    linkDelete = (cell, row, rowIndex, formatExtraData) => {
-        return (
-            <Button
-                // disabled={this.state.prescriptions[rowIndex].doctorLogin !== Cookies.get(process.env.REACT_APP_LOGIN_COOKIE)}
-                variant="outline-secondary">
-                <img src={deleteIcon} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}
-                     onClick={() => {
-                         this.makeDeleteDocumentationRequest(this.state.prescriptions[rowIndex].prescriptionId)
-                     }}/>
-            </Button>
-        );
-    }
-
-    handleDeleteButtonClick(id, title, question, t) {
-        confirmationAlerts(title, question).then((confirmed) => {
-            if (confirmed) {
-                deleteAppointmentSlotRequest(id, t);
-            }
-        });
     }
 
     render() {

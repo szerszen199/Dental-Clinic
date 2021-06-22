@@ -14,7 +14,6 @@ import javax.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.PrescriptionException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
@@ -87,16 +86,5 @@ public class PrescriptionFacade extends AbstractFacade<Prescription> {
     @Override
     protected EntityManager getEntityManager() {
         return em;
-    }
-
-    @Override
-    public Prescription find(Long id) throws AppBaseException {
-        Prescription prescription = super.find(id);
-        
-        if (prescription == null) {
-            throw PrescriptionException.noSuchPrescription();
-        }
-        
-        return prescription;
     }
 }
