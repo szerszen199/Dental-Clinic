@@ -216,5 +216,8 @@
   "appointment_slot_creation_failed": "Unable to create appointment slot",
   "no_access_level": "Access level has been revoked",
   "patients_account_list": "Patient's Accounts",
-  "new_entry": "New entry"
+  "new_entry": "New entry",
+  "question_add_new_entry": "Are you sure you want to add new documentation entry?",
+  "title_add_new_entry": "Adding new documentation entry",
+  "not_empty": "Fields can;t be empty!"
 }

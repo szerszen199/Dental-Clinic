@@ -216,5 +216,8 @@
   "get_all_scheduled_appointments_failed": "Pobieranie wszystkich wizyt nie powiodło się",
   "no_access_level": "Konto nie posiada poziomu dostępu",
   "patients_account_list": "Konta Pacjentów",
-  "new_entry": "Nowy wpis"
+  "new_entry": "Nowy wpis",
+  "question_add_new_entry": "Czy na pewno chcesz dodać nowy wpis dokuemntacji?",
+  "title_add_new_entry": "Dodawanie nowego wpisu dokumentacji",
+  "not_empty": "Pola nie mogą być puste"
 }
