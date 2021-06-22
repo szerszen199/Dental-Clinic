@@ -23,4 +23,36 @@ public class PrescriptionResponseDto {
         this.creationDateTime = creationDateTime;
         this.medications = medications;
     }
+
+    public Long getPrescriptionId() {
+        return prescriptionId;
+    }
+
+    public LocalDateTime getExpiration() {
+        return expiration;
+    }
+
+    public String getPatientFirstname() {
+        return patientFirstname;
+    }
+
+    public String getPatientLastname() {
+        return patientLastname;
+    }
+
+    public String getDoctorFirstname() {
+        return doctorFirstname;
+    }
+
+    public String getDoctorLastname() {
+        return doctorLastname;
+    }
+
+    public LocalDateTime getCreationDateTime() {
+        return creationDateTime;
+    }
+
+    public byte[] getMedications() {
+        return medications;
+    }
 }

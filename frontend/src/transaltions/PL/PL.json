@@ -215,5 +215,7 @@
   "edit": "Edycja",
   "get_all_scheduled_appointments_failed": "Pobieranie wszystkich wizyt nie powiodło się",
   "no_access_level": "Konto nie posiada poziomu dostępu",
-  "patients_account_list": "Konta Pacjentów"
+  "patients_account_list": "Konta Pacjentów",
+  "Expiration_Date" : "Data ważaności",
+  "medications" : "Leki"
 }
