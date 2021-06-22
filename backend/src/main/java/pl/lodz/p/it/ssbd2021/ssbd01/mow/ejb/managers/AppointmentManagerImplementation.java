@@ -11,10 +11,9 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentEditRequestDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentSelfDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentEditRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.CreateAppointmentSlotRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
@@ -39,7 +38,6 @@ import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -540,6 +538,9 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         if (appointment.getCanceled()) {
             throw AppointmentException.appointmentCanceled();
         }
+        if (appointment.getAppointmentDate().isBefore(LocalDateTime.now())) {
+            throw AppointmentException.appointmentIsInPast();
+        }
         appointment.setConfirmed(true);
         try {
             appointmentFacade.edit(appointment);
@@ -575,6 +576,9 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         }
         if (appointment.getCanceled()) {
             throw AppointmentException.appointmentCanceled();
+        }
+        if (appointment.getAppointmentDate().isBefore(LocalDateTime.now())) {
+            throw AppointmentException.appointmentIsInPast();
         }
         appointment.setConfirmed(true);
         try {
