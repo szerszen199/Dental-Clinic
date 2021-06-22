@@ -79,7 +79,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         Appointment appointment;
         try {
             account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
-            patient = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+            patient = accountFacade.findByLogin(bookAppointmentDto.getPatientLogin());
             appointment = appointmentFacade.find(bookAppointmentDto.getAppointmentId());
         } catch (Exception e) {
             throw AccountException.noSuchAccount(e);
