@@ -33,6 +33,7 @@ public class DoctorAndRateResponseDTO {
      * @param firstName imię lekarza
      * @param lastName  nazwisko lekarza
      * @param avgRate   średnia ocena
+     * @param ratesCounter licznik ocen
      */
     public DoctorAndRateResponseDTO(String login, String firstName, String lastName, double avgRate, int ratesCounter) {
         this.login = login;

@@ -99,7 +99,7 @@ public class AccessLevelManagerImplementation extends AbstractManager implements
                     doctorRating.setCreatedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(httpServletRequest));
                     try {
                         doctorRatingFacade.create(doctorRating);
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                         throw AccessLevelException.accessLevelAddFailed();
                     }
                 }
