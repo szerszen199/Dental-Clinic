@@ -12,6 +12,7 @@ import {FiRefreshCw} from "react-icons/fi";
 import {Col, Container, Row} from "react-bootstrap";
 import {Label} from "semantic-ui-react";
 import * as moment from "moment";
+import errorAlerts from "../../Alerts/ErrorAlerts/ErrorAlerts";
 
 const emailRegex = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
@@ -197,6 +198,7 @@ class EditAccountWithoutTranslation extends React.Component {
     }
 
     makeGetAccountRequest() {
+        const {t} = this.props;
         let requestPath
         if (this.state.accId === undefined) {
             requestPath = process.env.REACT_APP_BACKEND_URL + "account/info";
@@ -224,6 +226,11 @@ class EditAccountWithoutTranslation extends React.Component {
                     etag: result.headers['etag']
                 })
             })
+            .catch(response => {
+                if (response.response) {
+                    errorAlerts(t(response.response.data.message), response.response.status.toString(10));
+                }
+            });
     }
 
     handleSubmit(title, question, t) {
