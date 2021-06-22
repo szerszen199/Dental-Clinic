@@ -9,7 +9,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AllScheduledAppointmentsResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 
@@ -63,7 +62,7 @@ public interface AppointmentManager {
      * @return umówione wizyty
      * @throws AppointmentException appointment exception
      */
-    AllScheduledAppointmentsResponseDTO getScheduledAppointments() throws AppointmentException;
+    List<Appointment> getScheduledAppointments() throws AppointmentException;
 
     /**
      * Pobiera wszystkie umówione wizyty dla zalogowanego doktora.
@@ -71,7 +70,7 @@ public interface AppointmentManager {
      * @return umówione wizyty
      * @throws AppointmentException appointment exception
      */
-    AllScheduledAppointmentsResponseDTO getScheduledAppointmentsByDoctor() throws AppointmentException;
+    List<Appointment> getScheduledAppointmentsByDoctor() throws AppointmentException;
 
     /**
      * Pobiera wszystkie umówione wizyty dla zalogowanego pacjenta.
@@ -79,7 +78,7 @@ public interface AppointmentManager {
      * @return umówione wizyty
      * @throws AppointmentException appointment exception
      */
-    AllScheduledAppointmentsResponseDTO getScheduledAppointmentsByPatient() throws AppointmentException;
+    List<Appointment> getScheduledAppointmentsByPatient() throws AppointmentException;
 
     /**
      * Dodaje ocenę lekarza po wizycie.

@@ -243,5 +243,7 @@
   "prescription_created_successfully": "Recepta utworzona pomyślnie",
   "medical_documentation_fetch_failed": "Niepowodzenie przy pobieraniu dokumentacji medycznej pacjenta",
   "Documentation Entries": "Wpisy w dokumentacje",
-  "due date past date": "Data ważności musi być przyszła"
+  "due date past date": "Data ważności musi być przyszła",
+  "canceled": "Anulowana",
+  "confirmed": "Potwierdzona"
 }

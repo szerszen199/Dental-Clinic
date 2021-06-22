@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.cdi.endpoints;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.security.DenyAll;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
@@ -31,6 +33,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AllScheduledAppointmentsRes
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AvailableAppointmentResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.ScheduledAppointmentResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers.AppointmentManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.utils.AppointmentTransactionRepeater;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
@@ -204,7 +207,12 @@ public class AppointmentEndpoint {
     public Response getAllScheduleAppointments() {
         AllScheduledAppointmentsResponseDTO allScheduledAppointmentsResponseDTO;
         try {
-            allScheduledAppointmentsResponseDTO = appointmentManager.getScheduledAppointments();
+            List<Appointment> appointments = appointmentManager.getScheduledAppointments();
+            List<ScheduledAppointmentResponseDTO> scheduledAppointmentResponseDTOS = new ArrayList<>();
+            for (Appointment a : appointments) {
+                scheduledAppointmentResponseDTOS.add(new ScheduledAppointmentResponseDTO(a, signer));
+            }
+            allScheduledAppointmentsResponseDTO = new AllScheduledAppointmentsResponseDTO(scheduledAppointmentResponseDTOS);
         } catch (AppointmentException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (Exception e) {
@@ -225,7 +233,12 @@ public class AppointmentEndpoint {
     public Response getAllScheduleAppointmentsByDoctor() {
         AllScheduledAppointmentsResponseDTO allScheduledAppointmentsResponseDTO;
         try {
-            allScheduledAppointmentsResponseDTO = appointmentManager.getScheduledAppointmentsByDoctor();
+            List<Appointment> appointments = appointmentManager.getScheduledAppointmentsByDoctor();
+            List<ScheduledAppointmentResponseDTO> scheduledAppointmentResponseDTOS = new ArrayList<>();
+            for (Appointment a : appointments) {
+                scheduledAppointmentResponseDTOS.add(new ScheduledAppointmentResponseDTO(a, signer));
+            }
+            allScheduledAppointmentsResponseDTO = new AllScheduledAppointmentsResponseDTO(scheduledAppointmentResponseDTOS);
         } catch (AppointmentException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (Exception e) {
@@ -246,7 +259,12 @@ public class AppointmentEndpoint {
     public Response getAllScheduleAppointmentsByPatient() {
         AllScheduledAppointmentsResponseDTO allScheduledAppointmentsResponseDTO;
         try {
-            allScheduledAppointmentsResponseDTO = appointmentManager.getScheduledAppointmentsByPatient();
+            List<Appointment> appointments = appointmentManager.getScheduledAppointmentsByPatient();
+            List<ScheduledAppointmentResponseDTO> scheduledAppointmentResponseDTOS = new ArrayList<>();
+            for (Appointment a : appointments) {
+                scheduledAppointmentResponseDTOS.add(new ScheduledAppointmentResponseDTO(a, signer));
+            }
+            allScheduledAppointmentsResponseDTO = new AllScheduledAppointmentsResponseDTO(scheduledAppointmentResponseDTOS);
         } catch (AppointmentException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (Exception e) {
