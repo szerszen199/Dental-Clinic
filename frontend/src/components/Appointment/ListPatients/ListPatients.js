@@ -24,7 +24,8 @@ class ListPatientsWithoutTranslation extends React.Component {
     }
 
     makeGetPatientsRequest() {
-        makePatientsListRequest().then((response) => {
+        const {t} = this.props;
+        makePatientsListRequest(t).then((response) => {
             this.unFilteredList = response
             this.setState({patientsList: this.unFilteredList})
         })

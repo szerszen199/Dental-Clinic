@@ -113,7 +113,7 @@ class MainViewWithoutTranslation extends React.Component {
         if (typeof token !== 'undefined' && token !== null && token !== "null" && token !== undefined) {
             this.setState({
                 login: Cookies.get(process.env.REACT_APP_LOGIN_COOKIE),
-                isDarkMode: Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE),
+                isDarkMode: (Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE) === 'true'),
                 language: Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE),
                 flag: Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE) === "PL" ? this.flags["PL"] : this.flags["EN"]
             }, function () {
