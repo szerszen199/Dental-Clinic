@@ -304,5 +304,8 @@
   "title_cancel_appointment": "Warning appointment cancelation",
   "text_cancel_appointment": "Are you sure you want to cancel an appointment",
   "delete_appointment": "Delete appointment",
+  "title_reserve_appointment": "Reserve appointment",
+  "reserve_appointment_text": "Are you sure you want to reserve appointment ?",
+  "appointment_reserved_successfully" : "Reservation successful"
   "Question delete prescription": "Are you sure you want to delete prescription?"
 }

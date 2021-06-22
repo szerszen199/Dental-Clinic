@@ -13,9 +13,11 @@ import Account from "../components/Account/OwnAccount/Account"
 import AccountsList from "../components/AccountsList/AccountsList";
 import PrescriptionsUser from "../components/Prescription/PrescriptionsUser"
 import MyAppointment from "../components/Appointment/MyAppointments/MyAppointments";
+import Prescription from "../components/Prescription/Prescription"
 import PlanReceptionistAppointment from "../components/Appointment/PlanAppointment/Receptionist/PlanReceptionistAppointment";
 import PlanPatientAppointment from "../components/Appointment/PlanAppointment/Patient/PlanPatientAppointment";
 import ViewDoctorAppointmentSlots from "../components/Appointment/PlanAppointment/Doctor/ViewDoctorAppointmentSlots";
+import MyAppointment from "../components/Appointment/MyAppointments/MyAppointments";
 import ListDoctors from "../components/Appointment/ListDoctors/ListDoctors";
 import HomeRoute from "./HomeRoute";
 import Cookies from "js-cookie";

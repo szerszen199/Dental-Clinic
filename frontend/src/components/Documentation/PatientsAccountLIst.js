@@ -1,4 +1,4 @@
-import React, {Suspense} from "react";
+import React, {Fragment, Suspense} from "react";
 import {withTranslation} from "react-i18next";
 import BootstrapTable from 'react-bootstrap-table-next';
 import {Button} from "react-bootstrap";
@@ -7,7 +7,6 @@ import {FiRefreshCw} from "react-icons/fi";
 import edit from "../../assets/edit.png";
 import addNew from "../../assets/new.png";
 import {Input} from "semantic-ui-react";
-import {Fragment} from "react";
 import {makeAccountsListRequest} from "./AccountsListRequest";
 import {IconButton} from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
