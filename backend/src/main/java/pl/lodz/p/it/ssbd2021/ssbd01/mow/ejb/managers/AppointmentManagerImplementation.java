@@ -35,6 +35,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -139,9 +140,11 @@ public class AppointmentManagerImplementation extends AbstractManager implements
 
     @Override
     @RolesAllowed(I18n.PATIENT)
-    public void rateAppointment(Long id, Double rate) throws AppointmentException {
+    public void rateAppointment(Long id, BigDecimal rate) throws AppointmentException {
         Appointment appointment;
-        String callerName = loggedInAccountUtil.getLoggedInAccountLogin();
+        if (rate.doubleValue() < 0 || rate.doubleValue() > 5 || rate.toString().length() != 3) {
+            throw AppointmentException.invalidRatingScore();
+        }
         try {
             appointment = appointmentFacade.find(id);
         } catch (AppBaseException e) {
@@ -150,6 +153,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         if (appointment == null) {
             throw AppointmentException.appointmentNotFound();
         }
+        String callerName = loggedInAccountUtil.getLoggedInAccountLogin();
         if (appointment.getPatient() == null || !appointment.getPatient().getLogin().equals(callerName)) {
             throw AppointmentException.appointmentNotBelongingToPatient();
         }
@@ -159,10 +163,9 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         if (appointment.getAppointmentDate().isAfter(LocalDateTime.now())) {
             throw AppointmentException.appointmentNotFinished();
         }
-        appointment.setRating(rate);
         try {
-            appointmentFacade.edit(appointment);
-        } catch (AppBaseException e) {
+            appointmentFacade.updateRating(id, rate);
+        } catch (AppointmentException e) {
             throw AppointmentException.appointmentEditFailed();
         }
     }

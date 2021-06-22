@@ -18,6 +18,11 @@ DROP SEQUENCE IF EXISTS documentation_entries_seq;
 DROP SEQUENCE IF EXISTS prescriptions_seq;
 DROP SEQUENCE IF EXISTS doctors_ratings_seq;
 
+
+ALTER table appointments
+ALTER COLUMN rating TYPE decimal
+
+
 -- Tabela reprezentująca dane użytkownika
 CREATE TABLE accounts
 (

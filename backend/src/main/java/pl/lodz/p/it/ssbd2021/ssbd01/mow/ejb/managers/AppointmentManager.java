@@ -14,6 +14,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 
 import javax.ejb.Local;
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -94,7 +95,7 @@ public interface AppointmentManager {
      * @param rate     ocena
      * @throws AppointmentException wyjątek typu AppointmentException
      */
-    void rateAppointment(Long doctorId, Double rate) throws AppointmentException;
+    void rateAppointment(Long doctorId, BigDecimal rate) throws AppointmentException;
 
     /**
      * Pobiera wszystkich lekarzy i ich oceny.
