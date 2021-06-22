@@ -1,5 +1,15 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.NotImplementedException;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
@@ -23,17 +33,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
-
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Klasa implementująca interfejs menadżera wizyt.
@@ -156,7 +155,8 @@ public class AppointmentManagerImplementation extends AbstractManager implements
                             new DoctorAndRateResponseDTO(doctor.getDoctor().getLogin(),
                                     doctor.getDoctor().getFirstName(),
                                     doctor.getDoctor().getLastName(),
-                                    doctor.getAverage()))
+                                    doctor.getAverage(),
+                                    doctor.getRatesCounter()))
                     .collect(Collectors.toList());
         } catch (AppBaseException e) {
             throw DoctorRatingException.getDoctorsAndRatesFailed();

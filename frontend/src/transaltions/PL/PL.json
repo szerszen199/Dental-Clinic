@@ -224,5 +224,10 @@
   "documentation_entry_created_unsuccessfully": "Dodanie nowego wpisu dokumentacji nie powiodło się",
   "medical_documentation_not_found": "Dokumentacja medyczna dla tego pacjenta nie istnieje",
   "encrypting_failed": "Szyfrowanie danych nie powiodło się",
-  "documentation_entry_creation_failed": "Dodanie nowego wpisu dokumentacji nie powiodło się"
+  "documentation_entry_creation_failed": "Dodanie nowego wpisu dokumentacji nie powiodło się",
+  "No rates": "Brak ocen",
+  "Rates counter": "Liczba ocen",
+  "get_doctors_and_rates_failed": "Próba wyświetlenia dostępnych lekarzy nie powiodła się. Spróbuj ponownie.",
+  "Sorry": "Przepraszamy",
+  "No doctors": "Aktualnie nie dysponujemy personelem, który mógłby się państwem zająć."
 }

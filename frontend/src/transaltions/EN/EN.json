@@ -224,5 +224,10 @@
   "documentation_entry_created_unsuccessfully": "Documentation entry was created unsuccessfully",
   "medical_documentation_not_found": "Documentation for that patient doesn't exist",
   "encrypting_failed": "Encrypting data failed,",
-  "documentation_entry_creation_failed": "Documentation entry creation failed"
+  "documentation_entry_creation_failed": "Documentation entry creation failed",
+  "No rates": "No rates",
+  "Rates counter": "Rates counter",
+  "get_doctors_and_rates_failed": "An attempt to view the available doctors has failed. Try again.",
+  "Sorry": "Sorry",
+  "No doctors": "At the moment, we do not have staff to take care of you."
 }

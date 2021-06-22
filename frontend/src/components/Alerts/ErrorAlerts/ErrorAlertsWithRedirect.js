@@ -18,5 +18,6 @@ export default function errorAlertsWithRedirect(title, message,path) {
             },
         }).then(() => {
             window.location.hash = path;
+            window.location.reload();
         }));
 }
