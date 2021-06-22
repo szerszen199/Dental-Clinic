@@ -41,4 +41,7 @@ public interface PrescriptionsManager {
     void editPrescription(EditPrescriptionRequestDto editPrescriptionRequestDto) throws PrescriptionException, EncryptionException;
 
     List<PrescriptionResponseDto> getPrescriptions() throws AppBaseException;
+    List<PrescriptionResponseDto> getPatientPrescriptions() throws AppBaseException;
+    List<PrescriptionResponseDto> getDoctorPrescriptions() throws AppBaseException;
+
 }

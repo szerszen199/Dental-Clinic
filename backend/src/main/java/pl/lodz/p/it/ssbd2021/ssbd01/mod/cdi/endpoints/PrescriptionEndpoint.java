@@ -46,7 +46,6 @@ public class PrescriptionEndpoint {
     private PrescriptionsManager prescriptionsManager;
     @Inject
     private PrescriptionTransactionRepeater prescriptionTransactionRepeater;
-
     @Inject
     private EntityIdentitySignerVerifier signer;
 
@@ -104,14 +103,8 @@ public class PrescriptionEndpoint {
         return Response.ok().entity(new MessageResponseDto(I18n.PRESCRIPTION_EDITED_SUCCESSFULLY)).build();
     }
 
-
-    /**
-     * Pobiera listę aktywnych pacjentów.
-     *
-     * @return lista aktywnych pacjentów
-     */
     @GET
-    @RolesAllowed({I18n.DOCTOR,I18n.PATIENT})
+    @RolesAllowed({I18n.DOCTOR})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("prescriptions")
     public Response getPrescription() {
@@ -121,6 +114,39 @@ public class PrescriptionEndpoint {
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
-        return Response.ok().entity(prescriptions).build();
+        return Response.ok(prescriptions).build();
+    }
+
+    /**
+     * Pobiera listę aktywnych pacjentów.
+     *
+     * @return lista aktywnych pacjentów
+     */
+    @GET
+    @RolesAllowed({I18n.DOCTOR})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("prescriptions/doctor")
+    public Response getPrescriptionDoctor() {
+        List<PrescriptionResponseDto> prescriptions;
+        try {
+            prescriptions = prescriptionsManager.getDoctorPrescriptions();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.ok(prescriptions).build();
+    }
+
+    @GET
+    @RolesAllowed({I18n.PATIENT})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("prescriptions/patient")
+    public Response getPrescriptionPatient() {
+        List<PrescriptionResponseDto> prescriptions;
+        try {
+            prescriptions = prescriptionsManager.getPatientPrescriptions();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.ok(prescriptions).build();
     }
 }
