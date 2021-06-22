@@ -143,9 +143,9 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
     }
 
     @Override
-    public List<PrescriptionResponseDto> getDoctorPrescriptions() throws AppBaseException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    public List<PrescriptionResponseDto> getDoctorPrescriptions(String username) throws AppBaseException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         Account account;
-        account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        account = accountFacade.findByLogin(username);
         List<Prescription> prescriptions = prescriptionFacade.findByDoctorLogin(account.getLogin());
         List<PrescriptionResponseDto> prescriptionResponseDtoList = new ArrayList<>();
         for (Prescription prescription: prescriptions){

@@ -217,5 +217,6 @@
   "no_access_level": "Access level has been revoked",
   "patients_account_list": "Patient's Accounts",
   "Expiration_Date" : "Expiration date",
-  "medications" : "Mediactions"
+  "medications" : "Mediactions",
+  "to_prescriptions" : "To prescriptions"
 }
