@@ -78,6 +78,11 @@ public class Appointment extends AbstractEntity implements Serializable {
     @Column(name = "reminder_mail_sent", nullable = false)
     private Boolean reminderMailSent;
 
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "rate_mail_sent", nullable = false)
+    private Boolean rateMailSent;
+
     public LocalDateTime getConfirmationDateTime() {
         return confirmationDateTime;
     }
@@ -224,6 +229,14 @@ public class Appointment extends AbstractEntity implements Serializable {
 
     public void setReminderMailSent(Boolean reminderMailSent) {
         this.reminderMailSent = reminderMailSent;
+    }
+
+    public Boolean getRateMailSent() {
+        return rateMailSent;
+    }
+
+    public void setRateMailSent(Boolean rateMailSent) {
+        this.rateMailSent = rateMailSent;
     }
 
     @Override
