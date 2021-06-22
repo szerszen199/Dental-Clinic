@@ -214,5 +214,6 @@
   "edit": "Edit",
   "get_all_scheduled_appointments_failed": "Get all scheduled appointments failed",
   "appointment_slot_creation_failed": "Unable to create appointment slot",
-  "no_access_level": "Access level has been revoked"
+  "no_access_level": "Access level has been revoked",
+  "patients_account_list": "Patient's Accounts"
 }
