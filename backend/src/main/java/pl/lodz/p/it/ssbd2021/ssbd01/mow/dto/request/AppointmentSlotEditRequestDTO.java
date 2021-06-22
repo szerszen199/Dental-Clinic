@@ -4,16 +4,15 @@ import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
 import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AppointmentSlotEditRequestDTO implements SignableEntity {
-
-    @NotNull(message = I18n.APPOINTMENT_ID_NULL)
-    private Long id;
 
     @NotNull(message = I18n.DOCTOR_ID_NULL)
     @Login
@@ -26,9 +25,8 @@ public class AppointmentSlotEditRequestDTO implements SignableEntity {
     @NotNull(message = I18n.VERSION_NULL)
     private Long version;
 
-    public Long getId() {
-        return id;
-    }
+    @NotNull(message = I18n.APPOINTMENT_ID_NULL)
+    private Long id;
 
     public String getDoctorLogin() {
         return doctorLogin;
@@ -40,6 +38,10 @@ public class AppointmentSlotEditRequestDTO implements SignableEntity {
 
     public Long getVersion() {
         return version;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public void setId(Long id) {
@@ -59,9 +61,11 @@ public class AppointmentSlotEditRequestDTO implements SignableEntity {
     }
 
     @Override
+    @JsonbTransient
     public Map<String, String> getPayload() {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new LinkedHashMap<>();
         map.put("version", String.valueOf(version));
+        map.put("id", getId().toString());
         return map;
     }
 }

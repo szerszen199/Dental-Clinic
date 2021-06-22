@@ -8,7 +8,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -77,7 +77,7 @@ public class AccountInfoWithAccessLevelsResponseDto extends AccountInfoResponseD
     @Override
     @JsonbTransient
     public Map<String, String> getPayload() {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new LinkedHashMap<>();
         map.put("version", getVersion().toString());
         map.put("login", getLogin());
         return map;
