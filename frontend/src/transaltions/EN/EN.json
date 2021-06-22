@@ -195,7 +195,6 @@
   "DateTime past error": "Date and Time must be from the future!",
   "Doctor blank error": "You have to select doctor!",
   "appointment_slot_created_successfully": "Appointment slot created successfully",
-  "appointment_slot_creation_failed": "Unable to create appointment slot",
   "creation_time": "Creation Time",
   "modification_time": "Modification time",
   "was_done": "What was done",
@@ -207,6 +206,12 @@
   "documentation_entry_not_found": "Documentation entry not found",
   "invalid_doctor_documentation_entry": "Invalid doctor for documentation entry",
   "delete_documentation_entry": "Are you sure you want to delete documentation entry?",
-  "documentation_entry_deleted_successfully": "Documentation entry deleted successfully"
-
+  "documentation_entry_deleted_successfully": "Documentation entry deleted successfully",
+  "appointment_slot_creation_failed": "Unable to create appointment slot",
+  "doctor_name": "Doctor's name",
+  "patient_name": "Patient's name",
+  "date": "Date",
+  "scheduled_appointments": "Scheduled appointments",
+  "edit": "Edit",
+  "get_all_scheduled_appointments_failed": "Get all scheduled appointments failed"
 }
