@@ -28,6 +28,7 @@ import ListPatients from "../components/Appointment/ListPatients/ListPatients";
 import AddAppointment from "../components/Appointment/AddAppointment/AddAppointment";
 import DocumentationList from "../components/Documentation/Documentation";
 import NewDocumentationEntry from "../components/Documentation/NewDocumentationEntry/NewDocumentationEntry";
+import CreatePrescription from "../components/Documentation/CreatePrescription";
 
 export default function Routes() {
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
@@ -77,6 +78,7 @@ export default function Routes() {
             <PrivateRoute authed={isAdministrator() || isReceptionist()} path='/accounts' component={AccountsList}/>
             <PrivateRoute authed={isAdministrator()} path='/other-account/:accId' component={OtherAccount} />
             <PrivateRoute authed={isDoctor()} path='/account-documentation/:accId' component={DocumentationList} />
+            <PrivateRoute authed={isDoctor()} path='/create-prescription/:accId' component={CreatePrescription} />
             <PrivateRoute authed={isDoctor()} path='/new-documentation-entry/:accId' component={NewDocumentationEntry} />
             <PrivateRoute authed={isPatient() || isReceptionist() || isDoctor()} path='/my-appointments'
                           component={MyAppointment}/>

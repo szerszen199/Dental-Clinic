@@ -77,6 +77,7 @@
   "Pesel length error": "Pesel must be 11 characters long!",
   "Pesel control digit error": "Pesel is invalid!",
   "Language not selected error": "Language must be selected!",
+  "medications blank error": "Medications can not be empty!",
   "Activate/Deactivate role": "Activate/Deactivate role",
   "Activate role": "Activate access role",
   "Deactivate role": "Deactivate access role",
@@ -229,5 +230,16 @@
   "Rates counter": "Rates counter",
   "get_doctors_and_rates_failed": "An attempt to view the available doctors has failed. Try again.",
   "Sorry": "Sorry",
-  "No doctors": "At the moment, we do not have staff to take care of you."
+  "No doctors": "At the moment, we do not have staff to take care of you.",
+  "medications": "Medications",
+  "create_prescription": "Create Prescription",
+  "to_create_prescription": "Create Prescription",
+  "Question create prescription": "Are you sure you want to create Prescription?",
+  "dueDate": "Due Date",
+  "dueTime": "Due Time",
+  "invalid_date_prescription": "Prescription's due date must be set in the future",
+  "invalid_medications": "Invalid medications",
+  "prescription_creation_failure": "Failure during prescription creation",
+  "prescription_created_successfully": "Prescription created successfully",
+  "medical_documentation_fetch_failed": "Error when fetching patient's medical documentation"
 }
