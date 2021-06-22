@@ -1,12 +1,12 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Typ ScheduledAppointmentResponseDTO.
@@ -23,11 +23,13 @@ public class ScheduledAppointmentResponseDTO implements SignableEntity {
     private final String patientFirstName;
     private final String patientLastName;
     private final String etag;
+    private final boolean canceled;
+    private final boolean confirmed;
 
     /**
      * DTO do zwracania umówionej wizyty.
      *
-     * @param appointment wizyta, na podstawie której tworzone jest DTO.
+     * @param appointment                  wizyta, na podstawie której tworzone jest DTO.
      * @param entityIdentitySignerVerifier obiekt klasy do funkcjonalności podpisywania etag
      */
     public ScheduledAppointmentResponseDTO(Appointment appointment, EntityIdentitySignerVerifier entityIdentitySignerVerifier) {
@@ -40,7 +42,17 @@ public class ScheduledAppointmentResponseDTO implements SignableEntity {
         this.patientLastName = appointment.getPatient().getLastName();
         this.doctorFirstName = appointment.getDoctor().getFirstName();
         this.doctorLastName = appointment.getDoctor().getLastName();
+        this.canceled = appointment.getCanceled();
+        this.confirmed = appointment.getConfirmed();
         this.etag = entityIdentitySignerVerifier.sign(this);
+    }
+
+    public boolean isCanceled() {
+        return canceled;
+    }
+
+    public boolean isConfirmed() {
+        return confirmed;
     }
 
     public String getEtag() {

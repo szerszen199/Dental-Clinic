@@ -12,9 +12,14 @@ export async function makeMyAppointmentsListRequest(t) {
     data.sort((a, b) => (a.date > b.date) ? 1 : -1)
     for (const i of data) {
         appointments.push(new Appointment(i.id, i.doctorLogin, i.patientLogin, moment(i.date).format('DD.MM.YYYY HH:mm'),
-            i.version, i.doctorFirstName + " " + i.doctorLastName, i.patientFirstName + " " + i.patientLastName, i.etag));
+            i.version, i.doctorFirstName + " " + i.doctorLastName, i.patientFirstName + " " + i.patientLastName, i.etag,
+            getSign(i.canceled), getSign(i.confirmed)));
     }
     return appointments;
+}
+
+function getSign(text){
+    return text === true ? "+" : "-"
 }
 
 async function getData(token, currentRole, t) {

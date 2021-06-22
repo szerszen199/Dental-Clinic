@@ -66,6 +66,16 @@ class MyAppointmentsWithoutTranslation extends React.Component {
                 style: {verticalAlign: "middle"}
             },
             {
+                dataField: 'canceled',
+                text: t('canceled'),
+                style: {verticalAlign: "middle", textAlign: "center"}
+            },
+            {
+                dataField: 'confirmed',
+                text: t('confirmed'),
+                style: {verticalAlign: "middle", textAlign: "center"}
+            },
+            {
                 dataField: 'actions',
                 text: t('edit'),
                 headerStyle: {verticalAlign: "middle"},
