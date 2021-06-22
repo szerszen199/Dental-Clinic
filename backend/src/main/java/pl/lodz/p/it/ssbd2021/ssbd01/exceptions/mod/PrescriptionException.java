@@ -66,11 +66,21 @@ public class PrescriptionException extends AppBaseException {
     }
 
     /**
-     * Wyjąterk w przypadku niepowodzenia edycji recepty.
+     * Wyjątek w przypadku niepowodzenia edycji recepty.
      *
      * @return wyjątek PrescriptionException
      */
     public static PrescriptionException prescriptionEditFailed() {
         return new PrescriptionException(I18n.PRESCRIPTION_EDIT_FAILED);
+    }
+
+    /**
+     * Wyjątek w przypadku niepowodzenia odnalezienia konta edytującego receptę.
+     *
+     * @param cause powód wyjątku
+     * @return wyjątek PrescriptionException
+     */
+    public static PrescriptionException accountNotFound(Throwable cause) {
+        return new PrescriptionException(I18n.ACCOUNT_NOT_FOUND, cause);
     }
 }

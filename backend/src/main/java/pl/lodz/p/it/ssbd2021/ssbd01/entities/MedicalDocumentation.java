@@ -40,8 +40,6 @@ import java.util.Collection;
 public class MedicalDocumentation extends AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH}, mappedBy = "medicalDocumentation", fetch = FetchType.EAGER)
-    private final Collection<DocumentationEntry> documentationEntryCollection = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medical_documentations_generator")
     @SequenceGenerator(name = "medical_documentations_generator", sequenceName = "medical_documentations_seq", allocationSize = 1)
@@ -102,9 +100,7 @@ public class MedicalDocumentation extends AbstractEntity implements Serializable
         this.patient = patient;
     }
 
-    public Collection<DocumentationEntry> getDocumentationEntryCollection() {
-        return documentationEntryCollection;
-    }
+
 
     @Override
     public String toString() {

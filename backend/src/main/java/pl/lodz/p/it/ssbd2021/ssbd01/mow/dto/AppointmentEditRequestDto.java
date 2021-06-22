@@ -10,15 +10,18 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Typ Dto dla edycji wizyty.
+ */
 public class AppointmentEditRequestDto implements SignableEntity {
 
     @NotNull(message = I18n.APPOINTMENT_ID_NULL)
     private Long id;
-
     @Login
     @NotNull(message = I18n.PATIENT_ID_NULL)
     private String patientLogin;
 
+    @NotNull(message = I18n.APPOINTMENT_DATE_NULL)
     @Future
     private LocalDateTime appointmentDate;
 
@@ -31,14 +34,6 @@ public class AppointmentEditRequestDto implements SignableEntity {
 
     public void setPatientLogin(String patientLogin) {
         this.patientLogin = patientLogin;
-    }
-
-    public LocalDateTime getAppointmentDate() {
-        return appointmentDate;
-    }
-
-    public void setAppointmentDate(LocalDateTime appointmentDate) {
-        this.appointmentDate = appointmentDate;
     }
 
     public Long getVersion() {
@@ -57,9 +52,18 @@ public class AppointmentEditRequestDto implements SignableEntity {
         this.id = id;
     }
 
+    public LocalDateTime getAppointmentDate() {
+        return appointmentDate;
+    }
+
+    public void setAppointmentDate(LocalDateTime appointmentDate) {
+        this.appointmentDate = appointmentDate;
+    }
+
     @Override
     public Map<String, String> getPayload() {
         Map<String, String> map = new HashMap<>();
+        map.put("id", String.valueOf(id));
         map.put("version", String.valueOf(version));
         return map;
     }

@@ -35,6 +35,9 @@ import javax.validation.constraints.NotNull;
         @NamedQuery(name = "Appointment.findByRating", query = "SELECT a FROM Appointment a WHERE a.rating = :rating"),
         @NamedQuery(name = "Appointment.findByVersion", query = "SELECT a FROM Appointment a WHERE a.version = :version"),
         @NamedQuery(name = "Appointment.findByCreationDateTime", query = "SELECT a FROM Appointment a WHERE a.creationDateTime = :creationDateTime"),
+        @NamedQuery(name = "Appointment.findAllScheduled", query = "SELECT a FROM Appointment a WHERE a.patient != null AND a.doctor != null"),
+        @NamedQuery(name = "Appointment.findAllScheduledByDoctor", query = "SELECT a FROM Appointment a WHERE a.patient != null AND a.doctor = :doctor"),
+        @NamedQuery(name = "Appointment.findAllScheduledByPatient", query = "SELECT a FROM Appointment a WHERE a.patient = :patient AND a.doctor != null"),
         @NamedQuery(name = "Appointment.findByModificationDateTime", query = "SELECT a FROM Appointment a WHERE a.modificationDateTime = :modificationDateTime")})
 public class Appointment extends AbstractEntity implements Serializable {
 
@@ -43,7 +46,7 @@ public class Appointment extends AbstractEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appointments_generator")
     @SequenceGenerator(name = "appointments_generator", sequenceName = "appointments_seq", allocationSize = 1)
     @Basic(optional = false)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "id", updatable = false, nullable = false)
     @NotNull
     private Long id;
 
@@ -57,9 +60,8 @@ public class Appointment extends AbstractEntity implements Serializable {
     @Column(name = "confirmation_date_time", nullable = true)
     private LocalDateTime confirmationDateTime;
 
-    @Basic(optional = false)
-    @Column(name = "cancellation_date_time", nullable = false)
-    @NotNull
+    @Basic(optional = true)
+    @Column(name = "cancellation_date_time", nullable = true)
     private LocalDateTime cancellationDateTime;
 
     @JoinColumn(name = "confirmed_by", referencedColumnName = "id", nullable = true)
@@ -130,6 +132,17 @@ public class Appointment extends AbstractEntity implements Serializable {
      * Tworzy nową instancję Appointment.
      */
     public Appointment() {
+    }
+
+    /**
+     * Tworzy nowa instancje  Appointment.
+     *
+     * @param doctor          doktor
+     * @param appointmentDate data wizyty
+     */
+    public Appointment(Account doctor, LocalDateTime appointmentDate) {
+        this.doctor = doctor;
+        this.appointmentDate = appointmentDate;
     }
 
     /**
