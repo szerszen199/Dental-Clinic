@@ -3,23 +3,9 @@ import errorAlerts from "../../Alerts/ErrorAlerts/ErrorAlerts";
 import successAlerts from "../../Alerts/SuccessAlerts/SuccessAlerts";
 import Cookies from "js-cookie";
 
-export function planAppointmentRequest(appointmentId, patient, t) {
+export function planAppointmentRequestSelf(appointmentId, patientId, t) {
 
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
-
-    let reserveForOtherAccount = {
-        method: 'put',
-        url: process.env.REACT_APP_BACKEND_URL+ "reservation/reserve",
-
-        headers: {
-            'Authorization': 'Bearer ' + token,
-            'Content-Type': 'application/json',
-        },
-        data: {
-            appointmentId: appointmentId,
-            patientLogin: patient.login
-        }
-    };
 
     let reserveForOwnAccount = {
         method: 'put',
@@ -29,18 +15,13 @@ export function planAppointmentRequest(appointmentId, patient, t) {
             'Content-Type': 'application/json',
         },
         data: {
-            appointmentId: appointmentId
+            patientId: patientId
         }
     };
 
-    let axiosConfig
-    if (patient.login === undefined) {
-        axiosConfig = reserveForOwnAccount
-    } else {
-        axiosConfig = reserveForOtherAccount
-    }
 
-    axios(axiosConfig)
+
+    axios(reserveForOwnAccount)
         .then((response) => {
             successAlerts(t(response.data.message, response.status)).then(() => {
             })
@@ -50,5 +31,6 @@ export function planAppointmentRequest(appointmentId, patient, t) {
                 errorAlerts(t(response.response.data.message), response.response.status.toString(10));
             }
         });}
+
 
 

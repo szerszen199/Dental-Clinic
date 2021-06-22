@@ -8,28 +8,17 @@ public class BookAppointmentSelfDto {
 
     @NotNull(message = I18n.APPOINTMENT_ID_NULL)
     private Long appointmentId;
-    @NotNull(message = I18n.APPOINTMENT_ID_NULL)
-    private Long patientId;
 
-    public Long getAppointmentId() {
+    public BookAppointmentSelfDto(long appointmentId) {
+        this.appointmentId = appointmentId;
+    }
+
+    public long getAppointmentId() {
         return appointmentId;
     }
 
-    public void setAppointmentId(Long appointmentId) {
+    public void setAppointmentId(long appointmentId) {
         this.appointmentId = appointmentId;
-    }
-
-    public Long getPatientId() {
-        return patientId;
-    }
-
-    public void setPatientId(Long patientId) {
-        this.patientId = patientId;
-    }
-
-    public BookAppointmentSelfDto(Long version, Long appointmentId, Long patientId) {
-        this.appointmentId = appointmentId;
-        this.patientId = patientId;
     }
 
     public BookAppointmentSelfDto() {

@@ -6,6 +6,8 @@ import {makePatientsListRequest} from "../ListPatients/ListPatientsRequest";
 import {Input} from "semantic-ui-react";
 import BootstrapTable from "react-bootstrap-table-next";
 import {planAppointmentRequest} from "./PlanAppointmentRequest";
+import {FiRefreshCw} from "react-icons/fi";
+import Cookies from "js-cookie";
 
 class PlanAppointmentWithoutTranslation extends React.Component {
 
@@ -89,8 +91,40 @@ class PlanAppointmentWithoutTranslation extends React.Component {
     }
 
     handleSubmit(t) {
-        planAppointmentRequest(7,t);
+        planAppointmentRequest(7, this.state.chosenAccount,t);
     }
+
+    renderButton() {
+        return <Button variant={"secondary"} size="lg" onClick={() => {
+            this.makeGetAccountRequest()
+        }}>
+            <FiRefreshCw/>
+        </Button>
+    }
+
+    renderPatientList(t) {
+        let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
+
+        function isPatient() {
+            return token !== undefined && Cookies !== undefined && Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) === process.env.REACT_APP_ROLE_PATIENT;
+        }
+        if (!isPatient()) {
+            return<Col>
+            <Fragment>
+                <datalist id='options'>
+                    {this.state.patientsList.length !== this.unFilteredList.length ? this.getHintList() : []}
+                </datalist>
+                <div className="AccountListGroup">
+                    <Input list='options' id="ListFilter"
+                           onChange={e => this.filterList(e.target.value)}
+                           placeholder={t("Filter")}/>
+                    {!this.state.patientsList.length ? this.renderNull() : this.renderAccounts()}
+                </div>
+            </Fragment>
+            </Col>
+        }
+    }
+
 
     render() {
         const {t} = this.props;
@@ -154,19 +188,7 @@ class PlanAppointmentWithoutTranslation extends React.Component {
                                 </Card>
                             </Accordion>
                         </Col>
-                        <Col>
-                            <Fragment>
-                                <datalist id='options'>
-                                    {this.state.patientsList.length !== this.unFilteredList.length ? this.getHintList() : []}
-                                </datalist>
-                                <div className="AccountListGroup">
-                                    <Input list='options' id="ListFilter"
-                                           onChange={e => this.filterList(e.target.value)}
-                                           placeholder={t("Filter")}/>
-                                    {!this.state.patientsList.length ? this.renderNull() : this.renderAccounts()}
-                                </div>
-                            </Fragment>
-                        </Col>
+                        {this.renderPatientList(t)}
                     </Row>
                 </form>
             </div>

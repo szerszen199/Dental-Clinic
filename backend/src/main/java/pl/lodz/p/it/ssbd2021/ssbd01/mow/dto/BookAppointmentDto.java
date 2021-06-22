@@ -8,17 +8,23 @@ public class BookAppointmentDto {
 
     @NotNull(message = I18n.APPOINTMENT_ID_NULL)
     private Long appointmentId;
+    @NotNull(message = I18n.PATIENT_LOGIN_NULL)
+    private String patientLogin;
 
-    public BookAppointmentDto(long appointmentId) {
-        this.appointmentId = appointmentId;
-    }
-
-    public long getAppointmentId() {
+    public Long getAppointmentId() {
         return appointmentId;
     }
 
-    public void setAppointmentId(long appointmentId) {
+    public void setAppointmentId(Long appointmentId) {
         this.appointmentId = appointmentId;
+    }
+
+    public String getPatientLogin() {
+        return patientLogin;
+    }
+
+    public void setPatientLogin(String patientLogin) {
+        this.patientLogin = patientLogin;
     }
 
     public BookAppointmentDto() {

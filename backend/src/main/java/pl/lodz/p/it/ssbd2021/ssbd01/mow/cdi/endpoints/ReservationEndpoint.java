@@ -46,6 +46,7 @@ public class ReservationEndpoint {
      * Reserve appointment response.
      *
      * @param bookAppointmentSelfDto the book appointment self dto
+     * @param header                 the header
      * @return the response
      */
     @PUT

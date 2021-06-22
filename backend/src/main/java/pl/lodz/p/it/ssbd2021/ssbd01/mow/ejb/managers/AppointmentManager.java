@@ -21,12 +21,18 @@ public interface AppointmentManager {
     /**
      * Dodaje rezerwację do podanej wizyty.
      *
+     * @param bookAppointmentSelfDto the book appointment self dto
+     * @throws AppBaseException the app base exception
+     */
+    void bookAppointmentSelf(BookAppointmentSelfDto bookAppointmentSelfDto) throws AppBaseException;
+
+    /**
+     * Book appointment.
+     *
      * @param bookAppointmentDto the book appointment dto
      * @throws AppBaseException the app base exception
      */
-    void bookAppointmentSelf(BookAppointmentSelfDto bookAppointmentDto) throws AppBaseException;
-
-    void bookAppointment(BookAppointmentDto bookAppointmentSelfDto) throws AppBaseException;
+    void bookAppointment(BookAppointmentDto bookAppointmentDto) throws AppBaseException;
     /**
      * Anuluje umówioną wizytę.
      *
