@@ -18,7 +18,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.security.SignatureFilterBinding;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AppointmentConverter;
 
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateful;
