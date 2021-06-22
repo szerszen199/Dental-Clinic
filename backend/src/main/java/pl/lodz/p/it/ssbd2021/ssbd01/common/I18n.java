@@ -207,4 +207,8 @@ public class I18n {
     public static final String APPOINTMENT_CANCELED_NULL = "appointment_canceled_null";
     public static final String DOCTOR_LOGIN_NULL = "doctor_login_null";
     public static final String APPOINTMENT_RATED_SUCCESSFULLY = "appointment_rated_successfully";
+    public static final String APPOINTMENT_NOT_FINISHED = "appointment_not_finished";
+    public static final String APPOINTMENT_RATE_SUBJECT = "appointment_rate_subject";
+    public static final String APPOINTMENT_RATE_TEXT = "appointment_rate_text";
+    public static final String APPOINTMENT_RATE_LINK = "appointment_rate_link";
 }
