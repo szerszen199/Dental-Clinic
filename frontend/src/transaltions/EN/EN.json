@@ -226,5 +226,6 @@
   "invalid_date_prescription": "Prescription's due date must be set in the future",
   "invalid_medications": "Invalid medications",
   "prescription_creation_failure": "Failure during prescription creation",
-  "prescription_created_successfully": "Prescription created successfully"
+  "prescription_created_successfully": "Prescription created successfully",
+  "medical_documentation_fetch_failed": "Error when fetching patient's medical documentation"
 }

@@ -226,5 +226,6 @@
   "invalid_date_prescription": "Data ważności recepty musi być przyszła",
   "invalid_medications": "Błędne zalecone lekarstwa",
   "prescription_creation_failure": "Błąd przy tworzeniu recepty",
-  "prescription_created_successfully": "Recepta utworzona pomyślnie"
+  "prescription_created_successfully": "Recepta utworzona pomyślnie",
+  "medical_documentation_fetch_failed": "Niepowodzenie przy pobieraniu dokumentacji medycznej pacjenta"
 }
