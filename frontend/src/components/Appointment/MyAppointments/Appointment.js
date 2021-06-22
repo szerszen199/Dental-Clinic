@@ -1,5 +1,5 @@
 export class Appointment {
-    constructor(id, doctorLogin, patientLogin, date, version, doctorName, patientName, etag) {
+    constructor(id, doctorLogin, patientLogin, date, version, doctorName, patientName, etag, canceled, confirmed) {
         this.id = id;
         this.patientLogin = patientLogin;
         this.doctorLogin = doctorLogin;
@@ -8,5 +8,7 @@ export class Appointment {
         this.doctorName = doctorName;
         this.patientName = patientName;
         this.etag = etag;
+        this.canceled = canceled;
+        this.confirmed = confirmed;
     }
 }

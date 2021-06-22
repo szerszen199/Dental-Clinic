@@ -66,6 +66,16 @@ class MyAppointmentsWithoutTranslation extends React.Component {
                 style: {verticalAlign: "middle"}
             },
             {
+                dataField: 'canceled',
+                text: t('canceled'),
+                style: {verticalAlign: "middle", textAlign: "center"}
+            },
+            {
+                dataField: 'confirmed',
+                text: t('confirmed'),
+                style: {verticalAlign: "middle", textAlign: "center"}
+            },
+            {
                 dataField: 'actions',
                 text: t('edit'),
                 headerStyle: {verticalAlign: "middle"},
@@ -75,11 +85,6 @@ class MyAppointmentsWithoutTranslation extends React.Component {
         ]
 
         return <BootstrapTable striped keyField='id' columns={columns} data={this.state.appointments}/>;
-    }
-
-    renderLoading() {
-        const {t} = this.props;
-        return <div>{t('Loading')}</div>
     }
 
     render() {
@@ -92,7 +97,7 @@ class MyAppointmentsWithoutTranslation extends React.Component {
                 </div>
                 <div className="documentation">
                     <Container>
-                        {!this.state.appointments.length ? this.renderLoading() : this.renderTableOfAppointments()}
+                        {this.renderTableOfAppointments()}
                     </Container>
                 </div>
             </Fragment>
