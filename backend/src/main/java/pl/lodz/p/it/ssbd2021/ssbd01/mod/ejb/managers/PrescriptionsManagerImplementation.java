@@ -131,5 +131,43 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
                                     prescription.getCreationDateTime(),
                                     prescription.getMedications()))
                                     .collect(Collectors.toList());
-}
+    }
+
+    @Override
+    public List<PrescriptionResponseDto> getPatientPrescriptions() throws AppBaseException {
+        Account account;
+        account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        List<Prescription> prescriptions = prescriptionFacade.findByPatientLogin(account.getLogin());
+        return prescriptions.stream()
+                .map(prescription ->
+                        new PrescriptionResponseDto(
+                                prescription.getId(),
+                                prescription.getExpiration(),
+                                prescription.getPatient().getFirstName(),
+                                prescription.getPatient().getLastName(),
+                                prescription.getDoctor().getFirstName(),
+                                prescription.getDoctor().getLastName(),
+                                prescription.getCreationDateTime(),
+                                prescription.getMedications()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PrescriptionResponseDto> getDoctorPrescriptions() throws AppBaseException {
+        Account account;
+        account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        List<Prescription> prescriptions = prescriptionFacade.findByDoctorLogin(account.getLogin());
+        return prescriptions.stream()
+                .map(prescription ->
+                        new PrescriptionResponseDto(
+                                prescription.getId(),
+                                prescription.getExpiration(),
+                                prescription.getPatient().getFirstName(),
+                                prescription.getPatient().getLastName(),
+                                prescription.getDoctor().getFirstName(),
+                                prescription.getDoctor().getLastName(),
+                                prescription.getCreationDateTime(),
+                                prescription.getMedications()))
+                .collect(Collectors.toList());
+    }
 }
