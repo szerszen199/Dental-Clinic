@@ -6,6 +6,7 @@ import {makeMyAppointmentsListRequest} from "./MyAppointmentsRequest";
 import {FiRefreshCw} from "react-icons/fi";
 import edit from "../../../assets/edit.png";
 import BootstrapTable from "react-bootstrap-table-next";
+import Cookies from "js-cookie";
 
 class MyAppointmentsWithoutTranslation extends React.Component {
 
@@ -74,15 +75,20 @@ class MyAppointmentsWithoutTranslation extends React.Component {
                 dataField: 'confirmed',
                 text: t('confirmed'),
                 style: {verticalAlign: "middle", textAlign: "center"}
-            },
-            {
-                dataField: 'actions',
-                text: t('edit'),
-                headerStyle: {verticalAlign: "middle"},
-                style: {textAlign: "center"},
-                formatter: this.linkEdit
             }
         ]
+
+        if (Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) === process.env.REACT_APP_ROLE_RECEPTIONIST) {
+            columns.push(
+                {
+                    dataField: 'actions',
+                    text: t('edit'),
+                    headerStyle: {verticalAlign: "middle"},
+                    style: {textAlign: "center"},
+                    formatter: this.linkEdit
+                }
+            )
+        }
 
         return <BootstrapTable striped keyField='id' columns={columns} data={this.state.appointments}/>;
     }
