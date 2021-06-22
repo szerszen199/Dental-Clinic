@@ -12,6 +12,11 @@ public class DoctorInfoResponseDTO {
     @NotNull
     String lastName;
 
+    /**
+     * DTO do zwracania informacji o doktorze w ramach informacji o wizycie.
+     *
+     * @param account konto na podstawie którego jest tworzone DTO.
+     */
     public DoctorInfoResponseDTO(Account account) {
         this.id = account.getId();
         this.firstName = account.getFirstName();
