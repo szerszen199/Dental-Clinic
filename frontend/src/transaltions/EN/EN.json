@@ -243,5 +243,7 @@
   "prescription_created_successfully": "Prescription created successfully",
   "medical_documentation_fetch_failed": "Error when fetching patient's medical documentation",
   "Documentation Entries": "Documentation Entries",
-  "due date past date": "Due date must be future"
+  "due date past date": "Due date must be future",
+  "canceled": "Canceled",
+  "confirmed": "Confirmed"
 }

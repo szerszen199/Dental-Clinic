@@ -1,15 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.NotImplementedException;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
@@ -21,10 +11,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AllScheduledAppointmentsResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.ScheduledAppointmentResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AppointmentFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.DoctorRatingFacade;
@@ -33,6 +21,16 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
+
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Klasa implementująca interfejs menadżera wizyt.
@@ -87,21 +85,16 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
-    public AllScheduledAppointmentsResponseDTO getScheduledAppointments() throws AppointmentException {
+    public List<Appointment> getScheduledAppointments() throws AppointmentException {
         try {
-            List<Appointment> appointments = appointmentFacade.findAllScheduledAppointments();
-            List<ScheduledAppointmentResponseDTO> scheduledAppointmentResponseDTOS = new ArrayList<>();
-            for (Appointment a : appointments) {
-                scheduledAppointmentResponseDTOS.add(new ScheduledAppointmentResponseDTO(a, entityIdentitySignerVerifier));
-            }
-            return new AllScheduledAppointmentsResponseDTO(scheduledAppointmentResponseDTOS);
+            return appointmentFacade.findAllScheduledAppointments();
         } catch (AppBaseException e) {
             throw AppointmentException.getAllScheduledAppointmentsException();
         }
     }
 
     @Override
-    public AllScheduledAppointmentsResponseDTO getScheduledAppointmentsByDoctor() throws AppointmentException {
+    public List<Appointment> getScheduledAppointmentsByDoctor() throws AppointmentException {
         Account account;
         try {
             account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
@@ -109,19 +102,14 @@ public class AppointmentManagerImplementation extends AbstractManager implements
             throw AppointmentException.accountNotFound();
         }
         try {
-            List<Appointment> appointments = appointmentFacade.findAllScheduledAppointmentsByDoctor(account);
-            List<ScheduledAppointmentResponseDTO> scheduledAppointmentResponseDTOS = new ArrayList<>();
-            for (Appointment a : appointments) {
-                scheduledAppointmentResponseDTOS.add(new ScheduledAppointmentResponseDTO(a, entityIdentitySignerVerifier));
-            }
-            return new AllScheduledAppointmentsResponseDTO(scheduledAppointmentResponseDTOS);
+            return appointmentFacade.findAllScheduledAppointmentsByDoctor(account);
         } catch (AppBaseException e) {
             throw AppointmentException.getAllScheduledAppointmentsException();
         }
     }
 
     @Override
-    public AllScheduledAppointmentsResponseDTO getScheduledAppointmentsByPatient() throws AppointmentException {
+    public List<Appointment> getScheduledAppointmentsByPatient() throws AppointmentException {
         Account account;
         try {
             account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
@@ -129,12 +117,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
             throw AppointmentException.accountNotFound();
         }
         try {
-            List<Appointment> appointments = appointmentFacade.findAllScheduledAppointmentsByPatient(account);
-            List<ScheduledAppointmentResponseDTO> scheduledAppointmentResponseDTOS = new ArrayList<>();
-            for (Appointment a : appointments) {
-                scheduledAppointmentResponseDTOS.add(new ScheduledAppointmentResponseDTO(a, entityIdentitySignerVerifier));
-            }
-            return new AllScheduledAppointmentsResponseDTO(scheduledAppointmentResponseDTOS);
+            return appointmentFacade.findAllScheduledAppointmentsByPatient(account);
         } catch (AppBaseException e) {
             throw AppointmentException.getAllScheduledAppointmentsException();
         }
