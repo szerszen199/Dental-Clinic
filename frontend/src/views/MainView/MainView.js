@@ -20,7 +20,7 @@ import './MainView.css';
 import {Link} from "react-router-dom";
 import findDefaultRole from "../../roles/findDefaultRole";
 import {darkModeRequest} from "../../components/DarkMode/DarkModeRequest"
-import {getBrowserLanguage} from "../../components/Language/LanguageRequest";
+import {getBrowserLanguage, languageRequest} from "../../components/Language/LanguageRequest";
 
 const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
 const roleDoctorName = process.env.REACT_APP_ROLE_DOCTOR
@@ -72,6 +72,7 @@ class MainViewWithoutTranslation extends React.Component {
 
         Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, language, {secure: true, sameSite: 'none'});
         i18n.changeLanguage(language);
+        languageRequest(language);
     }
 
     makeRefreshRequest() {
