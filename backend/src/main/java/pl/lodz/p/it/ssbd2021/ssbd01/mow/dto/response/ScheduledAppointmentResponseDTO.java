@@ -1,51 +1,35 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
-import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.SignableEntity;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Typ ScheduledAppointmentResponseDTO.
  */
-public class ScheduledAppointmentResponseDTO {
+public class ScheduledAppointmentResponseDTO implements SignableEntity {
 
-    @NotNull
-    Long id;
-
-    @NotNull
-    @Login
-    String doctorLogin;
-
-    @NotNull
-    @Login
-    String patientLogin;
-
-    @NotNull
-    LocalDateTime date;
-
-    @NotNull
-    Long version;
-
-    @NotNull
-    String doctorFirstName;
-
-    @NotNull
-    String doctorLastName;
-
-    @NotNull
-    String patientFirstName;
-
-    @NotNull
-    String patientLastName;
+    private final Long id;
+    private final String doctorLogin;
+    private final String patientLogin;
+    private final LocalDateTime date;
+    private final Long version;
+    private final String doctorFirstName;
+    private final String doctorLastName;
+    private final String patientFirstName;
+    private final String patientLastName;
+    private final String etag;
 
     /**
      * DTO do zwracania umówionej wizyty.
      *
      * @param appointment wizyta, na podstawie której tworzone jest DTO.
      */
-    public ScheduledAppointmentResponseDTO(Appointment appointment) {
+    public ScheduledAppointmentResponseDTO(Appointment appointment, EntityIdentitySignerVerifier entityIdentitySignerVerifier) {
         this.id = appointment.getId();
         this.doctorLogin = appointment.getDoctor().getLogin();
         this.patientLogin = appointment.getPatient().getLogin();
@@ -53,85 +37,63 @@ public class ScheduledAppointmentResponseDTO {
         this.version = appointment.getVersion();
         this.patientFirstName = appointment.getPatient().getFirstName();
         this.patientLastName = appointment.getPatient().getLastName();
-        this.doctorFirstName = appointment.getDoctor().getLastName();
+        this.doctorFirstName = appointment.getDoctor().getFirstName();
         this.doctorLastName = appointment.getDoctor().getLastName();
+        this.etag = entityIdentitySignerVerifier.sign(this);
     }
 
-    /**
-     * Tworzy nową instancję klasy ScheduledAppointmentResponseDTO.
-     */
-    public ScheduledAppointmentResponseDTO() {
+    public String getEtag() {
+        return etag;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getDoctorLogin() {
         return doctorLogin;
     }
 
-    public void setDoctorLogin(String doctorLogin) {
-        this.doctorLogin = doctorLogin;
-    }
 
     public String getPatientLogin() {
         return patientLogin;
     }
 
-    public void setPatientLogin(String patientLogin) {
-        this.patientLogin = patientLogin;
-    }
 
     public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
 
     public Long getVersion() {
         return version;
     }
 
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 
     public String getDoctorFirstName() {
         return doctorFirstName;
     }
 
-    public void setDoctorFirstName(String doctorFirstName) {
-        this.doctorFirstName = doctorFirstName;
-    }
 
     public String getDoctorLastName() {
         return doctorLastName;
     }
 
-    public void setDoctorLastName(String doctorLastName) {
-        this.doctorLastName = doctorLastName;
-    }
 
     public String getPatientFirstName() {
         return patientFirstName;
     }
 
-    public void setPatientFirstName(String patientFirstName) {
-        this.patientFirstName = patientFirstName;
-    }
 
     public String getPatientLastName() {
         return patientLastName;
     }
 
-    public void setPatientLastName(String patientLastName) {
-        this.patientLastName = patientLastName;
+    @Override
+    public Map<String, String> getPayload() {
+        Map<String, String> map = new HashMap<>();
+        map.put("version", getVersion().toString());
+        return map;
     }
 }
