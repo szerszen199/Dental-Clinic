@@ -124,6 +124,9 @@ public class DoctorRating extends AbstractEntity implements Serializable {
     }
     
     public double getAverage() {
+        if (ratesCounter == 0) {
+            return 0d;
+        }
         return ratesSum / ratesCounter;
     }
 
