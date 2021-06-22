@@ -1,29 +1,16 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
-import java.util.List;
-import javax.ejb.Local;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentDto;
-
-import javax.ejb.Local;
-import java.util.List;
-import java.util.Map;
-import java.util.List;
-import javax.ejb.Local;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentSelfDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 
 import javax.ejb.Local;
 import java.util.List;
-import java.util.Map;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 
 /**
  * Interfejs menadżera wizyt.
@@ -37,8 +24,9 @@ public interface AppointmentManager {
      * @param bookAppointmentDto the book appointment dto
      * @throws AppBaseException the app base exception
      */
-    void bookAppointment(BookAppointmentDto bookAppointmentDto) throws AppBaseException;
+    void bookAppointmentSelf(BookAppointmentSelfDto bookAppointmentDto) throws AppBaseException;
 
+    void bookAppointment(BookAppointmentDto bookAppointmentSelfDto) throws AppBaseException;
     /**
      * Anuluje umówioną wizytę.
      *
