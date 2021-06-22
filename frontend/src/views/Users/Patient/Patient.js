@@ -16,7 +16,7 @@ const Patient = () => {
                 <Nav.Link as={Link} style={{color: "rgb(127, 127, 127)"}} className="navMenu"
                           to="/my-appointments">{t("My appointments")}</Nav.Link>
                 <Nav.Link as={Link} style={{color: "rgb(127, 127, 127)"}} className="navMenu"
-                          to="/plan-appointment">{t("Plan an appointment")}</Nav.Link>
+                          to="/plan-appointment-patient">{t("Plan an appointment")}</Nav.Link>
                 <NavDropdown.Divider/>
                 <Nav.Link as={Link} style={{color: "rgb(127, 127, 127)"}} className="navMenu"
                           to="/list-doctors">{t("List of doctors")}</Nav.Link>
