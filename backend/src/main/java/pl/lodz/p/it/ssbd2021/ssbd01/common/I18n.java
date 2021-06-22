@@ -226,6 +226,9 @@ public class I18n {
     public static final Object APPOINTMENT_CANCELLATION_FAILED = "appointment_cancellation_failed";
     public static final String PATIENT_LOGIN_NULL = "patient_login_null";
     public static final String APPOINTMENT_RESERVED_SUCCESSFULLY = "appointment_reserved_successfully";
+    public static final String INVALID_TOKEN = "invalid_token";
+    public static final String APPOINTMENT_ALREADY_RATED = "appointment_already_rated";
+    public static final String DOCTOR_ALREADY_RATED = "doctor_rating_failed";
 
     public static final String NO_SUCH_PRESCRIPTION = "no_such_prescription";
     public static final String PRESCRIPTION_REMOVAL_FAILED = "prescription_removal_failed";

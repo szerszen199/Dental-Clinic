@@ -1,8 +1,9 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod;
 
-import javax.ejb.ApplicationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+
+import javax.ejb.ApplicationException;
 
 /**
  * Typ Prescription exception.
