@@ -157,4 +157,8 @@ public class AppointmentException extends AppBaseException {
     public static AppointmentException appointmentCanceled() {
         return new AppointmentException(I18n.APPOINTMENT_CANCELED);
     }
+
+    public static AppointmentException appointmentNotFinished() {
+        return new AppointmentException(I18n.APPOINTMENT_NOT_FINISHED);
+    }
 }
