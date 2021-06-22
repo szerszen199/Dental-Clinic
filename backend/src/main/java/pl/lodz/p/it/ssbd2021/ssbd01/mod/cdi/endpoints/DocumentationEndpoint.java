@@ -139,7 +139,7 @@ public class DocumentationEndpoint {
         }
         try {
             documentationEntryTransactionRepeater.repeatTransaction(
-                    () -> documentationEntryManager.editDocumentationEntry(editDocumentationEntryRequestDTO), documentationEntryManager);
+                    () -> documentationEntryManager.editDocumentationEntry(editDocumentationEntryRequestDTO));
         } catch (EncryptionException | DocumentationEntryException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         } catch (Exception e) {
@@ -165,8 +165,9 @@ public class DocumentationEndpoint {
         Encryptor encryptor = new Encryptor(propertiesLoader);
         try {
             return Response.ok()
-                    .entity(new DocumentationInfoResponseDTO(medicalDocumentationManager.getDocumentationByPatient(
-                            getFullDocumentationRequestDTO.getPatient()),
+                    .entity(new DocumentationInfoResponseDTO(
+                            medicalDocumentationManager.getDocumentationByPatient(getFullDocumentationRequestDTO.getPatient()),
+                            documentationEntryManager.getDocumentationEntriesForUser(getFullDocumentationRequestDTO.getPatient()),
                             encryptor,
                             entityIdentitySignerVerifier))
                     .build();

@@ -62,6 +62,7 @@ import java.util.Set;
         @NamedQuery(name = "Account.findByLoginOrEmailOrPesel", query = "SELECT a FROM Account a WHERE a.login = :login OR a.email = :email OR a.pesel = :pesel"),
         @NamedQuery(name = "Account.findActivePatients",
                 query = "SELECT a FROM Account a INNER JOIN AccessLevel al ON a.id = al.accountId WHERE a.active = true AND a.enabled = true AND al.active = true AND al.level = 'level.patient'"),
+        @NamedQuery(name = "Account.findByAccessLevel", query = "SELECT a FROM Account a, AccessLevel al WHERE al.accountId.id = a.id and al.level = :level and a.enabled = true and a.active = true"),
         @NamedQuery(name = "Account.findByLogin", query = "SELECT a FROM Account a WHERE a.login = :login")})
 public class Account extends AbstractEntity implements Serializable {
 
