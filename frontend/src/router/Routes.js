@@ -87,6 +87,7 @@ export default function Routes() {
                           component={ListDoctors}/>
             <PrivateRoute authed={isReceptionist()} path='/list-patients'
                           component={ListPatients}/>
+            <PrivateRoute authed={isPatient() || isReceptionist()} path='/available-appointments' component={AccountsList}/>
             <Route authed={isLoggedIn()} path='/activation-confirm/:token' component={AccountActivationConfirm}/>
             <Route authed={isLoggedIn()} path='/mail-change-confirm/:token' component={MailChangeConfirm}/>
             <Route authed={isLoggedIn()} path='/password-change-confirm/:token' component={PasswordChangeConfirm}/>
