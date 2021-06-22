@@ -28,6 +28,7 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -111,11 +112,11 @@ public class PrescriptionEndpoint {
     @GET
     @RolesAllowed({I18n.DOCTOR})
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("prescriptions/doctor")
-    public Response getPrescriptionDoctor() {
+    @Path("prescriptions/doctor/{username}")
+    public Response getPrescriptionDoctor(@NotNull @PathParam("username") String username) {
         List<PrescriptionResponseDto> prescriptions;
         try {
-            prescriptions = prescriptionsManager.getDoctorPrescriptions();
+            prescriptions = prescriptionsManager.getDoctorPrescriptions(username);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }

@@ -217,5 +217,6 @@
   "no_access_level": "Konto nie posiada poziomu dostępu",
   "patients_account_list": "Konta Pacjentów",
   "Expiration_Date" : "Data ważaności",
-  "medications" : "Leki"
+  "medications" : "Leki",
+  "to_prescriptions" : "Do recept"
 }

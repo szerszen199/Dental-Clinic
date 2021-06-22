@@ -19,7 +19,6 @@ function Doctor() {
                 <Nav.Link as={Link} style={{color: "rgb(127, 127, 127)"}} className="navMenu"
                           to="/list-doctors">{t("List of doctors")}</Nav.Link>
             </NavDropdown>
-            <Nav.Link as={Link} to="/prescriptions">{t("Prescriptions")}</Nav.Link>
             <Nav.Link as={Link} to="/patients_account_list">{t("patients_account_list")}</Nav.Link>
             <MyAccount/>
         </Nav>
