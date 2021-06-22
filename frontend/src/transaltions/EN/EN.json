@@ -218,5 +218,13 @@
   "no_access_level": "Access level has been revoked",
   "patients_account_list": "Patient's Accounts",
   "medications": "Medications",
-  "create_prescription": "Create Prescription"
+  "create_prescription": "Create Prescription",
+  "to_create_prescription": "Create Prescription",
+  "Question create prescription": "Are you sure you want to create Prescription?",
+  "dueDate": "Due Date",
+  "dueTime": "Due Time",
+  "invalid_date_prescription": "Prescription's due date must be set in the future",
+  "invalid_medications": "Invalid medications",
+  "prescription_creation_failure": "Failure during prescription creation",
+  "prescription_created_successfully": "Prescription created successfully"
 }
