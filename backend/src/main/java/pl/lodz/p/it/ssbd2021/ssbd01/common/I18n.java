@@ -202,7 +202,7 @@ public class I18n {
     public static final String APPOINTMENT_CANCELED = "appointment_canceled";
     public static final String MAIL_FAILED = "mail_failed";
     public static final String APPOINTMENT_CONFIRMED_SUCCESSFULLY = "appointment_confirmed_successfully";
-    public static final String APPOINTMENT_MAIL_CONFIRM__REMINDER_SUBJECT = "appointment_confirm_reminder_subject";
+    public static final String APPOINTMENT_MAIL_CONFIRM_REMINDER_SUBJECT = "appointment_confirm_reminder_subject";
     public static final String APPOINTMENT_MAIL_CONFIRM_REMINDER_TEXT = "appointment_confirm_reminder_text";
     public static final String APPOINTMENT_SLOT_EDIT_FAILED = "appointment_slot_edit_failed";
     public static final String APPOINTMENT_SLOT_EDITED_SUCCESSFULLY = "appointment_slot_edited_successfully";
@@ -211,13 +211,9 @@ public class I18n {
     public static final String APPOINTMENT_CONFIRMED_NULL = "appointment_confirmed_null";
     public static final String APPOINTMENT_CANCELED_NULL = "appointment_canceled_null";
     public static final String DOCTOR_LOGIN_NULL = "doctor_login_null";
-
-
-
     
     public static final String NO_SUCH_PRESCRIPTION = "no_such_prescription";
     public static final String PRESCRIPTION_REMOVAL_FAILED = "prescription_removal_failed";
     public static final String PRESCRIPTION_REMOVAL_UNAUTHORIZED = "prescription_removal_unauthorized";
-    public static final String PRESCRIPTION_ID_NULL = "prescription_id_null";
     public static final String PRESCRIPTION_REMOVED_SUCCESSFULLY = "prescription_removed_successfully";
 }

@@ -15,53 +15,6 @@ import javax.interceptor.Interceptors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.DocumentationEntryException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.AddDocumentationEntryRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.DeleteDocumentationEntryRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.DeletePrescriptionRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.EditDocumentationEntryRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.GetFullDocumentationRequestDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.DocumentationEntryResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.DocumentationInfoResponseDTO;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.MessageResponseDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.DocumentationEntryManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.MedicalDocumentationManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.PrescriptionManager;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.utils.DocumentationEntryTransactionRepeater;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.utils.MedicalDocumentationTransactionRepeater;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.utils.PrescriptionTransactionRepeater;
-import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
-import pl.lodz.p.it.ssbd2021.ssbd01.security.SignatureFilterBinding;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.Encryptor;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
-
-import javax.annotation.security.DenyAll;
-import javax.annotation.security.RolesAllowed;
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -71,8 +24,28 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.DocumentationEntryException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.AddDocumentationEntryRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.DeleteDocumentationEntryRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.EditDocumentationEntryRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.GetFullDocumentationRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.DocumentationEntryResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.DocumentationInfoResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.MessageResponseDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.DocumentationEntryManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.MedicalDocumentationManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.utils.DocumentationEntryTransactionRepeater;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.utils.MedicalDocumentationTransactionRepeater;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.utils.PrescriptionTransactionRepeater;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.SignatureFilterBinding;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.Encryptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_OPTIMISTIC_LOCK_ERROR;
 
@@ -100,9 +73,6 @@ public class DocumentationEndpoint {
 
     @Inject
     private DocumentationEntryManager documentationEntryManager;
-    
-    @Inject
-    private PrescriptionManager prescriptionManager;
 
     @Inject
     private EntityIdentitySignerVerifier signer;
