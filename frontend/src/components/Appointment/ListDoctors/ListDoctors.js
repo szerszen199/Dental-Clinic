@@ -1,9 +1,8 @@
-import React, {Suspense} from "react";
+import React, {Fragment, Suspense} from "react";
 import "./ListDoctors.css";
 import {Button, Card, Col, Container, Row} from "react-bootstrap";
 import Rating from '@material-ui/lab/Rating';
 import {makeDoctorsListRequest} from "./DoctorListRequest";
-import {Fragment} from 'react';
 import {withTranslation} from "react-i18next";
 import {FiRefreshCw} from "react-icons/fi";
 import {Box} from "@material-ui/core";

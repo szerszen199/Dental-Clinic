@@ -300,7 +300,6 @@
   "title_cancel_appointment": "Uwaga odwołanie wizyty",
   "text_cancel_appointment": "Czy napewno chcesz odwołać wizytę",
   "delete_appointment": "Usuń wizytę",
-  "prescription_expired" : "Recepta wygasła",
 
   "expiration_date_null": "Data wygaśnięcia nie może być pusta",
   "medications_null": "Zapisane lekarstwa nie mogą być puste",
@@ -310,4 +309,12 @@
   "prescription_removal_unauthorized": "Nie wystawiłeś tej recepty, nie możesz jej usunąć",
   "prescription_removed_successfully": "Recepta została usunięta",
   "Question delete prescription": "Czy chcesz usunąć receptę?"
+=======
+  "documentation_entry_edition_failed": "Edycja wpisu dokumentacji nie powiodła się",
+  "title_reserve_appointment": "Rezerwuj wizytę",
+  "reserve_appointment_text": "Czy na pewno chcesz rezerwowac wizytę?",
+  "appointment_reserved_successfully": "Rezerwacja przebiegła pomyślnie",
+  "appointment_not_found": "Wizyty nie znaleziono",
+  "appointment_edit_failed": "Edycja wizyty się nie powiodła"
+>>>>>>> origin/develop
 }

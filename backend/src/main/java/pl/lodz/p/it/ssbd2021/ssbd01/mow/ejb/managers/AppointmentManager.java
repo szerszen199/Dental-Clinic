@@ -8,6 +8,9 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentEditRequestDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentSelfDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.CreateAppointmentSlotRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
@@ -26,10 +29,18 @@ public interface AppointmentManager {
     /**
      * Dodaje rezerwację do podanej wizyty.
      *
-     * @param appointmentId klucz główny wizyty
-     * @param login         login pacjenta
+     * @param bookAppointmentSelfDto the book appointment self dto
+     * @throws AppBaseException the app base exception
      */
-    void bookAppointment(Long appointmentId, String login);
+    void bookAppointmentSelf(BookAppointmentSelfDto bookAppointmentSelfDto) throws AppBaseException;
+
+    /**
+     * Book appointment.
+     *
+     * @param bookAppointmentDto the book appointment dto
+     * @throws AppBaseException the app base exception
+     */
+    void bookAppointment(BookAppointmentDto bookAppointmentDto) throws AppBaseException;
 
     /**
      * Anuluje umówioną wizytę.

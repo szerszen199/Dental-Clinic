@@ -1,4 +1,4 @@
-import React, {Suspense} from "react";
+import React, {Fragment, Suspense} from "react";
 import "./AccountsList.css";
 import {makeAccountsListRequest} from "./AccountsListRequest";
 import {withTranslation} from "react-i18next";
