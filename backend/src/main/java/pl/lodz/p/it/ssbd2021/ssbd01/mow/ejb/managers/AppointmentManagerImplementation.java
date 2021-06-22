@@ -20,6 +20,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AppointmentFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.DoctorRatingFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.JWTAppointmentRatingUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
@@ -67,6 +68,9 @@ public class AppointmentManagerImplementation extends AbstractManager implements
 
     @Inject
     private MailProvider mailProvider;
+
+    @Inject
+    JWTAppointmentRatingUtils jwtAppointmentRatingUtils;
 
     @Override
     public void bookAppointment(Long appointmentId, String login) {
@@ -125,7 +129,8 @@ public class AppointmentManagerImplementation extends AbstractManager implements
 
     @Override
     public Appointment findById(Long id) throws AppBaseException {
-        Appointment appointment = appointmentFacade.find(id);;
+        Appointment appointment = appointmentFacade.find(id);
+        ;
         if (appointment == null) {
             throw AppointmentException.appointmentNotFound();
         }
@@ -151,7 +156,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         if (appointment.getCanceled()) {
             throw AppointmentException.appointmentCanceled();
         }
-        if(appointment.getAppointmentDate().isAfter(LocalDateTime.now())){
+        if (appointment.getAppointmentDate().isAfter(LocalDateTime.now())) {
             throw AppointmentException.appointmentNotFinished();
         }
         appointment.setRating(rate);
@@ -162,10 +167,36 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         }
     }
 
+    @Override
     @PermitAll
-    public void sendAppointmentRateEmail(Long id){
+    public void sendAppointmentRateEmail(Long id) throws AppointmentException, MailSendingException {
+        Appointment appointment;
+        try {
+            appointment = appointmentFacade.find(id);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        if (appointment == null) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        if (appointment.getPatient() == null) {
+            throw AppointmentException.appointmentNotBelongingToPatient();
+        }
 
+        try {
+            mailProvider.sendAppointmentRateMail(appointment.getPatient().getEmail(), appointment.getPatient().getLanguage(),
+                    jwtAppointmentRatingUtils.generateJwtTokenForUsername(appointment.getPatient().getLogin()), id);
+        } catch (MailSendingException e) {
+            throw MailSendingException.mailFailed();
+        }
+        appointment.setRateMailSent(true);
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
     }
+
 
     @Override
     public List<DoctorAndRateResponseDTO> getAllDoctorsAndRates() throws DoctorRatingException {
