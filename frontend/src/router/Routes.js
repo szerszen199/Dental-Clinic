@@ -11,7 +11,7 @@ import PrivateRoute from "./PrivateRoute";
 import GuestHomeRoute from "./GuestHomeRoute";
 import Account from "../components/Account/OwnAccount/Account"
 import AccountsList from "../components/AccountsList/AccountsList";
-import Prescription from "../components/Prescription/Prescription"
+import PrescriptionList from "../components/Prescription/PrescriptionList"
 import MyAppointment from "../components/Appointment/MyAppointments/MyAppointments";
 import PlanAppointment from "../components/Appointment/PlanAppointment/PlanAppointment";
 import ListDoctors from "../components/Appointment/ListDoctors/ListDoctors";
@@ -63,7 +63,7 @@ export default function Routes() {
             <Route exact path="/reset-password">
                 <Reset/>
             </Route>
-            <PrivateRoute authed={isPatient() || isDoctor()} path='/prescriptions' component={Prescription}/>
+            <PrivateRoute authed={isPatient() || isDoctor()} path='/prescriptions' component={PrescriptionList}/>
             <Route exact path="/new-password-admin/:token">
                 <SetNewPasswordAdmin/>
             </Route>
@@ -71,7 +71,7 @@ export default function Routes() {
                 <SetNewPassword/>
             </Route>
             <Route path='/unlock-account/:token' component={UnlockConfirm}/>
-            <PrivateRoute authed={isPatient()} path='/prescriptions' component={Prescription}/>
+            <PrivateRoute authed={isPatient()} path='/prescriptions' component={PrescriptionList}/>
             <PrivateRoute authed={isLoggedIn()} path='/account' component={Account}/>
             <PrivateRoute authed={isAdministrator() || isReceptionist()} path='/accounts' component={AccountsList}/>
             <PrivateRoute authed={isAdministrator()} path='/other-account/:accId' component={OtherAccount} />
