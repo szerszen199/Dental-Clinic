@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
 import axios from "axios";
 import {Doctor} from './Doctor';
+import errorAlerts from "../../Alerts/ErrorAlerts/ErrorAlerts";
 
 export async function makeDoctorsListRequest(t) {
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
