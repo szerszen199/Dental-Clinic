@@ -1,5 +1,24 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.cdi.endpoints;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.EJBTransactionRolledbackException;
+import javax.ejb.Stateful;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
@@ -18,26 +37,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.SignatureFilterBinding;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.converters.AppointmentConverter;
-
-import javax.annotation.security.DenyAll;
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.EJBTransactionRolledbackException;
-import javax.ejb.Stateful;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_OPTIMISTIC_LOCK_ERROR;
 
@@ -73,8 +72,10 @@ public class AppointmentEndpoint {
         List<DoctorAndRateResponseDTO> doctors;
         try {
             doctors = appointmentManager.getAllDoctorsAndRates();
-        } catch (DoctorRatingException | EJBTransactionRolledbackException e) {
+        } catch (DoctorRatingException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(I18n.GET_DOCTORS_AND_RATES_FAILED).build();
         }
         return Response.ok().entity(doctors).build();
     }

@@ -215,5 +215,10 @@
   "edit": "Edycja",
   "get_all_scheduled_appointments_failed": "Pobieranie wszystkich wizyt nie powiodło się",
   "no_access_level": "Konto nie posiada poziomu dostępu",
-  "patients_account_list": "Konta Pacjentów"
+  "patients_account_list": "Konta Pacjentów",
+  "No rates": "Brak ocen",
+  "Rates counter": "Liczba ocen",
+  "get_doctors_and_rates_failed": "Próba wyświetlenia dostępnych lekarzy nie powiodła się. Spróbuj ponownie.",
+  "Sorry": "Przepraszamy",
+  "No doctors": "Aktualnie nie dysponujemy personelem, który mógłby się państwem zająć."
 }

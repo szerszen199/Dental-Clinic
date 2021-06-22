@@ -215,5 +215,10 @@
   "get_all_scheduled_appointments_failed": "Get all scheduled appointments failed",
   "appointment_slot_creation_failed": "Unable to create appointment slot",
   "no_access_level": "Access level has been revoked",
-  "patients_account_list": "Patient's Accounts"
+  "patients_account_list": "Patient's Accounts",
+  "No rates": "No rates",
+  "Rates counter": "Rates counter",
+  "get_doctors_and_rates_failed": "An attempt to view the available doctors has failed. Try again.",
+  "Sorry": "Sorry",
+  "No doctors": "At the moment, we do not have staff to take care of you."
 }
