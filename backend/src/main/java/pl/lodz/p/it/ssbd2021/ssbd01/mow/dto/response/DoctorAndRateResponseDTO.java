@@ -8,6 +8,9 @@ import javax.validation.constraints.NotNull;
 public class DoctorAndRateResponseDTO {
 
     @NotNull
+    private String login;
+    
+    @NotNull
     private String firstName;
 
     @NotNull
@@ -19,11 +22,13 @@ public class DoctorAndRateResponseDTO {
     /**
      * Tworzy nową instancję klasy DoctorAndRateResponseDTO.
      *
+     * @param login     login lekarza
      * @param firstName imię lekarza
      * @param lastName  nazwisko lekarza
      * @param avgRate   średnia ocena
      */
-    public DoctorAndRateResponseDTO(String firstName, String lastName, double avgRate) {
+    public DoctorAndRateResponseDTO(String login, String firstName, String lastName, double avgRate) {
+        this.login = login;
         this.firstName = firstName;
         this.lastName = lastName;
         this.avgRate = avgRate;
@@ -54,5 +59,14 @@ public class DoctorAndRateResponseDTO {
      */
     public double getAvgRate() {
         return avgRate;
+    }
+
+    /**
+     * Pobiera pole login.
+     *
+     * @return login
+     */
+    public String getLogin() {
+        return login;
     }
 }

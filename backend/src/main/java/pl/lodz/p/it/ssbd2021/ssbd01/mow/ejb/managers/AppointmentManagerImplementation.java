@@ -15,20 +15,28 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorRating;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AllScheduledAppointmentsResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.ScheduledAppointmentResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AccountFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.AppointmentFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.facades.DoctorRatingFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 /**
  * Klasa implementująca interfejs menadżera wizyt.
  */
 @Stateful
-@PermitAll
+@RolesAllowed({I18n.RECEPTIONIST, I18n.DOCTOR, I18n.PATIENT})
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(LogInterceptor.class)
 public class AppointmentManagerImplementation extends AbstractManager implements AppointmentManager {
@@ -42,6 +50,15 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     @Inject
     private DoctorRatingFacade doctorRatingFacade;
 
+    @Inject
+    private HttpServletRequest request;
+
+    @Inject
+    private LoggedInAccountUtil loggedInAccountUtil;
+
+    @Inject
+    private EntityIdentitySignerVerifier entityIdentitySignerVerifier;
+
     @Override
     public void bookAppointment(Long appointmentId, String login) {
         throw new NotImplementedException();
@@ -53,7 +70,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
-    public void editBookedAppointment(Appointment appointment) {
+    public void editAppointmentSlot(Appointment appointment) {
         throw new NotImplementedException();
     }
 
@@ -68,8 +85,57 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
-    public List<Appointment> getBookedAppointments() {
-        throw new NotImplementedException();
+    public AllScheduledAppointmentsResponseDTO getScheduledAppointments() throws AppointmentException {
+        try {
+            List<Appointment> appointments = appointmentFacade.findAllScheduledAppointments();
+            List<ScheduledAppointmentResponseDTO> scheduledAppointmentResponseDTOS = new ArrayList<>();
+            for (Appointment a : appointments) {
+                scheduledAppointmentResponseDTOS.add(new ScheduledAppointmentResponseDTO(a, entityIdentitySignerVerifier));
+            }
+            return new AllScheduledAppointmentsResponseDTO(scheduledAppointmentResponseDTOS);
+        } catch (AppBaseException e) {
+            throw AppointmentException.getAllScheduledAppointmentsException();
+        }
+    }
+
+    @Override
+    public AllScheduledAppointmentsResponseDTO getScheduledAppointmentsByDoctor() throws AppointmentException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        } catch (Exception e) {
+            throw AppointmentException.accountNotFound();
+        }
+        try {
+            List<Appointment> appointments = appointmentFacade.findAllScheduledAppointmentsByDoctor(account);
+            List<ScheduledAppointmentResponseDTO> scheduledAppointmentResponseDTOS = new ArrayList<>();
+            for (Appointment a : appointments) {
+                scheduledAppointmentResponseDTOS.add(new ScheduledAppointmentResponseDTO(a, entityIdentitySignerVerifier));
+            }
+            return new AllScheduledAppointmentsResponseDTO(scheduledAppointmentResponseDTOS);
+        } catch (AppBaseException e) {
+            throw AppointmentException.getAllScheduledAppointmentsException();
+        }
+    }
+
+    @Override
+    public AllScheduledAppointmentsResponseDTO getScheduledAppointmentsByPatient() throws AppointmentException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        } catch (Exception e) {
+            throw AppointmentException.accountNotFound();
+        }
+        try {
+            List<Appointment> appointments = appointmentFacade.findAllScheduledAppointmentsByPatient(account);
+            List<ScheduledAppointmentResponseDTO> scheduledAppointmentResponseDTOS = new ArrayList<>();
+            for (Appointment a : appointments) {
+                scheduledAppointmentResponseDTOS.add(new ScheduledAppointmentResponseDTO(a, entityIdentitySignerVerifier));
+            }
+            return new AllScheduledAppointmentsResponseDTO(scheduledAppointmentResponseDTOS);
+        } catch (AppBaseException e) {
+            throw AppointmentException.getAllScheduledAppointmentsException();
+        }
     }
 
     @Override
@@ -84,7 +150,8 @@ public class AppointmentManagerImplementation extends AbstractManager implements
             return doctors
                     .stream()
                     .map(doctor ->
-                            new DoctorAndRateResponseDTO(doctor.getDoctor().getFirstName(),
+                            new DoctorAndRateResponseDTO(doctor.getDoctor().getLogin(),
+                                    doctor.getDoctor().getFirstName(),
                                     doctor.getDoctor().getLastName(),
                                     doctor.getAverage()))
                     .collect(Collectors.toList());
@@ -93,14 +160,72 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         }
     }
 
+    @RolesAllowed({I18n.RECEPTIONIST})
     @Override
-    public void addAppointmentSlot(Appointment appointment) {
-        throw new NotImplementedException();
+    public void addAppointmentSlot(Appointment appointment) throws AccountException, AppointmentException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
+        appointment.setCreatedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        appointment.setCreatedBy(account);
+        try {
+            appointmentFacade.create(appointment);
+        } catch (Exception e) {
+            throw AppointmentException.appointmentCreationFailed();
+        }
     }
 
     @Override
-    public void editAppointmentSlot(Appointment appointment) {
-        throw new NotImplementedException();
+    public void editBookedAppointment(AppointmentEditRequestDto appointmentEditRequestDto) throws AppointmentException {
+        Appointment appointment;
+        try {
+            appointment = appointmentFacade.find(appointmentEditRequestDto.getId());
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentNotFound();
+        }
+
+        if (!appointmentEditRequestDto.getVersion().equals(appointment.getVersion())) {
+            throw AppointmentException.versionMismatch();
+        }
+
+
+        try {
+            Account account;
+            if (appointmentEditRequestDto.getPatientLogin() != null) {
+                account = accountFacade.findByLogin(appointmentEditRequestDto.getPatientLogin());
+                final boolean isAccountActivePatient = account.getAccessLevels().stream()
+                        .anyMatch(accessLevel -> accessLevel.getLevel().equals(I18n.PATIENT)
+                                && accessLevel.getActive());
+                if (account.getActive() && isAccountActivePatient) {
+                    appointment.setPatient(account);
+                } else {
+                    throw AppointmentException.appointmentNotPatientInactive();
+                }
+
+            }
+        } catch (AppBaseException e) {
+            throw AppointmentException.accountNotFound();
+        }
+        try {
+            appointment.setModifiedBy(accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+        } catch (AccountException e) {
+            throw AppointmentException.accountNotFound(e.getCause());
+        } catch (Exception e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
+
+        if (appointmentEditRequestDto.getAppointmentDate() != null) {
+            appointment.setAppointmentDate(appointmentEditRequestDto.getAppointmentDate());
+        }
+
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
     }
 
     @Override
@@ -129,8 +254,22 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
-    public List<Account> getAllPatients() {
-        throw new NotImplementedException();
+    public List<PatientResponseDTO> getActivePatients() throws PatientException {
+        try {
+            List<Account> patients = accountFacade.getActivePatients();
+            return patients
+                    .stream()
+                    .map(patient ->
+                            new PatientResponseDTO(patient.getLogin(),
+                                    patient.getEmail(),
+                                    patient.getFirstName(),
+                                    patient.getLastName(),
+                                    patient.getPhoneNumber(),
+                                    patient.getPesel()))
+                    .collect(Collectors.toList());
+        } catch (AppBaseException e) {
+            throw PatientException.getActivePatients();
+        }
     }
 
     @RolesAllowed({I18n.RECEPTIONIST, I18n.PATIENT})
@@ -141,8 +280,6 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         } catch (AppBaseException e) {
             throw AppointmentException.getAllAppointmentsException();
         }
-
-
     }
 
     @RolesAllowed(I18n.DOCTOR)

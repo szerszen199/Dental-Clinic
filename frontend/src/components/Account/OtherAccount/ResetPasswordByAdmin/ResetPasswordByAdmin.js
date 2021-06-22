@@ -7,9 +7,6 @@ import confirmationAlerts from "../../../Alerts/ConfirmationAlerts/ConfirmationA
 import {makeResetPasswordByAdminRequest} from "./ResetPasswordByAdminRequest";
 
 class ResetPasswordByAdminWithoutTranslation extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
      handleSubmit(event, title, question, t) {
         return function (event) {
