@@ -224,6 +224,7 @@
   "get_all_scheduled_appointments_failed": "Pobieranie wszystkich wizyt nie powiodło się",
   "no_access_level": "Konto nie posiada poziomu dostępu",
   "patients_account_list": "Konta Pacjentów",
+  "appointment_not_found": "Wizyta nie została znaleziona",
   "appointment_slot_removal_failed": "Próba usunięcia terminu wizyty nie powiodła się",
   "appointment_was_booked": "Wybrana wizyta została już zarezerwowana. Odśwież stronę!",
   "appointment_id_null": "Wybierz wizytę",
@@ -270,6 +271,7 @@
   "documentation_entry_edited_unsuccessfully": "Edycja wpisu dokumentacji nie powiodła się",
   "documentation_entry_edition_failed": "Edycja wpisu dokumentacji nie powiodła się",
   "appointment_edit_successful": "Umówiona wizyta edytowana poprawnie",
+  "appointment_edit_failed": "Nie udało się edytować umówionej wizyty",
   "expiration": "Data ważaności",
   "patient_firstname": "Imię pacjenta",
   "patient_lastname": "Nazwisko pacjenta",
@@ -307,6 +309,14 @@
   "title_reserve_appointment": "Rezerwuj wizytę",
   "reserve_appointment_text": "Czy na pewno chcesz rezerwowac wizytę?",
   "appointment_reserved_successfully": "Rezerwacja przebiegła pomyślnie",
-  "appointment_not_found": "Wizyty nie znaleziono",
-  "appointment_edit_failed": "Edycja wizyty się nie powiodła"
+  "doctor_rating_failed": "Błąd oceniania doktora",
+  "appointment_already_rated": "Wizyta już oceniona",
+  "invalid_token": "Nieprawidłowy token",
+  "invalid_rating_score": "Nieprawidłowy wynik oceniania",
+  "appointment_not_finished": "Wizyta nie została zakończona",
+  "appointment_confirmed_successfully": "Wizyta potwierdzona pomyślnie",
+  "mail_failed": "Nie udało się wysłać maila",
+  "appointment_canceled": "Wizyta odwołana",
+  "appointment_already_confirmed": "Wizyta już potwierdzona",
+  "appointment_not_belonging_to_patient": "Wizyta nie należy do pacjenta"
 }

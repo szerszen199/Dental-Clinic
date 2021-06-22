@@ -7,10 +7,9 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentEditRequestDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentSelfDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentEditRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.CreateAppointmentSlotRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
@@ -113,9 +112,10 @@ public interface AppointmentManager {
      *
      * @param doctorId klucz główny lekarza
      * @param rate     ocena
+     * @param token    token
      * @throws AppointmentException wyjątek typu AppointmentException
      */
-    void rateAppointment(Long doctorId, BigDecimal rate) throws AppointmentException;
+    void rateAppointment(String token, Long doctorId, BigDecimal rate) throws AppointmentException;
 
     /**
      * Pobiera wszystkich lekarzy i ich oceny.
