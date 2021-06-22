@@ -120,7 +120,7 @@ public class DoctorRating extends AbstractEntity implements Serializable {
 
     @Override
     public Long getId() {
-        return null;
+        return this.id;
     }
     
     public double getAverage() {
