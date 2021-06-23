@@ -56,13 +56,15 @@ class PlanPatientAppointmentWithoutTr extends React.Component {
 
     }
 
-    renderButton() {
-        return <Button variant={"secondary"} size="lg" onClick={() => {
-            this.makeGetAccountRequest()
-        }}>
-            <FiRefreshCw/>
-        </Button>
-    }
+
+    // TODO: WITEK MA TO ZROBIc
+    // renderButton() {
+    //     return <Button variant={"secondary"} size="lg" onClick={() => {
+    //         this.makeGetAccountRequest()
+    //     }}>
+    //         <FiRefreshCw/>
+    //     </Button>
+    // }
 
     renderAppointments(){
         const {t} = this.props;
@@ -106,11 +108,9 @@ class PlanPatientAppointmentWithoutTr extends React.Component {
             onlyOneExpanding: true,
             renderer: row => (
                 <div>
-                    <form  onSubmit={()=>this.handleSubmit(row.id,t)}>
-                        <Button size={"lg"} type="submit">
+                        <Button size={"lg"} type="submit" onClick={() => {this.handleSubmit(row.id, t)}}>
                             book
                         </Button>
-                    </form>
                 </div>
             )
         };
