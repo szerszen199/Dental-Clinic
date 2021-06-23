@@ -294,5 +294,6 @@
   "Question edit prescription":  "Are you sure you want to edit prescription?",
   "prescription_edit_failed": "Prescription edit failed",
   "prescription_edited_successfully": "Prescription edited successfully",
-  "prescription_expired" : "Prescription expired"
+  "prescription_expired": "Prescription expired",
+  "Scheduled appointments": "Scheduled appointments"
 }
