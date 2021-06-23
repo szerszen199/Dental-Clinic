@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
@@ -67,6 +68,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

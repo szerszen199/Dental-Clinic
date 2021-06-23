@@ -33,6 +33,7 @@ import EditAppointmentSlot from "../components/Appointment/EditAppointmentSlot/E
 
 import NewDocumentationEntry from "../components/Documentation/NewDocumentationEntry/NewDocumentationEntry";
 import CreatePrescription from "../components/Documentation/CreatePrescription";
+import EditDocumentationEntry from "../components/Documentation/EditDocumentationEntry/EditDocumentationEntry";
 
 export default function Routes() {
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
@@ -82,6 +83,7 @@ export default function Routes() {
             <PrivateRoute authed={isAdministrator() || isReceptionist()} path='/accounts' component={AccountsList}/>
             <PrivateRoute authed={isAdministrator()} path='/other-account/:accId' component={OtherAccount} />
             <PrivateRoute authed={isDoctor()} path='/account-documentation/:accId' component={DocumentationList} />
+            <PrivateRoute authed={isDoctor()} path='/edit-documentation-entry/:accId/:entryId' component={EditDocumentationEntry} />
             <PrivateRoute authed={isDoctor()} path='/create-prescription/:accId' component={CreatePrescription} />
             <PrivateRoute authed={isDoctor()} path='/new-documentation-entry/:accId' component={NewDocumentationEntry} />
             <PrivateRoute authed={isPatient() || isReceptionist() || isDoctor()} path='/my-appointments'
