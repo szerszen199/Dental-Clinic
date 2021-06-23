@@ -76,16 +76,23 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         Appointment appointment;
         try {
             account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
-            appointment = appointmentFacade.find(bookAppointmentSelfDto.getAppointmentId());
+
         } catch (Exception e) {
             throw AccountException.noSuchAccount(e);
         }
-
+        appointment = appointmentFacade.find(bookAppointmentSelfDto.getAppointmentId());
+        if (appointment == null) {
+            throw AppointmentException.appointmentNotFound();
+        }
         appointment.setPatient(account);
         appointment.setModifiedBy(account);
         appointment.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         appointment.setModificationDateTime(LocalDateTime.now());
-        appointmentFacade.edit(appointment);
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
     }
 
     @Override
@@ -96,16 +103,22 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         try {
             account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
             patient = accountFacade.findByLogin(bookAppointmentDto.getPatientLogin());
-            appointment = appointmentFacade.find(bookAppointmentDto.getAppointmentId());
         } catch (Exception e) {
             throw AccountException.noSuchAccount(e);
         }
-
+        appointment = appointmentFacade.find(bookAppointmentDto.getAppointmentId());
+        if (appointment == null) {
+            throw AppointmentException.appointmentNotFound();
+        }
         appointment.setPatient(patient);
         appointment.setModifiedBy(account);
         appointment.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         appointment.setModificationDateTime(LocalDateTime.now());
-        appointmentFacade.edit(appointment);
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
     }
 
     @Override
