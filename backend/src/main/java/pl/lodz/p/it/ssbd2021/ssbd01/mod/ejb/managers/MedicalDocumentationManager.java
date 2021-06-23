@@ -1,8 +1,15 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.DocumentationEntryException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.AddDocumentationEntryRequestDTO;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -14,26 +21,34 @@ import java.util.List;
 public interface MedicalDocumentationManager {
 
     /**
-     * Dodaje wpis w dokumentacji medycznej pacjenta.
+     * Tworzy dokumentację medyczną.
      *
-     * @param patientId klucz główny pacjenta
-     * @param entry     dodawany wpis
+     * @param login login użytkownika, dla którego tworzona jest dokumentacja
+     * @throws MedicalDocumentationException wyjątek typu MedicalDocumentationException
+     * @throws AccountException              wyjątek typu AccountException
      */
-    void addDocumentationEntry(Long patientId, DocumentationEntry entry);
+    void createMedicalDocumentation(String login) throws MedicalDocumentationException, AccountException;
 
     /**
-     * Edytuje wpis w dokumentacji medycznej pacjenta.
+     * Dodaje wpis w dokumentacji medycznej pacjenta.
      *
-     * @param entry edytowany wpis
+     * @param addDocumentationEntryRequestDTO DTO dla tworzenia wpisu dokumentacji
+     * @throws DocumentationEntryException   wyjątek typu DocumentationEntryException
+     * @throws AccountException              wyjątek typu AccountException
+     * @throws EncryptionException           wyjątek typu EncryptionException
+     * @throws MedicalDocumentationException wyjątek typu MedicalDocumentationException
      */
-    void editDocumentationEntry(DocumentationEntry entry);
+    void addDocumentationEntry(AddDocumentationEntryRequestDTO addDocumentationEntryRequestDTO)
+            throws DocumentationEntryException, AccountException, EncryptionException, MedicalDocumentationException;
+
 
     /**
      * Usuwa wpis z dokumentacji medycznej pacjenta.
      *
      * @param id klucz główny dokumentacji medycznej
+     * @throws AppBaseException wyjątek typu {@link AppBaseException} w przypadku niepowodzenia
      */
-    void removeDocumentationEntry(Long id);
+    void removeDocumentationEntry(Long id) throws AppBaseException;
 
     /**
      * Pobiera dokumentację medyczną.
@@ -45,47 +60,16 @@ public interface MedicalDocumentationManager {
 
     /**
      * Pobiera dokumentację medyczną dla pacjenta o danym kluczu głównym {@param patientId}.
-     *
-     * @param patientId klucz główny pacjenta
+     * @param patientUsername login pacjenta
      * @return dokumentacja medyczna pacjenta
+     * @throws MedicalDocumentationException przy błędach z pobraniem dokumentacji medycznej
      */
-    MedicalDocumentation getDocumentationByPatient(Long patientId);
+    MedicalDocumentation getDocumentationByPatient(String patientUsername) throws MedicalDocumentationException;
 
     /**
-     * Dodaje receptę dla danego pacjenta.
+     * Sprawdza czy ostatnia transakcja się powiodła.
      *
-     * @param patientId    klucz główny pacjenta
-     * @param prescription the prescription
+     * @return true jeśli ostatnia transakcja się nie powiodła, false w przeciwnym wypadku.
      */
-    void addPrescription(Long patientId, Prescription prescription);
-
-    /**
-     * Modyfikuje receptę.
-     *
-     * @param prescription recepta
-     */
-    void editPrescription(Prescription prescription);
-
-    /**
-     * Usuwa receptę.
-     *
-     * @param id klucz główny recepty
-     */
-    void removePrescription(Long id);
-
-    /**
-     * Pobiera receptę po zadanym kluczu głównym.
-     *
-     * @param id klucz główny recepty
-     * @return recepta
-     */
-    Prescription getPrescription(Long id);
-
-    /**
-     * Pobiera wszystkie recepty dla danego pacjenta.
-     *
-     * @param patientId klucz główny pacjenta
-     * @return lista recept pacjenta
-     */
-    List<Prescription> getPrescriptionsByPatient(Long patientId);
+    boolean isLastTransactionRollback();
 }

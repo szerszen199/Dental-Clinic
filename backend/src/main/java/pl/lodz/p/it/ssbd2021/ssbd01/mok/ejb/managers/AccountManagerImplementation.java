@@ -8,8 +8,10 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.ReceptionistData;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades.MedicalDocumentationFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.SetNewPasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
@@ -55,6 +57,9 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     private AccountFacade accountFacade;
 
     @Inject
+    private MedicalDocumentationFacade medicalDocumentationFacade;
+
+    @Inject
     private LoggedInAccountUtil loggedInAccountUtil;
 
     @Inject
@@ -83,11 +88,12 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Inject
     private JwtResetPasswordConfirmation jwtResetPasswordConfirmation;
+    
     @Inject
     private PropertiesLoader propertiesLoader;
 
     @Override
-    public void createAccount(Account account) throws AccountException, MailSendingException {
+    public void createAccount(Account account) throws AccountException, MailSendingException, MedicalDocumentationException {
         String requestIp = IpAddressUtils.getClientIpAddressFromHttpServletRequest(request);
         account.setPassword(hashGenerator.generateHash(account.getPassword()));
         account.setCreatedByIp(requestIp);
@@ -184,7 +190,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (Exception e) {
             throw MailSendingException.activationConfirmation();
         }
-
     }
 
     @Override
@@ -396,6 +401,15 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     public List<Account> getAllAccounts() throws AppBaseException {
         try {
             return accountFacade.findAll();
+        } catch (AppBaseException e) {
+            throw AccountException.getAllAccountsFailed();
+        }
+    }
+
+    @Override
+    public List<Account> getAllPatients() throws AppBaseException {
+        try {
+            return accountFacade.getAllPatients();
         } catch (AppBaseException e) {
             throw AccountException.getAllAccountsFailed();
         }

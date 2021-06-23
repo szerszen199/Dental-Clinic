@@ -1,11 +1,14 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorRating;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccessLevelException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccessLevelFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.AccountFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades.DoctorRatingFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.AbstractManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
@@ -19,6 +22,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 /**
  * Typ Access level manager implementation - implementacja AccessLevelManager.
@@ -33,6 +37,9 @@ public class AccessLevelManagerImplementation extends AbstractManager implements
 
     @Inject
     private AccountFacade accountFacade;
+
+    @Inject
+    private DoctorRatingFacade doctorRatingFacade;
 
     @Inject
     private LoggedInAccountUtil loggedInAccountUtil;
@@ -71,10 +78,34 @@ public class AccessLevelManagerImplementation extends AbstractManager implements
         } catch (Exception e) {
             throw AccessLevelException.accessLevelAddFailed();
         }
+
         if (!accessLevel.getActive()) {
             accessLevel.setActive(true);
             accessLevel.setModifiedBy(accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
             accessLevel.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(httpServletRequest));
+
+            if (accessLevel.getLevel().equals(I18n.DOCTOR)) {
+
+                Optional<DoctorRating> doctorRatingOptional;
+
+                try {
+                    doctorRatingOptional = doctorRatingFacade.findByDoctorLogin(login);
+                } catch (Exception e) {
+                    throw AccessLevelException.accessLevelAddFailed();
+                }
+
+                if (doctorRatingOptional.isEmpty()) {
+                    DoctorRating doctorRating = new DoctorRating(accessLevel.getAccountId());
+                    doctorRating.setCreatedBy(accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+                    doctorRating.setCreatedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(httpServletRequest));
+                    try {
+                        doctorRatingFacade.create(doctorRating);
+                    } catch (Exception e) {
+                        throw AccessLevelException.accessLevelAddFailed();
+                    }
+                }
+            }
+
             try {
                 accessLevelFacade.edit(accessLevel);
             } catch (Exception e) {
@@ -82,6 +113,14 @@ public class AccessLevelManagerImplementation extends AbstractManager implements
             }
         }
 
+    }
+
+    @Override
+    public void deleteAccessLevelsByAccountId(Long id) throws AppBaseException {
+        var x = accessLevelFacade.findByAccountId(id);
+        for (AccessLevel al: x) {
+            accessLevelFacade.remove(al);
+        }
     }
 
 }

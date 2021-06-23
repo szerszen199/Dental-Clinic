@@ -59,12 +59,14 @@ import java.util.Set;
         @NamedQuery(name = "Account.findByLanguage", query = "SELECT a FROM Account a WHERE a.language = :language"),
         @NamedQuery(name = "Account.findByVersion", query = "SELECT a FROM Account a WHERE a.version = :version"),
         @NamedQuery(name = "Account.findByLoginOrEmailOrPesel", query = "SELECT a FROM Account a WHERE a.login = :login OR a.email = :email OR a.pesel = :pesel"),
+        @NamedQuery(name = "Account.findActivePatients",
+                query = "SELECT a FROM Account a INNER JOIN AccessLevel al ON a.id = al.accountId WHERE a.active = true AND a.enabled = true AND al.active = true AND al.level = 'level.patient'"),
+        @NamedQuery(name = "Account.findByAccessLevel", query = "SELECT a FROM Account a, AccessLevel al WHERE al.accountId.id = a.id and al.level = :level and a.enabled = true and a.active = true"),
         @NamedQuery(name = "Account.findByLogin", query = "SELECT a FROM Account a WHERE a.login = :login")})
 public class Account extends AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-    @JoinColumn(name = "account_id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "accountId")
     private final Set<AccessLevel> accessLevels = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accounts_generator")
@@ -129,10 +131,6 @@ public class Account extends AbstractEntity implements Serializable {
     @Column(name = "last_successful_login_ip", length = 256)
     @Size(min = 0, max = 256)
     private String lastSuccessfulLoginIp;
-
-    @Column(name = "modified_by_ip", length = 256)
-    @Size(min = 0, max = 256)
-    private String modifiedByIp;
 
     @Column(name = "last_block_unlock_ip", length = 256)
     @Size(min = 0, max = 256)
@@ -298,14 +296,6 @@ public class Account extends AbstractEntity implements Serializable {
      */
     public void setLastBlockUnlockIp(String lastBlockUnlockIp) {
         this.lastBlockUnlockIp = lastBlockUnlockIp;
-    }
-
-    public String getModifiedByIp() {
-        return modifiedByIp;
-    }
-
-    public void setModifiedByIp(String modifiedByIp) {
-        this.modifiedByIp = modifiedByIp;
     }
 
     @Override

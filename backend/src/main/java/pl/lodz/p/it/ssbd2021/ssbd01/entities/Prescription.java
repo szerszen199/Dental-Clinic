@@ -1,7 +1,11 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.Encryptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,8 +18,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 
 /**
  * Typ Prescription - klasa encyjna dal recept.
@@ -25,7 +33,8 @@ import javax.validation.constraints.Size;
 @NamedQueries({
         @NamedQuery(name = "Prescription.findAll", query = "SELECT p FROM Prescription p"),
         @NamedQuery(name = "Prescription.findById", query = "SELECT p FROM Prescription p WHERE p.id = :id"),
-        @NamedQuery(name = "Prescription.findByBusinessId", query = "SELECT p FROM Prescription p WHERE p.business = :business"),
+        @NamedQuery(name = "Prescription.findByPatientLogin", query = "SELECT p FROM Prescription p WHERE p.patient.login = :patientLogin"),
+        @NamedQuery(name = "Prescription.findByDoctorLogin", query = "SELECT p FROM Prescription p WHERE p.doctor.login = :doctorLogin"),
         @NamedQuery(name = "Prescription.findByExpiration", query = "SELECT p FROM Prescription p WHERE p.expiration = :expiration"),
         @NamedQuery(name = "Prescription.findByMedications", query = "SELECT p FROM Prescription p WHERE p.medications = :medications"),
         @NamedQuery(name = "Prescription.findByVersion", query = "SELECT p FROM Prescription p WHERE p.version = :version"),
@@ -44,26 +53,18 @@ public class Prescription extends AbstractEntity implements Serializable {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "business_id", columnDefinition = "bpchar", nullable = false)
-    @Size(min = 8, max = 8)
-    @NotNull
-    private String business;
-
-    @Basic(optional = false)
     @Column(name = "expiration", updatable = false, nullable = false)
     @NotNull
+    @Future
     private LocalDateTime expiration;
 
-    @Basic(optional = false)
-    @Column(name = "medications", nullable = false)
-    @NotNull
-    private String medications;
+    @Column(name = "medications")
+    private byte[] medications;
 
     @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
     @NotNull
     private Account doctor;
-
     @JoinColumn(name = "patient_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
     @NotNull
@@ -78,10 +79,18 @@ public class Prescription extends AbstractEntity implements Serializable {
     /**
      * Tworzy nową instancję klasy Prescription.
      *
-     * @param medications przepisane leki
+     * @param medications      przepisane leki
+     * @param propertiesLoader properties loader
+     * @throws NoSuchPaddingException    nie istniejący padding dla dekodowania
+     * @throws IllegalBlockSizeException błędny rozmiar bloku dla dekodowania
+     * @throws NoSuchAlgorithmException  błędny algorytm dla dekodowania
+     * @throws BadPaddingException       błędny padding dla dekodowania
+     * @throws InvalidKeyException       błędny klucz do dekodowania
      */
-    public Prescription(String medications) {
-        this.medications = medications;
+    public Prescription(String medications, PropertiesLoader propertiesLoader)
+            throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        Encryptor encryptor = new Encryptor(propertiesLoader);
+        this.medications = encryptor.encryptMessage(medications);
     }
 
     @Override
@@ -89,28 +98,71 @@ public class Prescription extends AbstractEntity implements Serializable {
         return id;
     }
 
-    public String getBusiness() {
-        return business;
-    }
-
     public LocalDateTime getExpiration() {
         return expiration;
     }
 
-    public String getMedications() {
+    public void setExpiration(LocalDateTime expiration) {
+        this.expiration = expiration;
+    }
+
+    public byte[] getMedications() {
         return medications;
     }
 
-    public void setMedications(String medications) {
+
+    /**
+     * Pobiera pole medications decrypted.
+     *
+     * @param propertiesLoader properties loader
+     * @return medications decrypted
+     * @throws NoSuchPaddingException    nie istniejący padding dla dekodowania
+     * @throws IllegalBlockSizeException błędny rozmiar bloku dla dekodowania
+     * @throws NoSuchAlgorithmException  błędny algorytm dla dekodowania
+     * @throws BadPaddingException       błędny padding dla dekodowania
+     * @throws InvalidKeyException       błędny klucz do dekodowania
+     */
+    public String getMedicationsDecrypted(PropertiesLoader propertiesLoader)
+            throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        Encryptor encryptor = new Encryptor(propertiesLoader);
+        return encryptor.decryptMessage(this.medications);
+    }
+
+    public void setMedications(byte[] medications) {
         this.medications = medications;
+    }
+
+    /**
+     * Ustawia pole medications.
+     *
+     * @param medications      medications
+     * @param propertiesLoader properties loader
+     * @throws NoSuchPaddingException    nie istniejący padding dla dekodowania
+     * @throws IllegalBlockSizeException błędny rozmiar bloku dla dekodowania
+     * @throws NoSuchAlgorithmException  błędny algorytm dla dekodowania
+     * @throws BadPaddingException       błędny padding dla dekodowania
+     * @throws InvalidKeyException       błędny klucz do dekodowania
+     */
+    public void setMedications(String medications, PropertiesLoader propertiesLoader)
+            throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        Encryptor encryptor = new Encryptor(propertiesLoader);
+        this.medications = encryptor.encryptMessage(medications);
     }
 
     public Account getDoctor() {
         return doctor;
     }
 
+    public void setDoctor(Account doctor) {
+        this.doctor = doctor;
+    }
+
     public Account getPatient() {
         return patient;
+    }
+
+    public void setPatient(Account patient) {
+        this.patient = patient;
     }
 
     @Override

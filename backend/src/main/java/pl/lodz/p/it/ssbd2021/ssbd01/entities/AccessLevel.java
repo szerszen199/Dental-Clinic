@@ -65,7 +65,7 @@ public class AccessLevel extends AbstractEntity implements Serializable {
     @Size(min = 7, max = 32)
     private String level;
 
-    @ManyToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
+    @ManyToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "account_id", referencedColumnName = "id", updatable = false)
     @NotNull
     private Account accountId;
@@ -119,6 +119,15 @@ public class AccessLevel extends AbstractEntity implements Serializable {
      */
     public Boolean getActive() {
         return active;
+    }
+
+    /**
+     * Pobiera pole accountId.
+     *
+     * @return accountId
+     */
+    public Account getAccountId() {
+        return accountId;
     }
 
     /**

@@ -1,12 +1,13 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request;
 
+import org.hibernate.validator.constraints.pl.PESEL;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.pl.PESEL;
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.validation.Login;
 
 /**
  * Klasa Dto dla nowo tworzonego konta.

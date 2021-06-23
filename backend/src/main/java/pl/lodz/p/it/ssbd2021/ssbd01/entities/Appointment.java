@@ -1,7 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +17,9 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 
 /**
@@ -35,6 +36,10 @@ import javax.validation.constraints.NotNull;
         @NamedQuery(name = "Appointment.findByRating", query = "SELECT a FROM Appointment a WHERE a.rating = :rating"),
         @NamedQuery(name = "Appointment.findByVersion", query = "SELECT a FROM Appointment a WHERE a.version = :version"),
         @NamedQuery(name = "Appointment.findByCreationDateTime", query = "SELECT a FROM Appointment a WHERE a.creationDateTime = :creationDateTime"),
+        @NamedQuery(name = "Appointment.findAllScheduled", query = "SELECT a FROM Appointment a WHERE a.patient != null AND a.doctor != null"),
+        @NamedQuery(name = "Appointment.findAllScheduledByDoctor", query = "SELECT a FROM Appointment a WHERE a.patient != null AND a.doctor = :doctor"),
+        @NamedQuery(name = "Appointment.updateRating", query = "UPDATE Appointment set rating=:rating, version=version+1 WHERE id=:id"),
+        @NamedQuery(name = "Appointment.findAllScheduledByPatient", query = "SELECT a FROM Appointment a WHERE a.patient = :patient AND a.doctor != null"),
         @NamedQuery(name = "Appointment.findByModificationDateTime", query = "SELECT a FROM Appointment a WHERE a.modificationDateTime = :modificationDateTime")})
 public class Appointment extends AbstractEntity implements Serializable {
 
@@ -43,7 +48,7 @@ public class Appointment extends AbstractEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appointments_generator")
     @SequenceGenerator(name = "appointments_generator", sequenceName = "appointments_seq", allocationSize = 1)
     @Basic(optional = false)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "id", updatable = false, nullable = false)
     @NotNull
     private Long id;
 
@@ -57,9 +62,8 @@ public class Appointment extends AbstractEntity implements Serializable {
     @Column(name = "confirmation_date_time", nullable = true)
     private LocalDateTime confirmationDateTime;
 
-    @Basic(optional = false)
-    @Column(name = "cancellation_date_time", nullable = false)
-    @NotNull
+    @Basic(optional = true)
+    @Column(name = "cancellation_date_time", nullable = true)
     private LocalDateTime cancellationDateTime;
 
     @JoinColumn(name = "confirmed_by", referencedColumnName = "id", nullable = true)
@@ -69,6 +73,17 @@ public class Appointment extends AbstractEntity implements Serializable {
     @JoinColumn(name = "canceled_by", referencedColumnName = "id", nullable = true)
     @ManyToOne(optional = true)
     private Account canceledBy;
+
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "reminder_mail_sent", nullable = false)
+    private Boolean reminderMailSent = false;
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "rate_mail_sent", nullable = false)
+    private Boolean rateMailSent = false;
 
     public LocalDateTime getConfirmationDateTime() {
         return confirmationDateTime;
@@ -112,11 +127,11 @@ public class Appointment extends AbstractEntity implements Serializable {
     @NotNull
     private Boolean canceled = false;
 
-    @Column(name = "rating", columnDefinition = "numeric", precision = 2, scale = 1)
+    @Column(name = "rating", columnDefinition = "decimal_type", precision = 2, scale = 1)
     @DecimalMin(value = "0.0")
     @DecimalMax(value = "5.0")
-    @Digits(integer = 1, fraction = 1)
-    private Double rating;
+    @Digits(integer = 2, fraction = 1)
+    private BigDecimal rating;
 
     @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
@@ -130,6 +145,17 @@ public class Appointment extends AbstractEntity implements Serializable {
      * Tworzy nową instancję Appointment.
      */
     public Appointment() {
+    }
+
+    /**
+     * Tworzy nowa instancje  Appointment.
+     *
+     * @param doctor          doktor
+     * @param appointmentDate data wizyty
+     */
+    public Appointment(Account doctor, LocalDateTime appointmentDate) {
+        this.doctor = doctor;
+        this.appointmentDate = appointmentDate;
     }
 
     /**
@@ -174,11 +200,11 @@ public class Appointment extends AbstractEntity implements Serializable {
         this.canceled = canceled;
     }
 
-    public Double getRating() {
+    public BigDecimal getRating() {
         return rating;
     }
 
-    public void setRating(Double rating) {
+    public void setRating(BigDecimal rating) {
         this.rating = rating;
     }
 
@@ -199,9 +225,24 @@ public class Appointment extends AbstractEntity implements Serializable {
         this.patient = patient;
     }
 
+    public Boolean getReminderMailSent() {
+        return reminderMailSent;
+    }
+
+    public void setReminderMailSent(Boolean reminderMailSent) {
+        this.reminderMailSent = reminderMailSent;
+    }
+
+    public Boolean getRateMailSent() {
+        return rateMailSent;
+    }
+
+    public void setRateMailSent(Boolean rateMailSent) {
+        this.rateMailSent = rateMailSent;
+    }
+
     @Override
     public String toString() {
         return "pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment[ id=" + id + " ]";
     }
-
 }

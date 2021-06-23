@@ -27,6 +27,9 @@ import java.io.Serializable;
         @NamedQuery(name = "DocumentationEntry.findByToBeDone", query = "SELECT d FROM DocumentationEntry d WHERE d.toBeDone = :toBeDone"),
         @NamedQuery(name = "DocumentationEntry.findByVersion", query = "SELECT d FROM DocumentationEntry d WHERE d.version = :version"),
         @NamedQuery(name = "DocumentationEntry.findByCreationDateTime", query = "SELECT d FROM DocumentationEntry d WHERE d.creationDateTime = :creationDateTime"),
+        @NamedQuery(name = "DocumentationEntry.deleteById", query = "DELETE FROM DocumentationEntry d WHERE d.id = :id"),
+        @NamedQuery(name = "DocumentationEntry.findByPatientLogin",
+                query = "SELECT d FROM DocumentationEntry d, MedicalDocumentation  md WHERE md.id = d.medicalDocumentation.id and md.patient.login = :login"),
         @NamedQuery(name = "DocumentationEntry.findByModificationDateTime", query = "SELECT d FROM DocumentationEntry d WHERE d.modificationDateTime = :modificationDateTime")})
 public class DocumentationEntry extends AbstractEntity implements Serializable {
 
@@ -41,15 +44,20 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
     private Long id;
 
     @Column(name = "was_done")
-    private String wasDone;
+    private byte[] wasDone;
 
     @Column(name = "to_be_done")
-    private String toBeDone;
+    private byte[] toBeDone;
 
     @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
     @NotNull
     private Account doctor;
+
+    @JoinColumn(name = "documentation_id", referencedColumnName = "id", nullable = false, updatable = false, insertable = true)
+    @ManyToOne(optional = false)
+    @NotNull
+    private MedicalDocumentation medicalDocumentation;
 
     /**
      * Tworzy nową instancję klasy DocumentationEntry.
@@ -57,24 +65,47 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
     public DocumentationEntry() {
     }
 
+    /**
+     * Tworzy nową instancję klasy Documentation entry.
+     *
+     * @param doctor               doktor tworzący wpis dokumentacji
+     * @param wasDone              co zostało zrobione
+     * @param toBeDone             co ma zostać zrobione wprzyszłości
+     * @param medicalDocumentation medyczna dokumentacja, dla której został dodany wpis
+     */
+    public DocumentationEntry(Account doctor, byte[] wasDone, byte[] toBeDone, MedicalDocumentation medicalDocumentation) {
+        this.doctor = doctor;
+        this.wasDone = wasDone;
+        this.toBeDone = toBeDone;
+        this.medicalDocumentation = medicalDocumentation;
+    }
+
+    public MedicalDocumentation getMedicalDocumentation() {
+        return medicalDocumentation;
+    }
+
+    public void setMedicalDocumentation(MedicalDocumentation medicalDocumentation) {
+        this.medicalDocumentation = medicalDocumentation;
+    }
+
     @Override
     public Long getId() {
         return id;
     }
 
-    public String getWasDone() {
+    public byte[] getWasDone() {
         return wasDone;
     }
 
-    public void setWasDone(String wasDone) {
+    public void setWasDone(byte[] wasDone) {
         this.wasDone = wasDone;
     }
 
-    public String getToBeDone() {
+    public byte[] getToBeDone() {
         return toBeDone;
     }
 
-    public void setToBeDone(String toBeDone) {
+    public void setToBeDone(byte[] toBeDone) {
         this.toBeDone = toBeDone;
     }
 

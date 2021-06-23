@@ -16,9 +16,12 @@ import java.util.logging.Logger;
 public abstract class AbstractManager {
 
     protected static final Logger LOGGER = Logger.getGlobal();
+    
     @Inject
-    LoggedInAccountUtil loggedInAccountUtil;
+    protected LoggedInAccountUtil loggedInAccountUtil;
+    
     boolean lastTransactionRollback;
+    
     private String transactionID;
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)

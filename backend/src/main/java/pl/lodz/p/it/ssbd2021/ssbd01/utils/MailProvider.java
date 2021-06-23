@@ -1,7 +1,8 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
-
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.ejb.Asynchronous;
 import javax.ejb.EJB;
@@ -12,9 +13,8 @@ import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.servlet.ServletContext;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATE_BUTTON;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATE_SUBJECT;
@@ -24,6 +24,8 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATION_C
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_CHANGE_CONFIRM_BUTTON;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_CHANGE_CONFIRM_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_CHANGE_CONFIRM_TEXT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_DELETE_BY_SCHEDULER_SUBJECT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_DELETE_BY_SCHEDULER_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_GRANT_ACCESS_LEVEL_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_GRANT_ACCESS_LEVEL_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_LOCK_BY_ADMIN_SUBJECT;
@@ -42,6 +44,8 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_SCHEDULER_LO
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_SCHEDULER_LOCK_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_UNLOCK_BY_ADMIN_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_UNLOCK_BY_ADMIN_TEXT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_MAIL_CONFIRMED_SUBJECT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_MAIL_CONFIRMED_TEXT;
 
 /**
  * Klasa Mail provider'a.
@@ -160,6 +164,25 @@ public class MailProvider {
         ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
         String subject = langBundle.getString(ACCOUNT_MAIL_LOCK_BY_ADMIN_SUBJECT);
         String messageText = paragraph(langBundle.getString(ACCOUNT_MAIL_LOCK_BY_ADMIN_TEXT));
+        try {
+            mailManager.sendMail(email, subject, getFrom(), messageText, session);
+        } catch (MessagingException e) {
+            throw MailSendingException.accountLock();
+        }
+    }
+
+    /**
+     * Wysyła wiadomość informującą o usunięciu kont przez scheduler.
+     *
+     * @param email Adres, na który zostanie wysłana wiadomość.
+     * @param lang  język wiadomości email
+     * @throws MailSendingException Błąd wysyłania wiadomości.
+     */
+    public void sendAccountDeletedByScheduler(String email, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(ACCOUNT_MAIL_DELETE_BY_SCHEDULER_SUBJECT);
+        String messageText = paragraph(langBundle.getString(ACCOUNT_MAIL_DELETE_BY_SCHEDULER_TEXT));
         try {
             mailManager.sendMail(email, subject, getFrom(), messageText, session);
         } catch (MessagingException e) {
@@ -308,14 +331,14 @@ public class MailProvider {
      *
      * @param email adres email
      * @param token token
-     * @param lang język maila
+     * @param lang  język maila
      * @throws MailSendingException wyjątek wysyłania maila
      */
     public void sendAccountLockedByScheduler(String email, String token, String lang) throws MailSendingException {
         Locale locale = new Locale(lang);
         ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
         String subject = langBundle.getString(ACCOUNT_MAIL_SCHEDULER_LOCK_SUBJECT);
-        String activationLink = buildMailConfirmationLink(getContextPath(), token);
+        String activationLink = buildMailUnlockAccount(getContextPath(), token);
         String messageText = paragraph(langBundle.getString(ACCOUNT_MAIL_SCHEDULER_LOCK_TEXT))
                 + hyperlink(activationLink, langBundle.getString(ACCOUNT_MAIL_SCHEDULER_LOCK_BUTTON));
         try {
@@ -370,6 +393,68 @@ public class MailProvider {
         }
     }
 
+    /**
+     * Wysyła maila z informacją o potwierdzeniu wizyty.
+     *
+     * @param email Adres, na który zostanie wysłana wiadomość.
+     * @param lang  język wiadomości email
+     * @throws MailSendingException Błąd wysyłania wiadomości.
+     */
+    public void sendAppointmentConfirmedMail(String email, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(APPOINTMENT_MAIL_CONFIRMED_SUBJECT);
+        String messageText = paragraph(langBundle.getString(APPOINTMENT_MAIL_CONFIRMED_TEXT));
+        try {
+            mailManager.sendMail(email, subject, getFrom(), messageText, session);
+        } catch (MessagingException e) {
+            throw MailSendingException.accountLock();
+        }
+    }
+
+    /**
+     * Wysyła maila z przypomnieniem o konieczności potwierdzenia wizyty.
+     *
+     * @param email Adres, na który zostanie wysłana wiadomość.
+     * @param lang  język wiadomości email
+     * @throws MailSendingException Błąd wysyłania wiadomości.
+     */
+    public void sendAppointmentConfirmationReminderMail(String email, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(I18n.APPOINTMENT_MAIL_CONFIRM_REMINDER_SUBJECT);
+        String messageText = paragraph(langBundle.getString(I18n.APPOINTMENT_MAIL_CONFIRM_REMINDER_TEXT));
+        try {
+            mailManager.sendMail(email, subject, getFrom(), messageText, session);
+        } catch (MessagingException e) {
+            throw MailSendingException.accountLock();
+        }
+    }
+
+    /**
+     * Wysyła maila z przypomnieniem o konieczności potwierdzenia wizyty.
+     *
+     * @param email Adres, na który zostanie wysłana wiadomość.
+     * @param lang  język wiadomości email
+     * @param token token
+     * @param id    id wizyty do ocenienia
+     * @throws MailSendingException Błąd wysyłania wiadomości.
+     */
+    public void sendAppointmentRateMail(String email, String lang, String token, Long id) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(I18n.APPOINTMENT_RATE_SUBJECT);
+        String activationLink = buildRatingLink(getContextPath(), token, id);
+        String messageText = paragraph(langBundle.getString(I18n.APPOINTMENT_RATE_TEXT))
+                + hyperlink(activationLink, langBundle.getString(I18n.APPOINTMENT_RATE_LINK));
+        try {
+            mailManager.sendMail(email, subject, getFrom(), messageText, session);
+        } catch (MessagingException e) {
+            throw MailSendingException.mailFailed();
+        }
+    }
+
+
     private String paragraph(String text) {
         return "<p>" + text + "</p>";
     }
@@ -387,6 +472,14 @@ public class MailProvider {
     }
 
     private String buildMailConfirmationLink(String defaultContext, String token) {
+        StringBuilder sb = new StringBuilder(getFrontendUrl());
+        sb.append("/mail-change-confirm/");
+        sb.append(token);
+
+        return sb.toString();
+    }
+
+    private String buildMailUnlockAccount(String defaultContext, String token) {
         StringBuilder sb = new StringBuilder(getFrontendUrl());
         sb.append("/unlock-account/");
         sb.append(token);
@@ -407,6 +500,12 @@ public class MailProvider {
         sb.append("/new-password-admin/");
         sb.append(token);
 
+        return sb.toString();
+    }
+
+    private String buildRatingLink(String contextPath, String token, Long id) {
+        StringBuilder sb = new StringBuilder(getFrontendUrl());
+        sb.append("/rate-appointment/").append(id.toString()).append("/").append(token);
         return sb.toString();
     }
 

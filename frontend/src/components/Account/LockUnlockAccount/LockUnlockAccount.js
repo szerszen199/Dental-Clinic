@@ -98,7 +98,7 @@ class LockAccountWithoutTranslation extends React.Component {
     }
 
     makeGetAccountRequest() {
-        console.log(this.props)
+        const {t} = this.props;
         let requestPath = process.env.REACT_APP_BACKEND_URL + "account/other-account-info/" + this.props.login
 
         axios
@@ -112,7 +112,12 @@ class LockAccountWithoutTranslation extends React.Component {
             })
             .then(result => this.setState({
                 isActivated: result.active
-            }))
+            })).then(window.location.reload())
+            .catch(response => {
+                if (response.response) {
+                    errorAlerts(t(response.response.data.message), response.response.status.toString(10));
+                }
+            });
     }
 
 
@@ -126,7 +131,7 @@ class LockAccountWithoutTranslation extends React.Component {
                 }
             }).then((response) => {
             successAlerts(t(response.data.message, response.status)).then(() => {
-                this.makeGetAccountRequest()
+                this.makeGetAccountRequest();
             })
         })
             .catch((response) => {

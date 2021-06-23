@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.PasswordException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.ChangePasswordDto;
@@ -24,10 +25,11 @@ public interface AccountManager {
      * Utworzenie konta przy rejestracji.
      *
      * @param account nowe konto
-     * @throws AccountException     wyjątek typu AccountException
-     * @throws MailSendingException wyjątek typu MailSendingException
+     * @throws AccountException              wyjątek typu AccountException
+     * @throws MailSendingException          wyjątek typu MailSendingException
+     * @throws MedicalDocumentationException wyjątek typu MedicalDocumentationException
      */
-    void createAccount(Account account) throws AccountException, MailSendingException;
+    void createAccount(Account account) throws AccountException, MailSendingException, MedicalDocumentationException;
 
     /**
      * usun konto.
@@ -147,6 +149,14 @@ public interface AccountManager {
      * @throws AppBaseException wyjątek typu AppBaseException
      */
     List<Account> getAllAccounts() throws AppBaseException;
+
+    /**
+     * Pobranie listy wszystkich pacjentów.
+     *
+     * @return lista wszystkich pacjentów
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    List<Account> getAllPatients() throws AppBaseException;
 
     /**
      * Zmienia hasło {@param newPassword} wskazanego konta {@param account}.
