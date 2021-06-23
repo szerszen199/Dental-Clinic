@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
-import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +16,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * Typ DoctorRating - klasa reprezentująca encję ocen doktora.
@@ -120,10 +120,18 @@ public class DoctorRating extends AbstractEntity implements Serializable {
 
     @Override
     public Long getId() {
-        return null;
+        return this.id;
     }
-    
+
+    /**
+     * Oblicza średnią ocen dla doktora.
+     *
+     * @return średnia ocen
+     */
     public double getAverage() {
+        if (ratesCounter == 0) {
+            return 0d;
+        }
         return ratesSum / ratesCounter;
     }
 

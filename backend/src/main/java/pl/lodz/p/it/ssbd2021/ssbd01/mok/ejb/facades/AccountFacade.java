@@ -1,6 +1,12 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.facades;
 
-import java.util.List;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+
 import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -11,11 +17,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
-import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import java.util.List;
 
 /**
  * Klasa definiująca główne operacje wykonywane na encjach typu Account.
@@ -130,5 +132,22 @@ public class AccountFacade extends AbstractFacade<Account> {
         }
     }
 
-    
+
+    /**
+     * Pobiera wszystkich pacjentów.
+     *
+     * @return Lista kont będących pacjentami
+     * @throws AppBaseException w przypadku błędów
+     */
+    public List<Account> getAllPatients() throws AppBaseException {
+        try {
+            TypedQuery<Account> tq = em.createNamedQuery("Account.findByAccessLevel", Account.class);
+            tq.setParameter("level", I18n.PATIENT);
+            return tq.getResultList();
+        } catch (PersistenceException e) {
+            throw AppBaseException.databaseError(e);
+        } catch (IllegalArgumentException e) {
+            throw AppBaseException.mismatchedPersistenceArguments(e);
+        }
+    }
 }

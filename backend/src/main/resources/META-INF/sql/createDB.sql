@@ -167,7 +167,8 @@ CREATE TABLE appointments
     confirmed_by_ip        VARCHAR(256),
     cancellation_date_time timestamptz,
     canceled_by            BIGINT,
-    canceled_by_ip         VARCHAR(256)
+    canceled_by_ip         VARCHAR(256),
+    reminder_mail_sent     BOOL DEFAULT FALSE NOT NULL
 );
 
 -- Klucze obce dla tabeli appointments
@@ -301,7 +302,7 @@ CREATE TABLE prescriptions
     expiration             TIMESTAMPTZ NOT NULL,                           -- data ważności recepty
     patient_id             BIGINT      NOT NULL,                           -- Id pacjenta, którego dotyczy recepta
     doctor_id              BIGINT      NOT NULL,                           -- Id lekarza który wystawił receptę
-    medications            TEXT        NOT NULL,                           -- Tekst informujący o przepisanych lekarstwach
+    medications            bytea        NOT NULL,                           -- Tekst informujący o przepisanych lekarstwach
     version                BIGINT                                          -- Wersja
         CONSTRAINT version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Czas utworzenia wiersza w tabeli
@@ -311,6 +312,14 @@ CREATE TABLE prescriptions
     modified_by            BIGINT,                                         -- Konto ostatnio modyfikujące wiersza w tabeli
     modified_by_ip         VARCHAR(256)
 );
+
+-- TODO: do definicji tableki ale nie chce ludziom psuć C:
+alter table prescriptions
+    drop column medications;
+alter table prescriptions
+    drop column business_id;
+alter table prescriptions
+    add column  medications bytea;
 
 -- Klucze obce dla tabeli documentation_entries
 ALTER TABLE prescriptions
@@ -450,6 +459,7 @@ GRANT
     ON doctors_ratings TO ssbd01mow;
 
 GRANT
+    SELECT,
     INSERT
     ON doctors_ratings TO ssbd01mok;
 

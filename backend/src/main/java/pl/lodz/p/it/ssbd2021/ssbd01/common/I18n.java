@@ -73,6 +73,10 @@ public class I18n {
 
     public static final String DARK_MODE_NULL = "dark_mode_null";
 
+    public static final String DOCTOR_ID_NULL = "doctor_id_null";
+    public static final String APPOINTMENT_DATE_NULL = "appointment_date_null";
+    public static final String APPOINTMENT_DATE_FUTURE = "appointment_date_future";
+
     public static final String INVALID_REFRESH_TOKEN = "invalid_refresh_token";
     public static final String PASSWORDS_NOT_DIFFER = "both_passwords_are_same";
     public static final String AUTHENTICATION_FAILURE = "invalid_login_password_combination";
@@ -106,7 +110,7 @@ public class I18n {
     public static final String ACCOUNT_MAIL_LOCK_BY_ADMIN_SUBJECT = "account_mail_lock_by_admin_subject";
     public static final String ACCOUNT_MAIL_LOCK_BY_ADMIN_TEXT = "account_mail_lock_by_admin_text";
     public static final String ACCOUNT_MAIL_DELETE_BY_SCHEDULER_SUBJECT = "account_mail_deleted_by_scheduler_subject";
-    public static final String ACCOUNT_MAIL_DELETE_BY_SCHEDULER_TEXT  = "account_mail_deleted_by_scheduler_text";
+    public static final String ACCOUNT_MAIL_DELETE_BY_SCHEDULER_TEXT = "account_mail_deleted_by_scheduler_text";
     public static final String ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_SUBJECT = "account_mail_lock_by_unsuccessful_login_subject";
     public static final String ACCOUNT_MAIL_LOCK_BY_UNSUCCESSFUL_LOGIN_TEXT = "account_mail_lock_by_unsuccessful_login_text";
     public static final String ACCOUNT_MAIL_LOGIN_SUBJECT = "account_mail_login_subject";
@@ -147,12 +151,11 @@ public class I18n {
     public static final String INVALID_DOCTOR_DOCUMENTATION_ENTRY = "invalid_doctor_documentation_entry";
     public static final String REMOVAL_FAILURE_ERROR = "removal_failure_error";
     public static final String DOCUMENTATION_ENTRY_DELETION_UNSUCCESSFUL = "documentation_entry_deletion_unsuccessful";
-    public static final String DOCTOR_ID_NULL = "doctor_id_null";
     public static final String DOCUMENTATION_ENTRY_CREATED_SUCCESSFULLY = "documentation_entry_created_successfully";
     public static final String PATIENT_ID_NULL = "patient_id_null";
     public static final String MEDICAL_DOCUMENTATION_NOT_FOUND = "medical_documentation_not_found";
     public static final String DOCUMENTATION_ENTRY_CREATION_FAILED = "documentation_entry_creation_failed";
-    public static final String DOCUMENTATION_ENTRY_CREATED_UNSUCCESSFULLY = "documentation_entry_created_failed";
+    public static final String DOCUMENTATION_ENTRY_CREATED_UNSUCCESSFULLY = "documentation_entry_created_unsuccessfully";
     public static final String ENCRYPTING_FAILED = "encrypting_failed";
     public static final String MEDICAL_DOCUMENTATION_CREATION_FAILED = "medical_documentation_creation_failed";
     public static final String DOCUMENTATION_ENTRY_ID_NULL = "documentation_entry_id_null";
@@ -161,8 +164,47 @@ public class I18n {
     public static final String DOCUMENTATION_ENTRY_EDITED_UNSUCCESSFULLY = "documentation_entry_edited_unsuccessfully";
     public static final String MEDICAL_DOCUMENTATION_FETCH_FAILED = "medical_documentation_fetch_failed";
     public static final String PATIENT_SAME_DOCTOR = "patient_same_doctor";
+
     public static final String GET_DOCTORS_AND_RATES_FAILED = "get_doctors_and_rates_failed";
-    public static final String GET_ACTIVE_PATIENTS_FAILED = "get_active_patients_failed";
+
+    public static final String APPOINTMENT_SLOT_CREATION_FAILED = "appointment_slot_creation_failed";
+    public static final String APPOINTMENT_SLOT_CREATED_SUCCESSFULLY = "appointment_slot_created_successfully";
+    public static final String GET_ALL_APPOINTMENTS_FAILED = "get_all_appointments_failed";
+    public static final String GET_OWN_APPOINTMENTS_FAILED = "get_own_appointments_failed";
+    public static final String INVALID_MEDICATIONS = "invalid_medications";
+    public static final String PRESCRIPTION_CREATION_FAILURE = "prescription_creation_failure";
+    public static final String PRESCRIPTION_CREATED_SUCCESSFULLY = "prescription_created_successfully";
+    public static final String EXPIRATION_DATE_NULL = "expiration_date_null";
+    public static final String MEDICATIONS_NULL = "medications_null";
+    public static final String APPOINTMENT_EDIT_FAILED = "appointment_edit_failed";
+    public static final String APPOINTMENT_EDIT_SUCCESSFUL = "appointment_edit_successful";
     public static final String APPOINTMENT_ID_NULL = "appointment_id_null";
+    public static final String APPOINTMENT_NOT_FOUND = "appointment_not_found";
+    public static final String NOT_PATIENT_OR_INACTIVE = "not_patient_or_inactive";
+    public static final String PRESCRIPTION_EDIT_FAILED = "prescription_edit_failed";
+    public static final String PRESCRIPTION_EDITED_SUCCESSFULLY = "prescription_edited_successfully";
+    public static final String PRESCRIPTION_ID_NULL = "prescription_id_null";
+    public static final String PRESCRIPTION_MEDICATIONS_NULL = "prescription_medications_null";
+    public static final String PRESCRIPTION_NOT_FOUND = "prescription_not_found";
+    public static final String GET_ACTIVE_PATIENTS_FAILED = "get_active_patients_failed";
+    public static final String GET_ALL_SCHEDULED_APPOINTMENTS_FAILED = "get_all_scheduled_appointments_failed";
+    public static final String NO_ACCESS_LEVEL = "no_access_level";
+    public static final String INVALID_DATE_PRESCRIPTION = "invalid_date_prescription";
+    public static final String APPOINTMENT_MAIL_CONFIRMED_SUBJECT = "appointment_confirmed_mail_subject";
+    public static final String APPOINTMENT_MAIL_CONFIRMED_TEXT = "appointment_confirmed_mail_text";
+    public static final String APPOINTMENT_NOT_BELONGING_TO_PATIENT = "appointment_not_belonging_to_patient";
+    public static final String APPOINTMENT_ALREADY_CONFIRMED = "appointment_already_confirmed";
+    public static final String APPOINTMENT_CANCELED = "appointment_canceled";
+    public static final String MAIL_FAILED = "mail_failed";
+    public static final String APPOINTMENT_CONFIRMED_SUCCESSFULLY = "appointment_confirmed_successfully";
+    public static final String APPOINTMENT_MAIL_CONFIRM__REMINDER_SUBJECT = "appointment_confirm_reminder_subject";
+    public static final String APPOINTMENT_MAIL_CONFIRM_REMINDER_TEXT = "appointment_confirm_reminder_text";
+    public static final String APPOINTMENT_SLOT_EDIT_FAILED = "appointment_slot_edit_failed";
+    public static final String APPOINTMENT_SLOT_EDITED_SUCCESSFULLY = "appointment_slot_edited_successfully";
+    public static final String APPOINTMENT_NOT_DOCTOR_OR_INACTIVE = "appointment_not_doctor_or_inactive";
+    public static final String APPOINTMENT_GET_INFO_FAILED = "appointment_get_info_failed";
+    public static final String APPOINTMENT_CONFIRMED_NULL = "appointment_confirmed_null";
+    public static final String APPOINTMENT_CANCELED_NULL = "appointment_canceled_null";
+    public static final String DOCTOR_LOGIN_NULL = "doctor_login_null";
     public static final String PATIENT_LOGIN_NULL = "patient_login_null";
 }

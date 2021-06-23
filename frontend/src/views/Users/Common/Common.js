@@ -19,9 +19,13 @@ export default function MyAccount() {
             style={{color: "rgb(127, 127, 127)"}}
             key={i}
             onClick={() => {
-                if (changeRoleRequest(accessLevels[i])) {
-                    updateAccessLevel(accessLevels[i])
-                }
+                changeRoleRequest(accessLevels[i],t).then((response) => {
+                        console.log(response)
+                        if (response === true) {
+                            updateAccessLevel(accessLevels[i])
+                        }
+                    }
+                )
             }}> {t(accessLevels[i])}</Dropdown.Item>);
     }
     return (
@@ -42,7 +46,11 @@ export default function MyAccount() {
 }
 
 function updateAccessLevel(access_level) {
-    Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, access_level, {expires: jwtCookieExpirationTime});
+    Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, access_level, {
+        expires: jwtCookieExpirationTime,
+        secure: true,
+        sameSite: 'none'
+    });
     window.location.hash = "#/home";
     window.location.reload();
 }

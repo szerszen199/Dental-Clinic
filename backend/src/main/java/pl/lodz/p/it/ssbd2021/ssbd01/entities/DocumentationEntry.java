@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,6 +27,9 @@ import java.io.Serializable;
         @NamedQuery(name = "DocumentationEntry.findByToBeDone", query = "SELECT d FROM DocumentationEntry d WHERE d.toBeDone = :toBeDone"),
         @NamedQuery(name = "DocumentationEntry.findByVersion", query = "SELECT d FROM DocumentationEntry d WHERE d.version = :version"),
         @NamedQuery(name = "DocumentationEntry.findByCreationDateTime", query = "SELECT d FROM DocumentationEntry d WHERE d.creationDateTime = :creationDateTime"),
+        @NamedQuery(name = "DocumentationEntry.deleteById", query = "DELETE FROM DocumentationEntry d WHERE d.id = :id"),
+        @NamedQuery(name = "DocumentationEntry.findByPatientLogin",
+                query = "SELECT d FROM DocumentationEntry d, MedicalDocumentation  md WHERE md.id = d.medicalDocumentation.id and md.patient.login = :login"),
         @NamedQuery(name = "DocumentationEntry.findByModificationDateTime", query = "SELECT d FROM DocumentationEntry d WHERE d.modificationDateTime = :modificationDateTime")})
 public class DocumentationEntry extends AbstractEntity implements Serializable {
 
@@ -53,7 +55,7 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
     private Account doctor;
 
     @JoinColumn(name = "documentation_id", referencedColumnName = "id", nullable = false, updatable = false, insertable = true)
-    @ManyToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(optional = false)
     @NotNull
     private MedicalDocumentation medicalDocumentation;
 
@@ -99,11 +101,11 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
         this.wasDone = wasDone;
     }
 
-    public byte [] getToBeDone() {
+    public byte[] getToBeDone() {
         return toBeDone;
     }
 
-    public void setToBeDone(byte [] toBeDone) {
+    public void setToBeDone(byte[] toBeDone) {
         this.toBeDone = toBeDone;
     }
 

@@ -5,11 +5,11 @@ import Cookies from "js-cookie";
 export async function makePatientsListRequest() {
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
     let data = await getData(token);
-    let accounts = []
+    let patients = []
     for (const i in data) {
-        accounts.push(new Patient(data[i].firstName + " " + data[i].lastName, data[i].email, data[i].login))
+        patients.push(new Patient(data[i].firstName + " " + data[i].lastName, data[i].email, data[i].login, data[i].phoneNumber, data[i].pesel))
     }
-    return accounts
+    return patients
 }
 
 async function getData(token) {

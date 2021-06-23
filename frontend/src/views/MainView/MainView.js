@@ -20,7 +20,7 @@ import './MainView.css';
 import {Link} from "react-router-dom";
 import findDefaultRole from "../../roles/findDefaultRole";
 import {darkModeRequest} from "../../components/DarkMode/DarkModeRequest"
-import {getBrowserLanguage} from "../../components/Language/LanguageRequest";
+import {getBrowserLanguage, languageRequest} from "../../components/Language/LanguageRequest";
 
 const roleAdminName = process.env.REACT_APP_ROLE_ADMINISTRATOR
 const roleDoctorName = process.env.REACT_APP_ROLE_DOCTOR
@@ -70,8 +70,9 @@ class MainViewWithoutTranslation extends React.Component {
             flag: language === "PL" ? this.flags["PL"] : this.flags["EN"]
         });
 
-        Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, language);
+        Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, language, {secure: true, sameSite: 'none'});
         i18n.changeLanguage(language);
+        languageRequest(language);
     }
 
     makeRefreshRequest() {
@@ -83,19 +84,19 @@ class MainViewWithoutTranslation extends React.Component {
             }, {
                 headers: {Authorization: "Bearer " + JWTAuthToken}
             }).then((response) => {
-                Cookies.set(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME, response.data.authJwtToken.token, {expires: jwtCookieExpirationTime});
-                Cookies.set(process.env.REACT_APP_ROLES_COOKIE_NAME, response.data.roles, {expires: jwtCookieExpirationTime});
-                Cookies.set(process.env.REACT_APP_LOGIN_COOKIE, response.data.username, {expires: jwtCookieExpirationTime});
+                Cookies.set(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME, response.data.authJwtToken.token, {expires: jwtCookieExpirationTime, secure: true, sameSite: 'none'});
+                Cookies.set(process.env.REACT_APP_ROLES_COOKIE_NAME, response.data.roles, {expires: jwtCookieExpirationTime, secure: true, sameSite: 'none'});
+                Cookies.set(process.env.REACT_APP_LOGIN_COOKIE, response.data.username, {expires: jwtCookieExpirationTime, secure: true, sameSite: 'none'});
                 if (Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE) != null) {
-                    Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE), {expires: jwtCookieExpirationTime});
+                    Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE), {expires: jwtCookieExpirationTime, secure: true, sameSite: 'none'});
                 }
                 if (Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) == null) {
-                    Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, findDefaultRole(response.data.roles), {expires: jwtCookieExpirationTime});
+                    Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, findDefaultRole(response.data.roles), {expires: jwtCookieExpirationTime, secure: true, sameSite: 'none'});
                 } else {
-                    Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME), {expires: jwtCookieExpirationTime});
+                    Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME), {expires: jwtCookieExpirationTime, secure: true, sameSite: 'none'});
                 }
                 if (Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE) != null) {
-                    Cookies.set(process.env.REACT_APP_DARK_MODE_COOKIE, Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE), {expires: jwtCookieExpirationTime});
+                    Cookies.set(process.env.REACT_APP_DARK_MODE_COOKIE, Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE), {expires: jwtCookieExpirationTime, secure: true, sameSite: 'none'});
                 }
                 localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, response.data.refreshJwtToken.token);
             }).catch((response) => {
@@ -164,7 +165,7 @@ class MainViewWithoutTranslation extends React.Component {
                                         checked={this.state.isDarkMode}
                                         onChange={(e) => {
                                             this.setState({isDarkMode: e})
-                                            Cookies.set(process.env.REACT_APP_DARK_MODE_COOKIE, e, {expires: process.env.jwtCookieExpirationTime})
+                                            Cookies.set(process.env.REACT_APP_DARK_MODE_COOKIE, e, {expires: process.env.jwtCookieExpirationTime, secure: true, sameSite: 'none'})
                                             accessLevelDictionary = darkModeStyleChange(e)
                                             if (this.state.login) {
                                                 darkModeRequest(e)
