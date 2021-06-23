@@ -3,20 +3,32 @@ import "../PlanAppointment.css";
 import BootstrapTable from "react-bootstrap-table-next";
 import {makeAppointmentSlotsListRequest} from "../AppointmentSlotsListRequest";
 import {withTranslation} from "react-i18next";
+import {makePatientsListRequest} from "../../ListPatients/ListPatientsRequest";
+import {Button} from "react-bootstrap";
+import {FiRefreshCw} from "react-icons/fi";
+import {planPatientAppointmentRequest} from "./PlanPatientAppointmentRequest";
 
 class PlanPatientAppointmentWithoutTr extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            patientsList: [],
             appointmentsList: []
         };
         this.unFilteredList = []
     }
 
     componentDidMount() {
+        this.makeGetPatientRequest();
         this.makeGetAppointmentsSlotsRequest();
     }
 
+    makeGetPatientRequest() {
+        makePatientsListRequest().then((response) => {
+            this.unFilteredList = response
+            this.setState({patientsList: this.unFilteredList})
+        })
+    }
     makeGetAppointmentsSlotsRequest() {
         makeAppointmentSlotsListRequest().then((response) => {
             this.unFilteredList = response
@@ -25,8 +37,24 @@ class PlanPatientAppointmentWithoutTr extends React.Component {
     }
 
     renderNull() {
-        return <div>{'Loading'}</div>
+        const {t} = this.props;
+        return <div>{t('Loading')}</div>
+    }
 
+    setChosenAccount(rowIndex) {
+        this.setState({chosenAccount: this.state.patientsList[rowIndex]})
+    }
+
+    handleSubmit(appointmentId,t) {
+        planPatientAppointmentRequest(appointmentId, this.state.chosenAccount,t);
+    }
+
+    renderButton() {
+        return <Button variant={"secondary"} size="lg" onClick={() => {
+            this.makeGetAccountRequest()
+        }}>
+            <FiRefreshCw/>
+        </Button>
     }
 
     renderAppointments(){
@@ -71,9 +99,11 @@ class PlanPatientAppointmentWithoutTr extends React.Component {
             onlyOneExpanding: true,
             renderer: row => (
                 <div>
-                    <p>{ `Tu moze isc przycisk edycji/wyboru/idk, kolumna  ${row.doctor}` }</p>
-                    <p>You can render anything here, also you can add additional data on every row object</p>
-                    <p>expandRow.renderer callback will pass the origin row object to you</p>
+                    <form  onSubmit={()=>this.handleSubmit(row.id,t)}>
+                        <Button size={"lg"} type="submit">
+                            book
+                        </Button>
+                    </form>
                 </div>
             )
         };
