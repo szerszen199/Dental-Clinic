@@ -3,12 +3,11 @@ import Cookies from "js-cookie";
 import successAlerts from "../../Alerts/SuccessAlerts/SuccessAlerts";
 import errorAlerts from "../../Alerts/ErrorAlerts/ErrorAlerts";
 
-export function editPrescriptionRequest(prescId, medications, expiration, version, etag, t) {
+export function editPrescriptionRequest(prescId, medications,version, etag, t) {
 
-    axios.put(process.env.REACT_APP_BACKEND_URL + "prescription/edit", {
+    axios.post(process.env.REACT_APP_BACKEND_URL + "prescription/edit", {
         id: prescId,
         medications: medications,
-        expiration: expiration,
         version: version
 
     }, {

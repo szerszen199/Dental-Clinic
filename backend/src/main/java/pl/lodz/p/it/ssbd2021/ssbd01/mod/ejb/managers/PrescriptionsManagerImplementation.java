@@ -97,6 +97,10 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
             throw PrescriptionException.prescriptionNotFound();
         }
 
+        if (prescription.getExpiration().isBefore(LocalDateTime.now())){
+            throw PrescriptionException.prescriptionExpired();
+        }
+
         if (!editPrescriptionRequestDto.getVersion().equals(prescription.getVersion())) {
             throw PrescriptionException.versionMismatch();
         }
@@ -112,6 +116,7 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
 
         try {
             prescription.setModifiedBy(accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+            prescription.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         } catch (AccountException e) {
             throw PrescriptionException.accountNotFound(e.getCause());
         } catch (Exception e) {
@@ -143,7 +148,7 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
         account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
         List<Prescription> prescriptions = prescriptionFacade.findByPatientLogin(account.getLogin());
         List<PrescriptionResponseDto> prescriptionResponseDtoList = new ArrayList<>();
-        for (Prescription prescription: prescriptions) {
+        for (Prescription prescription : prescriptions) {
             PrescriptionResponseDto prescriptionResponseDto = new PrescriptionResponseDto(
                     prescription.getId(),
                     prescription.getExpiration(),
@@ -165,7 +170,7 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
         account = accountFacade.findByLogin(username);
         List<Prescription> prescriptions = prescriptionFacade.findByPatientLogin(account.getLogin());
         List<PrescriptionResponseDto> prescriptionResponseDtoList = new ArrayList<>();
-        for (Prescription prescription: prescriptions) {
+        for (Prescription prescription : prescriptions) {
             PrescriptionResponseDto prescriptionResponseDto = new PrescriptionResponseDto(
                     prescription.getId(),
                     prescription.getExpiration(),

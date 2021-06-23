@@ -17,6 +17,9 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Typ PrescriptionInfoDto.
+ */
 public class PrescriptionInfoDto implements SignableEntity {
 
     @NotNull(message = I18n.PRESCRIPTION_ID_NULL)

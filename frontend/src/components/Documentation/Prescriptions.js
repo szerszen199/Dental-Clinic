@@ -69,7 +69,7 @@ class PrescriptionsListWithoutTranslation extends React.Component {
             allEntries.sort(compare);
             self.setState({
                 prescriptions: allEntries
-            })
+            }, () => console.log(self.state))
         }).catch((response) => {
             if (response.response) {
                 errorAlerts(t(response.response.data.message), response.response.status.toString(10));
@@ -78,9 +78,12 @@ class PrescriptionsListWithoutTranslation extends React.Component {
     }
 
     linkEdit = (cell, row, rowIndex, formatExtraData) => {
+
         return (
-            <Link to={"/edit-prescription/" + this.state.prescriptions[rowIndex].id}>
-                <Button variant="outline-secondary">
+
+            <Link to={"/edit-prescription/" + this.state.prescriptions[rowIndex].prescriptionId}>
+                <Button variant="outline-secondary"
+                        disabled={Date.parse(this.state.prescriptions[rowIndex].expiration) < new Date()}>
                     <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}
                     />
                 </Button>
