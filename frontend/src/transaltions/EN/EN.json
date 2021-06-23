@@ -285,5 +285,11 @@
   "patient_lastname" : "Patient's lastname",
   "doctor_firstname" : "Doctor's firstname",
   "doctor_lastname" : "Doctor's lastname",
-  "to_prescriptions" : "To prescriptions"
+  "to_prescriptions" : "To prescriptions",
+  "Edit prescription": "Edit prescription",
+  "Medications": "Medications",
+  "Question edit prescription":  "Are you sure you want to edit prescription?",
+  "prescription_edit_failed": "Prescription edit failed",
+  "prescription_edited_successfully": "Prescription edited successfully",
+  "prescription_expired" : "Prescription expired"
 }

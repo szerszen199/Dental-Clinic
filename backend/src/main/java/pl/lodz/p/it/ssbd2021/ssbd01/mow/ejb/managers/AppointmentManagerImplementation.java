@@ -284,6 +284,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         }
         try {
             appointment.setModifiedBy(accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin()));
+            appointment.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
         } catch (AccountException e) {
             throw AppointmentException.accountNotFound(e.getCause());
         } catch (Exception e) {
