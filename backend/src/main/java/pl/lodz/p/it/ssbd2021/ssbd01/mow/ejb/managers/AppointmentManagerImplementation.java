@@ -22,6 +22,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
@@ -29,6 +30,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -124,8 +126,38 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
-    public void rateDoctor(Long doctorId, Double rate) {
-        throw new NotImplementedException();
+    @RolesAllowed(I18n.PATIENT)
+    public void rateAppointment(Long id, Double rate) throws AppointmentException {
+        Appointment appointment;
+        String callerName = loggedInAccountUtil.getLoggedInAccountLogin();
+        try {
+            appointment = appointmentFacade.find(id);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        if (appointment == null) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        if (appointment.getPatient() == null || !appointment.getPatient().getLogin().equals(callerName)) {
+            throw AppointmentException.appointmentNotBelongingToPatient();
+        }
+        if (appointment.getCanceled()) {
+            throw AppointmentException.appointmentCanceled();
+        }
+        if(appointment.getAppointmentDate().isAfter(LocalDateTime.now())){
+            throw AppointmentException.appointmentNotFinished();
+        }
+        appointment.setRating(rate);
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
+    }
+
+    @PermitAll
+    public void sendAppointmentRateEmail(Long id){
+
     }
 
     @Override

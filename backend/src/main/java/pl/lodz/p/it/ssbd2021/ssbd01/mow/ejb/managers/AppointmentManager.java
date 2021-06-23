@@ -86,7 +86,7 @@ public interface AppointmentManager {
      * @param doctorId klucz główny lekarza
      * @param rate     ocena
      */
-    void rateDoctor(Long doctorId, Double rate);
+    void rateAppointment(Long doctorId, Double rate) throws AppointmentException;
 
     /**
      * Pobiera wszystkich lekarzy i ich oceny.
