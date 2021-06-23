@@ -134,7 +134,6 @@ class DocumentationWithoutTranslation extends React.Component {
     }
 
     renderButton() {
-        let self = this;
         return <Button variant={"secondary"} onClick={() => {
             this.makeGetAccountsRequest()
         }}>
