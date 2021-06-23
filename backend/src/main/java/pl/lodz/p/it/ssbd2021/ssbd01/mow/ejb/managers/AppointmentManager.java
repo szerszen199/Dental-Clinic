@@ -4,11 +4,14 @@ import java.util.List;
 import javax.ejb.Local;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AllScheduledAppointmentsResponseDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.CreateAppointmentSlotRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 
@@ -38,9 +41,10 @@ public interface AppointmentManager {
     /**
      * Modyfikuje slot wizyty.
      *
-     * @param appointment modyfikowana wizyta
+     * @param newAppointment edytowana wizyta
+     * @throws AppointmentException wyjątek typu AppointmentException
      */
-    void editAppointmentSlot(Appointment appointment);
+    void editAppointmentSlot(AppointmentSlotEditRequestDTO newAppointment) throws AppointmentException;
 
     /**
      * Pobiera wszystkie wolne wizyty.
@@ -81,6 +85,15 @@ public interface AppointmentManager {
     List<Appointment> getScheduledAppointmentsByPatient() throws AppointmentException;
 
     /**
+     * Pobiera wizytę o {@param id}.
+     *
+     * @param id klucz główny wizyty
+     * @return umówione wizyty
+     * @throws AppBaseException wyjątek typu AppBaseException
+     */
+    Appointment findById(Long id) throws AppBaseException;
+
+    /**
      * Dodaje ocenę lekarza po wizycie.
      *
      * @param doctorId klucz główny lekarza
@@ -100,10 +113,9 @@ public interface AppointmentManager {
      * Dodaje slot na wizytę.
      *
      * @param appointment wolna wizyta
-     * @throws AccountException wyjątek typu AccountException
      * @throws AppointmentException wyjątek typu AppointmentException
      */
-    void addAppointmentSlot(Appointment appointment) throws AccountException, AppointmentException;
+    void addAppointmentSlot(CreateAppointmentSlotRequestDTO appointment) throws AppointmentException;
 
     /**
      * Modyfikuje umówioną wizyty.
