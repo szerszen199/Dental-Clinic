@@ -106,7 +106,8 @@ public class PrescriptionEndpoint {
                     .entity(new MessageResponseDto(DATABASE_OPTIMISTIC_LOCK_ERROR)).build();
         }
         try {
-            prescriptionsManager.editPrescription(editPrescriptionRequestDto);
+            prescriptionTransactionRepeater.repeatTransaction(
+                    () -> prescriptionsManager.editPrescription(editPrescriptionRequestDto));
         } catch (EncryptionException | PrescriptionException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         } catch (Exception e) {
