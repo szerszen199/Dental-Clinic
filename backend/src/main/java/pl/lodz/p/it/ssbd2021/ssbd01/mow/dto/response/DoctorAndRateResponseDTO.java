@@ -10,21 +10,21 @@ import javax.validation.constraints.NotNull;
 public class DoctorAndRateResponseDTO {
     
     @NotNull
-    private String login;
+    private final String login;
 
     @NotNull
-    private String firstName;
+    private final String firstName;
 
     @NotNull
-    private String lastName;
+    private final String lastName;
 
     @NotNull
     @DecimalMin(value = "0.0")
-    private double avgRate;
+    private final double avgRate;
 
     @NotNull
     @Min(value = 0)
-    private int ratesCounter;
+    private final int ratesCounter;
 
     /**
      * Tworzy nową instancję klasy DoctorAndRateResponseDTO.

@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.exceptions;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.EDIT_ACCOUNT_MAIL;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.MAIL_ACCOUNT_LOCK_SEND_ERROR;

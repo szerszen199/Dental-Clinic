@@ -1,8 +1,9 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow;
 
-import javax.ejb.ApplicationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+
+import javax.ejb.ApplicationException;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_NOT_FOUND;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_SLOT_REMOVAL_FAILED;
@@ -195,5 +196,32 @@ public class AppointmentException extends AppBaseException {
      */
     public static AppointmentException invalidRatingScore() {
         return new AppointmentException(I18n.INVALID_RATING_SCORE);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący nieprawidłowy token.
+     *
+     * @return zwraca wyjątek reprezentujący nieprawidłowy token.
+     */
+    public static AppointmentException invalidToken() {
+        return new AppointmentException(I18n.INVALID_TOKEN);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący już ocenioną wizytę.
+     *
+     * @return zwraca wyjątek reprezentujący już ocenioną wizytę.
+     */
+    public static AppointmentException appointmentAlreadyRated() {
+        return new AppointmentException(I18n.APPOINTMENT_ALREADY_RATED);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący błąd oceniania doktora.
+     *
+     * @return zwraca wyjątek reprezentujący błąd oceniania doktora.
+     */
+    public static AppointmentException doctorRatingFailed() {
+        return new AppointmentException(I18n.DOCTOR_ALREADY_RATED);
     }
 }

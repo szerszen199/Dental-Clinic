@@ -1,8 +1,8 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
-
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.ejb.Asynchronous;
 import javax.ejb.EJB;
@@ -13,9 +13,8 @@ import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.servlet.ServletContext;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATE_BUTTON;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_ACTIVATE_SUBJECT;
@@ -423,7 +422,7 @@ public class MailProvider {
     public void sendAppointmentConfirmationReminderMail(String email, String lang) throws MailSendingException {
         Locale locale = new Locale(lang);
         ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
-        String subject = langBundle.getString(I18n.APPOINTMENT_MAIL_CONFIRM__REMINDER_SUBJECT);
+        String subject = langBundle.getString(I18n.APPOINTMENT_MAIL_CONFIRM_REMINDER_SUBJECT);
         String messageText = paragraph(langBundle.getString(I18n.APPOINTMENT_MAIL_CONFIRM_REMINDER_TEXT));
         try {
             mailManager.sendMail(email, subject, getFrom(), messageText, session);

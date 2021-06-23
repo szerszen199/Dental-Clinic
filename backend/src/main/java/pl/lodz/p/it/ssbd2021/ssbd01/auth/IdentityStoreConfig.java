@@ -1,8 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.auth;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-
-import javax.annotation.security.DeclareRoles;
 import javax.enterprise.context.ApplicationScoped;
 import javax.security.enterprise.identitystore.DatabaseIdentityStoreDefinition;
 

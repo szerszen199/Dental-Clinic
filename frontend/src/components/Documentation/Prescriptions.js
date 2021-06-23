@@ -11,6 +11,10 @@ import {FiRefreshCw} from "react-icons/fi";
 import {PrescriptionEntry} from "./PrescriptionEntry";
 import {Link} from "react-router-dom";
 import edit from "../../assets/edit.png";
+import deleteIcon from "../../assets/delete-xxl.png";
+import confirmationAlerts from "../Alerts/ConfirmationAlerts/ConfirmationAlerts";
+import {deleteAppointmentSlotRequest} from "../Appointment/PlanAppointment/DeleteAppointmentSlotRequest";
+import {makeDeletePrescriptionRequest} from "../Prescription/DeletePrescriptionRequest";
 
 
 class PrescriptionsListWithoutTranslation extends React.Component {
@@ -50,6 +54,7 @@ class PrescriptionsListWithoutTranslation extends React.Component {
                     prescriptionEntry.expiration,
                     prescriptionEntry.patientFirstname,
                     prescriptionEntry.patientLastname,
+                    prescriptionEntry.doctorLogin,
                     prescriptionEntry.doctorFirstname,
                     prescriptionEntry.doctorLastname,
                     prescriptionEntry.creationDateTime,
@@ -88,6 +93,28 @@ class PrescriptionsListWithoutTranslation extends React.Component {
                 </Button>
             </Link>
         );
+    }
+
+    linkDelete = (cell, row, rowIndex, formatExtraData) => {
+        const {t} = this.props;
+        return (
+            <Button
+                disabled={this.state.prescriptions[rowIndex].doctorLogin !== Cookies.get(process.env.REACT_APP_LOGIN_COOKIE)}
+                variant="outline-secondary"
+                onClick={() => {
+                    this.handleDeleteButtonClick(this.state.prescriptions[rowIndex].prescriptionId, t('Warning'), t('Question delete prescription'), t)
+                }}>
+                <img src={deleteIcon} alt="Delete" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}/>
+            </Button>
+        );
+    }
+
+    handleDeleteButtonClick(id, title, question, t) {
+        confirmationAlerts(title, question).then((confirmed) => {
+            if (confirmed) {
+                makeDeletePrescriptionRequest(id, t);
+            }
+        });
     }
 
     renderDocumentation() {
@@ -129,6 +156,13 @@ class PrescriptionsListWithoutTranslation extends React.Component {
                 headerStyle: {verticalAlign: "middle"},
                 style: {textAlign: "center"},
                 formatter: this.linkEdit
+            },
+            {
+                dataField: 'actions',
+                text: t('delete'),
+                headerStyle: {verticalAlign: "middle"},
+                style: {textAlign: "center"},
+                formatter: this.linkDelete
             }
         ]
 

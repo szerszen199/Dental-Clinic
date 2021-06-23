@@ -12,10 +12,10 @@ import GuestHomeRoute from "./GuestHomeRoute";
 import Account from "../components/Account/OwnAccount/Account"
 import AccountsList from "../components/AccountsList/AccountsList";
 import PrescriptionsUser from "../components/Prescription/PrescriptionsUser"
-import MyAppointment from "../components/Appointment/MyAppointments/MyAppointments";
 import PlanReceptionistAppointment from "../components/Appointment/PlanAppointment/Receptionist/PlanReceptionistAppointment";
 import PlanPatientAppointment from "../components/Appointment/PlanAppointment/Patient/PlanPatientAppointment";
 import ViewDoctorAppointmentSlots from "../components/Appointment/PlanAppointment/Doctor/ViewDoctorAppointmentSlots";
+import MyAppointment from "../components/Appointment/MyAppointments/MyAppointments";
 import ListDoctors from "../components/Appointment/ListDoctors/ListDoctors";
 import HomeRoute from "./HomeRoute";
 import Cookies from "js-cookie";
@@ -37,6 +37,7 @@ import EditDocumentationEntry from "../components/Documentation/EditDocumentatio
 import EditBookedAppointment from "../components/Appointment/EditBookedAppointment/EditBookedAppointment";
 import Prescriptions from "../components/Documentation/Prescriptions";
 import EditPrescription from "../components/Prescription/EditPrescription/EditPrescription";
+import RateAppointment from "../components/Appointment/RateAppointment";
 
 export default function Routes() {
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
@@ -110,6 +111,7 @@ export default function Routes() {
             <Route authed={isLoggedIn()} path='/activation-confirm/:token' component={AccountActivationConfirm}/>
             <Route authed={isLoggedIn()} path='/mail-change-confirm/:token' component={MailChangeConfirm}/>
             <Route authed={isLoggedIn()} path='/password-change-confirm/:token' component={PasswordChangeConfirm}/>
+            <Route path='/rate-appointment/:id/:token' component={RateAppointment}/>
             <Route path='/not-found' component={Error404}/>
             <Route>
                 <Error404/>

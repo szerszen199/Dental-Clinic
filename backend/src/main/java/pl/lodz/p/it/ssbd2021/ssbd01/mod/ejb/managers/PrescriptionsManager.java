@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
@@ -85,4 +84,11 @@ public interface PrescriptionsManager {
     List<PrescriptionResponseDto> getDoctorPrescriptions(String username) throws AppBaseException, NoSuchPaddingException, IllegalBlockSizeException,
             NoSuchAlgorithmException, BadPaddingException, InvalidKeyException;
 
+    /**
+     * Usuwa receptę.
+     *
+     * @param id klucz główny recepty
+     * @throws AppBaseException bazowy wyjątek aplikacji
+     */
+    void deletePrescription(Long id) throws AppBaseException;
 }

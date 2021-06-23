@@ -1,15 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.NotImplementedException;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
@@ -21,6 +11,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentSelfDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentEditRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.CreateAppointmentSlotRequestDTO;
@@ -46,6 +38,7 @@ import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,6 +53,9 @@ import java.util.stream.Collectors;
 public class AppointmentManagerImplementation extends AbstractManager implements AppointmentManager {
 
     @Inject
+    private HttpServletRequest request;
+
+    @Inject
     private AppointmentFacade appointmentFacade;
 
     @Inject
@@ -67,9 +63,6 @@ public class AppointmentManagerImplementation extends AbstractManager implements
 
     @Inject
     private DoctorRatingFacade doctorRatingFacade;
-
-    @Inject
-    private HttpServletRequest request;
 
     @Inject
     private LoggedInAccountUtil loggedInAccountUtil;
@@ -84,13 +77,140 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     JWTAppointmentRatingUtils jwtAppointmentRatingUtils;
 
     @Override
-    public void bookAppointment(Long appointmentId, String login) {
-        throw new NotImplementedException();
+    public void bookAppointmentSelf(BookAppointmentSelfDto bookAppointmentSelfDto) throws AppBaseException {
+        Account account;
+        Appointment appointment;
+        try {
+            account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
+        appointment = appointmentFacade.find(bookAppointmentSelfDto.getAppointmentId());
+        if (appointment == null) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        appointment.setPatient(account);
+        appointment.setModifiedBy(account);
+        appointment.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        appointment.setModificationDateTime(LocalDateTime.now());
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
     }
 
     @Override
-    public void cancelBookedAppointment(Long id) {
-        throw new NotImplementedException();
+    public void bookAppointment(BookAppointmentDto bookAppointmentDto) throws AppBaseException {
+        Account account;
+        Account patient;
+        Appointment appointment;
+        try {
+            account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+            patient = accountFacade.findByLogin(bookAppointmentDto.getPatientLogin());
+        } catch (Exception e) {
+            throw AccountException.noSuchAccount(e);
+        }
+        appointment = appointmentFacade.find(bookAppointmentDto.getAppointmentId());
+        if (appointment == null) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        appointment.setPatient(patient);
+        appointment.setModifiedBy(account);
+        appointment.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        appointment.setModificationDateTime(LocalDateTime.now());
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
+    }
+
+    @PermitAll
+    @Override
+    public void cancelBookedAppointmentScheduler(Long id) throws AppointmentException {
+        Appointment appointment;
+        try {
+            appointment = appointmentFacade.find(id);
+            if (appointment == null) {
+                throw AppointmentException.appointmentNotFound();
+            }
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        appointment.setCanceled(true);
+        appointment.setCancellationDateTime(LocalDateTime.now());
+        appointment.setCanceledBy(null);
+        appointment.setModifiedBy(null);
+        appointment.setModifiedByIp(null);
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (Exception e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
+    }
+
+    @Override
+    public void cancelBookedAppointment(Long id) throws AppointmentException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        } catch (Exception e) {
+            throw AppointmentException.accountNotFound();
+        }
+        Appointment appointment;
+        try {
+            appointment = appointmentFacade.find(id);
+            if (appointment == null) {
+                throw AppointmentException.appointmentNotFound();
+            }
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        appointment.setCanceled(true);
+        appointment.setCancellationDateTime(LocalDateTime.now());
+        appointment.setCanceledBy(account);
+        appointment.setModifiedBy(account);
+        appointment.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (Exception e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
+    }
+
+    @Override
+    public void cancelBookedAppointmentPatient(Long id) throws AppointmentException {
+        Account account;
+        try {
+            account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
+        } catch (Exception e) {
+            throw AppointmentException.accountNotFound();
+        }
+        Appointment appointment;
+        try {
+            appointment = appointmentFacade.find(id);
+            if (appointment == null) {
+                throw AppointmentException.appointmentNotFound();
+            }
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        if (!appointment.getPatient().equals(account)) {
+            throw AppointmentException.appointmentNotBelongingToPatient();
+        }
+        appointment.setCanceled(true);
+        appointment.setCancellationDateTime(LocalDateTime.now());
+        appointment.setCanceledBy(account);
+        appointment.setModifiedBy(account);
+        appointment.setModifiedByIp(IpAddressUtils.getClientIpAddressFromHttpServletRequest(request));
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (Exception e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
+
     }
 
     @Override
@@ -141,7 +261,6 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     @Override
     public Appointment findById(Long id) throws AppBaseException {
         Appointment appointment = appointmentFacade.find(id);
-        ;
         if (appointment == null) {
             throw AppointmentException.appointmentNotFound();
         }
@@ -149,10 +268,15 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
-    @RolesAllowed(I18n.PATIENT)
-    public void rateAppointment(Long id, BigDecimal rate) throws AppointmentException {
+    @PermitAll
+    public void rateAppointment(String token, Long id, BigDecimal rate) throws AppointmentException {
         Appointment appointment;
-        if (rate.doubleValue() < 0 || rate.doubleValue() > 5 || rate.toString().length() != 3) {
+
+        if (!jwtAppointmentRatingUtils.validateJwtToken(token)) {
+            throw AppointmentException.invalidToken();
+        }
+
+        if (rate.doubleValue() < 0 || rate.doubleValue() > 5 || (rate.toString().length() != 3 && rate.toString().length() != 1)) {
             throw AppointmentException.invalidRatingScore();
         }
         try {
@@ -163,7 +287,13 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         if (appointment == null) {
             throw AppointmentException.appointmentNotFound();
         }
-        String callerName = loggedInAccountUtil.getLoggedInAccountLogin();
+        String callerName;
+        try {
+            callerName = jwtAppointmentRatingUtils.getUserNameFromJwtToken(token);
+        } catch (ParseException e) {
+            throw AppointmentException.accountNotFound();
+        }
+
         if (appointment.getPatient() == null || !appointment.getPatient().getLogin().equals(callerName)) {
             throw AppointmentException.appointmentNotBelongingToPatient();
         }
@@ -173,10 +303,25 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         if (appointment.getAppointmentDate().isAfter(LocalDateTime.now())) {
             throw AppointmentException.appointmentNotFinished();
         }
+        if (appointment.getRating() != null) {
+            throw AppointmentException.appointmentAlreadyRated();
+        }
         try {
             appointmentFacade.updateRating(id, rate);
         } catch (AppointmentException e) {
             throw AppointmentException.appointmentEditFailed();
+        }
+        try {
+            List<DoctorRating> doctorRatings = doctorRatingFacade.findAll();
+            for (DoctorRating doctorRating : doctorRatings) {
+                if (doctorRating.getDoctor().getLogin().equals(appointment.getDoctor().getLogin())) {
+                    doctorRating.setRatesCounter(doctorRating.getRatesCounter() + 1);
+                    doctorRating.setRatesSum(doctorRating.getRatesSum() + appointment.getRating().doubleValue());
+                    doctorRatingFacade.edit(doctorRating);
+                }
+            }
+        } catch (AppBaseException e) {
+            throw AppointmentException.doctorRatingFailed();
         }
     }
 
@@ -327,6 +472,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
 
     }
 
+    @RolesAllowed({I18n.RECEPTIONIST})
     @Override
     public void editBookedAppointment(AppointmentEditRequestDto appointmentEditRequestDto) throws AppointmentException {
         Appointment appointment;
