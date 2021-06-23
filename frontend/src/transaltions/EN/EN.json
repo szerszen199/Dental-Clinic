@@ -289,6 +289,11 @@
   "expiration_date_null": "Expiration date can't be null",
   "medications_null": "Medications can't be null",
   "documentation_id_null": "Documentation id can't be null",
+  "not_found": "Resource not found",
+  "no_such_prescription": "No prescription was selected",
+  "prescription_removal_failed": "Prescription removal failed",
+  "prescription_removal_unauthorized": "You have not issued this prescription, you cannot remove it",
+  "prescription_removed_successfully": "Prescription has been deleted",
   "Edit prescription": "Edit prescription",
   "Medications": "Medications",
   "Question edit prescription": "Are you sure you want to edit prescription?",
@@ -311,5 +316,6 @@
   "mail_failed": "Mail failed",
   "appointment_canceled": "Appointment canceled",
   "appointment_already_confirmed": "Appointment already confirmed",
-  "appointment_not_belonging_to_patient": "Appointment does not belong to patient"
+  "appointment_not_belonging_to_patient": "Appointment does not belong to patient",
+  "Question delete prescription": "Are you sure you want to delete prescription?"
 }

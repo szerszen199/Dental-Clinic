@@ -8,11 +8,11 @@ import edit from "../../assets/edit.png";
 import addNew from "../../assets/new.png";
 import {Input} from "semantic-ui-react";
 import {makeAccountsListRequest} from "./AccountsListRequest";
+import {IconButton} from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 
 class DocumentationWithoutTranslation extends React.Component {
-
-
     constructor(props) {
         super(props);
         this.state = {
@@ -98,7 +98,7 @@ class DocumentationWithoutTranslation extends React.Component {
                 headerStyle: {verticalAlign: "middle"},
                 style: {textAlign: "center"},
                 formatter: this.linkPrescriptions
-            }
+            },
         ]
         return <BootstrapTable striped keyField='login' columns={columns} data={this.state.accountsList}/>;
     }
