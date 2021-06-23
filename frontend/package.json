@@ -25,6 +25,7 @@
     "moment": "^2.24.0",
     "react": "^17.0.2",
     "react-bootstrap": "^1.5.2",
+    "react-bootstrap-star-rating": "^3.5.5-alpha.0.3",
     "react-confirm-alert": "^2.7.0",
     "react-custom-flag-select": "^2.7.1",
     "react-dark-mode-switch": "^1.0.2",

@@ -113,9 +113,10 @@ public interface AppointmentManager {
      *
      * @param doctorId klucz główny lekarza
      * @param rate     ocena
+     * @param token    token
      * @throws AppointmentException wyjątek typu AppointmentException
      */
-    void rateAppointment(Long doctorId, BigDecimal rate) throws AppointmentException;
+    void rateAppointment(String token, Long doctorId, BigDecimal rate) throws AppointmentException;
 
     /**
      * Pobiera wszystkich lekarzy i ich oceny.
