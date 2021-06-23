@@ -78,6 +78,10 @@ public class MailSendingException extends AppBaseException {
         return new MailSendingException(MAIL_ACTIVATION_CONFIRMATION_SEND_ERROR);
     }
 
+    /** Metoda opakowująca wyjątek MailSendingException z informacją o błędzie wysyłania maila.
+     *
+     * @return obiekt wyjątku MailSendingException z wiadomością sygnalizującą niepowodzenie wysyłania wiadomości e-mail.
+     */
     public static MailSendingException mailFailed() {
         return new MailSendingException(I18n.MAIL_FAILED);
     }

@@ -196,4 +196,6 @@ public class I18n {
     public static final String APPOINTMENT_CANCELED = "appointment_canceled";
     public static final String MAIL_FAILED = "mail_failed";
     public static final String APPOINTMENT_CONFIRMED_SUCCESSFULLY = "appointment_confirmed_successfully";
+    public static final String APPOINTMENT_MAIL_CONFIRM__REMINDER_SUBJECT = "appointment_confirm_reminder_subject";
+    public static final String APPOINTMENT_MAIL_CONFIRM_REMINDER_TEXT = "appointment_confirm_reminder_text";
 }

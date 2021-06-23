@@ -70,9 +70,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
     }
 
     @Override
-    public void cancelBookedAppointment(Long id)
-    {
-
+    public void cancelBookedAppointment(Long id) {
         throw new NotImplementedException();
     }
 
@@ -223,7 +221,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
 
     @RolesAllowed({I18n.PATIENT, I18n.RECEPTIONIST})
     @Override
-    public void confirmBookedAppointment(Long id) throws AppointmentException,MailSendingException {
+    public void confirmBookedAppointment(Long id) throws AppointmentException, MailSendingException {
         Appointment appointment;
         String callerName = loggedInAccountUtil.getLoggedInAccountLogin();
         try {
@@ -231,7 +229,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         } catch (AppBaseException e) {
             throw AppointmentException.appointmentNotFound();
         }
-        if(appointment == null){
+        if (appointment == null) {
             throw AppointmentException.appointmentNotFound();
         }
         if (appointment.getPatient() == null || !appointment.getPatient().getLogin().equals(callerName)) {
