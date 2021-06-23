@@ -115,6 +115,15 @@ public interface AppointmentManager {
     void removeAppointmentSlot(Long id);
 
     /**
+     * Potwierdza własną umówioną wizytę.
+     *
+     * @param id klucz główny wizyty
+     * @throws AppointmentException wyjątek sygnalizująvy błąd operacji na wizycie.
+     * @throws MailSendingException wyjątek sygnalizująvy błąd wysyłania maila.
+     */
+    void confirmOwnBookedAppointment(Long id) throws AppointmentException, MailSendingException;
+
+    /**
      * Potwierdza umówioną wizytę.
      *
      * @param id klucz główny wizyty
