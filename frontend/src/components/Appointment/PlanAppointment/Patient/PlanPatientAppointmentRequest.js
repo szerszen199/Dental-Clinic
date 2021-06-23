@@ -1,9 +1,9 @@
 import axios from "axios";
-import errorAlerts from "../../Alerts/ErrorAlerts/ErrorAlerts";
-import successAlerts from "../../Alerts/SuccessAlerts/SuccessAlerts";
+import errorAlerts from "../../../Alerts/ErrorAlerts/ErrorAlerts";
+import successAlerts from "../../../Alerts/SuccessAlerts/SuccessAlerts";
 import Cookies from "js-cookie";
 
-export function planAppointmentRequestSelf(appointmentId, patientId, t) {
+export function planPatientAppointmentRequest(appointmentId, t) {
 
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
 
@@ -15,10 +15,9 @@ export function planAppointmentRequestSelf(appointmentId, patientId, t) {
             'Content-Type': 'application/json',
         },
         data: {
-            patientId: patientId
+            appointmentId: appointmentId
         }
     };
-
 
 
     axios(reserveForOwnAccount)

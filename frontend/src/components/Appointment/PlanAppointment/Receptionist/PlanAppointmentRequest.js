@@ -1,6 +1,6 @@
 import axios from "axios";
-import errorAlerts from "../../Alerts/ErrorAlerts/ErrorAlerts";
-import successAlerts from "../../Alerts/SuccessAlerts/SuccessAlerts";
+import errorAlerts from "../../../Alerts/ErrorAlerts/ErrorAlerts";
+import successAlerts from "../../../Alerts/SuccessAlerts/SuccessAlerts";
 import Cookies from "js-cookie";
 
 export function planAppointmentRequest(appointmentId, patient, t) {
@@ -21,26 +21,7 @@ export function planAppointmentRequest(appointmentId, patient, t) {
         }
     };
 
-    let reserveForOwnAccount = {
-        method: 'put',
-        url: process.env.REACT_APP_BACKEND_URL+ "reservation/reserve/self",
-        headers: {
-            'Authorization': 'Bearer ' + token,
-            'Content-Type': 'application/json',
-        },
-        data: {
-            appointmentId: appointmentId
-        }
-    };
-
-    let axiosConfig
-    if (patient.login === undefined) {
-        axiosConfig = reserveForOwnAccount
-    } else {
-        axiosConfig = reserveForOtherAccount
-    }
-
-    axios(axiosConfig)
+    axios(reserveForOtherAccount)
         .then((response) => {
             successAlerts(t(response.data.message, response.status)).then(() => {
             })
