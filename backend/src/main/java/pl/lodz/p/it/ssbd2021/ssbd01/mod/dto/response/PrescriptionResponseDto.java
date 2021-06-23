@@ -13,7 +13,20 @@ public class PrescriptionResponseDto {
     private final LocalDateTime creationDateTime;
     private final String medications;
 
-    public PrescriptionResponseDto(Long prescriptionId, LocalDateTime expiration, String patientFirstname, String patientLastname, String doctorFirstname, String doctorLastname, LocalDateTime creationDateTime, String medications) {
+    /**
+     * Instantiates a new Prescription response dto.
+     *
+     * @param prescriptionId   the prescription id
+     * @param expiration       the expiration
+     * @param patientFirstname the patient firstname
+     * @param patientLastname  the patient lastname
+     * @param doctorFirstname  the doctor firstname
+     * @param doctorLastname   the doctor lastname
+     * @param creationDateTime the creation date time
+     * @param medications      the medications
+     */
+    public PrescriptionResponseDto(Long prescriptionId, LocalDateTime expiration, String patientFirstname, String patientLastname,
+                                   String doctorFirstname, String doctorLastname, LocalDateTime creationDateTime, String medications) {
         this.prescriptionId = prescriptionId;
         this.expiration = expiration;
         this.patientFirstname = patientFirstname;
