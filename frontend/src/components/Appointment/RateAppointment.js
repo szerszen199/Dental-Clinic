@@ -25,13 +25,14 @@ class RateAppointmentWithoutTr extends React.Component {
 
     sendRate() {
         let self = this;
+        const {t} = this.props;
         axios.get(process.env.REACT_APP_BACKEND_URL + "appointment/rate/" + self.token + "/" + self.id + "/" + self.rate, {}).then(response => {
             self.setState({
                 message: response.data.message
             })
-            successAlertsWithRedirect(response.data.message, response.status.toString(), "#/home");
+            successAlertsWithRedirect(t(response.data.message), response.status.toString(), "#/home");
         }).catch(reason => {
-            errorAlertsWithRedirect(reason.response.data.message, reason.response.status.toString(), "#/home");
+            errorAlertsWithRedirect(t(reason.response.data.message), reason.response.status.toString(), "#/home");
 
         })
 
