@@ -95,7 +95,6 @@ class AccountsListWithoutTranslation extends React.Component {
     renderNull() {
         const {t} = this.props;
         return <div>{t('Loading')}</div>
-
     }
 
     renderButton() {

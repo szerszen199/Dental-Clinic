@@ -5,6 +5,7 @@ import {Button} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {FiRefreshCw} from "react-icons/fi";
 import edit from "../../assets/edit.png";
+import addNew from "../../assets/new.png";
 import {Input} from "semantic-ui-react";
 import {Fragment} from "react";
 import {makeAccountsListRequest} from "./AccountsListRequest";
@@ -77,6 +78,20 @@ class DocumentationWithoutTranslation extends React.Component {
                 headerStyle: {verticalAlign: "middle"},
                 style: {textAlign: "center"},
                 formatter: this.linkDocumentation
+            },
+            {
+                dataField: 'actions',
+                text: t('new_entry'),
+                headerStyle: {verticalAlign: "middle"},
+                style: {textAlign: "center"},
+                formatter: this.newEntry
+            },
+            {
+                dataField: 'actions',
+                text: t('to_create_prescription'),
+                headerStyle: {verticalAlign: "middle"},
+                style: {textAlign: "center"},
+                formatter: this.createPrescription
             }
         ]
         return <BootstrapTable striped keyField='login' columns={columns} data={this.state.accountsList}/>;
@@ -85,6 +100,26 @@ class DocumentationWithoutTranslation extends React.Component {
     linkDocumentation = (cell, row, rowIndex, formatExtraData) => {
         return (
             <Link to={"/account-documentation/" + this.state.accountsList[rowIndex].login}>
+                <Button variant="outline-secondary">
+                    <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}/>
+                </Button>
+            </Link>
+        );
+    }
+
+    newEntry = (cell, row, rowIndex, formatExtraData) => {
+        return (
+            <Link to={"/new-documentation-entry/" + this.state.accountsList[rowIndex].login}>
+                <Button variant="outline-secondary">
+                    <img src={addNew} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}/>
+                </Button>
+            </Link>
+        );
+    }
+
+    createPrescription = (cell, row, rowIndex, formatExtraData) => {
+        return (
+            <Link to={"/create-prescription/" + this.state.accountsList[rowIndex].login}>
                 <Button variant="outline-secondary">
                     <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}/>
                 </Button>

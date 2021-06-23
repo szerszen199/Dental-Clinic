@@ -6,6 +6,8 @@ import {makeMyAppointmentsListRequest} from "./MyAppointmentsRequest";
 import {FiRefreshCw} from "react-icons/fi";
 import edit from "../../../assets/edit.png";
 import BootstrapTable from "react-bootstrap-table-next";
+import {Link} from "react-router-dom";
+import Cookies from "js-cookie";
 
 class MyAppointmentsWithoutTranslation extends React.Component {
 
@@ -17,7 +19,6 @@ class MyAppointmentsWithoutTranslation extends React.Component {
     }
 
     componentDidMount() {
-        this.renderLoading();
         this.makeGetAppointments();
     }
 
@@ -40,11 +41,12 @@ class MyAppointmentsWithoutTranslation extends React.Component {
 
     linkEdit = (cell, row, rowIndex, formatExtraData) => {
         return (
-            <Button variant="outline-secondary">
-                <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}
-                    // onClick={this.edit(this.state.documentation[rowIndex].id)}
-                />
-            </Button>
+            <Link to={"/edit-appointment/" + this.state.appointments[rowIndex].id}>
+                <Button variant="outline-secondary">
+                    <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}
+                    />
+                </Button>
+            </Link>
         );
     }
 
@@ -67,20 +69,30 @@ class MyAppointmentsWithoutTranslation extends React.Component {
                 style: {verticalAlign: "middle"}
             },
             {
-                dataField: 'actions',
-                text: t('edit'),
-                headerStyle: {verticalAlign: "middle"},
-                style: {textAlign: "center"},
-                formatter: this.linkEdit
+                dataField: 'canceled',
+                text: t('canceled'),
+                style: {verticalAlign: "middle", textAlign: "center"}
+            },
+            {
+                dataField: 'confirmed',
+                text: t('confirmed'),
+                style: {verticalAlign: "middle", textAlign: "center"}
             }
         ]
 
-        return <BootstrapTable striped keyField='id' columns={columns} data={this.state.appointments}/>;
-    }
+        if (Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) === process.env.REACT_APP_ROLE_RECEPTIONIST) {
+            columns.push(
+                {
+                    dataField: 'actions',
+                    text: t('edit'),
+                    headerStyle: {verticalAlign: "middle"},
+                    style: {textAlign: "center"},
+                    formatter: this.linkEdit
+                }
+            )
+        }
 
-    renderLoading() {
-        const {t} = this.props;
-        return <div>{t('Loading')}</div>
+        return <BootstrapTable striped keyField='id' columns={columns} data={this.state.appointments}/>;
     }
 
     render() {

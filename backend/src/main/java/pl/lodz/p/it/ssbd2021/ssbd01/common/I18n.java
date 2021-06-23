@@ -155,7 +155,7 @@ public class I18n {
     public static final String PATIENT_ID_NULL = "patient_id_null";
     public static final String MEDICAL_DOCUMENTATION_NOT_FOUND = "medical_documentation_not_found";
     public static final String DOCUMENTATION_ENTRY_CREATION_FAILED = "documentation_entry_creation_failed";
-    public static final String DOCUMENTATION_ENTRY_CREATED_UNSUCCESSFULLY = "documentation_entry_created_failed";
+    public static final String DOCUMENTATION_ENTRY_CREATED_UNSUCCESSFULLY = "documentation_entry_created_unsuccessfully";
     public static final String ENCRYPTING_FAILED = "encrypting_failed";
     public static final String MEDICAL_DOCUMENTATION_CREATION_FAILED = "medical_documentation_creation_failed";
     public static final String DOCUMENTATION_ENTRY_ID_NULL = "documentation_entry_id_null";
@@ -194,6 +194,16 @@ public class I18n {
     public static final String GET_ACTIVE_PATIENTS_FAILED = "get_active_patients_failed";
     public static final String GET_ALL_SCHEDULED_APPOINTMENTS_FAILED = "get_all_scheduled_appointments_failed";
     public static final String NO_ACCESS_LEVEL = "no_access_level";
+    public static final String INVALID_DATE_PRESCRIPTION = "invalid_date_prescription";
+    public static final String APPOINTMENT_MAIL_CONFIRMED_SUBJECT = "appointment_confirmed_mail_subject";
+    public static final String APPOINTMENT_MAIL_CONFIRMED_TEXT = "appointment_confirmed_mail_text";
+    public static final String APPOINTMENT_NOT_BELONGING_TO_PATIENT = "appointment_not_belonging_to_patient";
+    public static final String APPOINTMENT_ALREADY_CONFIRMED = "appointment_already_confirmed";
+    public static final String APPOINTMENT_CANCELED = "appointment_canceled";
+    public static final String MAIL_FAILED = "mail_failed";
+    public static final String APPOINTMENT_CONFIRMED_SUCCESSFULLY = "appointment_confirmed_successfully";
+    public static final String APPOINTMENT_MAIL_CONFIRM__REMINDER_SUBJECT = "appointment_confirm_reminder_subject";
+    public static final String APPOINTMENT_MAIL_CONFIRM_REMINDER_TEXT = "appointment_confirm_reminder_text";
     public static final String APPOINTMENT_SLOT_EDIT_FAILED = "appointment_slot_edit_failed";
     public static final String APPOINTMENT_SLOT_EDITED_SUCCESSFULLY = "appointment_slot_edited_successfully";
     public static final String APPOINTMENT_NOT_DOCTOR_OR_INACTIVE = "appointment_not_doctor_or_inactive";
