@@ -1,5 +1,11 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+
 import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -10,11 +16,9 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
-import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.PrescriptionException;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import java.util.List;
+import javax.persistence.PersistenceException;
+import javax.persistence.TypedQuery;
 
 /**
  * Klasa definiująca główne operacje wykonywane na encjach typu Prescription.
@@ -42,6 +46,44 @@ public class PrescriptionFacade extends AbstractFacade<Prescription> {
      */
     public PrescriptionFacade(Class<Prescription> entityClass) {
         super(entityClass);
+    }
+
+    /**
+     * Find by patient login list.
+     *
+     * @param patientLogin the patient login
+     * @return the list
+     * @throws AppBaseException the app base exception
+     */
+    public List<Prescription> findByPatientLogin(String patientLogin) throws AppBaseException {
+        try {
+            TypedQuery<Prescription> tq = em.createNamedQuery("Prescription.findByPatientLogin", Prescription.class);
+            tq.setParameter("patientLogin", patientLogin);
+            return tq.getResultList();
+        } catch (NoResultException e) {
+            throw AccountException.noSuchAccount(e);
+        } catch (PersistenceException e) {
+            throw AppBaseException.databaseError(e);
+        }
+    }
+
+    /**
+     * Find by doctor login list.
+     *
+     * @param doctorLogin the doctor login
+     * @return the list
+     * @throws AppBaseException the app base exception
+     */
+    public List<Prescription> findByDoctorLogin(String doctorLogin) throws AppBaseException {
+        try {
+            TypedQuery<Prescription> tq = em.createNamedQuery("Prescription.findByDoctorLogin", Prescription.class);
+            tq.setParameter("doctorLogin", doctorLogin);
+            return tq.getResultList();
+        } catch (NoResultException e) {
+            throw AccountException.noSuchAccount(e);
+        } catch (PersistenceException e) {
+            throw AppBaseException.databaseError(e);
+        }
     }
 
     @Override

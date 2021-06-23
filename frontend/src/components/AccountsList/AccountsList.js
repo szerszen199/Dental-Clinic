@@ -5,10 +5,10 @@ import {withTranslation} from "react-i18next";
 import BootstrapTable from 'react-bootstrap-table-next';
 import {Button} from "react-bootstrap";
 import {Link} from "react-router-dom";
-import {FiRefreshCw} from "react-icons/fi";
 import edit from "../../assets/edit.png";
 import {Input} from "semantic-ui-react";
 import {Fragment} from "react";
+import {FiRefreshCw} from "react-icons/fi";
 
 class AccountsListWithoutTranslation extends React.Component {
 
@@ -42,10 +42,10 @@ class AccountsListWithoutTranslation extends React.Component {
         this.setState({accountsList: tempList})
     }
 
-    getHintList(list){
+    getHintList(list) {
         let tempList = [];
-        let uniqueList = [...new Set(this.state.accountsList.map(a =>a.name))];
-        for(let i in uniqueList){
+        let uniqueList = [...new Set(this.state.accountsList.map(a => a.name))];
+        for (let i in uniqueList) {
             tempList.push(<option key={i} value={uniqueList[i]}>{uniqueList[i]}</option>);
         }
         return tempList;
@@ -79,7 +79,7 @@ class AccountsListWithoutTranslation extends React.Component {
                 formatter: this.linkEdit
             }
         ]
-        return <BootstrapTable striped keyField='login' columns={columns} data={this.state.accountsList} />;
+        return <BootstrapTable striped keyField='login' columns={columns} data={this.state.accountsList}/>;
     }
 
     linkEdit = (cell, row, rowIndex, formatExtraData) => {
@@ -95,7 +95,6 @@ class AccountsListWithoutTranslation extends React.Component {
     renderNull() {
         const {t} = this.props;
         return <div>{t('Loading')}</div>
-
     }
 
     renderButton() {
@@ -103,7 +102,7 @@ class AccountsListWithoutTranslation extends React.Component {
         return <Button variant={"secondary"} onClick={() => {
             this.makeGetAccountsRequest(self)
         }}>
-            <FiRefreshCw />
+            <FiRefreshCw/>
         </Button>
     }
 
@@ -115,10 +114,11 @@ class AccountsListWithoutTranslation extends React.Component {
                 {this.renderButton()}
             </div>
             <datalist id='options'>
-                {this.state.accountsList.length !== this.unFilteredList.length?this.getHintList():[]}
+                {this.state.accountsList.length !== this.unFilteredList.length ? this.getHintList() : []}
             </datalist>
             <div className="AccountListGroup">
-                <Input list='options' id="ListFilter" onChange={e => this.filterList(e.target.value)} placeholder={t("Filter")}/>
+                <Input list='options' id="ListFilter" onChange={e => this.filterList(e.target.value)}
+                       placeholder={t("Filter")}/>
                 {!this.state.accountsList.length ? this.renderNull() : this.renderAccounts()}
             </div>
         </Fragment>
