@@ -14,6 +14,8 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from '@material-ui/icons/Edit';
 import {ButtonGroup} from "@material-ui/core";
 import {deleteAppointmentSlotRequest} from "../DeleteAppointmentSlotRequest";
+import confirmationAlerts from "../../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
+import Button from "@material-ui/core/Button";
 
 class PlanReceptionistAppointmentWithoutTr extends React.Component {
     constructor(props) {
