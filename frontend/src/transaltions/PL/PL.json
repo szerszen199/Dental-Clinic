@@ -299,5 +299,11 @@
   "Scheduled appointments": "Zaplanowane wizyty",
   "title_cancel_appointment": "Uwaga odwołanie wizyty",
   "text_cancel_appointment": "Czy napewno chcesz odwołać wizytę",
-  "delete_appointment": "Usuń wizytę"
+  "delete_appointment": "Usuń wizytę",
+  "documentation_entry_edition_failed": "Edycja wpisu dokumentacji nie powiodła się",
+  "title_reserve_appointment": "Rezerwuj wizytę",
+  "reserve_appointment_text": "Czy na pewno chcesz rezerwowac wizytę?",
+  "appointment_reserved_successfully": "Rezerwacja przebiegła pomyślnie",
+  "appointment_not_found": "Wizyty nie znaleziono",
+  "appointment_edit_failed": "Edycja wizyty się nie powiodła"
 }

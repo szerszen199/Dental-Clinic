@@ -1,8 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;

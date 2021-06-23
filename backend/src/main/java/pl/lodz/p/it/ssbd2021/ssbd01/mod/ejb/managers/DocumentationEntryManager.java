@@ -39,7 +39,7 @@ public interface DocumentationEntryManager {
      * @return Wpis z dokuemtnacji.
      * @throws DocumentationEntryException w przypadku błędu.
      */
-    public DocumentationEntry getDocumentationEntry(Long id) throws DocumentationEntryException;
+    DocumentationEntry getDocumentationEntry(Long id) throws DocumentationEntryException;
 
 
     /**
