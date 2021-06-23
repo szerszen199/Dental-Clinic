@@ -295,5 +295,8 @@
   "prescription_edit_failed": "Prescription edit failed",
   "prescription_edited_successfully": "Prescription edited successfully",
   "prescription_expired": "Prescription expired",
-  "Scheduled appointments": "Scheduled appointments"
+  "Scheduled appointments": "Scheduled appointments",
+  "title_cancel_appointment": "Warning appointment cancelation",
+  "text_cancel_appointment": "Are you sure you want to cancel an appointment",
+  "delete_appointment": "Delete appointment"
 }
