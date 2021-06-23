@@ -195,4 +195,7 @@ public interface AppointmentManager {
      * @return true jeśli ostatnia transakcja się nie powiodła, false w przeciwnym wypadku.
      */
     boolean isLastTransactionRollback();
+
+    void cancelBookedAppointmentPatient(Long id) throws AppointmentException;
+
 }

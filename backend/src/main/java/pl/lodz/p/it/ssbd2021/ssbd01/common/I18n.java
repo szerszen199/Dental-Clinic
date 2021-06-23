@@ -217,4 +217,6 @@ public class I18n {
     public static final String APPOINTMENT_RATE_TEXT = "appointment_rate_text";
     public static final String APPOINTMENT_RATE_LINK = "appointment_rate_link";
     public static final String INVALID_RATING_SCORE = "invalid_rating_score";
+    public static final String APPOINTMENT_CANCELED_SUCCESSFULLY = "appointment_canceled_successfully";
+    public static final Object APPOINTMENT_CANCELLATION_FAILED = "appointment_cancellation_failed";
 }
