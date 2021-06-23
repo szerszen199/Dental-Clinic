@@ -447,6 +447,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
 
     }
 
+    @RolesAllowed({I18n.RECEPTIONIST})
     @Override
     public void editBookedAppointment(AppointmentEditRequestDto appointmentEditRequestDto) throws AppointmentException {
         Appointment appointment;

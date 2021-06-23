@@ -85,6 +85,7 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
 
     }
 
+    @RolesAllowed({I18n.DOCTOR})
     @Override
     public void editPrescription(EditPrescriptionRequestDto editPrescriptionRequestDto) throws PrescriptionException, EncryptionException {
         Prescription prescription;
