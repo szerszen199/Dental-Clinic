@@ -97,7 +97,7 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
             throw PrescriptionException.prescriptionNotFound();
         }
 
-        if (prescription.getExpiration().isBefore(LocalDateTime.now())){
+        if (prescription.getExpiration().isBefore(LocalDateTime.now())) {
             throw PrescriptionException.prescriptionExpired();
         }
 
