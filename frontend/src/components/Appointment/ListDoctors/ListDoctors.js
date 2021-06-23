@@ -24,7 +24,8 @@ class DoctorsList extends React.Component {
     }
 
     makeGetDoctorsRequest() {
-        makeDoctorsListRequest()
+        const {t} = this.props;
+        makeDoctorsListRequest(t)
             .then((response) => {
                 this.setState({
                     doctorsList: response,
@@ -72,7 +73,6 @@ class DoctorsList extends React.Component {
     render() {
         const {t} = this.props;
         document.title = t("Dental Clinic") + " - " + t("List of doctors");
-        console.log(this.state.requestWasMade)
         return ((!this.state.doctorsList.length) && (this.state.requestWasMade === true)) ?
             <Alert severity="error">
                 <AlertTitle>{t('Sorry')}</AlertTitle>
