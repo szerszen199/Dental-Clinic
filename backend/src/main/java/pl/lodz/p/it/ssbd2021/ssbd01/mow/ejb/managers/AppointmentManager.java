@@ -54,6 +54,15 @@ public interface AppointmentManager {
      */
     List<Appointment> getAppointmentSlotsSinceNow();
 
+
+    /**
+     * Odwolanie wizyty przez scheduler.
+     *
+     * @param id the id
+     * @throws AppointmentException the appointment exception
+     */
+    void cancelBookedAppointmentScheduler(Long id) throws AppointmentException;
+
     /**
      * Pobiera wszystkie umówione wizyty.
      *
@@ -196,6 +205,12 @@ public interface AppointmentManager {
      */
     boolean isLastTransactionRollback();
 
+    /**
+     * Odwołanie wizyty przez pacjenta.
+     *
+     * @param id the id
+     * @throws AppointmentException the appointment exception
+     */
     void cancelBookedAppointmentPatient(Long id) throws AppointmentException;
 
 }
