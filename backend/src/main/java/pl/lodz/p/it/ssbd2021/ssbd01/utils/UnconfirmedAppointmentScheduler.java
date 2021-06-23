@@ -31,7 +31,8 @@ public class UnconfirmedAppointmentScheduler {
     public void remindAboutVisitConfirmation() throws AppointmentException, MailSendingException {
         List<Appointment> appointments = appointmentManager.getScheduledAppointments();
         for (Appointment appointment : appointments) {
-            if (!appointment.getReminderMailSent() && !appointment.getCanceled() && appointment.getPatient() != null && !appointment.getConfirmed() && appointment.getAppointmentDate().minusDays(3).isBefore(LocalDateTime.now())) {
+            if (!appointment.getReminderMailSent() && !appointment.getCanceled() && appointment.getPatient()
+                    != null && !appointment.getConfirmed() && appointment.getAppointmentDate().minusDays(3).isBefore(LocalDateTime.now())) {
                 appointmentManager.sendAppointmentReminder(appointment.getId());
             }
         }
