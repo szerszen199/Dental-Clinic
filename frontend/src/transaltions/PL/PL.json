@@ -277,5 +277,10 @@
   "patient_lastname" : "Nazwisko pacjęta",
   "doctor_firstname" : "Imię doktora",
   "doctor_lastname" : "nazwisko doktora",
-  "to_prescriptions" : "Do recept"
+  "to_prescriptions" : "Do recept",
+
+  "patient_id_null": "Id pacjenta nie może być puste",
+  "expiration_date_null": "Data wygaśnięcia nie może być pusta",
+  "medications_null": "Zapisane lekarstwa nie mogą być puste",
+  "documentation_id_null": "Id dokumentacji nie może być puste"
 }
