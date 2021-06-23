@@ -92,7 +92,7 @@ class AccountsListWithoutTranslation extends React.Component {
             </Link>
         );
     }
-    
+
     renderButton() {
         let self = this;
         return <Button variant={"secondary"} onClick={() => {
