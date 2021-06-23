@@ -68,6 +68,7 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
     }
 
     renderAccounts() {
+        let self = this;
         const {t} = this.props;
         const selectRow = {
             mode: 'radio',
@@ -111,7 +112,7 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
 
     renderButton() {
         return <Button variant={"secondary"} size="lg" onClick={() => {
-            this.makeGetAccountRequest()
+            this.makeGetPatientRequest();
         }}>
             <FiRefreshCw/>
         </Button>
@@ -127,6 +128,7 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
         if (!isPatient()) {
             return <Col>
                 <Fragment>
+                    {this.renderButton()}
                     <datalist id='options'>
                         {this.state.patientsList.length !== this.unFilteredList.length ? this.getHintList() : []}
                     </datalist>
@@ -187,7 +189,6 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
                         <Button size={"lg"} type="submit" onClick={() => {this.handleSubmit(row.id, t)}}>
                             book
                         </Button>
-                    </form>
                 </div>
             )
         };
