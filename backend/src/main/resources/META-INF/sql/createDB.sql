@@ -18,6 +18,11 @@ DROP SEQUENCE IF EXISTS documentation_entries_seq;
 DROP SEQUENCE IF EXISTS prescriptions_seq;
 DROP SEQUENCE IF EXISTS doctors_ratings_seq;
 
+
+ALTER table appointments
+ALTER COLUMN rating TYPE decimal
+
+
 -- Tabela reprezentująca dane użytkownika
 CREATE TABLE accounts
 (
@@ -168,7 +173,8 @@ CREATE TABLE appointments
     cancellation_date_time timestamptz,
     canceled_by            BIGINT,
     canceled_by_ip         VARCHAR(256),
-    reminder_mail_sent     BOOL DEFAULT FALSE NOT NULL
+    reminder_mail_sent     BOOL DEFAULT FALSE NOT NULL,
+    rate_mail_sent     BOOL DEFAULT FALSE NOT NULL
 );
 
 -- Klucze obce dla tabeli appointments

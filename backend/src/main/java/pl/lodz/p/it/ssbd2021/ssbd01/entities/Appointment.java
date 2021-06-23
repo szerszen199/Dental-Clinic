@@ -18,6 +18,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 
@@ -37,6 +38,7 @@ import java.time.LocalDateTime;
         @NamedQuery(name = "Appointment.findByCreationDateTime", query = "SELECT a FROM Appointment a WHERE a.creationDateTime = :creationDateTime"),
         @NamedQuery(name = "Appointment.findAllScheduled", query = "SELECT a FROM Appointment a WHERE a.patient != null AND a.doctor != null"),
         @NamedQuery(name = "Appointment.findAllScheduledByDoctor", query = "SELECT a FROM Appointment a WHERE a.patient != null AND a.doctor = :doctor"),
+        @NamedQuery(name = "Appointment.updateRating", query = "UPDATE Appointment set rating=:rating WHERE id=:id"),
         @NamedQuery(name = "Appointment.findAllScheduledByPatient", query = "SELECT a FROM Appointment a WHERE a.patient = :patient AND a.doctor != null"),
         @NamedQuery(name = "Appointment.findByModificationDateTime", query = "SELECT a FROM Appointment a WHERE a.modificationDateTime = :modificationDateTime")})
 public class Appointment extends AbstractEntity implements Serializable {
@@ -77,6 +79,11 @@ public class Appointment extends AbstractEntity implements Serializable {
     @NotNull
     @Column(name = "reminder_mail_sent", nullable = false)
     private Boolean reminderMailSent;
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "rate_mail_sent", nullable = false)
+    private Boolean rateMailSent;
 
     public LocalDateTime getConfirmationDateTime() {
         return confirmationDateTime;
@@ -120,11 +127,11 @@ public class Appointment extends AbstractEntity implements Serializable {
     @NotNull
     private Boolean canceled = false;
 
-    @Column(name = "rating", columnDefinition = "numeric", precision = 2, scale = 1)
+    @Column(name = "rating", columnDefinition = "decimal_type", precision = 2, scale = 1)
     @DecimalMin(value = "0.0")
     @DecimalMax(value = "5.0")
-    @Digits(integer = 1, fraction = 1)
-    private Double rating;
+    @Digits(integer = 2, fraction = 1)
+    private BigDecimal rating;
 
     @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
@@ -193,11 +200,11 @@ public class Appointment extends AbstractEntity implements Serializable {
         this.canceled = canceled;
     }
 
-    public Double getRating() {
+    public BigDecimal getRating() {
         return rating;
     }
 
-    public void setRating(Double rating) {
+    public void setRating(BigDecimal rating) {
         this.rating = rating;
     }
 
@@ -224,6 +231,14 @@ public class Appointment extends AbstractEntity implements Serializable {
 
     public void setReminderMailSent(Boolean reminderMailSent) {
         this.reminderMailSent = reminderMailSent;
+    }
+
+    public Boolean getRateMailSent() {
+        return rateMailSent;
+    }
+
+    public void setRateMailSent(Boolean rateMailSent) {
+        this.rateMailSent = rateMailSent;
     }
 
     @Override
