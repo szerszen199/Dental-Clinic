@@ -1,7 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;

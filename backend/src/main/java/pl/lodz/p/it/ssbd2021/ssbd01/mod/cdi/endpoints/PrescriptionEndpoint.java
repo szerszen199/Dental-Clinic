@@ -1,27 +1,22 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.PrescriptionException;
-
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.EditPrescriptionRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.CreatePrescriptionRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.EditPrescriptionRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.MessageResponseDto;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.PrescriptionResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.PrescriptionInfoDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.PrescriptionResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.PrescriptionsManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.utils.PrescriptionTransactionRepeater;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.EntityIdentitySignerVerifier;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.SignatureFilterBinding;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.Encryptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
-import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -41,10 +36,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_OPTIMISTIC_LOCK_ERROR;
-import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PRESCRIPTION_NOT_FOUND;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PRESCRIPTION_GET_INFO_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.PRESCRIPTION_NOT_FOUND;
 
 @Path("prescription")
 @Stateful

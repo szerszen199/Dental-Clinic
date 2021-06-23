@@ -1,8 +1,9 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response;
 
-import java.time.LocalDateTime;
-import javax.validation.constraints.NotNull;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
+
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 public class AvailableAppointmentResponseDTO {
 
