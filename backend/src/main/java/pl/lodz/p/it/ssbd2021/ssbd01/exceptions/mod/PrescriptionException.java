@@ -85,7 +85,7 @@ public class PrescriptionException extends AppBaseException {
     }
 
     /**
-     * Wyjątek w przypadku błędnej daty recepty.
+     * Wyjątek w przypadku niewłaściwej daty.
      *
      * @return wyjątek PrescriptionException
      */

@@ -130,4 +130,31 @@ public class AppointmentException extends AppBaseException {
     public static AppointmentException appointmentNotDoctorOrInactive() {
         return new AppointmentException(I18n.APPOINTMENT_NOT_DOCTOR_OR_INACTIVE);
     }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę działania na wizycie nie należącej do pacjenta.
+     *
+     * @return wyjątek typu AppointmentException reprezentujący próbę działania na wizycie nie należącej do pacjenta.
+     */
+    public static AppointmentException appointmentNotBelongingToPatient() {
+        return new AppointmentException(I18n.APPOINTMENT_NOT_BELONGING_TO_PATIENT);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę potwierdzenia już potwierdzonej wizyty.
+     *
+     * @return zwraca wyjątek reprezentujący próbę potwierdzenia już potwierdzonej wizyty..
+     */
+    public static AppointmentException appointmentAlreadyConfirmed() {
+        return new AppointmentException(I18n.APPOINTMENT_ALREADY_CONFIRMED);
+    }
+
+    /**
+     * Tworzy wyjątek reprezentujący próbę potwierdzenia anulowanej wizyty.
+     *
+     * @return zwraca wyjątek reprezentujący próbę potwierdzenia anulowanej wizyty.
+     */
+    public static AppointmentException appointmentCanceled() {
+        return new AppointmentException(I18n.APPOINTMENT_CANCELED);
+    }
 }
