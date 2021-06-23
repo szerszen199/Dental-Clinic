@@ -35,8 +35,9 @@ public interface AppointmentManager {
      * Anuluje umówioną wizytę.
      *
      * @param id klucz główny wizyty
+     * @throws AppointmentException the appointment exception
      */
-    void cancelBookedAppointment(Long id);
+    void cancelBookedAppointment(Long id) throws AppointmentException;
 
     /**
      * Modyfikuje slot wizyty.
