@@ -11,7 +11,7 @@ export function makeResetPasswordByAdminRequest(login, t) {
             Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
         }
     }).then(function (response) {
-        successAlertsWithRefresh(t(response.data.message, response.status)).then(() => {
+        successAlertsWithRefresh(t(response.data.message), response.status.toString(10)).then(() => {
         })
     }).catch((response) => {
         if (response.response) {

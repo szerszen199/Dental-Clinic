@@ -30,6 +30,7 @@ import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 
 @Stateful
 @RolesAllowed({I18n.DOCTOR, I18n.PATIENT})
@@ -56,6 +57,9 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
     public void createPrescription(CreatePrescriptionRequestDTO createPrescriptionRequestDTO) throws AppBaseException {
         Account doctor;
         Account patient;
+        if (createPrescriptionRequestDTO.getExpiration().isBefore(LocalDateTime.now())) {
+            throw PrescriptionException.invalidDateException();
+        }
         try {
             doctor = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
             patient = accountFacade.findByLogin(createPrescriptionRequestDTO.getPatient());
