@@ -218,6 +218,14 @@ public class Appointment extends AbstractEntity implements Serializable {
         this.patient = patient;
     }
 
+    public Boolean getReminderMailSent() {
+        return reminderMailSent;
+    }
+
+    public void setReminderMailSent(Boolean reminderMailSent) {
+        this.reminderMailSent = reminderMailSent;
+    }
+
     @Override
     public String toString() {
         return "pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment[ id=" + id + " ]";
