@@ -46,6 +46,13 @@ public class PrescriptionFacade extends AbstractFacade<Prescription> {
         super(entityClass);
     }
 
+    /**
+     * Find by patient login list.
+     *
+     * @param patientLogin the patient login
+     * @return the list
+     * @throws AppBaseException the app base exception
+     */
     public List<Prescription> findByPatientLogin(String patientLogin) throws AppBaseException {
         try {
             TypedQuery<Prescription> tq = em.createNamedQuery("Prescription.findByPatientLogin", Prescription.class);
@@ -58,6 +65,13 @@ public class PrescriptionFacade extends AbstractFacade<Prescription> {
         }
     }
 
+    /**
+     * Find by doctor login list.
+     *
+     * @param doctorLogin the doctor login
+     * @return the list
+     * @throws AppBaseException the app base exception
+     */
     public List<Prescription> findByDoctorLogin(String doctorLogin) throws AppBaseException {
         try {
             TypedQuery<Prescription> tq = em.createNamedQuery("Prescription.findByDoctorLogin", Prescription.class);

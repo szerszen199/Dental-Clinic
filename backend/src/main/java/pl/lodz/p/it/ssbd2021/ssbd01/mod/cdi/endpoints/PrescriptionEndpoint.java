@@ -107,6 +107,7 @@ public class PrescriptionEndpoint {
     /**
      * Pobiera listę aktywnych pacjentów.
      *
+     * @param username the username
      * @return lista aktywnych pacjentów
      */
     @GET
@@ -123,6 +124,11 @@ public class PrescriptionEndpoint {
         return Response.ok(prescriptions).build();
     }
 
+    /**
+     * Gets prescription patient.
+     *
+     * @return the prescription patient
+     */
     @GET
     @RolesAllowed({I18n.PATIENT})
     @Produces(MediaType.APPLICATION_JSON)

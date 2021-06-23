@@ -45,7 +45,33 @@ public interface PrescriptionsManager {
      */
     void editPrescription(EditPrescriptionRequestDto editPrescriptionRequestDto) throws PrescriptionException, EncryptionException;
 
-    List<PrescriptionResponseDto> getPatientPrescriptions() throws AppBaseException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException;
-    List<PrescriptionResponseDto> getDoctorPrescriptions(String username) throws AppBaseException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException;
+    /**
+     * Gets patient prescriptions.
+     *
+     * @return the patient prescriptions
+     * @throws AppBaseException          the app base exception
+     * @throws NoSuchPaddingException    the no such padding exception
+     * @throws IllegalBlockSizeException the illegal block size exception
+     * @throws NoSuchAlgorithmException  the no such algorithm exception
+     * @throws BadPaddingException       the bad padding exception
+     * @throws InvalidKeyException       the invalid key exception
+     */
+    List<PrescriptionResponseDto> getPatientPrescriptions() throws AppBaseException, NoSuchPaddingException, IllegalBlockSizeException,
+            NoSuchAlgorithmException, BadPaddingException, InvalidKeyException;
+
+    /**
+     * Gets doctor prescriptions.
+     *
+     * @param username the username
+     * @return the doctor prescriptions
+     * @throws AppBaseException          the app base exception
+     * @throws NoSuchPaddingException    the no such padding exception
+     * @throws IllegalBlockSizeException the illegal block size exception
+     * @throws NoSuchAlgorithmException  the no such algorithm exception
+     * @throws BadPaddingException       the bad padding exception
+     * @throws InvalidKeyException       the invalid key exception
+     */
+    List<PrescriptionResponseDto> getDoctorPrescriptions(String username) throws AppBaseException, NoSuchPaddingException, IllegalBlockSizeException,
+            NoSuchAlgorithmException, BadPaddingException, InvalidKeyException;
 
 }

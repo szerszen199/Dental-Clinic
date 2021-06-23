@@ -122,12 +122,13 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
     }
 
     @Override
-    public List<PrescriptionResponseDto> getPatientPrescriptions() throws AppBaseException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    public List<PrescriptionResponseDto> getPatientPrescriptions() throws AppBaseException, NoSuchPaddingException, IllegalBlockSizeException,
+            NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         Account account;
         account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
         List<Prescription> prescriptions = prescriptionFacade.findByPatientLogin(account.getLogin());
         List<PrescriptionResponseDto> prescriptionResponseDtoList = new ArrayList<>();
-        for (Prescription prescription: prescriptions){
+        for (Prescription prescription: prescriptions) {
             PrescriptionResponseDto prescriptionResponseDto = new PrescriptionResponseDto(
                     prescription.getId(),
                     prescription.getExpiration(),
@@ -143,12 +144,13 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
     }
 
     @Override
-    public List<PrescriptionResponseDto> getDoctorPrescriptions(String username) throws AppBaseException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    public List<PrescriptionResponseDto> getDoctorPrescriptions(String username) throws AppBaseException, NoSuchPaddingException, IllegalBlockSizeException,
+            NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         Account account;
         account = accountFacade.findByLogin(username);
         List<Prescription> prescriptions = prescriptionFacade.findByDoctorLogin(account.getLogin());
         List<PrescriptionResponseDto> prescriptionResponseDtoList = new ArrayList<>();
-        for (Prescription prescription: prescriptions){
+        for (Prescription prescription: prescriptions) {
             PrescriptionResponseDto prescriptionResponseDto = new PrescriptionResponseDto(
                     prescription.getId(),
                     prescription.getExpiration(),
