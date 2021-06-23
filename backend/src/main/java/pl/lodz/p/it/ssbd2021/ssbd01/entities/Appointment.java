@@ -230,5 +230,4 @@ public class Appointment extends AbstractEntity implements Serializable {
     public String toString() {
         return "pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment[ id=" + id + " ]";
     }
-
 }

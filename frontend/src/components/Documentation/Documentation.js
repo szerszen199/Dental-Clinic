@@ -14,7 +14,6 @@ import {FiRefreshCw} from "react-icons/fi";
 import confirmationAlerts from "../Alerts/ConfirmationAlerts/ConfirmationAlerts";
 import successAlerts from "../Alerts/SuccessAlerts/SuccessAlerts";
 import {Link} from "react-router-dom";
-import edit from "../../assets/edit.png";
 
 
 class DocumentationListWithoutTranslation extends React.Component {
@@ -31,7 +30,6 @@ class DocumentationListWithoutTranslation extends React.Component {
     }
 
     renderButton() {
-        let self = this;
         return <Button variant={"secondary"} onClick={() => {
             this.makeGetAllDocumentationRequest()
         }}>

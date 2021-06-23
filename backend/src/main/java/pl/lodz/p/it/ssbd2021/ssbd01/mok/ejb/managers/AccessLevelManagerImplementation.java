@@ -1,6 +1,15 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mok.ejb.managers;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import javax.annotation.security.PermitAll;
+import javax.ejb.SessionSynchronization;
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
+import javax.servlet.http.HttpServletRequest;
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorRating;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
@@ -118,7 +127,9 @@ public class AccessLevelManagerImplementation extends AbstractManager implements
     @Override
     public void deleteAccessLevelsByAccountId(Long id) throws AppBaseException {
         var x = accessLevelFacade.findByAccountId(id);
-        x.forEach(accessLevel -> accessLevelFacade.remove(accessLevel));
+        for (AccessLevel al: x) {
+            accessLevelFacade.remove(al);
+        }
     }
 
 }

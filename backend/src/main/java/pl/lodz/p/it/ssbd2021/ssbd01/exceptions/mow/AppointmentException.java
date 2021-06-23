@@ -1,9 +1,12 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow;
 
+import javax.ejb.ApplicationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 
-import javax.ejb.ApplicationException;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_NOT_FOUND;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_SLOT_REMOVAL_FAILED;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_WAS_BOOKED;
 
 
 /**
@@ -31,14 +34,31 @@ public class AppointmentException extends AppBaseException {
         super(message, cause);
     }
 
-
     /**
-     * Wyjątek braku znalezenia wizyty o danym ID.
+     * Zwraca wyjątek z komunikatem {@link I18n#APPOINTMENT_NOT_FOUND}.
      *
-     * @return AppointmentException wyjątek
+     * @return {@link AppointmentException}
      */
     public static AppointmentException appointmentNotFound() {
-        return new AppointmentException(I18n.APPOINTMENT_NOT_FOUND);
+        return new AppointmentException(APPOINTMENT_NOT_FOUND);
+    }
+
+    /**
+     * Zwraca wyjątek z komunikatem {@link I18n#APPOINTMENT_SLOT_REMOVAL_FAILED}.
+     *
+     * @return {@link AppointmentException}
+     */
+    public static AppBaseException appointmentSlotRemovalFailed() {
+        return new AppointmentException(APPOINTMENT_SLOT_REMOVAL_FAILED);
+    }
+
+    /**
+     * Zwraca wyjątek z komunikatem {@link I18n#APPOINTMENT_WAS_BOOKED}.
+     *
+     * @return {@link AppointmentException}
+     */
+    public static AppBaseException appointmentWasBooked() {
+        return new AppointmentException(APPOINTMENT_WAS_BOOKED);
     }
 
     /**
@@ -125,7 +145,8 @@ public class AppointmentException extends AppBaseException {
 
     /**
      * Wyjątek nieaktywnego konta dla wizyty, lub gdy konto nie jest pacjentem.
-     * @return  wyjątek AppointmentException
+     *
+     * @return wyjątek AppointmentException
      */
     public static AppointmentException appointmentNotDoctorOrInactive() {
         return new AppointmentException(I18n.APPOINTMENT_NOT_DOCTOR_OR_INACTIVE);

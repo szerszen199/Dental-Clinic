@@ -164,13 +164,18 @@ public class I18n {
     public static final String DOCUMENTATION_ENTRY_EDITED_UNSUCCESSFULLY = "documentation_entry_edited_unsuccessfully";
     public static final String MEDICAL_DOCUMENTATION_FETCH_FAILED = "medical_documentation_fetch_failed";
     public static final String PATIENT_SAME_DOCTOR = "patient_same_doctor";
-
+    
     public static final String GET_DOCTORS_AND_RATES_FAILED = "get_doctors_and_rates_failed";
 
     public static final String APPOINTMENT_SLOT_CREATION_FAILED = "appointment_slot_creation_failed";
     public static final String APPOINTMENT_SLOT_CREATED_SUCCESSFULLY = "appointment_slot_created_successfully";
     public static final String GET_ALL_APPOINTMENTS_FAILED = "get_all_appointments_failed";
     public static final String GET_OWN_APPOINTMENTS_FAILED = "get_own_appointments_failed";
+
+    public static final String APPOINTMENT_SLOT_REMOVAL_FAILED = "appointment_slot_removal_failed";
+    public static final String APPOINTMENT_WAS_BOOKED = "appointment_was_booked";
+    public static final String APPOINTMENT_SLOT_REMOVED_SUCCESSFULLY = "appointment_slot_removed_successfully";
+    public static final String APPOINTMENT_SLOT_REMOVED_UNSUCCESSFULLY = "appointment_slot_removed_unsuccessfully";
     public static final String INVALID_MEDICATIONS = "invalid_medications";
     public static final String PRESCRIPTION_CREATION_FAILURE = "prescription_creation_failure";
     public static final String PRESCRIPTION_CREATED_SUCCESSFULLY = "prescription_created_successfully";

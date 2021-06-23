@@ -1,20 +1,21 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
-
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 
 public class AvailableAppointmentResponseDTO {
 
     @NotNull
-    Long id;
-    @NotNull
-    LocalDateTime date;
-    @NotNull
     Long version;
     @NotNull
     DoctorInfoResponseDTO doctor;
+    @NotNull
+    private Long id;
+    @NotNull
+    private Long doctorId;
+    @NotNull
+    private LocalDateTime date;
 
     /**
      * DTO do zwracania terminów wizyt.
@@ -23,10 +24,10 @@ public class AvailableAppointmentResponseDTO {
      */
     public AvailableAppointmentResponseDTO(Appointment appointment) {
         this.id = appointment.getId();
+        this.doctorId = appointment.getDoctor().getId();
         this.date = appointment.getAppointmentDate();
         this.version = appointment.getVersion();
         this.doctor = new DoctorInfoResponseDTO(appointment.getDoctor());
-
     }
 
     public DoctorInfoResponseDTO getDoctor() {
@@ -43,6 +44,14 @@ public class AvailableAppointmentResponseDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(Long doctorId) {
+        this.doctorId = doctorId;
     }
 
     public LocalDateTime getDate() {
