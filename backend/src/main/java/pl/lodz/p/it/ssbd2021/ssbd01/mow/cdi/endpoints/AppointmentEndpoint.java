@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mow.cdi.endpoints;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
@@ -51,6 +52,28 @@ import java.util.stream.Collectors;
 
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_GET_INFO_FAILED;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_NOT_FOUND;
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.EJBTransactionRolledbackException;
+import javax.ejb.Stateful;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.DATABASE_OPTIMISTIC_LOCK_ERROR;
 
 /**
@@ -339,6 +362,47 @@ public class AppointmentEndpoint {
             return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.GET_ALL_SCHEDULED_APPOINTMENTS_FAILED)).build();
         }
         return Response.ok().entity(allScheduledAppointmentsResponseDTO).build();
+    }
+
+    /**
+     * Potwierdza własną wizytę.
+     *
+     * @param id id wizyty która ma zostać potwierdzona.
+     * @return status powodzenia operacji.
+     */
+    @GET
+    @RolesAllowed({I18n.PATIENT})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("confirm-own/{id}")
+    public Response confirmOwnAppointment(@PathParam("id") Long id) {
+
+        try {
+            appointmentManager.confirmOwnBookedAppointment(id);
+        } catch (AppointmentException | MailSendingException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_CONFIRMED_SUCCESSFULLY)).build();
+    }
+
+
+    /**
+     * Potwierdza wizytę.
+     *
+     * @param id id wizyty która ma zostać potwierdzona.
+     * @return status powodzenia operacji.
+     */
+    @GET
+    @RolesAllowed({I18n.RECEPTIONIST})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("confirm/{id}")
+    public Response confirmAppointment(@PathParam("id") Long id) {
+
+        try {
+            appointmentManager.confirmBookedAppointment(id);
+        } catch (AppointmentException | MailSendingException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_CONFIRMED_SUCCESSFULLY)).build();
     }
 
 }
