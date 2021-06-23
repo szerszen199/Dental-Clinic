@@ -18,11 +18,6 @@ DROP SEQUENCE IF EXISTS documentation_entries_seq;
 DROP SEQUENCE IF EXISTS prescriptions_seq;
 DROP SEQUENCE IF EXISTS doctors_ratings_seq;
 
-
-ALTER table appointments
-ALTER COLUMN rating TYPE decimal
-
-
 -- Tabela reprezentująca dane użytkownika
 CREATE TABLE accounts
 (
@@ -174,7 +169,7 @@ CREATE TABLE appointments
     canceled_by            BIGINT,
     canceled_by_ip         VARCHAR(256),
     reminder_mail_sent     BOOL DEFAULT FALSE NOT NULL,
-    rate_mail_sent     BOOL DEFAULT FALSE NOT NULL
+    rate_mail_sent         BOOL DEFAULT FALSE NOT NULL
 );
 
 -- Klucze obce dla tabeli appointments
@@ -261,8 +256,8 @@ CREATE TABLE documentation_entries
     id                     BIGINT PRIMARY KEY,                             -- Klucz głowny tabeli
     documentation_id       BIGINT      NOT NULL,                           -- Dokumentacja medyczna, do której odnosi się wpis
     doctor_id              BIGINT      NOT NULL,                           -- Lekarz, który tworzy wpis w dokumentacji
-    was_done               bytea,                                           -- Tekst informujący co zostało wykonane na wizycie reprezentowanej przez wpis w dokumentacji
-    to_be_done             bytea,                                           -- Tekst informujący co ma zostać wykonane na nastepnej wizycie
+    was_done               bytea,                                          -- Tekst informujący co zostało wykonane na wizycie reprezentowanej przez wpis w dokumentacji
+    to_be_done             bytea,                                          -- Tekst informujący co ma zostać wykonane na nastepnej wizycie
     version                BIGINT                                          -- Wersja
         CONSTRAINT version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Data utworzenia wiersza tabeli
@@ -303,12 +298,10 @@ CREATE SEQUENCE documentation_entries_seq -- Sekwencja uzywana do tworzenia pola
 CREATE TABLE prescriptions
 (
     id                     BIGINT PRIMARY KEY,                             -- Klucz główny tabeli
-    business_id            CHAR(8)     NOT NULL                            -- biznes id
-        CONSTRAINT pre_business_id_unique UNIQUE,
     expiration             TIMESTAMPTZ NOT NULL,                           -- data ważności recepty
     patient_id             BIGINT      NOT NULL,                           -- Id pacjenta, którego dotyczy recepta
     doctor_id              BIGINT      NOT NULL,                           -- Id lekarza który wystawił receptę
-    medications            bytea        NOT NULL,                           -- Tekst informujący o przepisanych lekarstwach
+    medications            bytea,                                          -- Tekst informujący o przepisanych lekarstwach
     version                BIGINT                                          -- Wersja
         CONSTRAINT version_gr0 CHECK (version >= 0),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Czas utworzenia wiersza w tabeli
@@ -318,14 +311,6 @@ CREATE TABLE prescriptions
     modified_by            BIGINT,                                         -- Konto ostatnio modyfikujące wiersza w tabeli
     modified_by_ip         VARCHAR(256)
 );
-
--- TODO: do definicji tableki ale nie chce ludziom psuć C:
-alter table prescriptions
-    drop column medications;
-alter table prescriptions
-    drop column business_id;
-alter table prescriptions
-    add column  medications bytea;
 
 -- Klucze obce dla tabeli documentation_entries
 ALTER TABLE prescriptions
@@ -356,20 +341,20 @@ CREATE SEQUENCE prescriptions_seq -- Sekwencja wykorzystywana do tworzenia klucz
 
 CREATE TABLE doctors_ratings
 (
-    id                     BIGINT PRIMARY KEY,                             -- Klucz główny tabeli
-    doctor_id              BIGINT      NOT NULL,                           -- Id lekarza, którego dotyczą statystyki ocen
-    rates_sum              DOUBLE PRECISION NOT NULL  DEFAULT 0.              -- Suma wszystkich ocen wystawionych lekarzowi
+    id                     BIGINT PRIMARY KEY,                                  -- Klucz główny tabeli
+    doctor_id              BIGINT           NOT NULL,                           -- Id lekarza, którego dotyczą statystyki ocen
+    rates_sum              DOUBLE PRECISION NOT NULL DEFAULT 0.                 -- Suma wszystkich ocen wystawionych lekarzowi
         CONSTRAINT rates_sum_gr0 CHECK (rates_sum >= 0),
-    rates_counter          INT NOT NULL  DEFAULT 0                         -- Ilość wszystkich wystawionych lekarzowi ocen
-        CONSTRAINT rates_counter_gr0 CHECK (rates_counter >= 0),           -- Większe-równe 0
-    active                 BOOL DEFAULT TRUE  NOT NULL,
-    version                BIGINT                                          -- Wersja
+    rates_counter          INT              NOT NULL DEFAULT 0                  -- Ilość wszystkich wystawionych lekarzowi ocen
+        CONSTRAINT rates_counter_gr0 CHECK (rates_counter >= 0),                -- Większe-równe 0
+    active                 BOOL                      DEFAULT TRUE NOT NULL,
+    version                BIGINT                                               -- Wersja
         CONSTRAINT version_gr0 CHECK (version >= 0),
-    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Czas utworzenia wiersza w tabeli
-    created_by             BIGINT      NOT NULL,                           -- Konto które utworzyło wiersz w tabeli
+    creation_date_time     TIMESTAMPTZ      NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Czas utworzenia wiersza w tabeli
+    created_by             BIGINT           NOT NULL,                           -- Konto które utworzyło wiersz w tabeli
     created_by_ip          VARCHAR(256),
-    modification_date_time TIMESTAMPTZ,                                    -- Data ostatniej modyfikacji wiersza w tabeli
-    modified_by            BIGINT,                                         -- Konto ostatnio modyfikujące wiersza w tabeli
+    modification_date_time TIMESTAMPTZ,                                         -- Data ostatniej modyfikacji wiersza w tabeli
+    modified_by            BIGINT,                                              -- Konto ostatnio modyfikujące wiersza w tabeli
     modified_by_ip         VARCHAR(256)
 );
 
@@ -453,9 +438,9 @@ GRANT
     DELETE
     ON appointments TO ssbd01mow;
 
-GRANT 
-    SELECT, 
-    USAGE 
+GRANT
+    SELECT,
+    USAGE
     ON appointments_seq TO ssbd01mow;
 
 GRANT
