@@ -36,6 +36,7 @@ import CreatePrescription from "../components/Documentation/CreatePrescription";
 import EditDocumentationEntry from "../components/Documentation/EditDocumentationEntry/EditDocumentationEntry";
 import EditBookedAppointment from "../components/Appointment/EditBookedAppointment/EditBookedAppointment";
 import Prescriptions from "../components/Documentation/Prescriptions";
+import RateAppointment from "../components/Appointment/RateAppointment";
 
 export default function Routes() {
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
@@ -108,6 +109,7 @@ export default function Routes() {
             <Route authed={isLoggedIn()} path='/activation-confirm/:token' component={AccountActivationConfirm}/>
             <Route authed={isLoggedIn()} path='/mail-change-confirm/:token' component={MailChangeConfirm}/>
             <Route authed={isLoggedIn()} path='/password-change-confirm/:token' component={PasswordChangeConfirm}/>
+            <Route path='/rate-appointment/:id/:token' component={RateAppointment}/>
             <Route path='/not-found' component={Error404}/>
             <Route>
                 <Error404/>
