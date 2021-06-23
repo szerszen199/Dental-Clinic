@@ -121,4 +121,15 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
             throw PrescriptionException.prescriptionEditFailed();
         }
     }
+
+    @Override
+    public Prescription findById(Long id) throws PrescriptionException {
+        Prescription prescription;
+        try {
+            prescription = prescriptionFacade.find(id);
+        } catch (AppBaseException e) {
+            throw PrescriptionException.prescriptionNotFound();
+        }
+        return prescription;
+    }
 }
