@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;

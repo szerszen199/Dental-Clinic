@@ -2,8 +2,6 @@ package pl.lodz.p.it.ssbd2021.ssbd01.exceptions;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 
-import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-
 import javax.ejb.ApplicationException;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
