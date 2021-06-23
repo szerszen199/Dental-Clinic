@@ -7,6 +7,7 @@ import {makePatientsListRequest} from "../../ListPatients/ListPatientsRequest";
 import {Button} from "react-bootstrap";
 import {FiRefreshCw} from "react-icons/fi";
 import {planPatientAppointmentRequest} from "./PlanPatientAppointmentRequest";
+import confirmationAlerts from "../../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
 
 class PlanPatientAppointmentWithoutTr extends React.Component {
     constructor(props) {
@@ -45,8 +46,14 @@ class PlanPatientAppointmentWithoutTr extends React.Component {
         this.setState({chosenAccount: this.state.patientsList[rowIndex]})
     }
 
-    handleSubmit(appointmentId,t) {
-        planPatientAppointmentRequest(appointmentId, this.state.chosenAccount,t);
+    handleSubmit(appointmentId, t) {
+
+            confirmationAlerts(t('title_reserve_appointment'), t('reserve_appointment_text')).then((confirmed) => {
+                if (confirmed) {
+                    planPatientAppointmentRequest(appointmentId, t);
+                }
+            })
+
     }
 
     renderButton() {

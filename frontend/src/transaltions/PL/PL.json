@@ -260,5 +260,8 @@
   "title_edit_entry": "Edycja wpisu dokumentacji",
   "documentation_entry_edited_successfully": "Edycja wpisu dokumentacji powiodła się",
   "documentation_entry_edited_unsuccessfully": "Edycja wpisu dokumentacji nie powiodła się",
-  "documentation_entry_edition_failed": "Edycja wpisu dokumentacji nie powiodła się"
+  "documentation_entry_edition_failed": "Edycja wpisu dokumentacji nie powiodła się",
+  "title_reserve_appointment": "Rezerwuj wizytę",
+  "reserve_appointment_text": "Czy na pewno chcesz rezerwowac wizytę?",
+  "appointment_reserved_successfully" : "Rezerwacja przebiegła pomyślnie"
 }

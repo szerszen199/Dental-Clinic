@@ -9,6 +9,7 @@ import {Button, Col, Row} from "react-bootstrap";
 import {FiRefreshCw} from "react-icons/fi";
 import Cookies from "js-cookie";
 import {Input} from "semantic-ui-react";
+import confirmationAlerts from "../../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
 
 class PlanReceptionistAppointmentWithoutTr extends React.Component {
     constructor(props) {
@@ -73,8 +74,8 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
             clickToSelect: true,
             hideSelectColumn: true,
             bgColor: '#e6ff99',
-            onSelect:(var1,var2,rowIndex)=>{
-                this.setState({chosenAccount: this.state.patientsList[rowIndex]});
+            onSelect: (var1, var2, rowIndex) =>{
+                self.setState({chosenAccount: this.state.patientsList[rowIndex]});
             },
         };
 
@@ -91,15 +92,21 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
                 style: {verticalAlign: "middle"}
             }
         ]
-        return <BootstrapTable striped keyField='login' columns={columns} data={this.state.patientsList} selectRow={ selectRow }/>;
+        return <BootstrapTable striped keyField='login' columns={columns} data={this.state.patientsList}
+                               selectRow={selectRow}/>;
+
     }
 
     setChosenAccount(rowIndex) {
         this.setState({chosenAccount: this.state.patientsList[rowIndex]})
     }
 
-    handleSubmit(appointmentId,t) {
-        planAppointmentRequest(appointmentId, this.state.chosenAccount,t);
+    handleSubmit(appointmentId, t) {
+        confirmationAlerts(t('title_reserve_appointment'), t('reserve_appointment_text')).then((confirmed) => {
+            if (confirmed) {
+                planAppointmentRequest(appointmentId, this.state.chosenAccount, t);
+            }
+        })
     }
 
     renderButton() {
@@ -116,8 +123,9 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
         function isPatient() {
             return token !== undefined && Cookies !== undefined && Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) === process.env.REACT_APP_ROLE_PATIENT;
         }
+
         if (!isPatient()) {
-            return<Col>
+            return <Col>
                 <Fragment>
                     <datalist id='options'>
                         {this.state.patientsList.length !== this.unFilteredList.length ? this.getHintList() : []}
@@ -134,7 +142,7 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
     }
 
 
-    renderAppointments(){
+    renderAppointments() {
         const {t} = this.props;
         const columns = [
             {
@@ -176,8 +184,7 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
             onlyOneExpanding: true,
             renderer: row => (
                 <div>
-                    <form  onSubmit={()=>this.handleSubmit(row.id,t)}>
-                        <Button size={"lg"} type="submit">
+                        <Button size={"lg"} type="submit" onClick={() => {this.handleSubmit(row.id, t)}}>
                             book
                         </Button>
                     </form>
@@ -185,7 +192,8 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
             )
         };
 
-        return <BootstrapTable striped keyField='id' columns={columns} data={this.state.appointmentsList} selectRow={ selectRow }   expandRow={ expandRow } />;
+        return <BootstrapTable striped keyField='id' columns={columns} data={this.state.appointmentsList}
+                               selectRow={selectRow} expandRow={expandRow}/>;
     }
 
     render() {
@@ -194,10 +202,10 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
             <div className="MyAppointment">
                 <Row>
                     <Col>
-                {!this.state.appointmentsList.length ? this.renderNull() : this.renderAppointments()}
+                        {!this.state.appointmentsList.length ? this.renderNull() : this.renderAppointments()}
                     </Col>
                     <Col>
-                {this.renderPatientList(t)}
+                        {this.renderPatientList(t)}
                     </Col>
                 </Row>
             </div>
@@ -205,9 +213,9 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
     }
 }
 
-const AppointmentWithTranslation =  withTranslation()(PlanReceptionistAppointmentWithoutTr);
+const AppointmentWithTranslation = withTranslation()(PlanReceptionistAppointmentWithoutTr);
 
-export default function PlanReceptionistAppointment(){
+export default function PlanReceptionistAppointment() {
     return (
         <Suspense fallback="loading">
             <AppointmentWithTranslation/>
