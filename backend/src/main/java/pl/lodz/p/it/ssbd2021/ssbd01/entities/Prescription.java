@@ -33,6 +33,8 @@ import java.time.LocalDateTime;
 @NamedQueries({
         @NamedQuery(name = "Prescription.findAll", query = "SELECT p FROM Prescription p"),
         @NamedQuery(name = "Prescription.findById", query = "SELECT p FROM Prescription p WHERE p.id = :id"),
+        @NamedQuery(name = "Prescription.findByPatientLogin", query = "SELECT p FROM Prescription p WHERE p.patient.login = :patientLogin"),
+        @NamedQuery(name = "Prescription.findByDoctorLogin", query = "SELECT p FROM Prescription p WHERE p.doctor.login = :doctorLogin"),
         @NamedQuery(name = "Prescription.findByExpiration", query = "SELECT p FROM Prescription p WHERE p.expiration = :expiration"),
         @NamedQuery(name = "Prescription.findByMedications", query = "SELECT p FROM Prescription p WHERE p.medications = :medications"),
         @NamedQuery(name = "Prescription.findByVersion", query = "SELECT p FROM Prescription p WHERE p.version = :version"),

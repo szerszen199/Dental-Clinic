@@ -92,6 +92,13 @@ class DocumentationWithoutTranslation extends React.Component {
                 headerStyle: {verticalAlign: "middle"},
                 style: {textAlign: "center"},
                 formatter: this.createPrescription
+            },
+            {
+                dataField: 'actions',
+                text: t('to_prescriptions'),
+                headerStyle: {verticalAlign: "middle"},
+                style: {textAlign: "center"},
+                formatter: this.linkPrescriptions
             }
         ]
         return <BootstrapTable striped keyField='login' columns={columns} data={this.state.accountsList}/>;
@@ -100,6 +107,15 @@ class DocumentationWithoutTranslation extends React.Component {
     linkDocumentation = (cell, row, rowIndex, formatExtraData) => {
         return (
             <Link to={"/account-documentation/" + this.state.accountsList[rowIndex].login}>
+                <Button variant="outline-secondary">
+                    <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}/>
+                </Button>
+            </Link>
+        );
+    }
+    linkPrescriptions = (cell, row, rowIndex, formatExtraData) => {
+        return (
+            <Link to={"/account-prescriptions/" + this.state.accountsList[rowIndex].login}>
                 <Button variant="outline-secondary">
                     <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}/>
                 </Button>

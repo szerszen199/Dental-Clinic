@@ -11,7 +11,7 @@ import PrivateRoute from "./PrivateRoute";
 import GuestHomeRoute from "./GuestHomeRoute";
 import Account from "../components/Account/OwnAccount/Account"
 import AccountsList from "../components/AccountsList/AccountsList";
-import Prescription from "../components/Prescription/Prescription"
+import PrescriptionsUser from "../components/Prescription/PrescriptionsUser"
 import MyAppointment from "../components/Appointment/MyAppointments/MyAppointments";
 import PlanReceptionistAppointment from "../components/Appointment/PlanAppointment/Receptionist/PlanReceptionistAppointment";
 import PlanPatientAppointment from "../components/Appointment/PlanAppointment/Patient/PlanPatientAppointment";
@@ -35,6 +35,7 @@ import NewDocumentationEntry from "../components/Documentation/NewDocumentationE
 import CreatePrescription from "../components/Documentation/CreatePrescription";
 import EditDocumentationEntry from "../components/Documentation/EditDocumentationEntry/EditDocumentationEntry";
 import EditBookedAppointment from "../components/Appointment/EditBookedAppointment/EditBookedAppointment";
+import Prescriptions from "../components/Documentation/Prescriptions";
 
 export default function Routes() {
     let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
@@ -71,7 +72,6 @@ export default function Routes() {
             <Route exact path="/reset-password">
                 <Reset/>
             </Route>
-            <PrivateRoute authed={isPatient() || isDoctor()} path='/prescriptions' component={Prescription}/>
             <Route exact path="/new-password-admin/:token">
                 <SetNewPasswordAdmin/>
             </Route>
@@ -79,7 +79,7 @@ export default function Routes() {
                 <SetNewPassword/>
             </Route>
             <Route path='/unlock-account/:token' component={UnlockConfirm}/>
-            <PrivateRoute authed={isPatient()} path='/prescriptions' component={Prescription}/>
+            <PrivateRoute authed={isPatient()} path='/prescriptions' component={PrescriptionsUser}/>
             <PrivateRoute authed={isLoggedIn()} path='/account' component={Account}/>
             <PrivateRoute authed={isAdministrator() || isReceptionist()} path='/accounts' component={AccountsList}/>
             <PrivateRoute authed={isAdministrator()} path='/other-account/:accId' component={OtherAccount} />
@@ -87,6 +87,7 @@ export default function Routes() {
             <PrivateRoute authed={isDoctor()} path='/edit-documentation-entry/:accId/:entryId' component={EditDocumentationEntry} />
             <PrivateRoute authed={isDoctor()} path='/create-prescription/:accId' component={CreatePrescription} />
             <PrivateRoute authed={isDoctor()} path='/new-documentation-entry/:accId' component={NewDocumentationEntry} />
+            <PrivateRoute authed={isDoctor()} path='/account-prescriptions/:accId' component={Prescriptions} />
             <PrivateRoute authed={isPatient() || isReceptionist() || isDoctor()} path='/my-appointments'
                           component={MyAppointment}/>
             <PrivateRoute authed={isPatient()} path='/plan-appointment-patient'
