@@ -264,5 +264,15 @@
   "documentation_entry_edited_unsuccessfully": "Edycja wpisu dokumentacji nie powiodła się",
   "documentation_entry_edition_failed": "Edycja wpisu dokumentacji nie powiodła się",
   "appointment_edit_successful": "Umówiona wizyta edytowana poprawnie",
-  "appointment_edit_failed": "Nie udało się edytować umówionej wizyty"
+  "appointment_edit_failed": "Nie udało się edytować umówionej wizyty",
+  "not_patient_or_inactive": "Wybrany pacjent nie jest aktywny",
+  "prescription_id_null": "Id recepty nie może być puste",
+  "prescription_medications_null": "Recepta musi zawierać leki",
+  "prescription_not_found": "Nie udało się znaleźć recepty",
+  "prescription_date_null": "Data wygaśnięcia recepty nie może być pusta",
+  "prescription_date_future": "Data wygaśnięcia recepty musi być z przyszłości",
+  "prescription_get_info_failed": "Nie udało załadować się danych recepty",
+  "appointment_id_null": "Id wizyty nie może byc puste",
+  "patient_id_null": "Id pacjenta nie może być pusty",
+  "appointment_date_null": "Appointment can't be empty"
 }
