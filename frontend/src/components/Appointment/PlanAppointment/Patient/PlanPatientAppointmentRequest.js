@@ -22,7 +22,6 @@ export function planPatientAppointmentRequest(appointmentId, t) {
 
     axios(reserveForOwnAccount)
         .then((response) => {
-            console.log("halo")
             successAlerts(t(response.data.message, response.status)).then(() => {
             })
         })

@@ -98,8 +98,6 @@ export default function Routes() {
                           component={ViewDoctorAppointmentSlots}/>
             <PrivateRoute authed={isReceptionist()} path='/appointment-slot/:appId' component={EditAppointmentSlot} />
             <PrivateRoute authed={isDoctor()} path='/patients_account_list' component={PatientsAccountList}/>
-            {/*<PrivateRoute authed={isPatient() || isReceptionist()} path='/plan-appointment'*/}
-            {/*              component={PlanAppointmentWithoutTranslation}/>*/}
             <PrivateRoute authed={isPatient() || isReceptionist() || isDoctor()} path='/list-doctors'
                           component={ListDoctors}/>
             <PrivateRoute authed={isReceptionist()} path='/list-patients'
