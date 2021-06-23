@@ -277,13 +277,34 @@ public class AppointmentEndpoint {
     }
 
     /**
+     * Potwierdza własną wizytę.
+     *
+     * @param id id wizyty która ma zostać potwierdzona.
+     * @return status powodzenia operacji.
+     */
+    @GET
+    @RolesAllowed({I18n.PATIENT})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("confirm-own/{id}")
+    public Response confirmOwnAppointment(@PathParam("id") Long id) {
+
+        try {
+            appointmentManager.confirmOwnBookedAppointment(id);
+        } catch (AppointmentException | MailSendingException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_CONFIRMED_SUCCESSFULLY)).build();
+    }
+
+
+    /**
      * Potwierdza wizytę.
      *
      * @param id id wizyty która ma zostać potwierdzona.
      * @return status powodzenia operacji.
      */
     @GET
-    @RolesAllowed({I18n.PATIENT, I18n.RECEPTIONIST})
+    @RolesAllowed({I18n.RECEPTIONIST})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("confirm/{id}")
     public Response confirmAppointment(@PathParam("id") Long id) {

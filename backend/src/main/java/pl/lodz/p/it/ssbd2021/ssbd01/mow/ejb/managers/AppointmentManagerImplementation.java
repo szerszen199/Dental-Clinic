@@ -221,9 +221,9 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         throw new NotImplementedException();
     }
 
-    @RolesAllowed({I18n.PATIENT, I18n.RECEPTIONIST})
+    @RolesAllowed({I18n.PATIENT})
     @Override
-    public void confirmBookedAppointment(Long id) throws AppointmentException, MailSendingException {
+    public void confirmOwnBookedAppointment(Long id) throws AppointmentException, MailSendingException {
         Appointment appointment;
         String callerName = loggedInAccountUtil.getLoggedInAccountLogin();
         try {
@@ -235,6 +235,42 @@ public class AppointmentManagerImplementation extends AbstractManager implements
             throw AppointmentException.appointmentNotFound();
         }
         if (appointment.getPatient() == null || !appointment.getPatient().getLogin().equals(callerName)) {
+            throw AppointmentException.appointmentNotBelongingToPatient();
+        }
+        if (appointment.getConfirmed()) {
+            throw AppointmentException.appointmentAlreadyConfirmed();
+        }
+        if (appointment.getCanceled()) {
+            throw AppointmentException.appointmentCanceled();
+        }
+        appointment.setConfirmed(true);
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
+        try {
+            mailProvider.sendAppointmentConfirmedMail(appointment.getDoctor().getEmail(), appointment.getPatient().getLanguage());
+            mailProvider.sendAppointmentConfirmedMail(appointment.getPatient().getEmail(), appointment.getPatient().getLanguage());
+        } catch (MailSendingException e) {
+            throw MailSendingException.mailFailed();
+        }
+
+    }
+
+    @RolesAllowed({I18n.RECEPTIONIST})
+    @Override
+    public void confirmBookedAppointment(Long id) throws AppointmentException, MailSendingException {
+        Appointment appointment;
+        try {
+            appointment = appointmentFacade.find(id);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        if (appointment == null) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        if (appointment.getPatient() == null) {
             throw AppointmentException.appointmentNotBelongingToPatient();
         }
         if (appointment.getConfirmed()) {
