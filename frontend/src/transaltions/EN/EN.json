@@ -271,5 +271,11 @@
   "appointment_not_found": "Unable to locate appointment, appointment has bad Id",
   "not_patient_or_inactive": "Selected account is not active",
   "appointment_slot_edit_failed": "Appointment slot edit failed",
-  "Question delete appointment slot": "Do you want to delete appointment slot?"
+  "Question delete appointment slot": "Do you want to delete appointment slot?",
+  "expiration" : "Expiration date",
+  "patient_firstname" : "Patient's firstname",
+  "patient_lastname" : "Patient's lastname",
+  "doctor_firstname" : "Doctor's firstname",
+  "doctor_lastname" : "Doctor's lastname",
+  "to_prescriptions" : "To prescriptions"
 }

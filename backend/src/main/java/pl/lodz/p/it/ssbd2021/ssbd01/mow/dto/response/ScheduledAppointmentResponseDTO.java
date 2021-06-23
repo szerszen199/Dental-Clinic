@@ -30,7 +30,7 @@ public class ScheduledAppointmentResponseDTO implements SignableEntity {
      * DTO do zwracania umówionej wizyty.
      *
      * @param appointment                  wizyta, na podstawie której tworzone jest DTO.
-     * @param entityIdentitySignerVerifier entity identity signer verifier do etaga
+     * @param entityIdentitySignerVerifier the entity identity signer verifier
      */
     public ScheduledAppointmentResponseDTO(Appointment appointment, EntityIdentitySignerVerifier entityIdentitySignerVerifier) {
         this.id = appointment.getId();

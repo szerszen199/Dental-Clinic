@@ -271,5 +271,11 @@
   "documentation_entry_edited_unsuccessfully": "Edycja wpisu dokumentacji nie powiodła się",
   "documentation_entry_edition_failed": "Edycja wpisu dokumentacji nie powiodła się",
   "appointment_edit_successful": "Umówiona wizyta edytowana poprawnie",
-  "appointment_edit_failed": "Nie udało się edytować umówionej wizyty"
+  "appointment_edit_failed": "Nie udało się edytować umówionej wizyty",
+  "expiration" : "Data ważaności",
+  "patient_firstname" : "Imię pacjęta",
+  "patient_lastname" : "Nazwisko pacjęta",
+  "doctor_firstname" : "Imię doktora",
+  "doctor_lastname" : "nazwisko doktora",
+  "to_prescriptions" : "Do recept"
 }
