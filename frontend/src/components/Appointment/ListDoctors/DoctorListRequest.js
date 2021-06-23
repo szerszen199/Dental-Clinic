@@ -7,7 +7,7 @@ export async function makeDoctorsListRequest() {
     let data = await getData(token);
     let doctors = []
     for (const i in data) {
-        doctors.push(new Doctor(data[i].firstName + " " + data[i].lastName, data[i].avgRate));
+        doctors.push(new Doctor(data[i].login, data[i].firstName + " " + data[i].lastName, data[i].avgRate, data[i].ratesCounter));
     }
     return doctors;
 }

@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.DocumentationEntryException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
@@ -10,6 +9,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.AddDocumentationEntryRequest
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.DeleteDocumentationEntryRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.EditDocumentationEntryRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.request.GetFullDocumentationRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.DocumentationEntryResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.DocumentationInfoResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.DocumentationEntryManager;
@@ -35,10 +35,12 @@ import javax.interceptor.Interceptors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -124,7 +126,7 @@ public class DocumentationEndpoint {
      * Edycja wpisu w dokumentacji medycznej pacjenta.
      *
      * @param editDocumentationEntryRequestDTO DTO zawierające niezbędne informacje do edycji wpisu dokumentacji medycznej.
-     * @param header                          etag
+     * @param header                           etag
      * @return {@link Response.Status#OK} przy powodzeniu, inaczej {@link Response.Status#BAD_REQUEST}
      */
     @POST
@@ -139,7 +141,7 @@ public class DocumentationEndpoint {
         }
         try {
             documentationEntryTransactionRepeater.repeatTransaction(
-                    () -> documentationEntryManager.editDocumentationEntry(editDocumentationEntryRequestDTO), documentationEntryManager);
+                    () -> documentationEntryManager.editDocumentationEntry(editDocumentationEntryRequestDTO));
         } catch (EncryptionException | DocumentationEntryException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         } catch (Exception e) {
@@ -165,8 +167,9 @@ public class DocumentationEndpoint {
         Encryptor encryptor = new Encryptor(propertiesLoader);
         try {
             return Response.ok()
-                    .entity(new DocumentationInfoResponseDTO(medicalDocumentationManager.getDocumentationByPatient(
-                            getFullDocumentationRequestDTO.getPatient()),
+                    .entity(new DocumentationInfoResponseDTO(
+                            medicalDocumentationManager.getDocumentationByPatient(getFullDocumentationRequestDTO.getPatient()),
+                            documentationEntryManager.getDocumentationEntriesForUser(getFullDocumentationRequestDTO.getPatient()),
                             encryptor,
                             entityIdentitySignerVerifier))
                     .build();
@@ -176,6 +179,33 @@ public class DocumentationEndpoint {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.MEDICAL_DOCUMENTATION_NOT_FOUND)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.MEDICAL_DOCUMENTATION_FETCH_FAILED)).build();
+        }
+    }
+
+    /**
+     * Pobiera pole wpisu dokumentacji medycznej użytkownika.
+     *
+     * @param id id wpisu dokumentacji
+     * @return {@link Response.Status#OK} w przypadku powodzenia, inaczej {@link Response.Status#BAD_REQUEST}
+     */
+    @GET
+    @Path("get/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON})
+    @RolesAllowed({I18n.DOCTOR})
+    public Response getDocumentationEntry(@NotNull @PathParam("id") Long id) {
+        Encryptor encryptor = new Encryptor(propertiesLoader);
+        try {
+            return Response.ok()
+                    .entity(new DocumentationEntryResponseDTO(
+                            documentationEntryManager.getDocumentationEntry(id),
+                            encryptor,
+                            entityIdentitySignerVerifier))
+                    .build();
+        } catch (DocumentationEntryException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_NOT_FOUND)).build();
         }
     }
 

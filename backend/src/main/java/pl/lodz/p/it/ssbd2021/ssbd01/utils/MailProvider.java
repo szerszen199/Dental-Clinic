@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
+import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 
 import javax.annotation.PostConstruct;
@@ -44,6 +45,8 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_SCHEDULER_LO
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_SCHEDULER_LOCK_TEXT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_UNLOCK_BY_ADMIN_SUBJECT;
 import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_MAIL_UNLOCK_BY_ADMIN_TEXT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_MAIL_CONFIRMED_SUBJECT;
+import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.APPOINTMENT_MAIL_CONFIRMED_TEXT;
 
 /**
  * Klasa Mail provider'a.
@@ -329,7 +332,7 @@ public class MailProvider {
      *
      * @param email adres email
      * @param token token
-     * @param lang język maila
+     * @param lang  język maila
      * @throws MailSendingException wyjątek wysyłania maila
      */
     public void sendAccountLockedByScheduler(String email, String token, String lang) throws MailSendingException {
@@ -387,6 +390,44 @@ public class MailProvider {
             String messageText = paragraph(langBundle.getString(ACCOUNT_MAIL_REVOKE_ACCESS_LEVEL_TEXT)) + capitalizedLevel;
             mailManager.sendMail(email, subject, getFrom(), messageText, session);
         } catch (MessagingException | ArrayIndexOutOfBoundsException e) {
+            throw MailSendingException.accountLock();
+        }
+    }
+
+    /**
+     * Wysyła maila z informacją o potwierdzeniu wizyty.
+     *
+     * @param email Adres, na który zostanie wysłana wiadomość.
+     * @param lang  język wiadomości email
+     * @throws MailSendingException Błąd wysyłania wiadomości.
+     */
+    public void sendAppointmentConfirmedMail(String email, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(APPOINTMENT_MAIL_CONFIRMED_SUBJECT);
+        String messageText = paragraph(langBundle.getString(APPOINTMENT_MAIL_CONFIRMED_TEXT));
+        try {
+            mailManager.sendMail(email, subject, getFrom(), messageText, session);
+        } catch (MessagingException e) {
+            throw MailSendingException.accountLock();
+        }
+    }
+
+    /**
+     * Wysyła maila z przypomnieniem o konieczności potwierdzenia wizyty.
+     *
+     * @param email Adres, na który zostanie wysłana wiadomość.
+     * @param lang  język wiadomości email
+     * @throws MailSendingException Błąd wysyłania wiadomości.
+     */
+    public void sendAppointmentConfirmationReminderMail(String email, String lang) throws MailSendingException {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LangResource", locale);
+        String subject = langBundle.getString(I18n.APPOINTMENT_MAIL_CONFIRM__REMINDER_SUBJECT);
+        String messageText = paragraph(langBundle.getString(I18n.APPOINTMENT_MAIL_CONFIRM_REMINDER_TEXT));
+        try {
+            mailManager.sendMail(email, subject, getFrom(), messageText, session);
+        } catch (MessagingException e) {
             throw MailSendingException.accountLock();
         }
     }

@@ -62,7 +62,6 @@ public abstract class AbstractFacade<T> {
         } catch (PersistenceException e) {
             throw AppBaseException.databaseError(e);
         }
-
     }
 
     /**

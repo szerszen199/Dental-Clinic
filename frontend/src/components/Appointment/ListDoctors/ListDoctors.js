@@ -1,18 +1,20 @@
-import React, {Suspense} from "react";
+import React, {Fragment, Suspense} from "react";
 import "./ListDoctors.css";
-import {Accordion, Button, Card, Col, Container, Row} from "react-bootstrap";
+import {Button, Card, Col, Container, Row} from "react-bootstrap";
 import Rating from '@material-ui/lab/Rating';
 import {makeDoctorsListRequest} from "./DoctorListRequest";
-import {Fragment} from 'react';
 import {withTranslation} from "react-i18next";
 import {FiRefreshCw} from "react-icons/fi";
+import {Box} from "@material-ui/core";
+import {Alert, AlertTitle} from "@material-ui/lab";
 
 class DoctorsList extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            doctorsList: []
+            doctorsList: [],
+            requestWasMade: false
         };
     }
 
@@ -21,9 +23,13 @@ class DoctorsList extends React.Component {
     }
 
     makeGetDoctorsRequest() {
-        makeDoctorsListRequest().then((response) => {
-            this.setState({doctorsList: response})
-        })
+        makeDoctorsListRequest()
+            .then((response) => {
+                this.setState({
+                    doctorsList: response,
+                    requestWasMade: true
+                })
+            });
     }
 
     renderNull() {
@@ -39,9 +45,12 @@ class DoctorsList extends React.Component {
                     <Container style={{width: "100%"}}>
                         <Row style={{width: "100%"}}>
                             <Col><p className="Buttons">{doctor.name}</p></Col>
-                            <Col style={{maxWidth: "100px"}}>
-                                <Rating name="half-rating-read" defaultValue={0.0} value={doctor.rate}
-                                        precision={0.1} readOnly/>
+                            <Col style={{maxWidth: "275px", textAlign: "right"}}>
+                                {doctor.ratesCounter ?
+                                    <Row><Rating name="half-rating-read" defaultValue={0.0} value={doctor.rate}
+                                                 precision={0.1} readOnly/>
+                                        <Box marginLeft={3}>{t('Rates counter')}: {doctor.ratesCounter}</Box></Row> :
+                                    <Box>{t('No rates')}</Box>}
                             </Col>
                         </Row>
                     </Container>
@@ -62,14 +71,20 @@ class DoctorsList extends React.Component {
     render() {
         const {t} = this.props;
         document.title = t("Dental Clinic") + " - " + t("List of doctors");
-        return (<Fragment>
-            <div className="account-refresh-button-div">
-                {this.renderButton()}
-            </div>
-            <div className="ListDoctors">
-                {!this.state.doctorsList.length ? this.renderNull() : this.renderDoctors()}
-            </div>
-        </Fragment>);
+        console.log(this.state.requestWasMade)
+        return ((!this.state.doctorsList.length) && (this.state.requestWasMade === true)) ?
+            <Alert severity="error">
+                <AlertTitle>{t('Sorry')}</AlertTitle>
+                {t('No doctors')}
+            </Alert>
+            : <Fragment>
+                <div className="account-refresh-button-div">
+                    {this.renderButton()}
+                </div>
+                <div className="ListDoctors">
+                    {!this.state.requestWasMade ? this.renderNull() : this.renderDoctors()}
+                </div>
+            </Fragment>;
     }
 }
 

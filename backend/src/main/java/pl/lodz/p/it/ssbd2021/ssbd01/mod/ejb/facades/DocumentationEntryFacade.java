@@ -2,6 +2,8 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.facades;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod.MedicalDocumentationException;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 
 import javax.annotation.security.PermitAll;
@@ -10,7 +12,12 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 /**
  * Klasa definiująca główne operacje wykonywane na encjach typu DocumentationEntry.
@@ -38,6 +45,33 @@ public class DocumentationEntryFacade extends AbstractFacade<DocumentationEntry>
      */
     public DocumentationEntryFacade(Class<DocumentationEntry> entityClass) {
         super(entityClass);
+    }
+
+    @Override
+    public void remove(DocumentationEntry entity) {
+        Query query = em.createNamedQuery("DocumentationEntry.deleteById");
+        query.setParameter("id", entity.getId());
+        query.executeUpdate();
+    }
+
+
+    /**
+     * Pobiera wszystkie wpisy w dokumentacje dla użytkownika.
+     *
+     * @param login login użytkownika
+     * @return listę wpisów w dokumentację.
+     * @throws AppBaseException w przypadku błędów
+     */
+    public List<DocumentationEntry> getDocumentationEntriesByLogin(String login) throws AppBaseException {
+        try {
+            TypedQuery<DocumentationEntry> tq = em.createNamedQuery("DocumentationEntry.findByPatientLogin", DocumentationEntry.class);
+            tq.setParameter("login", login);
+            return tq.getResultList();
+        } catch (NoResultException e) {
+            throw MedicalDocumentationException.noSuchMedicalDocumentation(e);
+        } catch (PersistenceException e) {
+            throw AppBaseException.databaseError(e);
+        }
     }
 
     @Override

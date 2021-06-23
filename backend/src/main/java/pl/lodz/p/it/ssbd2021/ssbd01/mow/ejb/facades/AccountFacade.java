@@ -5,6 +5,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
@@ -14,12 +15,6 @@ import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
-import javax.persistence.TypedQuery;
-import pl.lodz.p.it.ssbd2021.ssbd01.common.AbstractFacade;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -52,12 +47,13 @@ public class AccountFacade extends AbstractFacade<Account> {
         super(entityClass);
     }
 
+
     /**
-     * Find by login account.
+     * Wyszukuje konta na podstawie danego loginu.
      *
-     * @param login the login
-     * @return the account
-     * @throws AppBaseException the app base exception
+     * @param login login
+     * @return konto
+     * @throws AppBaseException wyjątek typu AppBaseException
      */
     public Account findByLogin(String login) throws AppBaseException {
         try {
@@ -95,4 +91,3 @@ public class AccountFacade extends AbstractFacade<Account> {
         }
     }
 }
-
