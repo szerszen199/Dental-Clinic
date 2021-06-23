@@ -53,6 +53,8 @@ class MyAppointmentsWithoutTranslation extends React.Component {
         );
     }
 
+
+
     linkCancel = (cell, row, rowIndex, formatExtraData) => {
         let url = "";
         if (Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) === process.env.REACT_APP_ROLE_PATIENT) {
@@ -71,6 +73,25 @@ class MyAppointmentsWithoutTranslation extends React.Component {
 
     }
 
+    linkConfirm = (cell, row, rowIndex, formatExtraData) => {
+        let url = "";
+        if (Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) === process.env.REACT_APP_ROLE_PATIENT) {
+            url = "appointment/confirm-own/"
+        }
+        if (Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) === process.env.REACT_APP_ROLE_RECEPTIONIST) {
+            url = "appointment/confirm/"
+        }
+        url += this.state.appointments[rowIndex].id.toString();
+        return (
+            <Button variant="outline-secondary" onClick={() => { this.makeConfirmRequest(url)}}
+                    disabled={this.state.appointments[rowIndex].canceled === "+" || this.state.appointments[rowIndex].patientLogin == "" ||
+                    this.state.appointments[rowIndex].confirmed ==="+" }>
+                <img src={deleteXXL} alt="Delete" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}/>
+            </Button>
+        );
+
+    }
+
     makeCancelRequest = (url) => {
         let self = this;
         const {t} = this.props;
@@ -80,6 +101,28 @@ class MyAppointmentsWithoutTranslation extends React.Component {
                     headers: {
                         Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
                     }
+                }).then((res) => {
+                    successAlerts(t(res.data.message), res.status.toString(10)).then(() => {
+                        self.makeGetAppointments();
+                    })
+                }).catch((res) => {
+                    if (res.response) {
+                        errorAlerts(t(res.response.data.message), res.response.status.toString(10));
+                    }
+                })
+            }
+        });
+    }
+
+    makeConfirmRequest = (url) => {
+        let self = this;
+        const {t} = this.props;
+        confirmationAlerts(t('title_confirm_appointment'), t('text_confirm_appointment')).then((confirmed) => {
+            if (confirmed) {
+                axios.get(process.env.REACT_APP_BACKEND_URL + url, {headers: {
+                        Authorization: "Bearer " + Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME)
+                    }}, {
+
                 }).then((res) => {
                     successAlerts(t(res.data.message), res.status.toString(10)).then(() => {
                         self.makeGetAppointments();
@@ -128,6 +171,13 @@ class MyAppointmentsWithoutTranslation extends React.Component {
                 headerStyle: {verticalAlign: "middle"},
                 style: {textAlign: "center"},
                 formatter: this.linkCancel
+            },
+            {
+                dataField: 'actions',
+                text: t('confirm_appointment'),
+                headerStyle: {verticalAlign: "middle"},
+                style: {textAlign: "center"},
+                formatter: this.linkConfirm
             }
         ]
 

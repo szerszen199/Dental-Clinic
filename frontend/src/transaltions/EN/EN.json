@@ -317,5 +317,10 @@
   "appointment_canceled": "Appointment canceled",
   "appointment_already_confirmed": "Appointment already confirmed",
   "appointment_not_belonging_to_patient": "Appointment does not belong to patient",
-  "Question delete prescription": "Are you sure you want to delete prescription?"
+  "Question delete prescription": "Are you sure you want to delete prescription?",
+  "text_confirm_appointment":"Are you sure you want to confirm an appointment?" ,
+  "title_confirm_appointment": "Warrning Appointment confirmation",
+  "appointment_is_in_past": "Appointment is in past",
+  "confirm_appointment": "Confirm appointment"
+
 }

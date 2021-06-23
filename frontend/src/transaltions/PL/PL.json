@@ -300,7 +300,6 @@
   "title_cancel_appointment": "Uwaga odwołanie wizyty",
   "text_cancel_appointment": "Czy napewno chcesz odwołać wizytę",
   "delete_appointment": "Usuń wizytę",
-
   "no_such_prescription": "Nie wybrano recepty",
   "prescription_removal_failed": "Usuwanie recepty nie powiodło się",
   "prescription_removal_unauthorized": "Nie wystawiłeś tej recepty, nie możesz jej usunąć",
@@ -309,6 +308,10 @@
   "title_reserve_appointment": "Rezerwuj wizytę",
   "reserve_appointment_text": "Czy na pewno chcesz rezerwowac wizytę?",
   "appointment_reserved_successfully": "Rezerwacja przebiegła pomyślnie",
+  "text_confirm_appointment":"Czy na pewno chcesz potwierdzić wizytę?" ,
+  "title_confirm_appointment": "Potwierdzenie wizyty",
+  "appointment_is_in_past": "Wizyta jest w przeszłości",
+  "confirm_appointment": "Potwierdź wizytę",
   "doctor_rating_failed": "Błąd oceniania doktora",
   "appointment_already_rated": "Wizyta już oceniona",
   "invalid_token": "Nieprawidłowy token",

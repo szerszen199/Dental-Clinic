@@ -359,7 +359,7 @@ public class AppointmentEndpoint {
         try {
             appointmentManager.confirmOwnBookedAppointment(id);
         } catch (AppointmentException | MailSendingException e) {
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_CONFIRMED_SUCCESSFULLY)).build();
     }
@@ -380,7 +380,7 @@ public class AppointmentEndpoint {
         try {
             appointmentManager.confirmBookedAppointment(id);
         } catch (AppointmentException | MailSendingException e) {
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_CONFIRMED_SUCCESSFULLY)).build();
     }
