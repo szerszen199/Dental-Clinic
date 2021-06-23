@@ -269,6 +269,14 @@
   "appointment_edit_successful": "Booked appointment edited successfully",
   "appointment_edit_failed": "Unable to edit booked appointment",
   "appointment_not_found": "Unable to locate appointment, appointment has bad Id",
+  "prescription_id_null": "Prescription id is empty",
+  "prescription_medications_null": "Prescription medications can't be empty",
+  "prescription_not_found": "Prescription not found",
+  "prescription_date_null": "Prescription date cant be empty",
+  "prescription_date_future": "Prescription date must be in the future",
+  "prescription_get_info_failed": "Unable to load prescription details",
+  "patient_id_null": "Patient id can't be empty",
+  "appointment_date_null": "Appointment can't be empty",
   "not_patient_or_inactive": "Selected account is not active",
   "appointment_slot_edit_failed": "Appointment slot edit failed",
   "Question delete appointment slot": "Do you want to delete appointment slot?",
@@ -278,9 +286,13 @@
   "doctor_firstname" : "Doctor's firstname",
   "doctor_lastname" : "Doctor's lastname",
   "to_prescriptions" : "To prescriptions",
-
-  "patient_id_null": "Patient's Id can't be null",
   "expiration_date_null": "Expiration date can't be null",
   "medications_null": "Medications can't be null",
-  "documentation_id_null": "Documentation id can't be null"
+  "documentation_id_null": "Documentation id can't be null",
+  "Edit prescription": "Edit prescription",
+  "Medications": "Medications",
+  "Question edit prescription":  "Are you sure you want to edit prescription?",
+  "prescription_edit_failed": "Prescription edit failed",
+  "prescription_edited_successfully": "Prescription edited successfully",
+  "prescription_expired" : "Prescription expired"
 }
