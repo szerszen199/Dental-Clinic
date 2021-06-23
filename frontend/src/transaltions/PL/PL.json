@@ -296,5 +296,9 @@
   "prescription_edit_failed": "Nie udało się edytować recepty",
   "prescription_edited_successfully": "Recepta edytowana poprawnie",
   "prescription_expired": "Recepta wygasła",
-  "Scheduled appointments": "Zaplanowane wizyty"
+  "Scheduled appointments": "Zaplanowane wizyty",
+  "documentation_id_null": "Id dokumentacji nie może być puste",
+  "title_cancel_appointment": "Uwaga odwołanie wizyty",
+  "text_cancel_appointment": "Czy napewno chcesz odwołać wizytę",
+  "delete_appointment": "Usuń wizytę"
 }
