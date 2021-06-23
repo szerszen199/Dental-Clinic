@@ -263,5 +263,7 @@
   "documentation_entry_edition_failed": "Documentation entry edited unsuccessfully",
   "title_reserve_appointment": "Reserve appointment",
   "reserve_appointment_text": "Are you sure you want to reserve appointment ?",
-  "appointment_reserved_successfully" : "Reservation successful"
+  "appointment_reserved_successfully" : "Reservation successful",
+  "appointment_not_found" : "Appointment not found",
+  "appointment_edit_failed" : "Appontment edit failed"
 }
