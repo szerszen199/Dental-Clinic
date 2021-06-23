@@ -199,6 +199,15 @@ public class AppointmentException extends AppBaseException {
     }
 
     /**
+     * Tworzy wyjątek reprezentujący próbę zatwierdzenia wizyty z przeszłości.
+     *
+     * @return zwraca wyjątek  reprezentujący próbę zatwierdzenia wizyty z przeszłości.
+     */
+    public static AppointmentException appointmentIsInPast() {
+        return new AppointmentException(I18n.APPOINTMENT_IS_IN_PAST);
+    }
+
+    /**
      * Tworzy wyjątek reprezentujący nieprawidłowy token.
      *
      * @return zwraca wyjątek reprezentujący nieprawidłowy token.

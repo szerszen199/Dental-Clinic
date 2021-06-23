@@ -566,6 +566,9 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         if (appointment.getCanceled()) {
             throw AppointmentException.appointmentCanceled();
         }
+        if (appointment.getAppointmentDate().isBefore(LocalDateTime.now())) {
+            throw AppointmentException.appointmentIsInPast();
+        }
         appointment.setConfirmed(true);
         try {
             appointmentFacade.edit(appointment);
@@ -601,6 +604,9 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         }
         if (appointment.getCanceled()) {
             throw AppointmentException.appointmentCanceled();
+        }
+        if (appointment.getAppointmentDate().isBefore(LocalDateTime.now())) {
+            throw AppointmentException.appointmentIsInPast();
         }
         appointment.setConfirmed(true);
         try {
