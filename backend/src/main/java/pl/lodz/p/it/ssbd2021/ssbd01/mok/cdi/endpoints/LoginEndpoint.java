@@ -241,8 +241,8 @@ public class LoginEndpoint {
 
     /**
      * Endpoint sprawdzający, czy zmiana poziomu dostępu jest możliwa.
+     *
      * @param level pożądany poziom dostępu
-     *              
      * @return Odpowiedź http 200 gdy zmiana jest możliwa, 401 gdy nie
      */
     @POST
@@ -251,11 +251,11 @@ public class LoginEndpoint {
     @RolesAllowed({I18n.ADMIN, I18n.RECEPTIONIST, I18n.DOCTOR, I18n.PATIENT})
     public Response changeRole(@PathParam("level") String level) {
         if (securityContext.isCallerInRole(level)) {
-            Logger.getGlobal().log(Level.INFO, "Użytkownik o loginie {0} zmienił poziom dostępu na {1}",new Object[]{securityContext.getCallerPrincipal().getName(),level});
+            Logger.getGlobal().log(Level.INFO, "Użytkownik o loginie {0} zmienił poziom dostępu na {1}", new Object[]{securityContext.getCallerPrincipal().getName(), level});
             return Response.ok().build();
         } else {
-            Logger.getGlobal().log(Level.WARNING, "Użytkownik o loginie {0} próbował zmienić poziom dostępu na {1}",new Object[]{securityContext.getCallerPrincipal().getName(),level});
-            return Response.status(UNAUTHORIZED).build();
+            Logger.getGlobal().log(Level.WARNING, "Użytkownik o loginie {0} próbował zmienić poziom dostępu na {1}", new Object[]{securityContext.getCallerPrincipal().getName(), level});
+            return Response.status(UNAUTHORIZED).entity(new MessageResponseDto(I18n.NO_ACCESS_LEVEL)).build();
         }
     }
 

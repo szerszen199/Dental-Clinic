@@ -1,14 +1,14 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.AfterBegin;
 import javax.ejb.AfterCompletion;
 import javax.ejb.BeforeCompletion;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Abstrakcyjna klasa po której powinne dziedziczyć inne managery, umożliwia logowanie.
@@ -16,9 +16,12 @@ import java.util.logging.Logger;
 public abstract class AbstractManager {
 
     protected static final Logger LOGGER = Logger.getGlobal();
+    
     @Inject
-    LoggedInAccountUtil loggedInAccountUtil;
+    protected LoggedInAccountUtil loggedInAccountUtil;
+    
     boolean lastTransactionRollback;
+    
     private String transactionID;
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)

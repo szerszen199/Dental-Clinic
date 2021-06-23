@@ -145,9 +145,6 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
         if (!documentationEntry.getDoctor().equals(loggedInDoctor)) {
             throw DocumentationEntryException.invalidDoctorException();
         }
-        if (documentationEntry.getMedicalDocumentation().getPatient().equals(loggedInDoctor)) {
-            throw DocumentationEntryException.patientSameDoctor();
-        }
         try {
             documentationEntryFacade.remove(documentationEntry);
         } catch (Exception e) {

@@ -17,6 +17,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
+import java.util.List;
 
 @Stateful
 @PermitAll
@@ -51,7 +52,7 @@ public class DocumentationEntryManagerImplementation extends AbstractManager imp
                 documentationEntry.setWasDone(encryptor.encryptMessage(editDocumentationEntryRequestDTO.getWasDone()));
             }
             if (editDocumentationEntryRequestDTO.getToBeDone() != null) {
-                documentationEntry.setWasDone(encryptor.encryptMessage(editDocumentationEntryRequestDTO.getToBeDone()));
+                documentationEntry.setToBeDone(encryptor.encryptMessage(editDocumentationEntryRequestDTO.getToBeDone()));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,6 +63,24 @@ public class DocumentationEntryManagerImplementation extends AbstractManager imp
             documentationEntryFacade.edit(documentationEntry);
         } catch (Exception e) {
             throw DocumentationEntryException.documentationEntryEditionFailed();
+        }
+    }
+
+    @Override
+    public List<DocumentationEntry> getDocumentationEntriesForUser(String username) throws DocumentationEntryException {
+        try {
+            return documentationEntryFacade.getDocumentationEntriesByLogin(username);
+        } catch (AppBaseException e) {
+            throw DocumentationEntryException.entryNotFoundError();
+        }
+    }
+
+    @Override
+    public DocumentationEntry getDocumentationEntry(Long id) throws DocumentationEntryException {
+        try {
+            return documentationEntryFacade.find(id);
+        } catch (AppBaseException e) {
+            throw DocumentationEntryException.entryNotFoundError();
         }
     }
 }
