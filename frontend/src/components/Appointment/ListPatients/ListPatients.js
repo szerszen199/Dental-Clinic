@@ -73,7 +73,7 @@ class ListPatientsWithoutTranslation extends React.Component {
                 dataField: 'pesel',
                 text: t('Pesel'),
                 style: {verticalAlign: "middle"}
-            }
+            },
         ]
         return <BootstrapTable striped keyField='login' columns={columns} data={this.state.patientsList} />;
     }

@@ -84,4 +84,11 @@ public interface PrescriptionsManager {
     List<PrescriptionResponseDto> getDoctorPrescriptions(String username) throws AppBaseException, NoSuchPaddingException, IllegalBlockSizeException,
             NoSuchAlgorithmException, BadPaddingException, InvalidKeyException;
 
+    /**
+     * Usuwa receptę.
+     *
+     * @param id klucz główny recepty
+     * @throws AppBaseException bazowy wyjątek aplikacji
+     */
+    void deletePrescription(Long id) throws AppBaseException;
 }

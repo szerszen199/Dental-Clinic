@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers;
 
 import org.apache.commons.lang3.NotImplementedException;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation;
@@ -54,9 +55,6 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
 
     @Inject
     private MedicalDocumentationFacade documentationFacade;
-
-    @Inject
-    private PrescriptionFacade prescriptionFacade;
 
     @Inject
     private PropertiesLoader propertiesLoader;
@@ -172,30 +170,5 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
         } catch (AppBaseException e) {
             throw MedicalDocumentationException.noSuchMedicalDocumentation(e);
         }
-    }
-
-    @Override
-    public void addPrescription(Long patientId, Prescription prescription) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void editPrescription(Prescription prescription) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void removePrescription(Long id) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Prescription getPrescription(Long id) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public List<Prescription> getPrescriptionsByPatient(Long patientId) {
-        throw new NotImplementedException();
     }
 }

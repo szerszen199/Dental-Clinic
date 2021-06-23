@@ -7,6 +7,9 @@ import errorAlerts from "../Alerts/ErrorAlerts/ErrorAlerts";
 import BootstrapTable from "react-bootstrap-table-next";
 import {FiRefreshCw} from "react-icons/fi";
 import {PrescriptionEntry} from "./PrescriptionEntry";
+import deleteIcon from "../../assets/delete-xxl.png";
+import confirmationAlerts from "../Alerts/ConfirmationAlerts/ConfirmationAlerts";
+import {deleteAppointmentSlotRequest} from "../Appointment/PlanAppointment/DeleteAppointmentSlotRequest";
 
 
 class PrescriptionsListWithoutTranslation extends React.Component {
@@ -103,10 +106,10 @@ class PrescriptionsListWithoutTranslation extends React.Component {
                 dataField: 'medications',
                 text: t('medications'),
                 style: {verticalAlign: "middle"}
-            },
+            }
         ]
 
-        return <BootstrapTable striped keyField='id' columns={columns} data={this.state.prescriptions}/>;
+        return <BootstrapTable striped keyField='prescriptionId' columns={columns} data={this.state.prescriptions}/>;
     }
 
     render() {

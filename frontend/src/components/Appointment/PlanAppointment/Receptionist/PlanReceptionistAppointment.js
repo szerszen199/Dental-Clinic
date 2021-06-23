@@ -5,11 +5,10 @@ import {makeAppointmentSlotsListRequest} from "../AppointmentSlotsListRequest";
 import {withTranslation} from "react-i18next";
 import {makePatientsListRequest} from "../../ListPatients/ListPatientsRequest";
 import {planAppointmentRequest} from "./PlanAppointmentRequest";
-import {Button, Col, Row} from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
 import {FiRefreshCw} from "react-icons/fi";
 import Cookies from "js-cookie";
 import {Input} from "semantic-ui-react";
-import confirmationAlerts from "../../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
 import {Link} from "react-router-dom";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from '@material-ui/icons/Edit';
@@ -225,11 +224,11 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
     }
 
     handleDeleteButtonClick(id, title, question, t) {
-        confirmationAlerts(title, question).then((confirmed) => {
-            if (confirmed) {
-                deleteAppointmentSlotRequest(id, t);
-            }
-        });
+            confirmationAlerts(title, question).then((confirmed) => {
+                if (confirmed) {
+                    deleteAppointmentSlotRequest(id, t);
+                }
+            });
     }
 
     render() {

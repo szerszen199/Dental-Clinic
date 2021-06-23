@@ -190,7 +190,6 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
         } catch (Exception e) {
             throw MailSendingException.activationConfirmation();
         }
-
     }
 
     @Override
