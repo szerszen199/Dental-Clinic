@@ -27,6 +27,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
@@ -138,8 +139,6 @@ public class AccountEndpoint {
         do {
             try {
                 new TransactionMaker().createAccountAndDocumentation(accountDto, accountManager, medicalDocumentationManager);
-//                this.accountManager.createAccount(AccountConverter.createAccountEntityFromDto(accountDto));
-//                this.medicalDocumentationManager.createMedicalDocumentation(accountDto.getLogin());
                 exception = null;
                 rollbackTX = accountManager.isLastTransactionRollback();
             } catch (AppBaseException | EJBTransactionRolledbackException e) {
