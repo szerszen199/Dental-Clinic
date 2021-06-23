@@ -148,7 +148,7 @@ public class PrescriptionsManagerImplementation extends AbstractManager implemen
             NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         Account account;
         account = accountFacade.findByLogin(username);
-        List<Prescription> prescriptions = prescriptionFacade.findByDoctorLogin(account.getLogin());
+        List<Prescription> prescriptions = prescriptionFacade.findByPatientLogin(account.getLogin());
         List<PrescriptionResponseDto> prescriptionResponseDtoList = new ArrayList<>();
         for (Prescription prescription: prescriptions) {
             PrescriptionResponseDto prescriptionResponseDto = new PrescriptionResponseDto(
