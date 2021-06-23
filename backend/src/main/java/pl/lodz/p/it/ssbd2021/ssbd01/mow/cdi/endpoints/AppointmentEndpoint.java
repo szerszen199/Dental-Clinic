@@ -430,6 +430,7 @@ public class AppointmentEndpoint {
         }
         return Response.ok().entity(new MessageResponseDto(I18n.APPOINTMENT_SLOT_REMOVED_SUCCESSFULLY)).build();
     }
+
     /**
      * Ocenia wizytę.
      *
