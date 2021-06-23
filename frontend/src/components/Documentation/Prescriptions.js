@@ -69,7 +69,7 @@ class PrescriptionsListWithoutTranslation extends React.Component {
             allEntries.sort(compare);
             self.setState({
                 prescriptions: allEntries
-            }, () => console.log(self.state))
+            })
         }).catch((response) => {
             if (response.response) {
                 errorAlerts(t(response.response.data.message), response.response.status.toString(10));
