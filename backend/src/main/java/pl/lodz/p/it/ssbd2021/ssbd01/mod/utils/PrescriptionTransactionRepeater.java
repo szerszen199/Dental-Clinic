@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.utils;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
-import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.MedicalDocumentationManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.PrescriptionsManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 

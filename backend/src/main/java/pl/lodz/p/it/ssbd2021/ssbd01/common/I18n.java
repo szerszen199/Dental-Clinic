@@ -171,7 +171,6 @@ public class I18n {
     public static final String APPOINTMENT_SLOT_CREATED_SUCCESSFULLY = "appointment_slot_created_successfully";
     public static final String GET_ALL_APPOINTMENTS_FAILED = "get_all_appointments_failed";
     public static final String GET_OWN_APPOINTMENTS_FAILED = "get_own_appointments_failed";
-
     public static final String APPOINTMENT_SLOT_REMOVAL_FAILED = "appointment_slot_removal_failed";
     public static final String APPOINTMENT_WAS_BOOKED = "appointment_was_booked";
     public static final String APPOINTMENT_SLOT_REMOVED_SUCCESSFULLY = "appointment_slot_removed_successfully";
@@ -225,4 +224,6 @@ public class I18n {
     public static final String PRESCRIPTION_EXPIRED = "prescription_expired";
     public static final String APPOINTMENT_CANCELED_SUCCESSFULLY = "appointment_canceled_successfully";
     public static final Object APPOINTMENT_CANCELLATION_FAILED = "appointment_cancellation_failed";
+    public static final String PATIENT_LOGIN_NULL = "patient_login_null";
+    public static final String APPOINTMENT_RESERVED_SUCCESSFULLY = "appointment_reserved_successfully";
 }

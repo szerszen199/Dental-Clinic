@@ -1,4 +1,4 @@
-import React, {Suspense} from "react";
+import React, {Fragment, Suspense} from "react";
 import "./ListPatients.css";
 import {makePatientsListRequest} from "./ListPatientsRequest";
 import {withTranslation} from "react-i18next";
@@ -6,7 +6,6 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import {Button} from "react-bootstrap";
 import {FiRefreshCw} from "react-icons/fi";
 import {Input} from "semantic-ui-react";
-import {Fragment} from "react";
 
 class ListPatientsWithoutTranslation extends React.Component {
 
