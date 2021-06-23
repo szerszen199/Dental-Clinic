@@ -189,11 +189,13 @@
   "get_active_patients_failed": "Nie udało się pobrać listy pacjentów",
   "Patients List": "Lista pacjentów",
   "Select doctor": "Wybierz lekarza",
+  "Select patient": "Wybierz pacjenta",
   "Add new appointment": "Dodaj nową wizytę",
   "Date and Time": "Wybierz termin wizyty",
   "DateTime blank error": "Termin nie może być pusty!",
   "DateTime past error": "Termin musi być z przyszłości!",
   "Doctor blank error": "Musisz wybrać lekarza!",
+  "Patient blank error": "Musisz wybrać pacjenta!",
   "medications blank error": "Przepisane lekarstwa nie mogą być puste!",
   "appointment_slot_created_successfully": "Utworzono termin wizyty",
   "appointment_slot_creation_failed": "Nie udało się utworzyć terminu wizyty",
@@ -260,5 +262,7 @@
   "title_edit_entry": "Edycja wpisu dokumentacji",
   "documentation_entry_edited_successfully": "Edycja wpisu dokumentacji powiodła się",
   "documentation_entry_edited_unsuccessfully": "Edycja wpisu dokumentacji nie powiodła się",
-  "documentation_entry_edition_failed": "Edycja wpisu dokumentacji nie powiodła się"
+  "documentation_entry_edition_failed": "Edycja wpisu dokumentacji nie powiodła się",
+  "appointment_edit_successful": "Umówiona wizyta edytowana poprawnie",
+  "appointment_edit_failed": "Nie udało się edytować umówionej wizyty"
 }
