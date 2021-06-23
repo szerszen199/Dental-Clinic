@@ -433,6 +433,22 @@ public class AppointmentManagerImplementation extends AbstractManager implements
             throw AppointmentException.getOwnAppointmentsException();
         }
     }
-    
-    
+
+    @PermitAll
+    @Override
+    public void sendAppointmentReminder(Long id) throws AppointmentException, MailSendingException {
+        Appointment appointment;
+        try {
+            appointment = appointmentFacade.find(id);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        mailProvider.sendAppointmentConfirmationReminderMail(appointment.getPatient().getEmail(), appointment.getPatient().getLanguage());
+        appointment.setReminderMailSent(true);
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
+    }
 }

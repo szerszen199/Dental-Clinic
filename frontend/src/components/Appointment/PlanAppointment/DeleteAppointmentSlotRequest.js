@@ -1,8 +1,6 @@
 import Cookies from "js-cookie";
 import axios from "axios";
-import successAlerts from "../../Alerts/SuccessAlerts/SuccessAlerts";
 import errorAlerts from "../../Alerts/ErrorAlerts/ErrorAlerts";
-import {FiRefreshCw} from "react-icons/fi";
 import React from "react";
 import successAlertsWithRefresh from "../../Alerts/SuccessAlerts/SuccessAlertsWithRefresh";
 
