@@ -6,6 +6,7 @@ import {makeMyAppointmentsListRequest} from "./MyAppointmentsRequest";
 import {FiRefreshCw} from "react-icons/fi";
 import edit from "../../../assets/edit.png";
 import BootstrapTable from "react-bootstrap-table-next";
+import {Link} from "react-router-dom";
 
 class MyAppointmentsWithoutTranslation extends React.Component {
 
@@ -39,11 +40,12 @@ class MyAppointmentsWithoutTranslation extends React.Component {
 
     linkEdit = (cell, row, rowIndex, formatExtraData) => {
         return (
-            <Button variant="outline-secondary">
-                <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}
-                    // onClick={this.edit(this.state.documentation[rowIndex].id)}
-                />
-            </Button>
+            <Link to={"/edit-appointment/" + this.state.appointments[rowIndex].id}>
+                <Button variant="outline-secondary">
+                    <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}
+                    />
+                </Button>
+            </Link>
         );
     }
 
