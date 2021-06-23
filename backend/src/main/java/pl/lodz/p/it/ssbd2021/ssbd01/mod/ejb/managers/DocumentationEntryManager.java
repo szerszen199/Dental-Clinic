@@ -32,6 +32,15 @@ public interface DocumentationEntryManager {
      */
     List<DocumentationEntry> getDocumentationEntriesForUser(String username) throws DocumentationEntryException;
 
+    /**
+     * Pobiera wpis z dokuemtnacji medycznej.
+     *
+     * @param id id dokumentacji.
+     * @return Wpis z dokuemtnacji.
+     * @throws DocumentationEntryException w przypadku błędu.
+     */
+    public DocumentationEntry getDocumentationEntry(Long id) throws DocumentationEntryException;
+
 
     /**
      * Sprawdza czy ostatnia transakcja się powiodła.
