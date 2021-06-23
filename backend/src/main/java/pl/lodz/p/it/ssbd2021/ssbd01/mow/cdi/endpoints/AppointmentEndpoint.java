@@ -23,6 +23,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
@@ -166,34 +167,6 @@ public class AppointmentEndpoint {
         return Response.ok().entity(new MessageResponseDto(I18n.APPOINTMENT_SLOT_CREATED_SUCCESSFULLY)).build();
     }
 
-    /**
-     * Edytuje wizytę.
-     *
-     * @param appointmentSlotEditRequestDto dane potrzebne do edycji terminu wizyty
-     * @param header                    nagłówek If-Match z podpisem obiektu
-     * @return 400 jezeli się nie powiodło 200 jeżeli się powiodło
-     */
-    @PUT
-    @RolesAllowed({I18n.RECEPTIONIST})
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @SignatureFilterBinding
-    @Path("edit-slot")
-    public Response editAppointment(@NotNull @Valid AppointmentSlotEditRequestDTO appointmentSlotEditRequestDto,
-                                    @HeaderParam("If-Match") String header) {
-        if (!signer.verifyEntityIntegrity(header, appointmentSlotEditRequestDto)) {
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(DATABASE_OPTIMISTIC_LOCK_ERROR)).build();
-        }
-        try {
-            appointmentTransactionRepeater.repeatTransaction(
-                    () -> appointmentManager.editAppointmentSlot(appointmentSlotEditRequestDto));
-        } catch (AppointmentException e) {
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
-        } catch (Exception e) {
-            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.APPOINTMENT_SLOT_EDIT_FAILED)).build();
-        }
-        return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_SLOT_EDITED_SUCCESSFULLY)).build();
-    }
 
     /**
      * Pobiera listę aktywnych pacjentów.
@@ -244,6 +217,34 @@ public class AppointmentEndpoint {
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_EDIT_SUCCESSFUL)).build();
     }
 
+    /**
+     * Edytuje wizytę.
+     *
+     * @param appointmentSlotEditRequestDto dane potrzebne do edycji terminu wizyty
+     * @param header                        nagłówek If-Match z podpisem obiektu
+     * @return 400 jezeli się nie powiodło 200 jeżeli się powiodło
+     */
+    @PUT
+    @RolesAllowed({I18n.RECEPTIONIST})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @SignatureFilterBinding
+    @Path("edit-slot")
+    public Response editAppointment(@NotNull @Valid AppointmentSlotEditRequestDTO appointmentSlotEditRequestDto,
+                                    @HeaderParam("If-Match") String header) {
+        if (!signer.verifyEntityIntegrity(header, appointmentSlotEditRequestDto)) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(DATABASE_OPTIMISTIC_LOCK_ERROR)).build();
+        }
+        try {
+            appointmentTransactionRepeater.repeatTransaction(
+                    () -> appointmentManager.editAppointmentSlot(appointmentSlotEditRequestDto));
+        } catch (AppointmentException e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.APPOINTMENT_SLOT_EDIT_FAILED)).build();
+        }
+        return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_SLOT_EDITED_SUCCESSFULLY)).build();
+    }
 
     /**
      * Pobiera listę wszystkich wolnych przyszłych terminów wizyt.
