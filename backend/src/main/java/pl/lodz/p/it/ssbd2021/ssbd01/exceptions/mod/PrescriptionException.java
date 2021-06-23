@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mod;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
 
 import javax.ejb.ApplicationException;
 
@@ -91,5 +92,14 @@ public class PrescriptionException extends AppBaseException {
      */
     public static AppBaseException invalidDateException() {
         return new PrescriptionException(I18n.INVALID_DATE_PRESCRIPTION);
+    }
+
+    /**
+     * Wyjątek w przypadku przedawnoinej recepty.
+     *
+     * @return wyjątek PrescriptionException
+     */
+    public static PrescriptionException prescriptionExpired() {
+        return new PrescriptionException(I18n.PRESCRIPTION_EXPIRED);
     }
 }
