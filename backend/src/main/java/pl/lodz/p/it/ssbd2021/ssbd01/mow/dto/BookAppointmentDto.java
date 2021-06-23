@@ -27,6 +27,9 @@ public class BookAppointmentDto {
         this.patientLogin = patientLogin;
     }
 
+    /**
+     * Tworzy instancję Book appointment dto.
+     */
     public BookAppointmentDto() {
     }
 

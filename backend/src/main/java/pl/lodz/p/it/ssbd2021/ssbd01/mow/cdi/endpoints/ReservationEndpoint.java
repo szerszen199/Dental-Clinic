@@ -43,7 +43,7 @@ public class ReservationEndpoint {
     EntityIdentitySignerVerifier signer;
 
     /**
-     * Reserve appointment response.
+     * Rezerwuje wizytę (klient dla siebie).
      *
      * @param bookAppointmentSelfDto the book appointment self dto
      * @param header                 the header
@@ -63,6 +63,12 @@ public class ReservationEndpoint {
         return Response.ok().entity(new MessageResponseDto(I18n.APPOINTMENT_RESERVED_SUCCESSFULLY)).build();
     }
 
+    /**
+     * Rezerwuje wizytę.
+     *
+     * @param bookAppointmentDto the book appointment dto
+     * @return the response
+     */
     @PUT
     @Path("reserve")
     @Consumes(MediaType.APPLICATION_JSON)

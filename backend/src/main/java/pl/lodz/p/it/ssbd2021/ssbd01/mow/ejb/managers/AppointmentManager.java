@@ -40,6 +40,7 @@ public interface AppointmentManager {
      * @throws AppBaseException the app base exception
      */
     void bookAppointment(BookAppointmentDto bookAppointmentDto) throws AppBaseException;
+
     /**
      * Anuluje umówioną wizytę.
      *

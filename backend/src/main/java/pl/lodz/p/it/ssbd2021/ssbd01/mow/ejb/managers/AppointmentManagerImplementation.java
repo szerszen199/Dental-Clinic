@@ -80,9 +80,6 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         } catch (Exception e) {
             throw AccountException.noSuchAccount(e);
         }
-//        if (!editDocumentationEntryRequestDTO.getVersion().equals(documentationEntry.getVersion())) {
-//            throw DocumentationEntryException.versionMismatchException();
-//        }
 
         appointment.setPatient(account);
         appointment.setModifiedBy(account);
