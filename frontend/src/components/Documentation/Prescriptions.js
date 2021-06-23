@@ -9,6 +9,8 @@ import errorAlerts from "../Alerts/ErrorAlerts/ErrorAlerts";
 import BootstrapTable from "react-bootstrap-table-next";
 import {FiRefreshCw} from "react-icons/fi";
 import {PrescriptionEntry} from "./PrescriptionEntry";
+import {Link} from "react-router-dom";
+import edit from "../../assets/edit.png";
 
 
 class PrescriptionsListWithoutTranslation extends React.Component {
@@ -75,6 +77,17 @@ class PrescriptionsListWithoutTranslation extends React.Component {
         });
     }
 
+    linkEdit = (cell, row, rowIndex, formatExtraData) => {
+        return (
+            <Link to={"/edit-prescription/" + this.state.prescriptions[rowIndex].id}>
+                <Button variant="outline-secondary">
+                    <img src={edit} alt="Edit" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}
+                    />
+                </Button>
+            </Link>
+        );
+    }
+
     renderDocumentation() {
         const {t} = this.props;
         const columns = [
@@ -108,6 +121,13 @@ class PrescriptionsListWithoutTranslation extends React.Component {
                 text: t('medications'),
                 style: {verticalAlign: "middle"}
             },
+            {
+                dataField: 'actions',
+                text: t('edit'),
+                headerStyle: {verticalAlign: "middle"},
+                style: {textAlign: "center"},
+                formatter: this.linkEdit
+            }
         ]
 
         return <BootstrapTable striped keyField='id' columns={columns} data={this.state.prescriptions}/>;
