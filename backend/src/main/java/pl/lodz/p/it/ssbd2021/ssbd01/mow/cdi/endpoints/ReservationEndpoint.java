@@ -60,7 +60,7 @@ public class ReservationEndpoint {
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_CREATED_UNSUCCESSFULLY)).build();
         }
-        return Response.ok().entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_CREATED_SUCCESSFULLY)).build();
+        return Response.ok().entity(new MessageResponseDto(I18n.APPOINTMENT_RESERVED_SUCCESSFULLY)).build();
     }
 
     @PUT
@@ -74,6 +74,6 @@ public class ReservationEndpoint {
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_CREATED_UNSUCCESSFULLY)).build();
         }
-        return Response.ok().entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_CREATED_SUCCESSFULLY)).build();
+        return Response.ok().entity(new MessageResponseDto(I18n.APPOINTMENT_RESERVED_SUCCESSFULLY)).build();
     }
 }
