@@ -207,6 +207,8 @@ public class I18n {
     public static final String APPOINTMENT_CANCELED_NULL = "appointment_canceled_null";
     public static final String DOCTOR_LOGIN_NULL = "doctor_login_null";
 
+    public static final String PRESCRIPTION_GET_INFO_FAILED = "prescription_get_info_failed";
 
-
+    public static final String PRESCRIPTION_DATE_NULL = "prescription_date_null";
+    public static final String PRESCRIPTION_DATE_FUTURE = "prescription_date_future";
 }
