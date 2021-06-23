@@ -1,0 +1,15 @@
+@media all and (min-width: 480px) {
+    .EditBookedAppointment {
+        padding: 60px 0;
+    }
+
+    .EditBookedAppointment form {
+        margin: 0 auto;
+        max-width: 320px;
+    }
+
+    .EditBookedAppointmentRefreshButton {
+        text-align: end;
+    }
+
+}
