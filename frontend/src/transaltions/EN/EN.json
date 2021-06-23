@@ -282,5 +282,5 @@
   "patient_id_null": "Patient's Id can't be null",
   "expiration_date_null": "Expiration date can't be null",
   "medications_null": "Medications can't be null",
-  "documentation_id_null": "Documentation id can't be null",
+  "documentation_id_null": "Documentation id can't be null"
 }
