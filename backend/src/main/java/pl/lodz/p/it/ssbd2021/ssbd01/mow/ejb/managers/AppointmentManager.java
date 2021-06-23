@@ -1,10 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers;
 
-import java.util.List;
-import javax.ejb.Local;
-
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
-import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
@@ -14,6 +10,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.AppointmentEditRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 
+import javax.ejb.Local;
+import java.util.List;
 
 
 /**
@@ -96,7 +94,7 @@ public interface AppointmentManager {
      * Dodaje slot na wizytę.
      *
      * @param appointment wolna wizyta
-     * @throws AccountException wyjątek typu AccountException
+     * @throws AccountException     wyjątek typu AccountException
      * @throws AppointmentException wyjątek typu AppointmentException
      */
     void addAppointmentSlot(Appointment appointment) throws AccountException, AppointmentException;
@@ -105,7 +103,7 @@ public interface AppointmentManager {
      * Modyfikuje umówioną wizyty.
      *
      * @param appointment wolna wizyta
-     * @throws AppointmentException  wyjątek appointmentException
+     * @throws AppointmentException wyjątek appointmentException
      */
     void editBookedAppointment(AppointmentEditRequestDto appointment) throws AppointmentException;
 
@@ -120,6 +118,8 @@ public interface AppointmentManager {
      * Potwierdza umówioną wizytę.
      *
      * @param id klucz główny wizyty
+     * @throws AppointmentException wyjątek sygnalizująvy błąd operacji na wizycie.
+     * @throws MailSendingException wyjątek sygnalizująvy błąd wysyłania maila.
      */
     void confirmBookedAppointment(Long id) throws AppointmentException, MailSendingException;
 

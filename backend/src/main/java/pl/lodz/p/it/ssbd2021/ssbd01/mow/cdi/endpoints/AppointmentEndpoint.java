@@ -1,25 +1,5 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.cdi.endpoints;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.annotation.security.DenyAll;
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.EJBTransactionRolledbackException;
-import javax.ejb.Stateful;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.MailSendingException;
@@ -60,6 +40,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -295,6 +276,12 @@ public class AppointmentEndpoint {
         return Response.ok().entity(allScheduledAppointmentsResponseDTO).build();
     }
 
+    /**
+     * Potwierdza wizytę.
+     *
+     * @param id id wizyty która ma zostać potwierdzona.
+     * @return status powodzenia operacji.
+     */
     @GET
     @RolesAllowed({I18n.PATIENT, I18n.RECEPTIONIST})
     @Produces(MediaType.APPLICATION_JSON)
