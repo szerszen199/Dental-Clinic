@@ -9,6 +9,11 @@ public class BookAppointmentSelfDto {
     @NotNull(message = I18n.APPOINTMENT_ID_NULL)
     private Long appointmentId;
 
+    /**
+     * Tworzy instancję new Book appointment self dto.
+     *
+     * @param appointmentId the appointment id
+     */
     public BookAppointmentSelfDto(long appointmentId) {
         this.appointmentId = appointmentId;
     }
@@ -21,6 +26,9 @@ public class BookAppointmentSelfDto {
         this.appointmentId = appointmentId;
     }
 
+    /**
+     * Tworzy instancję a new Book appointment self dto.
+     */
     public BookAppointmentSelfDto() {
     }
 
