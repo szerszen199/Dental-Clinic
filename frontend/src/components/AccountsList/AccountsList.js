@@ -26,7 +26,8 @@ class AccountsListWithoutTranslation extends React.Component {
     }
 
     makeGetAccountsRequest() {
-        makeAccountsListRequest().then((response) => {
+        const {t} = this.props;
+        makeAccountsListRequest(t).then((response) => {
             this.unFilteredList = response
             this.setState({accountsList: this.unFilteredList})
         })
@@ -91,12 +92,7 @@ class AccountsListWithoutTranslation extends React.Component {
             </Link>
         );
     }
-
-    renderNull() {
-        const {t} = this.props;
-        return <div>{t('Loading')}</div>
-    }
-
+    
     renderButton() {
         let self = this;
         return <Button variant={"secondary"} onClick={() => {
@@ -119,7 +115,7 @@ class AccountsListWithoutTranslation extends React.Component {
             <div className="AccountListGroup">
                 <Input list='options' id="ListFilter" onChange={e => this.filterList(e.target.value)}
                        placeholder={t("Filter")}/>
-                {!this.state.accountsList.length ? this.renderNull() : this.renderAccounts()}
+                {this.renderAccounts()}
             </div>
         </Fragment>
     }
