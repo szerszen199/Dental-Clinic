@@ -428,6 +428,12 @@ public class AppointmentEndpoint {
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_RATED_SUCCESSFULLY)).build();
     }
 
+    /**
+     * Odwołanie wizyty przez recepcjonistę.
+     *
+     * @param id the id
+     * @return the response
+     */
     @PUT
     @RolesAllowed(I18n.RECEPTIONIST)
     @Produces(MediaType.APPLICATION_JSON)
@@ -443,6 +449,12 @@ public class AppointmentEndpoint {
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_CANCELED_SUCCESSFULLY)).build();
     }
 
+    /**
+     * Odwołanie wizyty przez recepcjonistę.
+     *
+     * @param id the id
+     * @return the response
+     */
     @PUT
     @RolesAllowed(I18n.PATIENT)
     @Produces(MediaType.APPLICATION_JSON)
@@ -452,7 +464,7 @@ public class AppointmentEndpoint {
             appointmentManager.cancelBookedAppointmentPatient(id);
         } catch (AppointmentException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
-        }catch (Exception e) {
+        } catch (Exception e) {
             return Response.status(Status.BAD_REQUEST).entity(I18n.APPOINTMENT_CANCELLATION_FAILED).build();
         }
         return Response.status(Status.OK).entity(new MessageResponseDto(I18n.APPOINTMENT_CANCELED_SUCCESSFULLY)).build();

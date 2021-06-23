@@ -78,8 +78,32 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         throw new NotImplementedException();
     }
 
+    @PermitAll
     @Override
-    public void cancelBookedAppointment(Long id) throws AppointmentException{
+    public void cancelBookedAppointmentScheduler(Long id) throws AppointmentException {
+        Appointment appointment;
+        try {
+            appointment = appointmentFacade.find(id);
+            if (appointment == null) {
+                throw AppointmentException.appointmentNotFound();
+            }
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        appointment.setCanceled(true);
+        appointment.setCancellationDateTime(LocalDateTime.now());
+        appointment.setCanceledBy(null);
+        appointment.setModifiedBy(null);
+        appointment.setModifiedByIp(null);
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (Exception e) {
+            throw AppointmentException.appointmentEditFailed();
+        }
+    }
+
+    @Override
+    public void cancelBookedAppointment(Long id) throws AppointmentException {
         Account account;
         try {
             account = accountFacade.findByLogin(loggedInAccountUtil.getLoggedInAccountLogin());
@@ -89,7 +113,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         Appointment appointment;
         try {
             appointment = appointmentFacade.find(id);
-            if(appointment == null){
+            if (appointment == null) {
                 throw AppointmentException.appointmentNotFound();
             }
         } catch (AppBaseException e) {
@@ -118,13 +142,13 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         Appointment appointment;
         try {
             appointment = appointmentFacade.find(id);
-            if(appointment == null){
+            if (appointment == null) {
                 throw AppointmentException.appointmentNotFound();
             }
         } catch (AppBaseException e) {
             throw AppointmentException.appointmentNotFound();
         }
-        if(!appointment.getPatient().equals(account)){
+        if (!appointment.getPatient().equals(account)) {
             throw AppointmentException.appointmentNotBelongingToPatient();
         }
         appointment.setCanceled(true);
