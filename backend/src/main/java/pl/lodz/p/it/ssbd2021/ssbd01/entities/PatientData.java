@@ -3,10 +3,8 @@ package pl.lodz.p.it.ssbd2021.ssbd01.entities;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 import java.io.Serializable;
 
 

@@ -49,7 +49,7 @@ public class UnconfirmedAppointmentScheduler {
         List<Appointment> appointments = appointmentManager.getScheduledAppointments();
         for (Appointment appointment : appointments) {
             if (!appointment.getCanceled() && appointment.getPatient() != null && !appointment.getConfirmed() && appointment.getAppointmentDate().minusDays(1).isBefore(LocalDateTime.now())) {
-                appointmentManager.cancelBookedAppointment(appointment.getId());
+                appointmentManager.cancelBookedAppointmentScheduler(appointment.getId());
                 //TODO: Upewnić się że działa poprawnie po implementacji metody w appointmentManagerze.
             }
         }
@@ -62,7 +62,7 @@ public class UnconfirmedAppointmentScheduler {
      * @throws AppointmentException błąd operacji na wizytach.
      * @throws MailSendingException błąd wysyłania wiadomości.
      */
-    @Schedule(hour = "*", minute = "1", second = "1", info = "Every hour timer")
+    @Schedule(hour = "*", minute = "*", second = "1", info = "Every hour timer")
     public void sendAppointmentRating() throws AppointmentException, MailSendingException {
         List<Appointment> appointments = appointmentManager.getScheduledAppointments();
         for (Appointment appointment : appointments) {

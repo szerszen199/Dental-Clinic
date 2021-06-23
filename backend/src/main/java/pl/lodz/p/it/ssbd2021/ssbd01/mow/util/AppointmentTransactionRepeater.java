@@ -1,11 +1,12 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.util;
 
-import javax.ejb.EJBTransactionRolledbackException;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers.AppointmentManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
+
+import javax.ejb.EJBTransactionRolledbackException;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 /**
  * Typ AppointmentTransactionRepeater - klasa realizująca mechanizm powtarzania transakcji.

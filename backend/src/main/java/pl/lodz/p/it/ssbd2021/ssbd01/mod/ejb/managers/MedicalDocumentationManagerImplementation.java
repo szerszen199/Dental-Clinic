@@ -6,7 +6,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Account;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation;
-import pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData;
 import pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.EncryptionException;
@@ -32,7 +31,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -57,9 +55,6 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
 
     @Inject
     private MedicalDocumentationFacade documentationFacade;
-
-    @Inject
-    private PrescriptionFacade prescriptionFacade;
 
     @Inject
     private PropertiesLoader propertiesLoader;
@@ -175,30 +170,5 @@ public class MedicalDocumentationManagerImplementation extends AbstractManager i
         } catch (AppBaseException e) {
             throw MedicalDocumentationException.noSuchMedicalDocumentation(e);
         }
-    }
-
-    @Override
-    public void addPrescription(Long patientId, Prescription prescription) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void editPrescription(Prescription prescription) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void removePrescription(Long id) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Prescription getPrescription(Long id) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public List<Prescription> getPrescriptionsByPatient(Long patientId) {
-        throw new NotImplementedException();
     }
 }

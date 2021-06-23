@@ -70,7 +70,7 @@ class EditDocumentationEntryWithoutTranslation extends React.Component {
 
         axios(config)
             .then((response) => {
-                successAlertsWithRedirect(t(response.data.message), response.status.toString(), "/account-documentation/" + self.state.accId).then(() => {
+                successAlertsWithRedirect(t(response.data.message), response.status.toString(), "#/account-documentation/" + self.state.accId).then(() => {
                 })
             })
             .catch((response) => {

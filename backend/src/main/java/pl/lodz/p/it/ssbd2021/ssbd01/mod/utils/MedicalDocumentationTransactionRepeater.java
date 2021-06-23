@@ -1,11 +1,10 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mod.utils;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.ejb.managers.MedicalDocumentationManager;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
-
-import javax.ejb.Stateless;
-import javax.inject.Inject;
 
 /**
  * Typ Medical documentation transaction repeater.
@@ -22,7 +21,7 @@ public class MedicalDocumentationTransactionRepeater {
     /**
      * Powtórzenie transakcji.
      *
-     * @param repeatable                  implementacja interfejsu {@link Repeatable}
+     * @param repeatable implementacja interfejsu {@link Repeatable}
      * @throws Exception exception w przypadku niepowodzenia
      */
     public void repeatTransaction(Repeatable repeatable) throws Exception {

@@ -7,6 +7,8 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mok.AccountException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.AppointmentException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.DoctorRatingException;
 import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentDto;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentSelfDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentEditRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.CreateAppointmentSlotRequestDTO;
@@ -26,17 +28,26 @@ public interface AppointmentManager {
     /**
      * Dodaje rezerwację do podanej wizyty.
      *
-     * @param appointmentId klucz główny wizyty
-     * @param login         login pacjenta
+     * @param bookAppointmentSelfDto the book appointment self dto
+     * @throws AppBaseException the app base exception
      */
-    void bookAppointment(Long appointmentId, String login);
+    void bookAppointmentSelf(BookAppointmentSelfDto bookAppointmentSelfDto) throws AppBaseException;
+
+    /**
+     * Book appointment.
+     *
+     * @param bookAppointmentDto the book appointment dto
+     * @throws AppBaseException the app base exception
+     */
+    void bookAppointment(BookAppointmentDto bookAppointmentDto) throws AppBaseException;
 
     /**
      * Anuluje umówioną wizytę.
      *
      * @param id klucz główny wizyty
+     * @throws AppointmentException the appointment exception
      */
-    void cancelBookedAppointment(Long id);
+    void cancelBookedAppointment(Long id) throws AppointmentException;
 
     /**
      * Modyfikuje slot wizyty.
@@ -53,6 +64,15 @@ public interface AppointmentManager {
      * @return wolne nadchodzące wizyty
      */
     List<Appointment> getAppointmentSlotsSinceNow();
+
+
+    /**
+     * Odwolanie wizyty przez scheduler.
+     *
+     * @param id the id
+     * @throws AppointmentException the appointment exception
+     */
+    void cancelBookedAppointmentScheduler(Long id) throws AppointmentException;
 
     /**
      * Pobiera wszystkie umówione wizyty.
@@ -92,9 +112,10 @@ public interface AppointmentManager {
      *
      * @param doctorId klucz główny lekarza
      * @param rate     ocena
+     * @param token    token
      * @throws AppointmentException wyjątek typu AppointmentException
      */
-    void rateAppointment(Long doctorId, BigDecimal rate) throws AppointmentException;
+    void rateAppointment(String token, Long doctorId, BigDecimal rate) throws AppointmentException;
 
     /**
      * Pobiera wszystkich lekarzy i ich oceny.
@@ -195,4 +216,13 @@ public interface AppointmentManager {
      * @return true jeśli ostatnia transakcja się nie powiodła, false w przeciwnym wypadku.
      */
     boolean isLastTransactionRollback();
+
+    /**
+     * Odwołanie wizyty przez pacjenta.
+     *
+     * @param id the id
+     * @throws AppointmentException the appointment exception
+     */
+    void cancelBookedAppointmentPatient(Long id) throws AppointmentException;
+
 }
