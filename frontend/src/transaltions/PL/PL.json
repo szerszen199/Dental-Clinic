@@ -282,5 +282,17 @@
   "patient_id_null": "Id pacjenta nie może być puste",
   "expiration_date_null": "Data wygaśnięcia nie może być pusta",
   "medications_null": "Zapisane lekarstwa nie mogą być puste",
-  "documentation_id_null": "Id dokumentacji nie może być puste"
+  "documentation_id_null": "Id dokumentacji nie może być puste",
+
+  "doctor_rating_failed":"Błąd oceniania doktora",
+  "appointment_already_rated":"Wizyta już oceniona",
+  "invalid_token":"Nieprawidłowy token",
+  "invalid_rating_score":"Nieprawidłowy wynik oceniania",
+"appointment_not_finished":"Wizyta nie została zakończona",
+"appointment_confirmed_successfully":"Wizyta potwierdzona pomyślnie",
+  "mail_failed": "Nie udało się wysłać maila",
+  "appointment_canceled": "Wizyta odwołana",
+  "appointment_already_confirmed": "Wizyta już potwierdzona",
+  "appointment_not_belonging_to_patient": "Wizyta nie należy do pacjenta"
+
 }
