@@ -3,9 +3,13 @@ import "../PlanAppointment.css";
 import BootstrapTable from "react-bootstrap-table-next";
 import {makeAppointmentSlotsListRequest} from "../AppointmentSlotsListRequest";
 import {withTranslation} from "react-i18next";
-import {Button} from "react-bootstrap";
-import edit from "../../../../assets/edit.png";
 import {Link} from "react-router-dom";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from '@material-ui/icons/Edit';
+import Button from "@material-ui/core/Button";
+import {ButtonGroup} from "@material-ui/core";
+import {deleteAppointmentSlotRequest} from "../DeleteAppointmentSlotRequest";
+import confirmationAlerts from "../../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
 
 class PlanReceptionistAppointmentWithoutTr extends React.Component {
     constructor(props) {
@@ -30,10 +34,9 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
     renderNull() {
         const {t} = this.props;
         return <div>{t('Loading')}</div>
-
     }
 
-    renderAppointments(){
+    renderAppointments() {
         const {t} = this.props;
         const columns = [
             {
@@ -75,16 +78,40 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
             onlyOneExpanding: true,
             renderer: row => (
                 <div>
-                    <p>{ `Tu moze isc przycisk edycji/wyboru/idk, kolumna  ${row.doctor}` }</p>
-                    <Link to={"/appointment-slot/" + row.id}>
-                        {t("Edit")}
-                    </Link>
-                    <p>expandRow.renderer callback will pass the origin row object to you</p>
+                    <ButtonGroup style={{marginLeft: 10}}>
+                        <Button
+                            size={"small"}
+                            variant="contained"
+                            startIcon={<EditIcon/>}>
+                            <Link to={"/appointment-slot/" + row.id}>
+                                {t("Edit")}
+                            </Link>
+                        </Button>
+                        <Button
+                            size={"small"}
+                            variant="contained"
+                            color="secondary"
+                            startIcon={<DeleteIcon/>}
+                            onClick={() => {
+                                this.handleDeleteButtonClick(row.id, t('Warning'), t('Question delete appointment slot'), t)
+                            }}>
+                            {t('delete')}
+                        </Button>
+                    </ButtonGroup>
                 </div>
             )
         };
 
-        return <BootstrapTable striped keyField='id' columns={columns} data={this.state.appointmentsList} selectRow={ selectRow }   expandRow={ expandRow } />;
+        return <BootstrapTable striped keyField='id' columns={columns} data={this.state.appointmentsList}
+                               selectRow={selectRow} expandRow={expandRow}/>;
+    }
+
+    handleDeleteButtonClick(id, title, question, t) {
+            confirmationAlerts(title, question).then((confirmed) => {
+                if (confirmed) {
+                    deleteAppointmentSlotRequest(id, t);
+                }
+            });
     }
 
     render() {
@@ -96,9 +123,9 @@ class PlanReceptionistAppointmentWithoutTr extends React.Component {
     }
 }
 
-const AppointmentWithTranslation =  withTranslation()(PlanReceptionistAppointmentWithoutTr);
+const AppointmentWithTranslation = withTranslation()(PlanReceptionistAppointmentWithoutTr);
 
-export default function PlanReceptionistAppointment(){
+export default function PlanReceptionistAppointment() {
     return (
         <Suspense fallback="loading">
             <AppointmentWithTranslation/>

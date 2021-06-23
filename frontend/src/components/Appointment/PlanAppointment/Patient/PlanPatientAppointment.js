@@ -1,8 +1,6 @@
 import React, {Suspense} from "react";
 import "../PlanAppointment.css";
-import {Accordion, Button, Card, Col, Container, Row} from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
-import {AppointmentSlot} from "../../AppointmentSlot";
 import {makeAppointmentSlotsListRequest} from "../AppointmentSlotsListRequest";
 import {withTranslation} from "react-i18next";
 

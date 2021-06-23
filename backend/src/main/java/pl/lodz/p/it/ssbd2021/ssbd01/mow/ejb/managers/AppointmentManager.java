@@ -10,12 +10,12 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.mow.PatientException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentEditRequestDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.AppointmentSlotEditRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.request.CreateAppointmentSlotRequestDTO;
+import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.AllScheduledAppointmentsResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.DoctorAndRateResponseDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.response.PatientResponseDTO;
 
 import javax.ejb.Local;
 import java.util.List;
-
 
 /**
  * Interfejs menadżera wizyt.
@@ -124,8 +124,9 @@ public interface AppointmentManager {
      * Usuwa slot wizyty.
      *
      * @param id klucz główny wolnej wizyty
+     * @throws AppBaseException bazowy wyjątek aplikacji.
      */
-    void removeAppointmentSlot(Long id);
+    void deleteAppointmentSlot(Long id) throws AppBaseException;
 
     /**
      * Potwierdza własną umówioną wizytę.
@@ -154,13 +155,6 @@ public interface AppointmentManager {
     List<PatientResponseDTO> getActivePatients() throws PatientException;
 
     /**
-     * Sprawdza czy ostatnia transakcja się powiodła.
-     *
-     * @return true jeśli ostatnia transakcja się nie powiodła, false jeśli nie.
-     */
-    boolean isLastTransactionRollback();
-
-    /**
      * Pobiera wszystkie dostępne terminy wizyty.
      *
      * @return dostępne terminy wizyt.
@@ -184,4 +178,11 @@ public interface AppointmentManager {
      * @throws MailSendingException wyjątek sygnalizująvy błąd wysyłania maila.
      */
     void sendAppointmentReminder(Long id) throws AppointmentException, MailSendingException;
+
+    /**
+     * Sprawdza czy ostatnia transakcja się powiodła.
+     *
+     * @return true jeśli ostatnia transakcja się nie powiodła, false w przeciwnym wypadku.
+     */
+    boolean isLastTransactionRollback();
 }

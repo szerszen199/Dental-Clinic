@@ -43,7 +43,6 @@ public abstract class AbstractFacade<T> {
         } catch (OptimisticLockException e) {
             throw AppBaseException.optimisticLockError(e);
         }
-
     }
 
     /**
@@ -67,10 +66,17 @@ public abstract class AbstractFacade<T> {
      * Usuwa encję z bazy danych.
      *
      * @param entity obiekt encji.
+     * @throws AppBaseException - wyjątek typu AppBaseException
      */
-    public void remove(T entity) {
-        getEntityManager().remove(getEntityManager().merge(entity));
-        getEntityManager().flush();
+    public void remove(T entity) throws AppBaseException {
+        try {
+            getEntityManager().remove(getEntityManager().merge(entity));
+            getEntityManager().flush();
+        } catch (IllegalArgumentException e) {
+            throw AppBaseException.mismatchedPersistenceArguments(e);
+        } catch (PersistenceException e) {
+            throw AppBaseException.databaseError(e);
+        }
     }
 
     /**

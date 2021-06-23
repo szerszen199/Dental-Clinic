@@ -5,10 +5,10 @@ import {withTranslation} from "react-i18next";
 import BootstrapTable from 'react-bootstrap-table-next';
 import {Button} from "react-bootstrap";
 import {Link} from "react-router-dom";
-import {FiRefreshCw} from "react-icons/fi";
 import edit from "../../assets/edit.png";
 import {Input} from "semantic-ui-react";
 import {Fragment} from "react";
+import {FiRefreshCw} from "react-icons/fi";
 
 class AccountsListWithoutTranslation extends React.Component {
 

@@ -8,7 +8,6 @@ import "./Common.css"
 import Cookies from "js-cookie";
 import {jwtCookieExpirationTime} from "../../MainView/MainView";
 import {changeRoleRequest} from "../../../components/Account/Role/ChangeRoleRequest";
-import async from "async";
 
 export default function MyAccount() {
     const {t} = useTranslation();
