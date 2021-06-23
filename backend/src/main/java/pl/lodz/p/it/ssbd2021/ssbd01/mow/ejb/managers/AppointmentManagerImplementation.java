@@ -24,6 +24,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
@@ -84,6 +85,7 @@ public class AppointmentManagerImplementation extends AbstractManager implements
         throw new NotImplementedException();
     }
 
+    @PermitAll
     @Override
     public List<Appointment> getScheduledAppointments() throws AppointmentException {
         try {
@@ -293,6 +295,24 @@ public class AppointmentManagerImplementation extends AbstractManager implements
             return appointmentFacade.findFutureUnassignedAppointmentSlotsForDoctor(account.getId());
         } catch (AppBaseException e) {
             throw AppointmentException.getOwnAppointmentsException();
+        }
+    }
+
+    @PermitAll
+    @Override
+    public void sendAppointmentReminder(Long id) throws AppointmentException, MailSendingException {
+        Appointment appointment;
+        try {
+            appointment = appointmentFacade.find(id);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentNotFound();
+        }
+        mailProvider.sendAppointmentConfirmationReminderMail(appointment.getPatient().getEmail(), appointment.getPatient().getLanguage());
+        appointment.setReminderMailSent(true);
+        try {
+            appointmentFacade.edit(appointment);
+        } catch (AppBaseException e) {
+            throw AppointmentException.appointmentEditFailed();
         }
     }
 }

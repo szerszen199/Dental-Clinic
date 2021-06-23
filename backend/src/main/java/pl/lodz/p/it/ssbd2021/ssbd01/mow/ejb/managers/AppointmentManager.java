@@ -153,4 +153,13 @@ public interface AppointmentManager {
      * @throws AppointmentException wyjątek.
      */
     List<Appointment> getOwnAppointmentsSlots() throws AppointmentException;
+
+    /**
+     * Wysyła przypomnienie o konieczności potwierdzenia wizyty.
+     *
+     * @param id id wizyty dla której należy wysłać przypomnienie
+     * @throws AppointmentException wyjątek sygnalizująvy błąd operacji na wizycie.
+     * @throws MailSendingException wyjątek sygnalizująvy błąd wysyłania maila.
+     */
+    void sendAppointmentReminder(Long id) throws AppointmentException, MailSendingException;
 }

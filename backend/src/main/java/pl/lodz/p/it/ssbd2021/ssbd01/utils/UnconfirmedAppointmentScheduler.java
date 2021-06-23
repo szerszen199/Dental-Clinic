@@ -8,6 +8,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mow.ejb.managers.AppointmentManager;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,7 +16,9 @@ import java.util.List;
 @Singleton
 public class UnconfirmedAppointmentScheduler {
 
+    @Inject
     private AppointmentManager appointmentManager;
+    @Inject
     private MailProvider mailProvider;
 
     /**
@@ -24,12 +27,12 @@ public class UnconfirmedAppointmentScheduler {
      * @throws AppointmentException błąd operacji na wizytach.
      * @throws MailSendingException błąd wysyłania wiadomości.
      */
-    @Schedule(hour = "*", minute = "1", second = "1", info = "Every hour timer")
+    @Schedule(hour = "*", minute = "*", second = "1", info = "Every hour timer")
     public void remindAboutVisitConfirmation() throws AppointmentException, MailSendingException {
         List<Appointment> appointments = appointmentManager.getScheduledAppointments();
         for (Appointment appointment : appointments) {
-            if (!appointment.getCanceled() && appointment.getPatient() != null && !appointment.getConfirmed() && appointment.getAppointmentDate().minusDays(3).isAfter(LocalDateTime.now())) {
-                mailProvider.sendAppointmentConfirmationReminderMail(appointment.getPatient().getEmail(), appointment.getPatient().getLanguage());
+            if (!appointment.getReminderMailSent() && !appointment.getCanceled() && appointment.getPatient() != null && !appointment.getConfirmed() && appointment.getAppointmentDate().minusDays(3).isBefore(LocalDateTime.now())) {
+                appointmentManager.sendAppointmentReminder(appointment.getId());
             }
         }
     }
