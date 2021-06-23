@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.mow.cdi.endpoints;
 
 import pl.lodz.p.it.ssbd2021.ssbd01.common.I18n;
+import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
 import pl.lodz.p.it.ssbd2021.ssbd01.mod.dto.response.MessageResponseDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mow.dto.BookAppointmentSelfDto;
@@ -57,6 +58,8 @@ public class ReservationEndpoint {
     public Response reserveAppointmentSelf(@NotNull @Valid BookAppointmentSelfDto bookAppointmentSelfDto, @HeaderParam("If-Match") String header) {
         try {
             appointmentManagerImplementation.bookAppointmentSelf(bookAppointmentSelfDto);
+        } catch (AppBaseException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_CREATED_UNSUCCESSFULLY)).build();
         }
@@ -77,6 +80,8 @@ public class ReservationEndpoint {
     public Response reserveAppointment(@NotNull @Valid BookAppointmentDto bookAppointmentDto) {
         try {
             appointmentManagerImplementation.bookAppointment(bookAppointmentDto);
+        } catch (AppBaseException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(e.getMessage())).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new MessageResponseDto(I18n.DOCUMENTATION_ENTRY_CREATED_UNSUCCESSFULLY)).build();
         }
