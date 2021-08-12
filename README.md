@@ -20,7 +20,7 @@ The repository contains a fullstack Java/JS web application that is intended to 
 
 <p align="center">
     <a href="https://www.youtube.com/watch?v=UQWVD_xorck">
-    Applicaiton Showcase :poland:
+    Application Showcase :poland:
     </a>
 </p>
 <p align="center">
