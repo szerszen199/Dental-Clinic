@@ -19,19 +19,17 @@
 The repository contains a fullstack Java/JS web application that is intended to be used by a dental clinic. 
 
 <p align="center">
-  <img src="https://github.com/ZdrzalikPrzemyslaw/Dental-Clinic/blob/master/.github/Frontpage.png" />
-  </br>
-  Landing page
-  <img src="https://github.com/ZdrzalikPrzemyslaw/Dental-Clinic/blob/master/.github/LoggedInFrontpage.png" />
-  </br>
-  Logged in front page
-  <img src="https://github.com/ZdrzalikPrzemyslaw/Dental-Clinic/blob/master/.github/UsersList.png" />
-  </br>
-  Users' list
-  <a href="https://www.youtube.com/watch?v=UQWVD_xorck">
-  </br>
-  Applicaiton Showcase :poland:
-  </a>
+    <a href="https://www.youtube.com/watch?v=UQWVD_xorck">
+    Applicaiton Showcase :poland:
+    </a>
+    </br>
+    <img src="https://github.com/ZdrzalikPrzemyslaw/Dental-Clinic/blob/master/.github/Frontpage.png" />
+    </br>
+    Landing page
+    <img src="https://github.com/ZdrzalikPrzemyslaw/Dental-Clinic/blob/master/.github/LoggedInFrontpage.png" />
+    </br>
+    Logged in front page
+    <img src="https://github.com/ZdrzalikPrzemyslaw/Dental-Clinic/blob/master/.github/UsersList.png" />
 </p>
 
 ## 🔑 Prerequisites <a name = "prerequisites"></a>
