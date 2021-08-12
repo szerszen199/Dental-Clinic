@@ -58,6 +58,8 @@ You will also need to edit the JDBCConfig.java file found in the config package 
         isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 ```
 
+Use the sql scripts found in resources/META-INF/sql to populate your database with sample data.
+
 ## ⛏️ Built Using <a name = "built_using"></a>
 
 - [Java](www.java.com)
