@@ -20,12 +20,16 @@ The repository contains a fullstack Java/JS web application that is intended to 
 
 <p align="center">
   <img src="https://github.com/ZdrzalikPrzemyslaw/Dental-Clinic/blob/master/.github/Frontpage.png" />
-  <div>Landing page</div>
+  </br>
+  Landing page
   <img src="https://github.com/ZdrzalikPrzemyslaw/Dental-Clinic/blob/master/.github/LoggedInFrontpage.png" />
-  <div>Logged in front page</div>
+  </br>
+  Logged in front page
   <img src="https://github.com/ZdrzalikPrzemyslaw/Dental-Clinic/blob/master/.github/UsersList.png" />
-  <div>Users' list</div>
+  </br>
+  Users' list
   <a href="https://www.youtube.com/watch?v=UQWVD_xorck">
+  </br>
   Applicaiton Showcase :poland:
   </a>
 </p>
