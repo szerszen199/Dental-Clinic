@@ -23,9 +23,12 @@ The repository contains a fullstack Java/JS web application that is intended to 
     Applicaiton Showcase :poland:
     </a>
     </br>
+    </br>
     <img src="https://github.com/ZdrzalikPrzemyslaw/Dental-Clinic/blob/master/.github/Frontpage.png" />
     </br>
+    </br>
     <img src="https://github.com/ZdrzalikPrzemyslaw/Dental-Clinic/blob/master/.github/LoggedInFrontpage.png" />
+    </br>
     </br>
     <img src="https://github.com/ZdrzalikPrzemyslaw/Dental-Clinic/blob/master/.github/UsersList.png" />
 </p>
