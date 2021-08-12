@@ -19,7 +19,7 @@
 The repository contains a fullstack Java/JS web application that is intended to be used by a dental clinic. 
 
 <p align="center">
-  <img src="" >
+  <img src="https://github.com/ZdrzalikPrzemyslaw/Dental-Clinic/blob/master/.github/Frontpage.png" />
   <a href="https://www.youtube.com/watch?v=UQWVD_xorck">
   Applicaiton Showcase :poland:
   </a>
