@@ -50,17 +50,7 @@
         <junit.version>5.7.0</junit.version>
         <hibernate.version>5.4.30.Final</hibernate.version>
         <hibernate.validator.version>7.0.1.Final</hibernate.validator.version>
-
-        <payara.adminPort>4801</payara.adminPort>
-        <payara.username>admin</payara.username>
-        <payara.password>GenWydvam0</payara.password>
-        <payara.hostname>172.16.0.84</payara.hostname>
-<!--        <payara.hostname>studapp.it.p.lodz.pl</payara.hostname>-->
         <servlet.port>8401</servlet.port>
-
-        <frontend.directory>../frontend</frontend.directory>
-        <frontend.directory.output>${frontend.directory}/build</frontend.directory.output>
-        <npm.executable>node/npm</npm.executable>
     </properties>
 
     <dependencies>
@@ -187,54 +177,9 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.github.eirslett</groupId>
-                <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.9.1</version>
-                <executions>
-                    <execution>
-                        <id>install node and npm</id>
-                        <goals>
-                            <goal>install-node-and-npm</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                    </execution>
-                    <execution>
-                        <id>npm-install</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>install</arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>npm-build</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>run build</arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <workingDirectory>${frontend.directory}</workingDirectory>
-                    <nodeVersion>v14.17.0</nodeVersion>
-                    <npmVersion>7.15.0</npmVersion>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.0</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <webResources>
-                        <resource>
-                            <directory>${frontend.directory.output}</directory>
-                        </resource>
-                    </webResources>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -256,130 +201,8 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.1.1</version>
-                <configuration>
-                    <configLocation>checkstyle2020.xml</configLocation>
-                    <encoding>UTF-8</encoding>
-                    <consoleOutput>true</consoleOutput>
-                    <failsOnError>true</failsOnError>
-                    <linkXRef>false</linkXRef>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>checkstyle</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>8.36</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.8.2</version>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.6</version>
-                <executions>
-                    <execution>
-                        <id>default-prepare-agent</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>default-report</id>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>default-check</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <rule>
-                                    <element>BUNDLE</element>
-                                    <limits>
-                                        <limit>
-                                            <counter>COMPLEXITY</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.60</minimum>
-                                        </limit>
-                                    </limits>
-                                </rule>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.cargo</groupId>
-                <artifactId>cargo-maven3-plugin</artifactId>
-                <version>1.9.3</version>
-                <configuration>
-                    <container>
-                        <containerId>payara</containerId>
-                        <type>remote</type>
-                        <artifactInstaller>
-                            <groupId>fish.payara.distributions</groupId>
-                            <artifactId>payara</artifactId>
-                            <version>5.2021.1</version>
-                        </artifactInstaller>
-                    </container>
-                    <configuration>
-                        <type>runtime</type>
-                        <properties>
-                            <cargo.remote.username>${payara.username}</cargo.remote.username>
-                            <cargo.remote.password>${payara.password}</cargo.remote.password>
-                            <cargo.glassfish.admin.port>${payara.adminPort}</cargo.glassfish.admin.port>
-                            <cargo.hostname>${payara.hostname}</cargo.hostname>
-                            <cargo.servlet.port>${servlet.port}</cargo.servlet.port>
-                            <cargo.runtime.args>force=true</cargo.runtime.args>
-                        </properties>
-                    </configuration>
-                </configuration>
-                <dependencies>
-                <dependency>
-                    <groupId>org.glassfish.main.deployment</groupId>
-                    <artifactId>deployment-client</artifactId>
-                    <version>5.1.0</version>
-                </dependency>
-                <dependency>
-                    <groupId>javax.xml.bind</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                    <version>2.3.0</version>
-                </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <id>deploy</id>
-                        <goals>
-                            <goal>start</goal>
-                            <goal>redeploy</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>undeploy</id>
-                        <goals>
-                            <goal>undeploy</goal>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
