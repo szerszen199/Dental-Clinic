@@ -11,5 +11,3 @@ RUN mvn -f /home/app/pom.xml clean package
 #
 FROM payara/server-full:5.2021.7-jdk11 as deploy
 COPY --from=build /home/app/target/ssbd01-1.0.0.war $DEPLOY_DIR
-
-
