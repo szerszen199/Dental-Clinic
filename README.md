@@ -24,17 +24,17 @@ The repository contains a fullstack Java/JS web application that is intended to 
     </a>
 </p>
 <p align="center">
-    <img src="https://github.com/ZdrzalikPrzemyslaw/Dental-Clinic/blob/master/.github/Frontpage.png" />
+    <img src=".github/Frontpage.png"/>
 </p>
     </br>
     </br>
 <p align="center">
-    <img src="https://github.com/ZdrzalikPrzemyslaw/Dental-Clinic/blob/master/.github/LoggedInFrontpage.png" />
+    <img src=".github/LoggedInFrontpage.png" />
 </p>
     </br>
     </br>
-<p align="center">
-    <img src="https://github.com/ZdrzalikPrzemyslaw/Dental-Clinic/blob/master/.github/UsersList.png" />
+<p style="" align="center">
+    <img src=".github/UsersList.png" />
 </p>
 
 ## 🔑 Prerequisites <a name = "prerequisites"></a>

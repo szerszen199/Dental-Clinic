@@ -1,0 +1,4 @@
+CREATE USER ssbd01mok WITH PASSWORD 'password1';
+CREATE USER ssbd01mow WITH PASSWORD 'password2';
+CREATE USER ssbd01mod WITH PASSWORD 'password3';
+CREATE USER ssbd01auth WITH PASSWORD 'password4';
