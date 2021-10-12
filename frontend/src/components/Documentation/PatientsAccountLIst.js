@@ -8,9 +8,6 @@ import edit from "../../assets/edit.png";
 import addNew from "../../assets/new.png";
 import {Input} from "semantic-ui-react";
 import {makeAccountsListRequest} from "./AccountsListRequest";
-import {IconButton} from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
-
 
 class DocumentationWithoutTranslation extends React.Component {
     constructor(props) {

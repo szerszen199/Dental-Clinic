@@ -5,7 +5,6 @@ import {makeAppointmentSlotsListRequest} from "../AppointmentSlotsListRequest";
 import {withTranslation} from "react-i18next";
 import {makePatientsListRequest} from "../../ListPatients/ListPatientsRequest";
 import {Button} from "react-bootstrap";
-import {FiRefreshCw} from "react-icons/fi";
 import {planPatientAppointmentRequest} from "./PlanPatientAppointmentRequest";
 import confirmationAlerts from "../../../Alerts/ConfirmationAlerts/ConfirmationAlerts";
 

@@ -1,6 +1,5 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import successAlerts from "../Alerts/SuccessAlerts/SuccessAlerts";
 import errorAlerts from "../Alerts/ErrorAlerts/ErrorAlerts";
 import successAlertsWithRefresh from "../Alerts/SuccessAlerts/SuccessAlertsWithRefresh";
 
