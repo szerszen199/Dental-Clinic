@@ -1,15 +1,19 @@
 version: '3.8'
 networks:
   app_network:
-    driver: bridged
+    driver: bridge
 services:
   database:
+    container_name: database
     build:
       context: ./database
       dockerfile: postgres.Dockerfile
     ports:
       - "5432:5432"
+    networks:
+      - app_network
   backend:
+    container_name: backend
     build:
       context: backend
       dockerfile: payara.Dockerfile
@@ -17,13 +21,20 @@ services:
       - "8080:8080"
       - "8181:8181"
       - "8081:8081"
+      - "4848:4848"
+    restart: always
+    networks:
+      - app_network
     depends_on:
       - database
   frontend:
+    container_name: frontend
     build:
      context: frontend
      dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    networks:
+      - app_network
     depends_on:
       - backend
