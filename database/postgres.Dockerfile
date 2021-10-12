@@ -1,4 +1,4 @@
-FROM postgres:14
+FROM docker.io/library/postgres:14
 ENV POSTGRES_DB ssbd01
 ENV POSTGRES_USER ssbd01admin
 # TODO move password to env variable/secret
