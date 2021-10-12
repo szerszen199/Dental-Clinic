@@ -1,4 +1,4 @@
-FROM node:14.18.0
+FROM docker.io/library/node:14.18.0
 WORKDIR /home/app
 COPY package.json ./
 COPY package-lock.json ./
