@@ -7,10 +7,6 @@ import errorAlerts from "../Alerts/ErrorAlerts/ErrorAlerts";
 import BootstrapTable from "react-bootstrap-table-next";
 import {FiRefreshCw} from "react-icons/fi";
 import {PrescriptionEntry} from "./PrescriptionEntry";
-import deleteIcon from "../../assets/delete-xxl.png";
-import confirmationAlerts from "../Alerts/ConfirmationAlerts/ConfirmationAlerts";
-import {deleteAppointmentSlotRequest} from "../Appointment/PlanAppointment/DeleteAppointmentSlotRequest";
-
 
 class PrescriptionsListWithoutTranslation extends React.Component {
     constructor(props) {
@@ -34,7 +30,6 @@ class PrescriptionsListWithoutTranslation extends React.Component {
 
     makeGetAllPrescriptionRequest() {
         const {t} = this.props;
-        console.log(this.state)
         let self = this;
         axios.get(process.env.REACT_APP_BACKEND_URL + "prescription/prescriptions/patient", {
             headers: {

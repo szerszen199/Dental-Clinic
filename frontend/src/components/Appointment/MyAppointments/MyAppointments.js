@@ -66,7 +66,7 @@ class MyAppointmentsWithoutTranslation extends React.Component {
         url += this.state.appointments[rowIndex].id.toString();
         return (
             <Button variant="outline-secondary" onClick={() => { this.makeCancelRequest(url)}}
-                    disabled={this.state.appointments[rowIndex].canceled === "+" || this.state.appointments[rowIndex].patientLogin == "" }>
+                    disabled={this.state.appointments[rowIndex].canceled === "+" || this.state.appointments[rowIndex].patientLogin === "" }>
                 <img src={deleteXXL} alt="Delete" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}/>
             </Button>
         );
@@ -84,7 +84,7 @@ class MyAppointmentsWithoutTranslation extends React.Component {
         url += this.state.appointments[rowIndex].id.toString();
         return (
             <Button variant="outline-secondary" onClick={() => { this.makeConfirmRequest(url)}}
-                    disabled={this.state.appointments[rowIndex].canceled === "+" || this.state.appointments[rowIndex].patientLogin == "" ||
+                    disabled={this.state.appointments[rowIndex].canceled === "+" || this.state.appointments[rowIndex].patientLogin === "" ||
                     this.state.appointments[rowIndex].confirmed ==="+" }>
                 <img src={deleteXXL} alt="Delete" width={20} style={{paddingBottom: "5px", paddingLeft: "3px"}}/>
             </Button>

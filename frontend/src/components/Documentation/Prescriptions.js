@@ -1,7 +1,5 @@
 import React, {Fragment, Suspense} from "react";
-
 import {Button, Container} from "react-bootstrap";
-
 import axios from "axios";
 import Cookies from "js-cookie";
 import {withTranslation} from "react-i18next";
@@ -13,7 +11,6 @@ import {Link} from "react-router-dom";
 import edit from "../../assets/edit.png";
 import deleteIcon from "../../assets/delete-xxl.png";
 import confirmationAlerts from "../Alerts/ConfirmationAlerts/ConfirmationAlerts";
-import {deleteAppointmentSlotRequest} from "../Appointment/PlanAppointment/DeleteAppointmentSlotRequest";
 import {makeDeletePrescriptionRequest} from "../Prescription/DeletePrescriptionRequest";
 
 
