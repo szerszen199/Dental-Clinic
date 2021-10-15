@@ -4,8 +4,9 @@
 FROM docker.io/library/maven:3.8.2-adoptopenjdk-11 as build
 COPY src /home/app/src
 COPY pom.xml /home/app
-RUN mvn -f /home/app/pom.xml clean package
-
+WORKDIR /home/app/
+RUN mvn dependency:resolve
+RUN mvn package
 #
 # DEPLOY STAGE
 #
