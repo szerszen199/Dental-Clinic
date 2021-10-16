@@ -60,6 +60,12 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jboss.jbossts/jbossjta -->
+        <dependency>
+            <groupId>org.jboss.jbossts</groupId>
+            <artifactId>jbossjta</artifactId>
+            <version>4.16.6.Final</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
@@ -77,8 +83,6 @@
             <artifactId>nimbus-jose-jwt</artifactId>
             <version>9.8.1</version>
         </dependency>
-
-
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>

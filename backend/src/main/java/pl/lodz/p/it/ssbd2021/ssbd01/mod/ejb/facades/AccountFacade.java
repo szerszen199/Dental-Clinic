@@ -20,7 +20,7 @@ import javax.persistence.TypedQuery;
 /**
  * Klasa definiująca główne operacje wykonywane na encjach typu Account.
  */
-@Stateless
+@Stateless(name = "AccountFacadeMod")
 @PermitAll
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors(LogInterceptor.class)

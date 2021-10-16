@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Klasa definiująca główne operacje wykonywane na encjach typu Account.
  */
-@Stateless
+@Stateless(name = "AccountFacadeMow")
 @PermitAll
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors(LogInterceptor.class)

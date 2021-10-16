@@ -24,6 +24,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateful;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.security.enterprise.SecurityContext;
@@ -51,9 +52,9 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_NOT_FOUND;
 /**
  * Typ Login endpoint do logowania.
  */
+@RequestScoped
 @Path("auth")
 @PermitAll
-@Stateful
 @Interceptors({LogInterceptor.class})
 public class LoginEndpoint {
 

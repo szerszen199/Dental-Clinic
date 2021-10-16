@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Klasa definiująca operacje wykonywane na obiektach DoctorRating.
  */
-@Stateless
+@Stateless(name = "DoctorRatingFacadeMow")
 @PermitAll
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors(LogInterceptor.class)

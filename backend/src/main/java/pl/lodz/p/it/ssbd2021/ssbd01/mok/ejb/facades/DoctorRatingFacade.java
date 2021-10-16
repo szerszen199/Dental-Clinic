@@ -21,7 +21,7 @@ import java.util.Optional;
 /**
  * Klasa definiująca operacje wykonywane na obiektach DoctorRating.
  */
-@Stateless
+@Stateless(name = "DoctorRatingFacadeMok")
 @PermitAll
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors(LogInterceptor.class)
@@ -39,7 +39,7 @@ public class DoctorRatingFacade extends AbstractFacade<DoctorRating> {
 
     /**
      * Tworzy nową instancję klasy DoctorRatingFacade.
-     * 
+     *
      * @param entityClass typ obiektowy encji
      */
     public DoctorRatingFacade(Class<DoctorRating> entityClass) {
