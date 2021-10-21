@@ -3,7 +3,6 @@ package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.security.enterprise.SecurityContext;
-
 /**
  * Klasa narzędzia zalogowanego kotna.
  */

@@ -56,7 +56,7 @@ You will also need to edit the JDBCConfig.java file found in the config package 
 
 ```
 @DataSourceDefinition(
-        name = "java:app/jdbc/ssbd01mok",
+        name = "java:jboss/jdbc/ssbd01mok",
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd01mok",
         password = "TODO",

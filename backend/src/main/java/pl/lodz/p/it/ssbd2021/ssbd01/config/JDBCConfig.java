@@ -6,7 +6,7 @@ import java.sql.Connection;
 
 
 //@DataSourceDefinition(
-//        name = "java:app/jdbc/ssbd01admin",
+//        name = "java:jboss/jdbc/ssbd01admin",
 //        className = "org.postgresql.ds.PGSimpleDataSource",
 //        user = "ssbd01admin",
 //        password = "TODO",
@@ -23,11 +23,11 @@ import java.sql.Connection;
  * Typ Jdbc config klasa konfiguracji JDBC.
  */
 @DataSourceDefinition(
-        name = "java:app/jdbc/ssbd01mok",
+        name = "java:jboss/jdbc/ssbd01mok",
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd01mok",
         password = "password1",
-        serverName = "localhost",
+        serverName = "database",
         portNumber = 5432,
         databaseName = "ssbd01",
         transactional = true,
@@ -38,11 +38,11 @@ import java.sql.Connection;
 
 
 @DataSourceDefinition(
-        name = "java:app/jdbc/ssbd01auth",
+        name = "java:jboss/jdbc/ssbd01auth",
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd01auth",
         password = "password4",
-        serverName = "localhost",
+        serverName = "database",
         portNumber = 5432,
         databaseName = "ssbd01",
         transactional = true,
@@ -53,11 +53,11 @@ import java.sql.Connection;
 
 
 @DataSourceDefinition(
-        name = "java:app/jdbc/ssbd01mow",
+        name = "java:jboss/jdbc/ssbd01mow",
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd01mow",
         password = "password2",
-        serverName = "localhost",
+        serverName = "database",
         portNumber = 5432,
         databaseName = "ssbd01",
         transactional = true,
@@ -68,11 +68,11 @@ import java.sql.Connection;
 
 
 @DataSourceDefinition(
-        name = "java:app/jdbc/ssbd01mod",
+        name = "java:jboss/jdbc/ssbd01mod",
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd01mod",
         password = "password3",
-        serverName = "localhost",
+        serverName = "database",
         portNumber = 5432,
         databaseName = "ssbd01",
         transactional = true,

@@ -23,7 +23,6 @@ import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
-import javax.ejb.Stateful;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
@@ -58,16 +57,16 @@ import static pl.lodz.p.it.ssbd2021.ssbd01.common.I18n.ACCOUNT_NOT_FOUND;
 @Interceptors({LogInterceptor.class})
 public class LoginEndpoint {
 
-    private final IdentityStoreHandler identityStoreHandler;
-    private final AccountManager accountManager;
-    private final AuthViewEntityManager authViewEntityManager;
-    private final HttpServletRequest request;
-    private final JwtLoginUtils jwtLoginUtils;
-    private final PropertiesLoader propertiesLoader;
-    private final JwtRefreshUtils jwtRefreshUtils;
-    private final MailProvider mailProvider;
-    private final JwtResetPasswordConfirmation jwtResetPasswordConfirmation;
-    private final SecurityContext securityContext;
+    private IdentityStoreHandler identityStoreHandler;
+    private AccountManager accountManager;
+    private AuthViewEntityManager authViewEntityManager;
+    private HttpServletRequest request;
+    private JwtLoginUtils jwtLoginUtils;
+    private PropertiesLoader propertiesLoader;
+    private JwtRefreshUtils jwtRefreshUtils;
+    private MailProvider mailProvider;
+    private JwtResetPasswordConfirmation jwtResetPasswordConfirmation;
+    private SecurityContext securityContext;
 
 
     /**
@@ -105,6 +104,9 @@ public class LoginEndpoint {
         this.authViewEntityManager = authViewEntityManager;
         this.jwtResetPasswordConfirmation = jwtResetPasswordConfirmation;
         this.securityContext = securityContext;
+    }
+
+    public LoginEndpoint() {
     }
 
     /**

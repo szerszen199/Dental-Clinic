@@ -4,7 +4,7 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
     <persistence-unit name="ssbd01authPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>java:app/jdbc/ssbd01auth</jta-data-source>
+        <jta-data-source>java:jboss/jdbc/ssbd01auth</jta-data-source>
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.AuthViewEntity</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
@@ -12,13 +12,13 @@
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
             <property name="hibernate.hbm2ddl.auto" value="validate"/>
             <property name="hibernate.transaction.jta.platform"
-                      value="org.hibernate.service.jta.platform.internal.JBossStandAloneJtaPlatform" />
+                      value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform" />
             <property name="hibernate.id.new_generator_mappings" value="true"/>
         </properties>
     </persistence-unit>
     <persistence-unit name="ssbd01mokPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>java:app/jdbc/ssbd01mok</jta-data-source>
+        <jta-data-source>java:jboss/jdbc/ssbd01mok</jta-data-source>
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel</class>
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.PatientData</class>
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.DoctorData</class>
@@ -38,7 +38,7 @@
     </persistence-unit>
     <persistence-unit name="ssbd01mowPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>java:app/jdbc/ssbd01mow</jta-data-source>
+        <jta-data-source>java:jboss/jdbc/ssbd01mow</jta-data-source>
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.Appointment</class>
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.AccessLevel</class>
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.Account</class>
@@ -55,7 +55,7 @@
     </persistence-unit>
     <persistence-unit name="ssbd01modPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>java:app/jdbc/ssbd01mod</jta-data-source>
+        <jta-data-source>java:jboss/jdbc/ssbd01mod</jta-data-source>
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.MedicalDocumentation</class>
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.DocumentationEntry</class>
         <class>pl.lodz.p.it.ssbd2021.ssbd01.entities.Prescription</class>

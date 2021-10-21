@@ -7,7 +7,7 @@ import javax.security.enterprise.identitystore.DatabaseIdentityStoreDefinition;
  * Typ Identity store config klasa deklarująca role aplikacyjne.
  */
 @DatabaseIdentityStoreDefinition(
-        dataSourceLookup = "java:app/jdbc/ssbd01auth",
+        dataSourceLookup = "java:jboss/jdbc/ssbd01auth",
         callerQuery = "#{'select password from glassfish_auth_view where login = ?'}",
         groupsQuery = "select level from glassfish_auth_view  where login = ?",
         hashAlgorithm = AuthHashImpl.class

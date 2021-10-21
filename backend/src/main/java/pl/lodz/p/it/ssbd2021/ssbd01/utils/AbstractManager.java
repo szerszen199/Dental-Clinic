@@ -16,12 +16,12 @@ import java.util.logging.Logger;
 public abstract class AbstractManager {
 
     protected static final Logger LOGGER = Logger.getGlobal();
-    
+
     @Inject
     protected LoggedInAccountUtil loggedInAccountUtil;
-    
+
     boolean lastTransactionRollback;
-    
+
     private String transactionID;
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -35,7 +35,8 @@ public abstract class AbstractManager {
     @AfterBegin
     public void afterBegin() {
         transactionID = Long.toString(System.currentTimeMillis()) + ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
-        LOGGER.log(Level.INFO, "Transakcja TXid = {0} rozpoczęta w {1}. dla użytkownika {2}", new Object[]{transactionID, this.getClass().getName(), loggedInAccountUtil.getLoggedInAccountLogin()});
+        // FIXME
+//        LOGGER.log(Level.INFO, "Transakcja TXid = {0} rozpoczęta w {1}. dla użytkownika {2}", new Object[]{transactionID, this.getClass().getName(), loggedInAccountUtil.getLoggedInAccountLogin()});
     }
 
     /**
@@ -43,8 +44,9 @@ public abstract class AbstractManager {
      */
     @BeforeCompletion
     public void beforeCompletion() {
-        LOGGER.log(Level.INFO, "Transakcja TXid={0} przed zatwierdzeniem w {1} dla użytkownika {2}.",
-                new Object[]{transactionID, this.getClass().getName(), loggedInAccountUtil.getLoggedInAccountLogin()});
+        // FIXME
+//        LOGGER.log(Level.INFO, "Transakcja TXid={0} przed zatwierdzeniem w {1} dla użytkownika {2}.",
+//                new Object[]{transactionID, this.getClass().getName(), loggedInAccountUtil.getLoggedInAccountLogin()});
     }
 
     /**
@@ -55,7 +57,8 @@ public abstract class AbstractManager {
     @AfterCompletion
     public void afterCompletion(boolean commmitted) {
         lastTransactionRollback = !commmitted;
-        LOGGER.log(Level.INFO, "Transakcja TXid={0} zakończona w {1} poprzez {2} dla użytkownika {3}.",
-                new Object[]{transactionID, this.getClass().getName(), commmitted ? "ZATWIERDZENIE" : "ODWOłANIE", loggedInAccountUtil.getLoggedInAccountLogin()});
+        //FIXME
+//        LOGGER.log(Level.INFO, "Transakcja TXid={0} zakończona w {1} poprzez {2} dla użytkownika {3}.",
+//                new Object[]{transactionID, this.getClass().getName(), commmitted ? "ZATWIERDZENIE" : "ODWOłANIE", loggedInAccountUtil.getLoggedInAccountLogin()});
     }
 }

@@ -16,7 +16,7 @@ services:
     container_name: backend
     build:
       context: backend
-      dockerfile: payara.Dockerfile
+      dockerfile: wildfly.Dockerfile
     ports:
       - "8080:8080"
       - "8181:8181"
