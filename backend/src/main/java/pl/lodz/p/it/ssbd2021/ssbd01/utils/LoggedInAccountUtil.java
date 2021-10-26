@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.security.enterprise.SecurityContext;
@@ -8,7 +9,7 @@ import javax.security.enterprise.SecurityContext;
  */
 @Stateless
 public class LoggedInAccountUtil {
-    @Inject
+    @Resource(name = "sessionContext")
     private SecurityContext securityContext;
 
     /**

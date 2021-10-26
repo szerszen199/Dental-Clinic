@@ -49,8 +49,8 @@ public class LogInterceptor {
                     parameters = " ";
                 }
                 //FIXME
-//                LOGGER.log(logLevel, "Użytkownik: " + loggedInAccountUtil.getLoggedInAccountLogin()
-//                        + " Metoda: " + context.getMethod().toGenericString() + " Parametry: " + parameters + " Zwrócona wartość: " + returnedValue);
+                LOGGER.log(logLevel, "Użytkownik: " + loggedInAccountUtil.getLoggedInAccountLogin()
+                        + " Metoda: " + context.getMethod().toGenericString() + " Parametry: " + parameters + " Zwrócona wartość: " + returnedValue);
             }
         }
     }

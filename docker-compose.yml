@@ -22,6 +22,7 @@ services:
       - "8181:8181"
       - "8081:8081"
       - "4848:4848"
+      - "9990:9990"
     restart: always
     networks:
       - app_network
