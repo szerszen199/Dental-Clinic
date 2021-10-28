@@ -1,0 +1,4 @@
+CREATE USER ssbd01mok IDENTIFIED BY 'password1';
+CREATE USER ssbd01mow IDENTIFIED BY 'password2';
+CREATE USER ssbd01mod IDENTIFIED BY 'password3';
+CREATE USER ssbd01auth IDENTIFIED BY 'password4';

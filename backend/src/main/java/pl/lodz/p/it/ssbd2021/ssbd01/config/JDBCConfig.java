@@ -24,11 +24,11 @@ import java.sql.Connection;
  */
 @DataSourceDefinition(
         name = "java:jboss/jdbc/ssbd01mok",
-        className = "org.postgresql.ds.PGSimpleDataSource",
+        className = "org.mariadb.jdbc.MariaDbDataSource",
         user = "ssbd01mok",
         password = "password1",
         serverName = "localhost",
-        portNumber = 5432,
+        portNumber = 3306,
         databaseName = "ssbd01",
         transactional = true,
         initialPoolSize = 1,
@@ -39,11 +39,11 @@ import java.sql.Connection;
 
 @DataSourceDefinition(
         name = "java:jboss/jdbc/ssbd01auth",
-        className = "org.postgresql.ds.PGSimpleDataSource",
+        className = "org.mariadb.jdbc.MariaDbDataSource",
         user = "ssbd01auth",
         password = "password4",
         serverName = "localhost",
-        portNumber = 5432,
+        portNumber = 3306,
         databaseName = "ssbd01",
         transactional = true,
         initialPoolSize = 1,
@@ -54,11 +54,11 @@ import java.sql.Connection;
 
 @DataSourceDefinition(
         name = "java:jboss/jdbc/ssbd01mow",
-        className = "org.postgresql.ds.PGSimpleDataSource",
+        className = "org.mariadb.jdbc.MariaDbDataSource",
         user = "ssbd01mow",
         password = "password2",
         serverName = "localhost",
-        portNumber = 5432,
+        portNumber = 3306,
         databaseName = "ssbd01",
         transactional = true,
         initialPoolSize = 1,
@@ -69,11 +69,11 @@ import java.sql.Connection;
 
 @DataSourceDefinition(
         name = "java:jboss/jdbc/ssbd01mod",
-        className = "org.postgresql.ds.PGSimpleDataSource",
+        className = "org.mariadb.jdbc.MariaDbDataSource",
         user = "ssbd01mod",
         password = "password3",
         serverName = "localhost",
-        portNumber = 5432,
+        portNumber = 3306,
         databaseName = "ssbd01",
         transactional = true,
         initialPoolSize = 1,

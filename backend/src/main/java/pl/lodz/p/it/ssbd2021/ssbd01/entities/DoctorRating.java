@@ -38,8 +38,7 @@ public class DoctorRating extends AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "doctor_ratings_generator")
-    @SequenceGenerator(name = "doctor_ratings_generator", sequenceName = "doctors_ratings_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, nullable = false)
     @NotNull

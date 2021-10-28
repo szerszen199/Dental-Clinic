@@ -69,8 +69,7 @@ public class Account extends AbstractEntity implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "accountId")
     private final Set<AccessLevel> accessLevels = new HashSet<>();
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accounts_generator")
-    @SequenceGenerator(name = "accounts_generator", sequenceName = "accounts_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, nullable = false)
     @NotNull
@@ -90,7 +89,7 @@ public class Account extends AbstractEntity implements Serializable {
     @Column(name = "is_dark_mode", nullable = true)
     private boolean isDarkMode = false;
     @Basic(optional = false)
-    @Column(name = "password", columnDefinition = "bpchar", nullable = false, length = 64)
+    @Column(name = "password", columnDefinition = "char", nullable = false, length = 64)
     @NotNull
     @Size(min = 64, max = 64)
     private String password;
@@ -110,7 +109,7 @@ public class Account extends AbstractEntity implements Serializable {
     @Size(min = 9, max = 15)
     private String phoneNumber;
 
-    @Column(name = "pesel", columnDefinition = "bpchar", length = 11)
+    @Column(name = "pesel", columnDefinition = "char", length = 11)
     @Size(min = 11, max = 11)
     @PESEL
     private String pesel;
@@ -150,7 +149,7 @@ public class Account extends AbstractEntity implements Serializable {
     @Min(0)
     private Integer unsuccessfulLoginCounter = 0;
 
-    @Column(name = "language", columnDefinition = "bpchar", length = 2, nullable = false)
+    @Column(name = "language", columnDefinition = "char", length = 2, nullable = false)
     @Size(min = 2, max = 2)
     @NotNull
     private String language;

@@ -39,7 +39,7 @@ public class AuthViewEntity {
     private String login;
 
     @Basic(optional = false)
-    @Column(name = "password", columnDefinition = "bpchar", nullable = false, length = 64)
+    @Column(name = "password", columnDefinition = "char", nullable = false, length = 64)
     @NotNull
     @Size(min = 64, max = 64)
     private String password;

@@ -36,15 +36,14 @@ public class MedicalDocumentation extends AbstractEntity implements Serializable
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medical_documentations_generator")
-    @SequenceGenerator(name = "medical_documentations_generator", sequenceName = "medical_documentations_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, nullable = false)
     @NotNull
     private Long id;
-    @Column(name = "allergies")
+    @Column(name = "allergies", columnDefinition = "text")
     private String allergies;
-    @Column(name = "medications_taken")
+    @Column(name = "medications_taken", columnDefinition = "text")
     private String medicationsTaken;
     @JoinColumn(name = "patient_id", unique = true, referencedColumnName = "id", nullable = false, updatable = false)
     @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
@@ -94,7 +93,6 @@ public class MedicalDocumentation extends AbstractEntity implements Serializable
     public void setPatient(Account patient) {
         this.patient = patient;
     }
-
 
 
     @Override
