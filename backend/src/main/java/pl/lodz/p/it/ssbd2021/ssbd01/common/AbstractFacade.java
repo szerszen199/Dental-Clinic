@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.common;
 
 import java.util.List;
+import javax.annotation.security.PermitAll;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
@@ -51,6 +52,7 @@ public abstract class AbstractFacade<T> {
      * @param entity obiekt encji.
      * @throws AppBaseException bazowy wyjątek aplikacji
      */
+    @PermitAll
     public void edit(T entity) throws AppBaseException {
         try {
             getEntityManager().merge(entity);

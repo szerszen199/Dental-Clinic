@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2021.ssbd01.utils;
 
+import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
@@ -24,6 +25,7 @@ public class LogInterceptor {
      * @throws Exception Wyjątki.
      */
     @AroundInvoke
+    @PermitAll
     public Object intercept(InvocationContext context) throws Exception {
 
         String returnedValue = null;

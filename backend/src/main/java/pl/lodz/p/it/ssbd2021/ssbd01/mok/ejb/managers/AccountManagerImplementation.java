@@ -88,7 +88,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
 
     @Inject
     private JwtResetPasswordConfirmation jwtResetPasswordConfirmation;
-    
+
     @Inject
     private PropertiesLoader propertiesLoader;
 
@@ -466,6 +466,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
+    @PermitAll
     public Account findByLogin(String login) throws AppBaseException {
         return accountFacade.findByLogin(login);
     }
@@ -538,6 +539,7 @@ public class AccountManagerImplementation extends AbstractManager implements Acc
     }
 
     @Override
+    @PermitAll
     public void updateAfterSuccessfulLogin(String login, String ip, LocalDateTime time) throws AppBaseException {
         Account account;
         try {

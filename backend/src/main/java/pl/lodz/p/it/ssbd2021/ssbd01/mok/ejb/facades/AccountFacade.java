@@ -59,6 +59,7 @@ public class AccountFacade extends AbstractFacade<Account> {
      * @return konto
      * @throws AppBaseException wyjątek typu AppBaseException
      */
+    @PermitAll
     public Account findByLogin(String login) throws AppBaseException {
         try {
             TypedQuery<Account> tq = em.createNamedQuery("Account.findByLogin", Account.class);

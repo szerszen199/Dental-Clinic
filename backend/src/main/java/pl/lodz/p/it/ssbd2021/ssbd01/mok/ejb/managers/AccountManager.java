@@ -11,6 +11,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.common.SetNewPasswordDto;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditAnotherAccountRequestDTO;
 import pl.lodz.p.it.ssbd2021.ssbd01.mok.dto.request.EditOwnAccountRequestDTO;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.Local;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -229,6 +230,7 @@ public interface AccountManager {
      * @param time  time
      * @throws AppBaseException app base exception
      */
+    @PermitAll
     void updateAfterSuccessfulLogin(String login, String ip, LocalDateTime time) throws AppBaseException;
 
     /**
