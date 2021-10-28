@@ -20,7 +20,7 @@ DROP SEQUENCE IF EXISTS doctors_ratings_seq;
 -- Tabela reprezentująca dane użytkownika
 CREATE TABLE accounts
 (
-    id                                        BIGINT PRIMARY KEY,          -- klucz główny tabeli
+    id                                        BIGINT AUTO_INCREMENT PRIMARY KEY,          -- klucz główny tabeli
     login                                     VARCHAR(60)        NOT NULL,  -- login użytkownika, niezmienny
         CONSTRAINT acc_login_unique UNIQUE (login),
         CONSTRAINT account_login_not_anon check (login not in ('anonymous')),
@@ -90,7 +90,7 @@ CREATE SEQUENCE accounts_seq
 
 CREATE TABLE access_levels
 (
-    id                     BIGINT PRIMARY KEY,                                                -- klucz główny tabeli
+    id                     BIGINT AUTO_INCREMENT PRIMARY KEY,                                                -- klucz główny tabeli
     level                  VARCHAR(32) NOT NULL,
         CONSTRAINT acc_lvl_level CHECK
             (level in
@@ -148,7 +148,7 @@ CREATE SEQUENCE access_levels_seq
 
 CREATE TABLE appointments
 (
-    id                     BIGINT PRIMARY KEY,                                   -- Klucz głowny tabeli
+    id                     BIGINT AUTO_INCREMENT PRIMARY KEY,                                   -- Klucz głowny tabeli
     doctor_id              BIGINT,                                               -- Id konta lekarza dla wizyty
     patient_id             BIGINT,                                               -- Id konta pacjenta dla wizyty
     appointment_date       TIMESTAMP        NOT NULL,                          -- Data wizyty
@@ -212,7 +212,7 @@ CREATE SEQUENCE appointments_seq -- Sekwencja wykorzystywana do tworzenia kluczy
 -- Tabela reprezentująca dkoumentację medyczną użytkownika, będąca w relacji one to ona z tableką account, i one to many z wpisami w tabeli (tabela documentation_entries)
 CREATE TABLE medical_documentations
 (
-    id                     BIGINT PRIMARY KEY,                             -- Klucz głowny tabeli
+    id                     BIGINT AUTO_INCREMENT PRIMARY KEY,                             -- Klucz głowny tabeli
     patient_id             BIGINT      NOT NULL,                            -- ID pacjenta którego dotyczy dokumentacja
         CONSTRAINT med_documentation_patient_id_unique UNIQUE (id, patient_id),
     allergies              TEXT,                                           -- Tekstowy opis alergii pacjenta
@@ -255,7 +255,7 @@ CREATE SEQUENCE medical_documentations_seq -- Sekwencja wykorzystywana do tworze
 -- Tabela reprezentująca wpsiy w dokumentację medyczną użytkownika
 CREATE TABLE documentation_entries
 (
-    id                     BIGINT PRIMARY KEY,                             -- Klucz głowny tabeli
+    id                     BIGINT AUTO_INCREMENT PRIMARY KEY,                             -- Klucz głowny tabeli
     documentation_id       BIGINT      NOT NULL,                           -- Dokumentacja medyczna, do której odnosi się wpis
     doctor_id              BIGINT      NOT NULL,                           -- Lekarz, który tworzy wpis w dokumentacji
     was_done               VARBINARY(80),                                          -- Tekst informujący co zostało wykonane na wizycie reprezentowanej przez wpis w dokumentacji
@@ -299,7 +299,7 @@ CREATE SEQUENCE documentation_entries_seq -- Sekwencja uzywana do tworzenia pola
 -- Tabela reprezentująca recepty
 CREATE TABLE prescriptions
 (
-    id                     BIGINT PRIMARY KEY,                             -- Klucz główny tabeli
+    id                     BIGINT AUTO_INCREMENT PRIMARY KEY,                             -- Klucz główny tabeli
     expiration             TIMESTAMP NOT NULL,                           -- data ważności recepty
     patient_id             BIGINT      NOT NULL,                           -- Id pacjenta, którego dotyczy recepta
     doctor_id              BIGINT      NOT NULL,                           -- Id lekarza który wystawił receptę
@@ -343,7 +343,7 @@ CREATE SEQUENCE prescriptions_seq -- Sekwencja wykorzystywana do tworzenia klucz
 
 CREATE TABLE doctors_ratings
 (
-    id                     BIGINT PRIMARY KEY,                                  -- Klucz główny tabeli
+    id                     BIGINT AUTO_INCREMENT PRIMARY KEY,                                  -- Klucz główny tabeli
     doctor_id              BIGINT           NOT NULL,                           -- Id lekarza, którego dotyczą statystyki ocen
     rates_sum              DOUBLE PRECISION NOT NULL DEFAULT 0.,                 -- Suma wszystkich ocen wystawionych lekarzowi
         CONSTRAINT rates_sum_gr0 CHECK (rates_sum >= 0),
