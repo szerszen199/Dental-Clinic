@@ -18,11 +18,14 @@ import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtRefreshUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.security.JwtResetPasswordConfirmation;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.IpAddressUtils;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.LogInterceptor;
+import pl.lodz.p.it.ssbd2021.ssbd01.utils.LoggedInAccountUtil;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.MailProvider;
 import pl.lodz.p.it.ssbd2021.ssbd01.utils.PropertiesLoader;
 
+import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.ejb.SessionContext;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
@@ -66,7 +69,7 @@ public class LoginEndpoint {
     private JwtRefreshUtils jwtRefreshUtils;
     private MailProvider mailProvider;
     private JwtResetPasswordConfirmation jwtResetPasswordConfirmation;
-    private SecurityContext securityContext;
+    private LoggedInAccountUtil loggedInAccountUtil;
 
 
     /**
@@ -81,7 +84,7 @@ public class LoginEndpoint {
      * @param mailProvider                 mail provider
      * @param authViewEntityManager        auth view entity manager
      * @param jwtResetPasswordConfirmation token do potwierdzenia resetu hasła
-     * @param securityContext              security context
+
      */
     @Inject
     public LoginEndpoint(IdentityStoreHandler identityStoreHandler,
@@ -93,7 +96,7 @@ public class LoginEndpoint {
                          MailProvider mailProvider,
                          AuthViewEntityManager authViewEntityManager,
                          JwtResetPasswordConfirmation jwtResetPasswordConfirmation,
-                         SecurityContext securityContext) {
+                         LoggedInAccountUtil loggedInAccountUtil) {
         this.identityStoreHandler = identityStoreHandler;
         this.jwtLoginUtils = jwtLoginUtils;
         this.request = httpServletRequest;
@@ -103,7 +106,7 @@ public class LoginEndpoint {
         this.mailProvider = mailProvider;
         this.authViewEntityManager = authViewEntityManager;
         this.jwtResetPasswordConfirmation = jwtResetPasswordConfirmation;
-        this.securityContext = securityContext;
+        this.loggedInAccountUtil = loggedInAccountUtil;
     }
 
     public LoginEndpoint() {
@@ -253,11 +256,11 @@ public class LoginEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({I18n.ADMIN, I18n.RECEPTIONIST, I18n.DOCTOR, I18n.PATIENT})
     public Response changeRole(@PathParam("level") String level) {
-        if (securityContext.isCallerInRole(level)) {
-            Logger.getGlobal().log(Level.INFO, "Użytkownik o loginie {0} zmienił poziom dostępu na {1}", new Object[]{securityContext.getCallerPrincipal().getName(), level});
+        if (loggedInAccountUtil.isCallerInRole(level)) {
+            Logger.getGlobal().log(Level.INFO, "Użytkownik o loginie {0} zmienił poziom dostępu na {1}", new Object[]{loggedInAccountUtil.getLoggedInAccountLogin(), level});
             return Response.ok().build();
         } else {
-            Logger.getGlobal().log(Level.WARNING, "Użytkownik o loginie {0} próbował zmienić poziom dostępu na {1}", new Object[]{securityContext.getCallerPrincipal().getName(), level});
+            Logger.getGlobal().log(Level.WARNING, "Użytkownik o loginie {0} próbował zmienić poziom dostępu na {1}", new Object[]{loggedInAccountUtil.getLoggedInAccountLogin(), level});
             return Response.status(UNAUTHORIZED).entity(new MessageResponseDto(I18n.NO_ACCESS_LEVEL)).build();
         }
     }

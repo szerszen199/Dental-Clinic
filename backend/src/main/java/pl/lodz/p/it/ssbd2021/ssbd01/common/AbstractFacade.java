@@ -16,7 +16,7 @@ import pl.lodz.p.it.ssbd2021.ssbd01.exceptions.AppBaseException;
  *
  * @param <T> klasa encyjna
  */
-
+@PermitAll
 public abstract class AbstractFacade<T> {
 
     private final Class<T> entityClass;
