@@ -51,7 +51,7 @@ public class AccessLevel extends AbstractEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false, updatable = false)
-    @NotNull
+    //@NotNull
     private Long id;
 
     @Basic(optional = false)

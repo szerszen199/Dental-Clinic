@@ -39,7 +39,7 @@ public class DocumentationEntry extends AbstractEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, nullable = false)
-    @NotNull
+    //@NotNull
     private Long id;
 
     @Column(name = "was_done")

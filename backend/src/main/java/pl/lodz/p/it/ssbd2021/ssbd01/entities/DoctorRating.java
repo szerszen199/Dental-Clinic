@@ -41,7 +41,7 @@ public class DoctorRating extends AbstractEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, nullable = false)
-    @NotNull
+    //@NotNull
     private Long id;
 
     @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false, updatable = false)

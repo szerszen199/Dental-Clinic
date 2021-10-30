@@ -48,7 +48,7 @@ public class Appointment extends AbstractEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, nullable = false)
-    @NotNull
+    //@NotNull
     private Long id;
 
     @Basic(optional = false)

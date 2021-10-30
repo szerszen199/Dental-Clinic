@@ -39,7 +39,7 @@ public class MedicalDocumentation extends AbstractEntity implements Serializable
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, nullable = false)
-    @NotNull
+    //@NotNull
     private Long id;
     @Column(name = "allergies", columnDefinition = "text")
     private String allergies;
