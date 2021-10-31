@@ -7,9 +7,9 @@ services:
     container_name: database
     build:
       context: ./database
-      dockerfile: postgres.Dockerfile
+      dockerfile: mariadb.Dockerfile
     ports:
-      - "5432:5432"
+      - "3306:3306"
     networks:
       - app_network
   backend:
@@ -18,11 +18,8 @@ services:
       context: backend
       dockerfile: wildfly.Dockerfile
     ports:
-      - "8080:8080"
-      - "8181:8181"
-      - "8081:8081"
-      - "4848:4848"
       - "9990:9990"
+      - "8443:8443"
     restart: always
     networks:
       - app_network

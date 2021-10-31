@@ -1,0 +1,3 @@
+embed-server --std-out=echo
+/subsystem=undertow/application-security-domain=other:write-attribute(name=integrated-jaspi, value=false)
+stop-embedded-server
