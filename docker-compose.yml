@@ -31,9 +31,29 @@ services:
     build:
      context: frontend
      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
+    privileged: true
     networks:
       - app_network
     depends_on:
       - backend
+    environment:
+      - REACT_APP_BACKEND_URL=https://tua2021.pl/api/
+      - VIRTUAL_HOST=tua2021.pl
+      - VIRTUAL_PORT=3000
+
+  nginx-proxy:
+    container_name: nginx-proxy
+    image: jwilder/nginx-proxy
+    privileged: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./cert:/etc/nginx/certs
+    networks:
+      - app_network
+    depends_on:
+      - frontend
