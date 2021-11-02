@@ -47,7 +47,7 @@ services:
 
   nginx-proxy:
     container_name: nginx-proxy
-    image: jwilder/nginx-proxy
+    image: docker.io/jwilder/nginx-proxy
     privileged: true
     ports:
       - "80:80"
