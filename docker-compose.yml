@@ -8,8 +8,8 @@ services:
     build:
       context: ./database
       dockerfile: mariadb.Dockerfile
-    ports:
-      - "3306:3306"
+    expose:
+      - "3306"
     networks:
       - app_network
   backend:
@@ -17,9 +17,10 @@ services:
     build:
       context: backend
       dockerfile: wildfly.Dockerfile
-    ports:
-      - "9990:9990"
-      - "8443:8443"
+    expose:
+      - "9990"
+      - "8080"
+      - "8443"
     restart: always
     networks:
       - app_network
