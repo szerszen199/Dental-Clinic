@@ -88,5 +88,5 @@ Use the sql scripts found in resources/META-INF/sql to populate your database wi
 * [Grzegorz Muszyński](https://github.com/szerszen199)
 * [Witold Pietrzak](https://github.com/WitoldPietrzak)
 * [Piotr Antczak](https://github.com/pantczak)
-* Bartłomiej Graczyk
+* [Bartłomiej Graczyk](https://github.com/bartlomiejgraczyk)
 * Tomasz Woźniak
