@@ -77,7 +77,7 @@ class MainViewWithoutTranslation extends React.Component {
 
     makeRefreshRequest() {
         let JWTRefreshToken = localStorage.getItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME);
-        let JWTAuthToken = "eyJhbGciOiJIUzM4NCJ9.eyJleHAiOjIxMTI4MTI4MzksInN1YiI6ImlQaG9uZSJ9.NVdyOy8FFjxnrblPfdahV3Oiy6O5t8k22vWST-5wz7VYufOWsn85wk3vJzPU726B";
+        let JWTAuthToken = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
         if (JWTRefreshToken != null && JWTRefreshToken !== "null") {
             axios.post(process.env.REACT_APP_BACKEND_URL + "auth/refresh", {
                 refreshToken: localStorage.getItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME)
