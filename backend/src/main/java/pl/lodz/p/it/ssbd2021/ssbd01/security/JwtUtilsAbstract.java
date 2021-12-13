@@ -46,8 +46,9 @@ public abstract class JwtUtilsAbstract {
         String headerAuth = request.getHeader("Authorization");
 
         if (headerAuth != null && headerAuth.length() > 0 && !headerAuth.isBlank() && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7);
             System.out.println(headerAuth.substring(7));
+            return headerAuth.substring(7);
+            
         }
 
         return null;
