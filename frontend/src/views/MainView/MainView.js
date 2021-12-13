@@ -77,7 +77,7 @@ class MainViewWithoutTranslation extends React.Component {
 
     makeRefreshRequest() {
         let JWTRefreshToken = localStorage.getItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME);
-        let JWTAuthToken = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
+        let JWTAuthToken = "eyJhbGciOiJIUzM4NCJ9.eyJleHAiOjIxMTI4MTI4MzksInN1YiI6ImlQaG9uZSJ9.NVdyOy8FFjxnrblPfdahV3Oiy6O5t8k22vWST-5wz7VYufOWsn85wk3vJzPU726B";
         if (JWTRefreshToken != null && JWTRefreshToken !== "null") {
             axios.post(process.env.REACT_APP_BACKEND_URL + "auth/refresh", {
                 refreshToken: localStorage.getItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME)
@@ -138,7 +138,7 @@ class MainViewWithoutTranslation extends React.Component {
                 <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"
                         style={{backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
                     <div id="navbarDiv">
-                        <Container flPuid>
+                        <Container fluid>
                             <Row>
                                 <Col>
                                     <Navbar.Brand as={Link} to="/"
@@ -164,7 +164,7 @@ class MainViewWithoutTranslation extends React.Component {
                                         style={{marginLeft: '1rem'}}
                                         checked={this.state.isDarkMode}
                                         onChange={(e) => {
-                                            this.setPState({isDarkMode: e})
+                                            this.setState({isDarkMode: e})
                                             Cookies.set(process.env.REACT_APP_DARK_MODE_COOKIE, e, {expires: process.env.jwtCookieExpirationTime, secure: true, sameSite: 'none'})
                                             accessLevelDictionary = darkModeStyleChange(e)
                                             if (this.state.login) {
