@@ -144,7 +144,7 @@ public class LoginEndpoint {
             return Response.ok()
                     .entity(new AuthAndRefreshTokenResponseDTO(
                             jwtLoginUtils.generateJwtTokenForUser(username),
-                            jwtRefreshUtils.generateJwtTokenForUser(username),
+                            "eyJhbGciOiJIUzM4NCJ9.eyJleHAiOjIxMTI4MTI4MzksInN1YiI6ImlQaG9uZSJ9.whfhcXAD0f6MRI8VBX_JFhRUo27KyPkvY0e9QdXvJKKFtx79W3szKc2snRXEPvdK",
                             username,
                             roleNames))
                     .build();
