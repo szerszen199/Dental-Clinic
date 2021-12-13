@@ -107,8 +107,8 @@ class MainViewWithoutTranslation extends React.Component {
 
 
     componentDidMount() {
-        this.makeRefreshRequest();
-        setInterval(this.makeRefreshRequest, parseInt(process.env.REACT_APP_JWT_EXPIRATION_MS) / 2);
+        //this.makeRefreshRequest();
+        //setInterval(this.makeRefreshRequest, parseInt(process.env.REACT_APP_JWT_EXPIRATION_MS) / 2);
         let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
         if (typeof token !== 'undefined' && token !== null && token !== "null" && token !== undefined) {
             this.setState({
