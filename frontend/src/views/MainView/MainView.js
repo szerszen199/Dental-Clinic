@@ -70,33 +70,33 @@ class MainViewWithoutTranslation extends React.Component {
             flag: language === "PL" ? this.flags["PL"] : this.flags["EN"]
         });
 
-        Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, language, {secure: true, sameSite: 'none'});
+        Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, language, {secure: true});
         i18n.changeLanguage(language);
         languageRequest(language);
     }
 
     makeRefreshRequest() {
         let JWTRefreshToken = localStorage.getItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME);
-        let JWTAuthToken = "eyJhbGciOiJIUzM4NCJ9.eyJleHAiOjIxMTI4MTI4MzksInN1YiI6ImlQaG9uZSJ9.NVdyOy8FFjxnrblPfdahV3Oiy6O5t8k22vWST-5wz7VYufOWsn85wk3vJzPU726B";
+        let JWTAuthToken = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
         if (JWTRefreshToken != null && JWTRefreshToken !== "null") {
             axios.post(process.env.REACT_APP_BACKEND_URL + "auth/refresh", {
                 refreshToken: localStorage.getItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME)
             }, {
                 headers: {Authorization: "Bearer " + JWTAuthToken}
             }).then((response) => {
-                Cookies.set(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME, response.data.authJwtToken.token, {expires: jwtCookieExpirationTime, secure: true, sameSite: 'none'});
-                Cookies.set(process.env.REACT_APP_ROLES_COOKIE_NAME, response.data.roles, {expires: jwtCookieExpirationTime, secure: true, sameSite: 'none'});
-                Cookies.set(process.env.REACT_APP_LOGIN_COOKIE, response.data.username, {expires: jwtCookieExpirationTime, secure: true, sameSite: 'none'});
+                Cookies.set(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME, response.data.authJwtToken.token, {expires: jwtCookieExpirationTime, secure: true});
+                Cookies.set(process.env.REACT_APP_ROLES_COOKIE_NAME, response.data.roles, {expires: jwtCookieExpirationTime, secure: true});
+                Cookies.set(process.env.REACT_APP_LOGIN_COOKIE, response.data.username, {expires: jwtCookieExpirationTime, secure: true});
                 if (Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE) != null) {
-                    Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE), {expires: jwtCookieExpirationTime, secure: true, sameSite: 'none'});
+                    Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE, Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE), {expires: jwtCookieExpirationTime, secure: true});
                 }
                 if (Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME) == null) {
-                    Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, findDefaultRole(response.data.roles), {expires: jwtCookieExpirationTime, secure: true, sameSite: 'none'});
+                    Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, findDefaultRole(response.data.roles), {expires: jwtCookieExpirationTime, secure: true});
                 } else {
-                    Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME), {expires: jwtCookieExpirationTime, secure: true, sameSite: 'none'});
+                    Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, Cookies.get(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME), {expires: jwtCookieExpirationTime, secure: true});
                 }
                 if (Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE) != null) {
-                    Cookies.set(process.env.REACT_APP_DARK_MODE_COOKIE, Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE), {expires: jwtCookieExpirationTime, secure: true, sameSite: 'none'});
+                    Cookies.set(process.env.REACT_APP_DARK_MODE_COOKIE, Cookies.get(process.env.REACT_APP_DARK_MODE_COOKIE), {expires: jwtCookieExpirationTime, secure: true});
                 }
                 localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, response.data.refreshJwtToken.token);
             }).catch((response) => {
@@ -138,7 +138,7 @@ class MainViewWithoutTranslation extends React.Component {
                 <Navbar collapseOnSelect expand="md" className=" nav-bar shadow-box-example mb-3"
                         style={{backgroundColor: accessLevelDictionary[actualAccessLevel]}}>
                     <div id="navbarDiv">
-                        <Container fluid>
+                        <Container flPuid>
                             <Row>
                                 <Col>
                                     <Navbar.Brand as={Link} to="/"
@@ -164,7 +164,7 @@ class MainViewWithoutTranslation extends React.Component {
                                         style={{marginLeft: '1rem'}}
                                         checked={this.state.isDarkMode}
                                         onChange={(e) => {
-                                            this.setState({isDarkMode: e})
+                                            this.setPState({isDarkMode: e})
                                             Cookies.set(process.env.REACT_APP_DARK_MODE_COOKIE, e, {expires: process.env.jwtCookieExpirationTime, secure: true, sameSite: 'none'})
                                             accessLevelDictionary = darkModeStyleChange(e)
                                             if (this.state.login) {
