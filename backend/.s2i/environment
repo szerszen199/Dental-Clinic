@@ -1,1 +1,1 @@
-S2I_IMAGE_SOURCE_MOUNTS=backend/.s2i/s2i-config
+S2I_IMAGE_SOURCE_MOUNTS=.s2i/s2i-config

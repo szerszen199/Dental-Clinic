@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-echo "setupsh"
 source /usr/local/s2i/install-common.sh
-dir=$1
-run_cli_script "${dir}/setup.cli"
+
+injected_dir=$1
+echo "Running on injected_dir=${injected_dir}"
+
+run_cli_script "${injected_dir}/config.cli"
+
+echo "End CLI configuration"
