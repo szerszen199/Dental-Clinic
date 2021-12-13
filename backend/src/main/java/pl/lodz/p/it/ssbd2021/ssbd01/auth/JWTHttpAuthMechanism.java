@@ -33,7 +33,9 @@ public class JWTHttpAuthMechanism implements HttpAuthenticationMechanism {
     @Override
     public AuthenticationStatus validateRequest(HttpServletRequest req, HttpServletResponse res, HttpMessageContext msgContext) {
         try {
+            System.out.println("validateRequest_______________");
             String jwt = jwtLoginUtils.parseAuthJwtFromHttpServletRequest(req);
+            System.out.println(jwt);
             if (jwt != null && jwtLoginUtils.validateJwtToken(jwt)) {
                 String username = jwtLoginUtils.getUserNameFromJwtToken(jwt);
                 List<AuthViewEntity> authViewEntities = authViewEntityManager.findByLogin(username);
