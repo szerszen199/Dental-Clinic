@@ -42,10 +42,13 @@ public abstract class JwtUtilsAbstract {
      * @return string
      */
     public String parseAuthJwtFromHttpServletRequest(HttpServletRequest request) {
+        System.out.println("parseAuthJwtFromHttpServletRequest_______________");
         String headerAuth = request.getHeader("Authorization");
 
         if (headerAuth != null && headerAuth.length() > 0 && !headerAuth.isBlank() && headerAuth.startsWith("Bearer ")) {
+            System.out.println(headerAuth.substring(7));
             return headerAuth.substring(7);
+            
         }
 
         return null;
@@ -91,6 +94,7 @@ public abstract class JwtUtilsAbstract {
      * @return boolean
      */
     protected boolean validateJwtToken(String tokenToValidate) {
+        System.out.println(tokenToValidate);
         try {
             JWSObject jwsObject = JWSObject.parse(tokenToValidate);
             JWSVerifier jwsVerifier = new MACVerifier(getJwtSecret());

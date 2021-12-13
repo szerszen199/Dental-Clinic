@@ -89,15 +89,16 @@
             <artifactId>javax.persistence</artifactId>
             <version>2.2.1</version>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.eclipse.microprofile.health</groupId>
             <artifactId>microprofile-health-api</artifactId>
+            <version>4.0</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
+        </dependency> -->
+        <!-- <dependency>
             <groupId>org.eclipse.microprofile.config</groupId>
             <artifactId>microprofile-config-api</artifactId>
-        </dependency>
+        </dependency> -->
         <!-- https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt -->
         <dependency>
             <groupId>com.nimbusds</groupId>
