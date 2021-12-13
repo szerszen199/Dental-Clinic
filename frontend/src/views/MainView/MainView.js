@@ -76,7 +76,7 @@ class MainViewWithoutTranslation extends React.Component {
     }
 
     makeRefreshRequest() {
-        let JWTRefreshToken = "eyJhbGciOiJIUzM4NCJ9.eyJleHAiOjIxMTI4MTI4MzksInN1YiI6ImlQaG9uZSJ9.whfhcXAD0f6MRI8VBX_JFhRUo27KyPkvY0e9QdXvJKKFtx79W3szKc2snRXEPvd";
+        let JWTRefreshToken = localStorage.getItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME);
         let JWTAuthToken = "eyJhbGciOiJIUzM4NCJ9.eyJleHAiOjIxMTI4MTI4MzksInN1YiI6ImlQaG9uZSJ9.NVdyOy8FFjxnrblPfdahV3Oiy6O5t8k22vWST-5wz7VYufOWsn85wk3vJzPU726B";
         if (JWTRefreshToken != null && JWTRefreshToken !== "null") {
             axios.post(process.env.REACT_APP_BACKEND_URL + "auth/refresh", {
@@ -107,8 +107,8 @@ class MainViewWithoutTranslation extends React.Component {
 
 
     componentDidMount() {
-        //this.makeRefreshRequest();
-        //setInterval(this.makeRefreshRequest, parseInt(process.env.REACT_APP_JWT_EXPIRATION_MS) / 2);
+        this.makeRefreshRequest();
+        setInterval(this.makeRefreshRequest, parseInt(process.env.REACT_APP_JWT_EXPIRATION_MS) / 2);
         let token = Cookies.get(process.env.REACT_APP_JWT_TOKEN_COOKIE_NAME);
         if (typeof token !== 'undefined' && token !== null && token !== "null" && token !== undefined) {
             this.setState({
