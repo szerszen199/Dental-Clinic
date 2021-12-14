@@ -16,12 +16,6 @@ import java.net.Socket;
 @Liveness
 @ApplicationScoped
 public class LivenessHealthCheck implements HealthCheck {
-    @Inject
-    @ConfigProperty(name = "DB_SERVICE_HOST", defaultValue = "mariadb")
-    private String host;
-    @Inject
-    @ConfigProperty(name = "DB_SERVICE_PORT", defaultValue = "3306")
-    private int port;
 
     @Inject
     private LivnessSwitch livnessSwitch;
@@ -29,23 +23,13 @@ public class LivenessHealthCheck implements HealthCheck {
     @Override
     public HealthCheckResponse call() {
         HealthCheckResponseBuilder responseBuilder = HealthCheckResponse.named("Database connection health check");
-        try {
-            pingServer(host, port);
-            if (livnessSwitch.isAlive()) {
-                responseBuilder.up();
-            } else {
-                responseBuilder.down()
-                        .withData("error", "Livness switch set to false");
-            }
-        } catch (Exception e) {
+        if (livnessSwitch.isAlive()) {
+            responseBuilder.up();
+        } else {
             responseBuilder.down()
-                    .withData("error", e.getMessage());
+                    .withData("error", "Livness switch set to false");
         }
         return responseBuilder.build();
     }
 
-    private void pingServer(String dbhost, int port) throws IOException {
-        Socket socket = new Socket(dbhost, port);
-        socket.close();
-    }
 }
