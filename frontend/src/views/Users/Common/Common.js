@@ -47,10 +47,7 @@ export default function MyAccount() {
 
 function updateAccessLevel(access_level) {
     Cookies.set(process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME, access_level, {
-        expires: jwtCookieExpirationTime,
-        secure: true,
-        sameSite: 'none'
-    });
+        expires: jwtCookieExpirationTime});
     window.location.hash = "#/home";
     window.location.reload();
 }
